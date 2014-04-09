@@ -41,19 +41,19 @@ namespace TFSAggregator
                 }
                 if (leftType == typeof(int))
                 {
-                    return CompOperator.Compare(leftValue, rightValue);
+                    return CompOperator.Compare((int)leftSideValue, (int)rightSideValue);
                 }
                 if (leftType == typeof(double))
                 {
-                    double leftValue, rightValue;
-                    GetValues(workItem, out leftValue, out rightValue);
-                    return CompOperator.Compare(leftValue, rightValue);
+                    //double leftValue, rightValue;
+                    //GetValues(workItem, out leftValue, out rightValue);
+                    return CompOperator.Compare((double)leftSideValue, (double)rightSideValue);
                 }
                 if (leftType == typeof(DateTime))
                 {
-                    DateTime leftValue, rightValue;
-                    GetValues(workItem, out leftValue, out rightValue);
-                    return CompOperator.Compare(leftValue, rightValue);
+                    //DateTime leftValue, rightValue;
+                    //GetValues(workItem, out leftValue, out rightValue);
+                    return CompOperator.Compare((DateTime)leftSideValue, (DateTime)rightSideValue);
                 }
 
                 // No other types are supported

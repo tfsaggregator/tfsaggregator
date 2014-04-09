@@ -166,62 +166,62 @@ namespace TFSAggregator
                 // For "Parent" this will be all of the co-children of the work item sent in the event.
                 // For "Children" this will be all of the direct children of the work item in the event.
                 //TODO: Make sure children link type works
-                foreach (WorkItem sourceWorkItem in sourceWorkItems)
-                {
-                    // Iterate through all of the TFS Fields that we are aggregating.
-                    foreach (ConfigItemType sourceField in configAggregatorItem.SourceItems)
-                    {
-                        // Get the value of the sourceField on the sourceWorkItem
-                        string sourceValue = sourceWorkItem.GetField(sourceField.Name, "");
+                //foreach (WorkItem sourceWorkItem in sourceWorkItems)
+                //{
+                    //// Iterate through all of the TFS Fields that we are aggregating.
+                    //foreach (ConfigItemType sourceField in configAggregatorItem.SourceItems)
+                    //{
+                    //    // Get the value of the sourceField on the sourceWorkItem
+                    //    string sourceValue = sourceWorkItem.GetField(sourceField.Name, "");
 
-                        // Check to see if the value we have is not in the list of SourceValues
-                        // If it is not then this mapping is not going to be satisfied because this source item
-                        // breaks it (because we are inclusively checking (ie "And")).
-                        if (!mapping.SourceValues.Contains(sourceValue) && (mapping.Inclusive))
-                        {
-                            // it was not in the list.  We are done with this mapping.
-                            // if we get here then this is an "And" mapping that failed.
-                            mappingMatches = false;
-                            break;
-                        }
+                    //    // Check to see if the value we have is not in the list of SourceValues
+                    //    // If it is not then this mapping is not going to be satisfied because this source item
+                    //    // breaks it (because we are inclusively checking (ie "And")).
+                    //    if (!mapping.SourceValues.Contains(sourceValue) && (mapping.Inclusive))
+                    //    {
+                    //        // it was not in the list.  We are done with this mapping.
+                    //        // if we get here then this is an "And" mapping that failed.
+                    //        mappingMatches = false;
+                    //        break;
+                    //    }
 
-                        // Check to see if the value we have is in the list of SourceValues
-                        // If it is, this mapping is satisfied because we are non inclusive (ie "Or")
-                        if (mapping.SourceValues.Contains(sourceValue) && (!mapping.Inclusive))
-                        {
-                            // it was in the list.  We are done with this mapping.
-                            // If we get here then this was an "Or" mapping that succeded
-                            mappingMatches = true;
-                            break;
-                        }
-                    }
-                    // If this is an "And" and mapping does not match then we may as well be done with this iteration of work items.
-                    if ((!mappingMatches) && (mapping.Inclusive))
-                        break;
+                    //    // Check to see if the value we have is in the list of SourceValues
+                    //    // If it is, this mapping is satisfied because we are non inclusive (ie "Or")
+                    //    if (mapping.SourceValues.Contains(sourceValue) && (!mapping.Inclusive))
+                    //    {
+                    //        // it was in the list.  We are done with this mapping.
+                    //        // If we get here then this was an "Or" mapping that succeded
+                    //        mappingMatches = true;
+                    //        break;
+                    //    }
+                    //}
+                    //// If this is an "And" and mapping does not match then we may as well be done with this iteration of work items.
+                    //if ((!mappingMatches) && (mapping.Inclusive))
+                    //    break;
 
-                    // If this is an "Or" and mapping does match then we need to be done.
-                    if ((mappingMatches) && (!mapping.Inclusive))
-                        break;
-                }
+                    //// If this is an "Or" and mapping does match then we need to be done.
+                    //if ((mappingMatches) && (!mapping.Inclusive))
+                    //    break;
+                //}
 
-            aggregateValue = mapping.TargetValue;
-            aggregateFound = true;
+            //aggregateValue = mapping.TargetValue;
+            //aggregateFound = true;
 
-            if (aggregateFound)
-            {
-                // see if we need to make a change:
-                if (targetWorkItem[configAggregatorItem.TargetItem.Name].ToString() != aggregateValue)
-                {
-                    // If this is the "State" field then we may have do so special stuff 
-                    // (to get the state they want from where we are).  If not then just set the value.
-                    if (configAggregatorItem.TargetItem.Name != "State")
-                        targetWorkItem[configAggregatorItem.TargetItem.Name] = aggregateValue;
-                    else
-                        targetWorkItem.TransitionToState(aggregateValue, "TFS Aggregator: ");
+            //if (aggregateFound)
+            //{
+            //    // see if we need to make a change:
+            //    if (targetWorkItem[configAggregatorItem.TargetItem.Name].ToString() != aggregateValue)
+            //    {
+            //        // If this is the "State" field then we may have do so special stuff 
+            //        // (to get the state they want from where we are).  If not then just set the value.
+            //        if (configAggregatorItem.TargetItem.Name != "State")
+            //            targetWorkItem[configAggregatorItem.TargetItem.Name] = aggregateValue;
+            //        else
+            //            targetWorkItem.TransitionToState(aggregateValue, "TFS Aggregator: ");
 
-                    return true;
-                }
-            }
+            //        return true;
+            //    }
+            //}
 
             return false;
         }
