@@ -166,8 +166,8 @@ namespace TFSAggregator
                             // If we made a change then add this work item to the list of items to save.
                             if (changedWorkItem != null)
                             {
-                                // Add the target work item to the list of work items to save.
-                                workItemsToSave.AddIfUnique(targetWorkItem);
+                                // Add the changed work item to the list of work items to save.
+                                workItemsToSave.AddIfUnique(changedWorkItem);
                             }
                         }
                         else
