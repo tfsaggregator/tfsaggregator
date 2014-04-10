@@ -22,7 +22,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -47,17 +47,20 @@
       <HintPath>..\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.Framework.Server">
-      <HintPath>..\..\Microsoft.TeamFoundation.Framework.Server.dll</HintPath>
+      <HintPath>..\..\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Microsoft.TeamFoundation.Framework.Server.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v2.0\Microsoft.TeamFoundation.WorkItemTracking.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server">
-      <HintPath>..\..\Microsoft.TeamFoundation.WorkItemTracking.Server.dll</HintPath>
+      <HintPath>..\..\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Microsoft.TeamFoundation.WorkItemTracking.Server.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer">
-      <HintPath>..\..\Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll</HintPath>
+      <HintPath>..\..\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Services.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -94,6 +97,10 @@
     <Compile Include="WorkItemHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AggregatorItems.old.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="AggregatorItems.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
