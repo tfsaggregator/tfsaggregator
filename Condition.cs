@@ -11,18 +11,33 @@ namespace TFSAggregator
         public string RightValue { get; set; }
         public string RightFieldName { get; set; }
 
+        private object getFieldValue(string fieldName, WorkItem sourceItem, WorkItem parentItem = null)
+        {
+            object value;
+            if (fieldName.StartsWith("Source."))
+            {
+                value = sourceItem[fieldName.Split('.')[1]];
+            }
+            else if (fieldName.StartsWith("Parent."))
+            {
+                value = parentItem == null ? null : parentItem[fieldName.Split('.')[1]];
+            }
+            else value = sourceItem[fieldName];
+            return value;
+        }
+
         /// <summary>
         /// Perform a comparison.  If anything goes wrong then we just assume that everything checks out
         /// This is because if a value is null, we don't want to fail it.
         /// </summary>
         /// <param name="workItem"></param>
         /// <returns></returns>
-        public bool Compare(WorkItem workItem)
+        public bool Compare(WorkItem sourceItem, WorkItem parentItem=null)
         {
             object leftSideValue;
             object rightSideValue;
-            leftSideValue = string.IsNullOrEmpty(LeftFieldName) ? LeftValue : workItem[LeftFieldName];
-            rightSideValue = string.IsNullOrEmpty(RightFieldName) ? RightValue : workItem[RightFieldName];
+            leftSideValue = string.IsNullOrEmpty(LeftFieldName) ? LeftValue : getFieldValue(LeftFieldName, sourceItem, parentItem);
+            rightSideValue = string.IsNullOrEmpty(RightFieldName) ? RightValue : getFieldValue(RightFieldName,sourceItem, parentItem);
             try
             {
                 // Null is a bit of a special case.

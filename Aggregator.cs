@@ -13,7 +13,7 @@ namespace TFSAggregator
         /// Used to acutally do the aggregating.
         /// </summary>
         /// <returns>true if a change was made.  False if not</returns>
-        public static bool Aggregate(IEnumerable<WorkItem> sourceWorkItems, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
+        public static WorkItem Aggregate(WorkItem sourceWorkItem, IEnumerable<WorkItem> sourceWorkItems, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
         {
             if (configAggregatorItem.OperationType == OperationTypeEnum.Numeric)
             {
@@ -23,20 +23,20 @@ namespace TFSAggregator
             {
                 return StringAggregation(sourceWorkItems, targetWorkItem, configAggregatorItem);
             }
-            if (configAggregatorItem.OperationType == OperationTypeEnum.Copy)
+            if (configAggregatorItem.OperationType == OperationTypeEnum.CopyFrom)
             {
-                return CopyAggregation(sourceWorkItems, targetWorkItem, configAggregatorItem);
+                return CopyFromAggregation(sourceWorkItem, targetWorkItem, configAggregatorItem);
             }
 
             // This should never happen
-            return false;
+            return null;
         }
 
         /// <summary>
         /// Adds up all the values that need aggregating
         /// </summary>
         /// <returns>true if a change was made.  False if not</returns>
-        private static bool NumericAggregation(IEnumerable<WorkItem> sourceWorkItems, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
+        private static WorkItem NumericAggregation(IEnumerable<WorkItem> sourceWorkItems, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
         {
             double aggregateValue = 0;
             // Iterate through all of the work items that we are pulling data from.
@@ -54,9 +54,9 @@ namespace TFSAggregator
             if (aggregateValue != targetWorkItem.GetField<double>(configAggregatorItem.TargetItem.Name, 0))
             {
                 targetWorkItem[configAggregatorItem.TargetItem.Name] = aggregateValue;
-                return true;
+                return targetWorkItem;
             }
-            return false;
+            return null;
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace TFSAggregator
         /// the Target Field.
         /// </summary>
         /// <returns>true if a change was made.  False if not</returns>
-        private static bool StringAggregation(IEnumerable<WorkItem> sourceWorkItems, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
+        private static WorkItem StringAggregation(IEnumerable<WorkItem> sourceWorkItems, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
         {
             string aggregateValue = "";
             bool aggregateFound = false;
@@ -143,87 +143,48 @@ namespace TFSAggregator
                     else
                         targetWorkItem.TransitionToState(aggregateValue, "TFS Aggregator: ");
 
-                    return true;
+                    return targetWorkItem;
                 }
             }
 
-            return false;
+            return null;
         }
 
         /// <summary>
-        /// Copies a value from one field into another.
-        /// No mapping configuration is required.
-        /// If there are multiple source items or multiple source fields the first of each type is used
+        /// Copies a value from one workitem into another.
+        /// Values are copied from the target into the source (the event item)
         /// </summary>
         /// <returns>true if a change was made.  False if not</returns>
-        private static bool CopyAggregation(IEnumerable<WorkItem> sourceWorkItems, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
+        private static WorkItem CopyFromAggregation(WorkItem sourceWorkItem, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
         {
-            string aggregateValue = "";
-            bool aggregateFound = false;
+            //Source is the item just updated. It's the one we want to copy values to, not from.
+            //It means that this code is a little confusing since source and target have reversed meanings.
+            //For that reason we switch things around 
 
-                // Iterate through all of the work items that we are pulling data from.
-                // For link type of "Self" this will be just one item.
-                // For "Parent" this will be all of the co-children of the work item sent in the event.
-                // For "Children" this will be all of the direct children of the work item in the event.
-                //TODO: Make sure children link type works
-                //foreach (WorkItem sourceWorkItem in sourceWorkItems)
-                //{
-                    //// Iterate through all of the TFS Fields that we are aggregating.
-                    //foreach (ConfigItemType sourceField in configAggregatorItem.SourceItems)
-                    //{
-                    //    // Get the value of the sourceField on the sourceWorkItem
-                    //    string sourceValue = sourceWorkItem.GetField(sourceField.Name, "");
+            var aggregateSourceValues = new List<string>();
 
-                    //    // Check to see if the value we have is not in the list of SourceValues
-                    //    // If it is not then this mapping is not going to be satisfied because this source item
-                    //    // breaks it (because we are inclusively checking (ie "And")).
-                    //    if (!mapping.SourceValues.Contains(sourceValue) && (mapping.Inclusive))
-                    //    {
-                    //        // it was not in the list.  We are done with this mapping.
-                    //        // if we get here then this is an "And" mapping that failed.
-                    //        mappingMatches = false;
-                    //        break;
-                    //    }
+            // Iterate through all of the TFS Fields that we are aggregating.
+            foreach (ConfigItemType sourceField in configAggregatorItem.SourceItems)
+            {
+                // Get the value of the sourceField on the sourceWorkItem and add it to the list
+                string sourceValue = targetWorkItem.GetField(sourceField.Name, "");
+                aggregateSourceValues.Add(sourceValue);
+            }
+            
+            var resultValue = string.Format(configAggregatorItem.OutputFormat.FormatString, aggregateSourceValues.ToArray());
 
-                    //    // Check to see if the value we have is in the list of SourceValues
-                    //    // If it is, this mapping is satisfied because we are non inclusive (ie "Or")
-                    //    if (mapping.SourceValues.Contains(sourceValue) && (!mapping.Inclusive))
-                    //    {
-                    //        // it was in the list.  We are done with this mapping.
-                    //        // If we get here then this was an "Or" mapping that succeded
-                    //        mappingMatches = true;
-                    //        break;
-                    //    }
-                    //}
-                    //// If this is an "And" and mapping does not match then we may as well be done with this iteration of work items.
-                    //if ((!mappingMatches) && (mapping.Inclusive))
-                    //    break;
+            // see if we need to make a change:
+            if (sourceWorkItem[configAggregatorItem.TargetItem.Name].ToString() != resultValue)
+            {
+                //We don't want to use copyfrom for the state. There are other ways of doing that.
+                if (configAggregatorItem.TargetItem.Name != "State")
+                {
+                    sourceWorkItem[configAggregatorItem.TargetItem.Name] = resultValue;
+                    return sourceWorkItem;
+                }
+            }
 
-                    //// If this is an "Or" and mapping does match then we need to be done.
-                    //if ((mappingMatches) && (!mapping.Inclusive))
-                    //    break;
-                //}
-
-            //aggregateValue = mapping.TargetValue;
-            //aggregateFound = true;
-
-            //if (aggregateFound)
-            //{
-            //    // see if we need to make a change:
-            //    if (targetWorkItem[configAggregatorItem.TargetItem.Name].ToString() != aggregateValue)
-            //    {
-            //        // If this is the "State" field then we may have do so special stuff 
-            //        // (to get the state they want from where we are).  If not then just set the value.
-            //        if (configAggregatorItem.TargetItem.Name != "State")
-            //            targetWorkItem[configAggregatorItem.TargetItem.Name] = aggregateValue;
-            //        else
-            //            targetWorkItem.TransitionToState(aggregateValue, "TFS Aggregator: ");
-
-            //        return true;
-            //    }
-            //}
-
-            return false;
+            return null;
         }
 
     }

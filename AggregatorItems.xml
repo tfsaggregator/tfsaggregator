@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AggregatorItems tfsServerUrl="http://tfs2010dev:8080/tfs" >
+<AggregatorItems tfsServerUrl="http://win-2008r2:8080/tfs/DefaultCollection" >
   <!--When Bug/PBI is linked to a Feature update the Timesheet job field   -->
   <AggregatorItem operationType="CopyFrom" linkType="Parent" linkLevel="1" workItemType="Bug;Product Backlog Item">
     <TargetItem name="Timesheet Job" />
     <SourceItem name="Timesheet Job" />
     <!-- Only do this if the source field is populated and the target value is different -->
     <Conditions>
-      <Condition leftValue="" operator="NotEqualTo" rightField="Timesheet Job" />
-      <Condition leftField="Timesheet Job" operator="NotEqualTo" rightField="Timesheet Job" />
+      <Condition leftValue="" operator="NotEqualTo" rightField="Parent.Timesheet Job" />
+      <Condition leftField="Source.Timesheet Job" operator="NotEqualTo" rightField="Parent.Timesheet Job" />
     </Conditions>
     <OutputFormat formatString="F{0}" />
   </AggregatorItem>

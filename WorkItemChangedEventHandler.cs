@@ -103,16 +103,16 @@ namespace TFSAggregator
                                 bool parentLevelFound = true;
 
                                 // Go up the tree till we find the level of parent that we are looking for.
-                                WorkItem iterateToParent = eventWorkItem;
+                                WorkItem parentWorkItem = eventWorkItem;
                                 for (int i = 0; i < configAggregatorItem.LinkLevel; i++)
                                 {
 
                                     // Load the parent from the saved list (if we have it in there) or just load it from the store.
-                                    WorkItem nullCheck = iterateToParent.GetParentFromListOrStore(workItemsToSave, store);
+                                    WorkItem tempWorkItem = parentWorkItem.GetParentFromListOrStore(workItemsToSave, store);
                                     // 
-                                    if (nullCheck != null)
+                                    if (tempWorkItem != null)
                                     {
-                                        iterateToParent = nullCheck;
+                                        parentWorkItem = tempWorkItem;
                                     }
                                     else
                                         parentLevelFound = false;
@@ -126,13 +126,13 @@ namespace TFSAggregator
                                     continue;
                                 }
 
-                                if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}{0}Found {1} [{2}] {3} {4} up from {5} [{6}].  Aggregation continues.", "  ", iterateToParent.Type.Name, iterateToParent.Id, configAggregatorItem.LinkLevel, configAggregatorItem.LinkLevel > 1 ? "levels" : "level", workItemTypeName, workItemId));
+                                if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}{0}Found {1} [{2}] {3} {4} up from {5} [{6}].  Aggregation continues.", "  ", parentWorkItem.Type.Name, parentWorkItem.Id, configAggregatorItem.LinkLevel, configAggregatorItem.LinkLevel > 1 ? "levels" : "level", workItemTypeName, workItemId));
 
-                                targetWorkItem = iterateToParent;
+                                targetWorkItem = parentWorkItem;
 
                                 // Make sure that all conditions are true before we do the aggregation
                                 // If any fail then we don't do this aggregation.
-                                if (!configAggregatorItem.Conditions.AreAllConditionsMet(targetWorkItem))
+                                if (!configAggregatorItem.Conditions.AreAllConditionsMet(eventWorkItem, targetWorkItem))
                                 {
                                     if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}All conditions for parent aggregation are not met", "    "));
                                     currentAggregationId++; 
@@ -156,17 +156,15 @@ namespace TFSAggregator
                                 }
 
                                 // remove the kids that are not the right type that we are working with
-                                ConfigAggregatorItem configAggregatorItemClosure = configAggregatorItem;
-                                iterateFromParents.RemoveAll(x => x.Type.Name != configAggregatorItemClosure.WorkItemType);
-
+                                iterateFromParents.RemoveAll(x => !matchableWorkItemTypes.Contains(x.Type.Name));
                                 sourceWorkItems = iterateFromParents;
                             }
 
                             // Do the actual aggregation now
-                            bool changeMade = Aggregator.Aggregate(sourceWorkItems, targetWorkItem, configAggregatorItem);
+                            var changedWorkItem = Aggregator.Aggregate(eventWorkItem, sourceWorkItems, targetWorkItem, configAggregatorItem);
                             
                             // If we made a change then add this work item to the list of items to save.
-                            if (changeMade)
+                            if (changedWorkItem != null)
                             {
                                 // Add the target work item to the list of work items to save.
                                 workItemsToSave.AddIfUnique(targetWorkItem);

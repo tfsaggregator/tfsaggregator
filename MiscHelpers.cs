@@ -70,6 +70,26 @@ namespace TFSAggregator
             return areAllTrue;
         }
 
+        /// <summary>
+        /// Evaluate all conditions.  All must be true to perform the aggregation.
+        /// </summary>
+        /// <param name="conditions"></param>
+        /// <param name="workItem"></param>
+        /// <returns></returns>
+        public static bool AreAllConditionsMet(this List<Condition> conditions, WorkItem sourceItem, WorkItem parentItem)
+        {
+            bool areAllTrue = true;
+            foreach (Condition condition in conditions)
+            {
+                if (!condition.Compare(sourceItem, parentItem))
+                {
+                    areAllTrue = false;
+                    break;
+                }
+            }
+            return areAllTrue;
+        }
+
         public static void LogMessage(string message, bool isError)
         {
             if (TFSAggregatorSettings.LoggingIsEnabled)
@@ -88,7 +108,6 @@ namespace TFSAggregator
         public static void LogMessage(string message)
         {
             LogMessage(message, false);
-          
         }
 
         public static void AddRunSeparatorToLog()

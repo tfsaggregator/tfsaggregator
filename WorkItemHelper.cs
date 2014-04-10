@@ -26,7 +26,7 @@ namespace TFSAggregator
         }
 
         /// <summary>
-        /// Used to convert a field to a number.  If anything goes wrong then 0 is returned.
+        /// Used to convert a field to a number.  If anything goes wrong then the default value is returned.
         /// </summary>
         /// <param name="workItem"></param>
         /// <param name="fieldName">The name of the field to be retrived</param>
