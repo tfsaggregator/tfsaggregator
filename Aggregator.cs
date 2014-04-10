@@ -166,8 +166,9 @@ namespace TFSAggregator
             // Iterate through all of the TFS Fields that we are aggregating.
             foreach (ConfigItemType sourceField in configAggregatorItem.SourceItems)
             {
+                object value = targetWorkItem.GetField(sourceField.Name, (object)null);
                 // Get the value of the sourceField on the sourceWorkItem and add it to the list
-                string sourceValue = targetWorkItem.GetField(sourceField.Name, "");
+                string sourceValue = (value??"").ToString();
                 aggregateSourceValues.Add(sourceValue);
             }
             
