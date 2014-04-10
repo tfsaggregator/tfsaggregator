@@ -164,11 +164,10 @@ namespace TFSAggregator
                             {
                                 WorkItem parentWorkItem = eventWorkItem;
 
-                                targetWorkItem = parentWorkItem;
                                 var targetWorkItemTypes = configAggregatorItem.TargetWorkItemType.Split(';');
 
                                 // Get the children down how ever many link levels were specified.
-                                var iterateFromParents = new List<WorkItem> { targetWorkItem };
+                                var iterateFromParents = new List<WorkItem> { parentWorkItem };
                                 for (int i = 0; i < configAggregatorItem.LinkLevel; i++)
                                 {
                                     List<WorkItem> thisLevelOfKids = new List<WorkItem>();
@@ -181,16 +180,17 @@ namespace TFSAggregator
                                     iterateFromParents = thisLevelOfKids;
                                 }
 
-                                // remove the kids that are not the right type that we are working with
+                                // remove the kids that are not the right type that we are working with, and the parent as well.
+                                iterateFromParents.RemoveAll(x => x.Id == parentWorkItem.Id);
                                 iterateFromParents.RemoveAll(x => !targetWorkItemTypes.Contains(x.Type.Name));
                                 sourceWorkItems = iterateFromParents;  //this is the children
 
                                 // Make sure that all conditions are true before we do the aggregation
                                 // If any fail then we don't do this aggregation.
                                 bool processItems = true;
-                                foreach (var sourceItem in sourceWorkItems)
+                                foreach (var childItem in sourceWorkItems)
                                 {
-                                    if (!configAggregatorItem.Conditions.AreAllConditionsMet(eventWorkItem, targetWorkItem))
+                                    if (!configAggregatorItem.Conditions.AreAllConditionsMet(childItem, parentWorkItem))
                                     {
                                         if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}All conditions for parent aggregation are not met", "    "));
                                         processItems = false;
