@@ -4,6 +4,7 @@
     {
         Numeric,
         String,
-        CopyFrom
+        CopyFrom,
+        CopyTo
     }
 }

@@ -51,6 +51,7 @@ namespace TFSAggregator
                 aggItem.LinkLevel = xmlAggItem.LoadAttribute("linkLevel", 1);
                 aggItem.Name = xmlAggItem.LoadAttribute("name", "Name not set");
                 aggItem.WorkItemType = xmlAggItem.Attribute("workItemType").Value;
+                aggItem.TargetWorkItemType = xmlAggItem.LoadAttribute("targetWorkItemType","");
                 
                 // Iterate through all the sub items (Mappings, source and target items.))
                 foreach (XElement xmlConfigItem in xmlAggItem.Elements())

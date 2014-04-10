@@ -4,10 +4,10 @@
   <AggregatorItem operationType="CopyFrom" linkType="Parent" linkLevel="1" workItemType="Bug;Product Backlog Item">
     <TargetItem name="Timesheet Job" />
     <SourceItem name="Timesheet Job" />
-    <!-- Only do this if the source field is populated and the target value is different -->
+    <!-- Only if the source field is populated and the target value is different -->
     <Conditions>
       <Condition leftValue="" operator="NotEqualTo" rightField="Parent.Timesheet Job" />
-      <Condition leftField="Source.Timesheet Job" operator="NotEqualTo" rightField="Parent.Timesheet Job" />
+      <Condition leftField="Source.Timesheet Job" operator="NotEqualTo" rightField="Target.Timesheet Job" />
     </Conditions>
     <OutputFormat formatString="{0}" />
   </AggregatorItem>
@@ -15,12 +15,32 @@
   <AggregatorItem operationType="CopyFrom" linkType="Parent" linkLevel="1" workItemType="Bug;Product Backlog Item">
     <TargetItem name="Timesheet Job" />
     <SourceItem name="ID" />
-    <!-- Only do this if the source field is populated and the target value is different -->
     <Conditions>
       <Condition leftValue="" operator="EqualTo" rightField="Parent.Timesheet Job" />
       <Condition leftField="Source.Timesheet Job" operator="NotEqualTo" rightField="Parent.Timesheet Job" />
     </Conditions>
     <OutputFormat formatString="F{0}" />
   </AggregatorItem>
+
+  <AggregatorItem operationType="CopyTo" linkType="Children" linkLevel="1" workItemType="Feature" targetWorkItemType="Bug;Product Backlog Item">
+    <TargetItem name="Timesheet Job" />
+    <SourceItem name="ID" />
+    <Conditions>
+      <Condition leftValue="" operator="EqualTo" rightField="Parent.Timesheet Job" />
+      <Condition leftField="Source.Timesheet Job" operator="NotEqualTo" rightField="Parent.Timesheet Job" />
+    </Conditions>
+    <OutputFormat formatString="F{0}" />
+  </AggregatorItem>
+
+  <AggregatorItem operationType="CopyTo" linkType="Children" linkLevel="1" workItemType="Feature" targetWorkItemType="Bug;Product Backlog Item">
+    <TargetItem name="Timesheet Job" />
+    <SourceItem name="Timesheet Job" />
+    <Conditions>
+      <Condition leftValue="" operator="NotEqualTo" rightField="Parent.Timesheet Job" />
+      <Condition leftField="Source.Timesheet Job" operator="NotEqualTo" rightField="Parent.Timesheet Job" />
+    </Conditions>
+    <OutputFormat formatString="{0}" />
+  </AggregatorItem>
+
 
 </AggregatorItems>

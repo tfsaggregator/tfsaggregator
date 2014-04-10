@@ -25,6 +25,11 @@ namespace TFSAggregator
         public string WorkItemType { get; set; }
 
         /// <summary>
+        /// The name of the target work item type to apply this aggregation to (for CopyTo aggregations).
+        /// </summary>
+        public string TargetWorkItemType { get; set; }
+
+        /// <summary>
         /// The type of link that we are using
         /// </summary>
         public ConfigLinkTypeEnum LinkType { get; set; }

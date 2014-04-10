@@ -27,6 +27,10 @@ namespace TFSAggregator
             {
                 return CopyFromAggregation(sourceWorkItem, targetWorkItem, configAggregatorItem);
             }
+            if (configAggregatorItem.OperationType == OperationTypeEnum.CopyTo)
+            {
+                return CopyToAggregation(targetWorkItem, sourceWorkItem, configAggregatorItem);
+            }
 
             // This should never happen
             return null;
@@ -155,7 +159,7 @@ namespace TFSAggregator
         /// Values are copied from the target into the source (the event item)
         /// </summary>
         /// <returns>true if a change was made.  False if not</returns>
-        private static WorkItem CopyFromAggregation(WorkItem sourceWorkItem, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
+        private static WorkItem CopyFromAggregation(WorkItem childWorkItem, WorkItem parentWorkItem, ConfigAggregatorItem configAggregatorItem)
         {
             //Source is the item just updated. It's the one we want to copy values to, not from.
             //It means that this code is a little confusing since source and target have reversed meanings.
@@ -166,7 +170,7 @@ namespace TFSAggregator
             // Iterate through all of the TFS Fields that we are aggregating.
             foreach (ConfigItemType sourceField in configAggregatorItem.SourceItems)
             {
-                object value = targetWorkItem.GetField(sourceField.Name, (object)null);
+                object value = parentWorkItem.GetField(sourceField.Name, (object)null);
                 // Get the value of the sourceField on the sourceWorkItem and add it to the list
                 string sourceValue = (value??"").ToString();
                 aggregateSourceValues.Add(sourceValue);
@@ -175,13 +179,47 @@ namespace TFSAggregator
             var resultValue = string.Format(configAggregatorItem.OutputFormat.FormatString, aggregateSourceValues.ToArray());
 
             // see if we need to make a change:
-            if (sourceWorkItem[configAggregatorItem.TargetItem.Name].ToString() != resultValue)
+            if (childWorkItem[configAggregatorItem.TargetItem.Name].ToString() != resultValue)
             {
                 //We don't want to use copyfrom for the state. There are other ways of doing that.
                 if (configAggregatorItem.TargetItem.Name != "State")
                 {
-                    sourceWorkItem[configAggregatorItem.TargetItem.Name] = resultValue;
-                    return sourceWorkItem;
+                    childWorkItem[configAggregatorItem.TargetItem.Name] = resultValue;
+                    return childWorkItem;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Copies a value from one workitem into another.
+        /// Values are copied from the target into the source (the event item)
+        /// </summary>
+        /// <returns>true if a change was made.  False if not</returns>
+        private static WorkItem CopyToAggregation(WorkItem childWorkItem, WorkItem parentWorkItem, ConfigAggregatorItem configAggregatorItem)
+        {
+            var aggregateSourceValues = new List<string>();
+
+            // Iterate through all of the TFS Fields that we are aggregating.
+            foreach (ConfigItemType sourceField in configAggregatorItem.SourceItems)
+            {
+                object value = parentWorkItem.GetField(sourceField.Name, (object)null);
+                // Get the value of the sourceField on the sourceWorkItem and add it to the list
+                string sourceValue = (value ?? "").ToString();
+                aggregateSourceValues.Add(sourceValue);
+            }
+
+            var resultValue = string.Format(configAggregatorItem.OutputFormat.FormatString, aggregateSourceValues.ToArray());
+
+            // see if we need to make a change:
+            if (childWorkItem[configAggregatorItem.TargetItem.Name].ToString() != resultValue)
+            {
+                //We don't want to use copyfrom for the state. There are other ways of doing that.
+                if (configAggregatorItem.TargetItem.Name != "State")
+                {
+                    childWorkItem[configAggregatorItem.TargetItem.Name] = resultValue;
+                    return childWorkItem;
                 }
             }
 
