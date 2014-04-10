@@ -48,16 +48,16 @@ namespace TFSAggregator
             foreach (WorkItem sourceWorkItem in sourceWorkItems)
             {
                 // Iterate through all of the TFS Fields that we are aggregating.
-                foreach (ConfigItemType sourceField in configAggregatorItem.SourceItems)
+                foreach (ConfigItemType sourceField in configAggregatorItem.SourceFields)
                 {
                     double sourceValue = sourceWorkItem.GetField(sourceField.Name, 0.0);
                     aggregateValue = configAggregatorItem.Operation.Perform(aggregateValue, sourceValue);
                 }
             }
 
-            if (aggregateValue != targetWorkItem.GetField<double>(configAggregatorItem.TargetItem.Name, 0))
+            if (aggregateValue != targetWorkItem.GetField<double>(configAggregatorItem.TargetField.Name, 0))
             {
-                targetWorkItem[configAggregatorItem.TargetItem.Name] = aggregateValue;
+                targetWorkItem[configAggregatorItem.TargetField.Name] = aggregateValue;
                 return targetWorkItem;
             }
             return null;
@@ -92,7 +92,7 @@ namespace TFSAggregator
                 foreach (WorkItem sourceWorkItem in sourceWorkItems)
                 {
                     // Iterate through all of the TFS Fields that we are aggregating.
-                    foreach (ConfigItemType sourceField in configAggregatorItem.SourceItems)
+                    foreach (ConfigItemType sourceField in configAggregatorItem.SourceFields)
                     {
                         // Get the value of the sourceField on the sourceWorkItem
                         string sourceValue = sourceWorkItem.GetField(sourceField.Name, "");
@@ -138,12 +138,12 @@ namespace TFSAggregator
             if (aggregateFound)
             {
                 // see if we need to make a change:
-                if (targetWorkItem[configAggregatorItem.TargetItem.Name].ToString() != aggregateValue)
+                if (targetWorkItem[configAggregatorItem.TargetField.Name].ToString() != aggregateValue)
                 {
                     // If this is the "State" field then we may have do so special stuff 
                     // (to get the state they want from where we are).  If not then just set the value.
-                    if (configAggregatorItem.TargetItem.Name != "State")
-                        targetWorkItem[configAggregatorItem.TargetItem.Name] = aggregateValue;
+                    if (configAggregatorItem.TargetField.Name != "State")
+                        targetWorkItem[configAggregatorItem.TargetField.Name] = aggregateValue;
                     else
                         targetWorkItem.TransitionToState(aggregateValue, "TFS Aggregator: ");
 
@@ -168,7 +168,7 @@ namespace TFSAggregator
             var aggregateSourceValues = new List<string>();
 
             // Iterate through all of the TFS Fields that we are aggregating.
-            foreach (ConfigItemType sourceField in configAggregatorItem.SourceItems)
+            foreach (ConfigItemType sourceField in configAggregatorItem.SourceFields)
             {
                 object value = parentWorkItem.GetField(sourceField.Name, (object)null);
                 // Get the value of the sourceField on the sourceWorkItem and add it to the list
@@ -176,15 +176,15 @@ namespace TFSAggregator
                 aggregateSourceValues.Add(sourceValue);
             }
             
-            var resultValue = string.Format(configAggregatorItem.OutputFormat.FormatString, aggregateSourceValues.ToArray());
+            var resultValue = string.Format(configAggregatorItem.OutputFormat, aggregateSourceValues.ToArray());
 
             // see if we need to make a change:
-            if (childWorkItem[configAggregatorItem.TargetItem.Name].ToString() != resultValue)
+            if (childWorkItem[configAggregatorItem.TargetField.Name].ToString() != resultValue)
             {
                 //We don't want to use copyfrom for the state. There are other ways of doing that.
-                if (configAggregatorItem.TargetItem.Name != "State")
+                if (configAggregatorItem.TargetField.Name != "State")
                 {
-                    childWorkItem[configAggregatorItem.TargetItem.Name] = resultValue;
+                    childWorkItem[configAggregatorItem.TargetField.Name] = resultValue;
                     return childWorkItem;
                 }
             }
@@ -202,7 +202,7 @@ namespace TFSAggregator
             var aggregateSourceValues = new List<string>();
 
             // Iterate through all of the TFS Fields that we are aggregating.
-            foreach (ConfigItemType sourceField in configAggregatorItem.SourceItems)
+            foreach (ConfigItemType sourceField in configAggregatorItem.SourceFields)
             {
                 object value = parentWorkItem.GetField(sourceField.Name, (object)null);
                 // Get the value of the sourceField on the sourceWorkItem and add it to the list
@@ -210,15 +210,15 @@ namespace TFSAggregator
                 aggregateSourceValues.Add(sourceValue);
             }
 
-            var resultValue = string.Format(configAggregatorItem.OutputFormat.FormatString, aggregateSourceValues.ToArray());
+            var resultValue = string.Format(configAggregatorItem.OutputFormat, aggregateSourceValues.ToArray());
 
             // see if we need to make a change:
-            if (childWorkItem[configAggregatorItem.TargetItem.Name].ToString() != resultValue)
+            if (childWorkItem[configAggregatorItem.TargetField.Name].ToString() != resultValue)
             {
                 //We don't want to use copyfrom for the state. There are other ways of doing that.
-                if (configAggregatorItem.TargetItem.Name != "State")
+                if (configAggregatorItem.TargetField.Name != "State")
                 {
-                    childWorkItem[configAggregatorItem.TargetItem.Name] = resultValue;
+                    childWorkItem[configAggregatorItem.TargetField.Name] = resultValue;
                     return childWorkItem;
                 }
             }

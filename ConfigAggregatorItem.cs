@@ -9,7 +9,7 @@ namespace TFSAggregator
         
         public ConfigAggregatorItem()
         {
-            SourceItems = new List<ConfigItemType>();
+            SourceFields = new List<ConfigItemType>();
             Mappings = new List<Mapping>();
             Conditions = new List<Condition>();
         }
@@ -37,12 +37,12 @@ namespace TFSAggregator
         /// <summary>
         /// Field to be updated
         /// </summary>
-        public ConfigItemType TargetItem { get; set; }
+        public ConfigItemType TargetField { get; set; }
 
         /// <summary>
         /// Fields to get the data for the updating from
         /// </summary>
-        public List<ConfigItemType> SourceItems { get; set; }
+        public List<ConfigItemType> SourceFields { get; set; }
 
         /// <summary>
         /// Operation to perform on the Source Items before putting the aggregate in TargetItem
@@ -75,6 +75,6 @@ namespace TFSAggregator
         /// When using a CopyFrom or CopyTo operation values are passed to this format string for formatting
         /// If not supplied values will be unformatted.
         /// </summary>
-        public OutputFormatType OutputFormat { get; set; }
+        public String OutputFormat { get; set; }
     }
 }

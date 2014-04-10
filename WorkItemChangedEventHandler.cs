@@ -106,14 +106,11 @@ namespace TFSAggregator
                                 WorkItem parentWorkItem = eventWorkItem;
                                 for (int i = 0; i < configAggregatorItem.LinkLevel; i++)
                                 {
-
                                     // Load the parent from the saved list (if we have it in there) or just load it from the store.
                                     WorkItem tempWorkItem = parentWorkItem.GetParentFromListOrStore(workItemsToSave, store);
                                     // 
                                     if (tempWorkItem != null)
-                                    {
                                         parentWorkItem = tempWorkItem;
-                                    }
                                     else
                                         parentLevelFound = false;
 
@@ -167,25 +164,26 @@ namespace TFSAggregator
                                 var targetWorkItemTypes = configAggregatorItem.TargetWorkItemType.Split(';');
 
                                 // Get the children down how ever many link levels were specified.
-                                var iterateFromParents = new List<WorkItem> { parentWorkItem };
+                                // Start at the parent level and then iterate down the work item tree
+                                var currentLevelWorkItems = new List<WorkItem> { parentWorkItem };
                                 for (int i = 0; i < configAggregatorItem.LinkLevel; i++)
                                 {
                                     List<WorkItem> thisLevelOfKids = new List<WorkItem>();
                                     // Iterate all the parents to find the children of current set of parents
-                                    foreach (WorkItem iterateFromParent in iterateFromParents)
+                                    foreach (WorkItem iterateFromParent in currentLevelWorkItems)
                                     {
                                         thisLevelOfKids.AddRange(iterateFromParent.GetChildrenFromListOrStore(workItemsToSave, store));
                                     }
 
-                                    iterateFromParents = thisLevelOfKids;
+                                    currentLevelWorkItems = thisLevelOfKids;
                                 }
 
-                                // remove the kids that are not the right type that we are working with, and the parent as well.
-                                iterateFromParents.RemoveAll(x => x.Id == parentWorkItem.Id);
-                                iterateFromParents.RemoveAll(x => !targetWorkItemTypes.Contains(x.Type.Name));
-                                sourceWorkItems = iterateFromParents;  //this is the children
+                                // remove the kids that are not of the type we want to change.
+                                currentLevelWorkItems.RemoveAll(x => !targetWorkItemTypes.Contains(x.Type.Name));
+                                sourceWorkItems = currentLevelWorkItems; 
 
                                 // Make sure that all conditions are true before we do the aggregation
+                                // In a copyTo operation, the conditions are evaluated per child workitem.
                                 // If any fail then we don't do this aggregation.
                                 bool processItems = true;
                                 foreach (var childItem in sourceWorkItems)
@@ -193,22 +191,15 @@ namespace TFSAggregator
                                     if (!configAggregatorItem.Conditions.AreAllConditionsMet(childItem, parentWorkItem))
                                     {
                                         if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}All conditions for parent aggregation are not met", "    "));
-                                        processItems = false;
                                         continue;
                                     }
                                     if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}All conditions for parent aggregation are met", "    "));
-                                }
-                                if (processItems) //only process if condition was met
-                                {
-                                    foreach (var item in sourceWorkItems)
+                                    var changedWorkItem = Aggregator.Aggregate(eventWorkItem, null, childItem, configAggregatorItem);
+                                    // If we made a change then add this work item to the list of items to save.
+                                    if (changedWorkItem != null)
                                     {
-                                        var changedWorkItem = Aggregator.Aggregate(eventWorkItem, sourceWorkItems, item, configAggregatorItem);
-                                        // If we made a change then add this work item to the list of items to save.
-                                        if (changedWorkItem != null)
-                                        {
-                                            // Add the changed work item to the list of work items to save.
-                                            workItemsToSave.AddIfUnique(changedWorkItem);
-                                        }
+                                        // Add the changed work item to the list of work items to save.
+                                        workItemsToSave.AddIfUnique(changedWorkItem);
                                     }
                                 }
                             }

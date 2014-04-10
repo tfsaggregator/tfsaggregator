@@ -86,7 +86,6 @@
     <Compile Include="MiscHelpers.cs" />
     <Compile Include="ConfigTypes\OperationEnum.cs" />
     <Compile Include="ConfigTypes\OperationTypeEnum.cs" />
-    <Compile Include="ConfigTypes\OutputFormatType.cs" />
     <Compile Include="Operations.cs" />
     <Compile Include="StateManagement.cs" />
     <Compile Include="TFSAccess.cs" />

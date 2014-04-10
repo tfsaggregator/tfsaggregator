@@ -57,22 +57,21 @@ namespace TFSAggregator
                 foreach (XElement xmlConfigItem in xmlAggItem.Elements())
                 {
                     // If this is a target item then add it as such
-                    if (xmlConfigItem.Name == "TargetItem")
+                    if (xmlConfigItem.Name == "TargetField")
                     {
-                        aggItem.TargetItem = new ConfigItemType { Name = xmlConfigItem.Attribute("name").Value };
+                        aggItem.TargetField = new ConfigItemType { Name = xmlConfigItem.Attribute("name").Value };
                         
                     }
                     // If this is a source item then add it as such
-                    if (xmlConfigItem.Name == "SourceItem")
+                    if (xmlConfigItem.Name == "SourceField")
                     {
-                        aggItem.SourceItems.Add(new ConfigItemType { Name = xmlConfigItem.Attribute("name").Value });
+                        aggItem.SourceFields.Add(new ConfigItemType { Name = xmlConfigItem.Attribute("name").Value });
                     }
 
                     // If this is an outputFormat item then add it as such
                     if (xmlConfigItem.Name == "OutputFormat")
                     {
-                        aggItem.OutputFormat = new OutputFormatType { FormatString = xmlConfigItem.Attribute("formatString").Value };
-
+                        aggItem.OutputFormat = xmlConfigItem.Attribute("formatString").Value;
                     }
 
                     // If this is conditions (for the target) then read them in.
