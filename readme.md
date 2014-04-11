@@ -14,6 +14,14 @@ CopyFrom and CopyTo both support the new &lt;OutputFormat formatString="{0}" /&g
 
 In the sample config XML for the CopyFrom and CopyTo operations, a custom field 'Timesheet Job' was added to show how you might use this. The intent would be that in child work items the Timesheet fiels is readonly (except for the TFSService) and channging the timesheet on a feature would cascade changes to the children.
 
+####Installation
+
+Requires TFS2013.
+
+Copy TFSAggregator.dll and AggregatorItems.xml to the plugin folder of your Application Tier. This is usually at C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins
+
+Be aware that changing files in the Plugins folder will cause the TFS App Pool to recycle.
+
 ####Developers
 
 To build this project you will need to copy a few files from your TFS server (they're non-redistributable, sorry)
