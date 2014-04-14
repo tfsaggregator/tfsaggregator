@@ -2,39 +2,20 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.TeamFoundation.Common;
-using Microsoft.TeamFoundation.Framework.Server;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using Microsoft.TeamFoundation.WorkItemTracking.Server;
 using System.Text;
 using TFSAggregator.ConfigTypes;
-using WorkItem = Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItem;
+using TFSAggregator.TfSFacade;
 
 namespace TFSAggregator
 {
-    public class WorkItemChangedEventHandler : ISubscriber
+    public class EventProcessor
     {
-        
-        public WorkItemChangedEventHandler()
-        {
-            //DON"T ADD ANYTHING HERE UNLESS YOU REALLY KNOW WHAT YOU ARE DOING.
-            //TFS DOES NOT LIKE CONSTRUCTORS HERE AND SEEMS TO FREEZE WHEN YOU TRY :(
-        }
-
-        public Type[] SubscribedTypes()
-        {
-            return new Type[1] { typeof(WorkItemChangedEvent) };
-        }
-
         /// <summary>
         /// This is the one where all the magic starts.  Main() so to speak.  I will load the settings, connect to tfs and apply the aggregation rules.
         /// </summary>
-        public EventNotificationStatus ProcessEvent(TeamFoundationRequestContext requestContext, NotificationType notificationType, object notificationEventArgs,
-                                                    out int statusCode, out string statusMessage, out ExceptionPropertyCollection properties)
+        public ProcessingResult ProcessEvent(RequestContext requestContext, Notification notificationType, object notificationEventArgs)
         {
-            statusCode = 0;
-            properties = null;
-            statusMessage = String.Empty;
+            var result = new ProcessingResult();
             int currentAggregationId = 0;
             int workItemId = 0;
             string currentAggregationName = string.Empty;
@@ -262,19 +243,5 @@ namespace TFSAggregator
 
             return EventNotificationStatus.ActionPermitted;
         }
-
-        public string Name
-        {
-            get { return "TFSAggregator"; }
-        }
-
-
-
-        public SubscriberPriority Priority
-        {
-            get { return SubscriberPriority.Normal; }
-        }
-
-        
     }
 }

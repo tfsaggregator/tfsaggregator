@@ -22,7 +22,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -90,8 +90,13 @@
     <Compile Include="StateManagement.cs" />
     <Compile Include="TFSAccess.cs" />
     <Compile Include="TFSAggregatorSettings.cs" />
+    <Compile Include="TfSFacade\Notification.cs" />
+    <Compile Include="TfSFacade\ProcessingResult.cs" />
+    <Compile Include="TfSFacade\RequestContext.cs" />
+    <Compile Include="TfSFacade\WorkItem.cs" />
+    <Compile Include="TfsSpecific\WorkItemChangedEventHandler.cs" />
     <Compile Include="Transition.cs" />
-    <Compile Include="WorkItemChangedEventHandler.cs" />
+    <Compile Include="EventProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkItemHelper.cs" />
   </ItemGroup>
