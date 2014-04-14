@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
+using TFSAggregator.TfsFacade;
 
 namespace TFSAggregator
 {
@@ -27,16 +28,16 @@ namespace TFSAggregator
     /// </summary>
     public class TFSAccess
     {
-        private readonly WorkItemStore _store;
+        private readonly TFS.WorkItemStore _store;
         public TFSAccess(string tfsUri)
         {
             TfsTeamProjectCollection tfs = new TfsTeamProjectCollection(new Uri(tfsUri));
-            _store = (WorkItemStore)tfs.GetService(typeof(WorkItemStore));
+            _store = (TFS.WorkItemStore)tfs.GetService(typeof(TFS.WorkItemStore));
         }
 
         public WorkItem GetWorkItem(int workItemId)
         {
-            return _store.GetWorkItem(workItemId);
+            return new WorkItem(_store.GetWorkItem(workItemId));
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using TFSAggregator.TfsFacade;
 
 namespace TFSAggregator
 {
@@ -58,16 +58,7 @@ namespace TFSAggregator
         /// <returns></returns>
         public static bool AreAllConditionsMet(this List<Condition> conditions, WorkItem workItem)
         {
-            bool areAllTrue = true;
-            foreach (Condition condition in conditions)
-            {
-                if (!condition.Compare(workItem))
-                {
-                    areAllTrue = false;
-                    break;
-                }
-            }
-            return areAllTrue;
+            return AreAllConditionsMet(conditions, workItem, workItem);
         }
 
         /// <summary>

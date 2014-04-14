@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using TFSAggregator.TfsFacade;
 
 namespace TFSAggregator
 {
@@ -30,7 +30,7 @@ namespace TFSAggregator
         {
             object value;
             if (fieldName.EndsWith("WorkItemType", StringComparison.InvariantCultureIgnoreCase))
-                value = item.Type.Name;
+                value = item.TypeName;
             else
                 value = item == null ? null : item[fieldName];
             return value;

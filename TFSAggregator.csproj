@@ -94,6 +94,7 @@
     <Compile Include="TfSFacade\ProcessingResult.cs" />
     <Compile Include="TfSFacade\RequestContext.cs" />
     <Compile Include="TfSFacade\WorkItem.cs" />
+    <Compile Include="TfSFacade\WorkItemLink.cs" />
     <Compile Include="TfsSpecific\WorkItemChangedEventHandler.cs" />
     <Compile Include="Transition.cs" />
     <Compile Include="EventProcessor.cs" />

@@ -38,24 +38,16 @@ namespace TFSAggregator.TfsSpecific
         public EventNotificationStatus ProcessEvent(TeamFoundationRequestContext requestContext, NotificationType notificationType, object notificationEventArgs,
                                                     out int statusCode, out string statusMessage, out ExceptionPropertyCollection properties)
         {
-            var status = EventNotificationStatus.ActionPermitted;
+            var result = new ProcessingResult();
             try
             {
-                var context = new RequestContext(requestContext);
-                var notification = new Notification(notificationType);
-
                 //Check if we have a workitem changed event before proceeding
-                if (notificationType != NotificationType.Notification || !(notificationEventArgs is WorkItemChangedEvent))
+                if (notificationType == NotificationType.Notification && notificationEventArgs is WorkItemChangedEvent)
                 {
-                    return status;
+                    var context = new RequestContext(requestContext);
+                    var notification = new Notification(notificationType, notificationEventArgs as WorkItemChangedEvent);
+                    result = eventProcessor.ProcessEvent(context, notification);
                 }
-
-                ProcessingResult result = eventProcessor.ProcessChangedWorkItem(context, notification, notificationEventArgs);
-
-                status = result.NotificationStatus;
-                statusCode = result.StatusCode;
-                statusMessage = result.StatusMessage;
-                properties = result.Properties;
             }
             catch (Exception e)
             {
@@ -66,7 +58,11 @@ namespace TFSAggregator.TfsSpecific
                 }
                 MiscHelpers.LogMessage(message, true);
             }
-            return status;
+
+            statusCode = result.StatusCode;
+            statusMessage = result.StatusMessage;
+            properties = result.ExceptionProperties;
+            return result.NotificationStatus;
         }
 
         public string Name

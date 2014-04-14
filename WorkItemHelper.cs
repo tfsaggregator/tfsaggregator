@@ -2,50 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System.Text;
+using TFSAggregator.TfsFacade;
+using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace TFSAggregator
 {
     public static class WorkItemHelper
     {
-        /// <summary>
-        /// Try to open the work item.  If an except is thrown then log and suppress it.
-        /// </summary>
-        /// <param name="workItem"></param>
-        public static void TryOpen(this WorkItem workItem)
-        {
-            try
-            {
-                workItem.Open();
-            }
-            catch (Exception e)
-            {
-                MiscHelpers.LogMessage(String.Format("Unable to open work item '{0}'\nException: {1}", workItem.Id.ToString(), e.Message), true);
-            }
-        }
-
-        /// <summary>
-        /// Used to convert a field to a number.  If anything goes wrong then the default value is returned.
-        /// </summary>
-        /// <param name="workItem"></param>
-        /// <param name="fieldName">The name of the field to be retrived</param>
-        /// <param name="defaultValue">Value to be returned if something goes wrong.</param>
-        /// <returns></returns>
-        public static TType GetField<TType>(this WorkItem workItem, string fieldName, TType defaultValue)
-        {
-            try
-            {
-                TType convertedValue = (TType) workItem[fieldName];
-                return convertedValue;
-            }
-            catch (Exception)
-            {
-                return defaultValue;
-            }
-            
-        }
-
         /// <summary>
         /// Gets the workItem's parent from the list (if it is in there) or it will load
         /// it from the tfs store.  We want to use the list if we can so that we can save only
@@ -56,16 +20,15 @@ namespace TFSAggregator
             WorkItem parent;
 
             // See if the parent work item is already in our workItemList (if so just use that one).
-            int targetWorkItemId = (from WorkItemLink workItemLink in childItem.WorkItemLinks
+            int targetWorkItemId = (from TFS.WorkItemLink workItemLink in childItem.WorkItemLinks
                                     where workItemLink.LinkTypeEnd.Name == "Parent"
                                     select workItemLink.TargetId).FirstOrDefault();
 
-            
             parent = workItemList.Where(workItem => workItem.Id == targetWorkItemId).FirstOrDefault();
 
             if (parent == null)
             {
-                parent = (from WorkItemLink workItemLink in childItem.WorkItemLinks
+                parent = (from TFS.WorkItemLink workItemLink in childItem.WorkItemLinks
                                   where workItemLink.LinkTypeEnd.Name == "Parent"
                                   select store.Access.GetWorkItem(workItemLink.TargetId)).FirstOrDefault();
             }
@@ -81,7 +44,7 @@ namespace TFSAggregator
             List<WorkItem> decendants = new List<WorkItem>();
 
             // Go through all the links for the work item passed in (parent)
-            foreach (WorkItemLink link in parent.WorkItemLinks)
+            foreach (TFS.WorkItemLink link in parent.WorkItemLinks)
             {
                 WorkItem childWorkItem;
                 // Find all the child links
@@ -90,7 +53,7 @@ namespace TFSAggregator
                     // If this child link is in the list of items then add it to the result set
                     if (workItemList.Select(x=>x.Id).Contains(link.TargetId))
                     {
-                        WorkItemLink linkClosure = link;
+                        var linkClosure = link;
                         childWorkItem = workItemList.Where(x => x.Id == linkClosure.TargetId).FirstOrDefault();
                     }
                     // if the item was not in our list then get it from the store
@@ -121,7 +84,7 @@ namespace TFSAggregator
             workItem.Fields["State"].Value = state;
 
 
-            if (workItem.Fields["State"].Status != FieldStatus.Valid)
+            if (workItem.Fields["State"].Status != TFS.FieldStatus.Valid)
             {
                 // Revert back to the orginal value and start searching for a way to our "MovedState"
                 workItem.Fields["State"].Value = workItem.Fields["State"].OriginalValue;
@@ -188,7 +151,7 @@ namespace TFSAggregator
         /// <param name="fromState"></param>
         /// <param name="toState"></param>
         /// <returns></returns>
-        public static IEnumerable<string> FindNextState(this WorkItemType wiType, string fromState, string toState)
+        public static IEnumerable<string> FindNextState(this TFS.WorkItemType wiType, string fromState, string toState)
         {
             var map = new Dictionary<string, string>();
             var edges = wiType.GetTransitions().ToDictionary(i => i.From, i => i.To);
@@ -223,7 +186,7 @@ namespace TFSAggregator
             // no path exists
         }
 
-        private static readonly Dictionary<WorkItemType, List<Transition>> _allTransistions = new Dictionary<WorkItemType, List<Transition>>();
+        private static readonly Dictionary<TFS.WorkItemType, List<Transition>> _allTransistions = new Dictionary<TFS.WorkItemType, List<Transition>>();
 
         /// <summary>
         /// Deprecated
@@ -231,7 +194,7 @@ namespace TFSAggregator
         /// </summary>
         /// <param name="workItemType"></param>
         /// <returns></returns>
-        public static List<Transition> GetTransitions(this WorkItemType workItemType)
+        public static List<Transition> GetTransitions(this TFS.WorkItemType workItemType)
         {
             List<Transition> currentTransistions;
 
