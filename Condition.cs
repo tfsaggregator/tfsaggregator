@@ -16,13 +16,23 @@ namespace TFSAggregator
             object value;
             if (fieldName.StartsWith("Source."))
             {
-                value = sourceItem[fieldName.Split('.')[1]];
+                value = workItemFieldValue(fieldName.Split('.')[1], sourceItem);
             }
             else if (fieldName.StartsWith("Parent."))
             {
-                value = parentItem == null ? null : parentItem[fieldName.Split('.')[1]];
+                value = workItemFieldValue(fieldName.Split('.')[1], parentItem);
             }
-            else value = sourceItem[fieldName];
+            else value = workItemFieldValue(fieldName, sourceItem);
+            return value;
+        }
+
+        private static object workItemFieldValue(string fieldName, WorkItem item)
+        {
+            object value;
+            if (fieldName.EndsWith("WorkItemType", StringComparison.InvariantCultureIgnoreCase))
+                value = item.Type.Name;
+            else
+                value = item == null ? null : item[fieldName];
             return value;
         }
 

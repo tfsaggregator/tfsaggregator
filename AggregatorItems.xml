@@ -95,6 +95,7 @@
     <SourceField name="Timesheet Job" />
     <!-- Only if the source field is populated and the target value is different -->
     <Conditions>
+      <Condition leftValue="Feature" operator="EqualTo" rightField="Parent.WorkItemType" />
       <Condition leftValue="" operator="NotEqualTo" rightField="Parent.Timesheet Job" />
       <Condition leftField="Source.Timesheet Job" operator="NotEqualTo" rightField="Parent.Timesheet Job" />
     </Conditions>
@@ -105,6 +106,7 @@
     <TargetField name="Timesheet Job" />
     <SourceField name="ID" />
     <Conditions>
+      <Condition leftValue="Feature" operator="EqualTo" rightField="Parent.WorkItemType" />
       <Condition leftValue="" operator="EqualTo" rightField="Parent.Timesheet Job" />
       <Condition leftField="Source.Timesheet Job" operator="NotEqualTo" rightField="Parent.Timesheet Job" />
     </Conditions>
@@ -116,6 +118,7 @@
     <TargetField name="Timesheet Job" />
     <SourceField name="ID" />
     <Conditions>
+      <Condition leftValue="Feature" operator="EqualTo" rightField="Parent.WorkItemType" />
       <Condition leftValue="" operator="EqualTo" rightField="Parent.Timesheet Job" />
       <Condition leftField="Source.Rev" operator="EqualTo" rightValue="1" />
     </Conditions>
