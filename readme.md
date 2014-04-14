@@ -9,7 +9,7 @@ It enhances the original project in the following ways:
 3. Added a new operation type **CopyTo**. Allows you to change a parent workitem and copy field values into the children.
 4. Added 'Source.' and 'Parent.' prefixes to work item fields to support value comparisons between work items when checking Conditions.
 5. Renamed TargetItem and SourceItem elements in the config file to TargetField and SourceField to improve readability.
-6. Allow comparisons to reference the WorkItemType value.
+6. Allow comparisons to reference the WorkItemType value. (build from source to get this)
 
 CopyFrom and CopyTo both support the new &lt;OutputFormat formatString="{0}" /&gt; element to determine how the value should be formatted in the taregt item.
 
