@@ -87,7 +87,6 @@
     <Compile Include="ConfigTypes\OperationEnum.cs" />
     <Compile Include="ConfigTypes\OperationTypeEnum.cs" />
     <Compile Include="Operations.cs" />
-    <Compile Include="StateManagement.cs" />
     <Compile Include="TFSAccess.cs" />
     <Compile Include="TFSAggregatorSettings.cs" />
     <Compile Include="TfSFacade\Notification.cs" />
