@@ -23,15 +23,24 @@ namespace TFSAggregator
         public const string EventLogSource = "TFSAggregator";
         public const string eventLog = "Application";
 
+        // Provided so we can inject a different set of settings during unit testing
+        public static string SettingsOverride { get; set; }
 
         // Load in the settings from file
         private static void GetSettings()
         {
             _configAggregatorItems = new List<ConfigAggregatorItem>();
-
+            XDocument doc;
             // Load the options
-            string xmlFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), "AggregatorItems.xml");
-            XDocument doc = XDocument.Load(xmlFileName);
+            if (string.IsNullOrEmpty(SettingsOverride))
+            {
+                string xmlFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase), "AggregatorItems.xml");
+                doc = XDocument.Load(xmlFileName);
+            }
+            else
+            {
+                doc = XDocument.Parse(SettingsOverride);
+            }
 
             // Save off the TFS server name
             _tfsUri = doc.Element("AggregatorItems").Attribute("tfsServerUrl").Value;

@@ -23,8 +23,6 @@ namespace TFSAggregator
 
             try
             {
-                // Change this object to be a type we can easily get into
-                //WorkItemChangedEvent ev = notificationEventArgs as WorkItemChangedEvent;
                 // Connect to the setting file and load the location of the TFS server
                 string tfsUri = TFSAggregatorSettings.TFSUri;
                 // Connect to TFS so we are ready to get and send data.

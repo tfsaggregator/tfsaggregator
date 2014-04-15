@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<AggregatorItems tfsServerUrl="http://fakeServer:8080/tfs/DefaultCollection" >
+  <!--Add up the estimated work on the task-->
+  <AggregatorItem name="Sum fields on a single work item" operationType="Numeric" operation="Sum" linkType="Self" workItemType="Task">
+    <TargetItem name="Estimated Work"/>
+    <SourceItem name="Estimated Dev Work"/>
+    <SourceItem name="Estimated Test Work"/>
+  </AggregatorItem>
+</AggregatorItems>
