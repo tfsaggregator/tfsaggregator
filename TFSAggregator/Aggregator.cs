@@ -5,6 +5,7 @@ using System.Text;
 using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 using TFSAggregator.ConfigTypes;
 using TFSAggregator.TfsFacade;
+using TFSAggregator.TfSFacade;
 
 namespace TFSAggregator
 {
@@ -14,7 +15,7 @@ namespace TFSAggregator
         /// Used to acutally do the aggregating.
         /// </summary>
         /// <returns>true if a change was made.  False if not</returns>
-        public static WorkItem Aggregate(WorkItem sourceWorkItem, IEnumerable<WorkItem> sourceWorkItems, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
+        public static IWorkItem Aggregate(IWorkItem sourceWorkItem, IEnumerable<IWorkItem> sourceWorkItems, IWorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
         {
             if (configAggregatorItem.OperationType == OperationTypeEnum.Numeric)
             {
@@ -41,12 +42,12 @@ namespace TFSAggregator
         /// Adds up all the values that need aggregating
         /// </summary>
         /// <returns>true if a change was made.  False if not</returns>
-        private static WorkItem NumericAggregation(IEnumerable<WorkItem> sourceWorkItems, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
+        private static IWorkItem NumericAggregation(IEnumerable<IWorkItem> sourceWorkItems, IWorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
         {
             double aggregateValue = 0;
             // Iterate through all of the work items that we are pulling data from.
             // For link typ of "Self" this will be just one item.  For "Parent" this will be all of the co-children of the work item sent in the event.
-            foreach (WorkItem sourceWorkItem in sourceWorkItems)
+            foreach (var sourceWorkItem in sourceWorkItems)
             {
                 // Iterate through all of the TFS Fields that we are aggregating.
                 foreach (ConfigItemType sourceField in configAggregatorItem.SourceFields)
@@ -70,7 +71,7 @@ namespace TFSAggregator
         /// the Target Field.
         /// </summary>
         /// <returns>true if a change was made.  False if not</returns>
-        private static WorkItem StringAggregation(IEnumerable<WorkItem> sourceWorkItems, WorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
+        private static IWorkItem StringAggregation(IEnumerable<IWorkItem> sourceWorkItems, IWorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
         {
             string aggregateValue = "";
             bool aggregateFound = false;
@@ -90,7 +91,7 @@ namespace TFSAggregator
                 // Iterate through all of the work items that we are pulling data from.
                 // For link typ of "Self" this will be just one item.  For "Parent" this will 
                 // be all of the co-children of the work item sent in the event.
-                foreach (WorkItem sourceWorkItem in sourceWorkItems)
+                foreach (IWorkItem sourceWorkItem in sourceWorkItems)
                 {
                     // Iterate through all of the TFS Fields that we are aggregating.
                     foreach (ConfigItemType sourceField in configAggregatorItem.SourceFields)
@@ -160,7 +161,7 @@ namespace TFSAggregator
         /// Values are copied from the target into the source (the event item)
         /// </summary>
         /// <returns>true if a change was made.  False if not</returns>
-        private static WorkItem CopyFromAggregation(WorkItem childWorkItem, WorkItem parentWorkItem, ConfigAggregatorItem configAggregatorItem)
+        private static IWorkItem CopyFromAggregation(IWorkItem childWorkItem, IWorkItem parentWorkItem, ConfigAggregatorItem configAggregatorItem)
         {
             //Source is the item just updated. It's the one we want to copy values to, not from.
             //It means that this code is a little confusing since source and target have reversed meanings.
@@ -198,7 +199,7 @@ namespace TFSAggregator
         /// Values are copied from the target into the source (the event item)
         /// </summary>
         /// <returns>true if a change was made.  False if not</returns>
-        private static WorkItem CopyToAggregation(WorkItem childWorkItem, WorkItem parentWorkItem, ConfigAggregatorItem configAggregatorItem)
+        private static IWorkItem CopyToAggregation(IWorkItem childWorkItem, IWorkItem parentWorkItem, ConfigAggregatorItem configAggregatorItem)
         {
             var aggregateSourceValues = new List<string>();
 

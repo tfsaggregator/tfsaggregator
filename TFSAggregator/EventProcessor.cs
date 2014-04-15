@@ -4,17 +4,28 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using TFSAggregator.ConfigTypes;
-using TFSAggregator.TfsFacade;
 using TFSAggregator.TfSFacade;
+using TFSAggregator.TfsSpecific;
 
 namespace TFSAggregator
 {
     public class EventProcessor
     {
+        IWorkItemRepository store;
+
+        public EventProcessor() : this(new WorkItemRepository(TFSAggregatorSettings.TFSUri))
+        {
+        }
+
+        public EventProcessor(IWorkItemRepository workItemStore)
+        {
+            this.store = workItemStore;
+        }
+
         /// <summary>
         /// This is the one where all the magic starts.  Main() so to speak.  I will load the settings, connect to tfs and apply the aggregation rules.
         /// </summary>
-        public ProcessingResult ProcessEvent(RequestContext requestContext, Notification notification)
+        public ProcessingResult ProcessEvent(IRequestContext requestContext, INotification notification)
         {
             var result = new ProcessingResult();
             int currentAggregationId = 0;
@@ -23,16 +34,12 @@ namespace TFSAggregator
 
             try
             {
-                // Connect to the setting file and load the location of the TFS server
-                string tfsUri = TFSAggregatorSettings.TFSUri;
-                // Connect to TFS so we are ready to get and send data.
-                Store store = new Store(tfsUri);
                 // Get the id of the work item that was just changed by the user.
                 workItemId = notification.WorkItemId;
                 // Download the work item so we can update it (if needed)
-                WorkItem eventWorkItem = store.Access.GetWorkItem(workItemId);
-                string workItemTypeName = eventWorkItem.TypeName;
-                List<WorkItem> workItemsToSave = new List<WorkItem>();
+                var eventWorkItem = store.GetWorkItem(workItemId);
+                var workItemTypeName = eventWorkItem.TypeName;
+                var workItemsToSave = new List<IWorkItem>();
 
                 if (TFSAggregatorSettings.LoggingIsEnabled)
                 {
@@ -43,8 +50,8 @@ namespace TFSAggregator
                 // Apply the aggregation rules to the work item
                 foreach (ConfigAggregatorItem configAggregatorItem in TFSAggregatorSettings.ConfigAggregatorItems)
                 {
-                    List<WorkItem> sourceWorkItems = null;
-                    WorkItem targetWorkItem = null;
+                    List<IWorkItem> sourceWorkItems = null;
+                    IWorkItem targetWorkItem = null;
                     currentAggregationName = configAggregatorItem.Name;
 
                     var matchableWorkItemTypes = configAggregatorItem.WorkItemType.Split(';');
@@ -58,7 +65,7 @@ namespace TFSAggregator
                         if (configAggregatorItem.LinkType == ConfigLinkTypeEnum.Self)
                         {
                             // We are updating the same workitem that was sent in the event.
-                            sourceWorkItems = new List<WorkItem> { eventWorkItem };
+                            sourceWorkItems = new List<IWorkItem> { eventWorkItem };
                             targetWorkItem = eventWorkItem;
 
                             if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}{0}Aggregation applies to SELF. ({1} {2})", "  ", workItemTypeName, workItemId));
@@ -81,11 +88,11 @@ namespace TFSAggregator
                             bool parentLevelFound = true;
 
                             // Go up the tree till we find the level of parent that we are looking for.
-                            WorkItem parentWorkItem = eventWorkItem;
+                            var parentWorkItem = eventWorkItem;
                             for (int i = 0; i < configAggregatorItem.LinkLevel; i++)
                             {
                                 // Load the parent from the saved list (if we have it in there) or just load it from the store.
-                                WorkItem tempWorkItem = parentWorkItem.GetParentFromListOrStore(workItemsToSave, store);
+                                IWorkItem tempWorkItem = parentWorkItem.GetParentFromListOrStore(workItemsToSave, store);
                                 // 
                                 if (tempWorkItem != null)
                                     parentWorkItem = tempWorkItem;
@@ -101,7 +108,7 @@ namespace TFSAggregator
                                 continue;
                             }
 
-                            if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}{0}Found {1} [{2}] {3} {4} up from {5} [{6}].  Aggregation continues.", "  ", parentWorkItem.Type.Name, parentWorkItem.Id, configAggregatorItem.LinkLevel, configAggregatorItem.LinkLevel > 1 ? "levels" : "level", workItemTypeName, workItemId));
+                            if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}{0}Found {1} [{2}] {3} {4} up from {5} [{6}].  Aggregation continues.", "  ", parentWorkItem.TypeName, parentWorkItem.Id, configAggregatorItem.LinkLevel, configAggregatorItem.LinkLevel > 1 ? "levels" : "level", workItemTypeName, workItemId));
 
                             targetWorkItem = parentWorkItem;
 
@@ -117,12 +124,12 @@ namespace TFSAggregator
                             if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}All conditions for parent aggregation are met", "    "));
 
                             // Get the children down how ever many link levels were specified.
-                            List<WorkItem> iterateFromParents = new List<WorkItem> { targetWorkItem };
+                            var iterateFromParents = new List<IWorkItem> { targetWorkItem };
                             for (int i = 0; i < configAggregatorItem.LinkLevel; i++)
                             {
-                                List<WorkItem> thisLevelOfKids = new List<WorkItem>();
+                                var thisLevelOfKids = new List<IWorkItem>();
                                 // Iterate all the parents to find the children of current set of parents
-                                foreach (WorkItem iterateFromParent in iterateFromParents)
+                                foreach (var iterateFromParent in iterateFromParents)
                                 {
                                     thisLevelOfKids.AddRange(iterateFromParent.GetChildrenFromListOrStore(workItemsToSave, store));
                                 }
@@ -131,24 +138,24 @@ namespace TFSAggregator
                             }
 
                             // remove the kids that are not the right type that we are working with
-                            iterateFromParents.RemoveAll(x => !matchableWorkItemTypes.Contains(x.Type.Name));
+                            iterateFromParents.RemoveAll(x => !matchableWorkItemTypes.Contains(x.TypeName));
                             sourceWorkItems = iterateFromParents;
                         }
                         // We are aggregating to the children
                         else if (configAggregatorItem.LinkType == ConfigLinkTypeEnum.Children)
                         {
-                            WorkItem parentWorkItem = eventWorkItem;
+                            var parentWorkItem = eventWorkItem;
 
                             var targetWorkItemTypes = configAggregatorItem.TargetWorkItemType.Split(';');
 
                             // Get the children down how ever many link levels were specified.
                             // Start at the parent level and then iterate down the work item tree
-                            var currentLevelWorkItems = new List<WorkItem> { parentWorkItem };
+                            var currentLevelWorkItems = new List<IWorkItem> { parentWorkItem };
                             for (int i = 0; i < configAggregatorItem.LinkLevel; i++)
                             {
-                                List<WorkItem> thisLevelOfKids = new List<WorkItem>();
+                                var thisLevelOfKids = new List<IWorkItem>();
                                 // Iterate all the parents to find the children of current set of parents
-                                foreach (WorkItem iterateFromParent in currentLevelWorkItems)
+                                foreach (var iterateFromParent in currentLevelWorkItems)
                                 {
                                     thisLevelOfKids.AddRange(iterateFromParent.GetChildrenFromListOrStore(workItemsToSave, store));
                                 }
@@ -157,7 +164,7 @@ namespace TFSAggregator
                             }
 
                             // remove the kids that are not of the type we want to change.
-                            currentLevelWorkItems.RemoveAll(x => !targetWorkItemTypes.Contains(x.Type.Name));
+                            currentLevelWorkItems.RemoveAll(x => !targetWorkItemTypes.Contains(x.TypeName));
                             sourceWorkItems = currentLevelWorkItems;
 
                             // Make sure that all conditions are true before we do the aggregation
@@ -211,7 +218,7 @@ namespace TFSAggregator
                     {
                         MiscHelpers.LogMessage(String.Format("{0}{0}{0}{1} [{2}] {3} valid to save. {4}",
                                                             "    ",
-                                                            x.Type.Name,
+                                                            x.TypeName,
                                                             x.Id,
                                                             isValid ? "IS" : "IS NOT",
                                                             String.Format("\n{0}{0}{0}{0}Invalid fields: {1}", "    ", MiscHelpers.GetInvalidWorkItemFieldsList(x).ToString())));

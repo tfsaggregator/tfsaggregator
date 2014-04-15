@@ -5,6 +5,8 @@ using System.Xml;
 using System.Text;
 using TFSAggregator.TfsFacade;
 using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
+using TFSAggregator.TfsSpecific;
+using TFSAggregator.TfSFacade;
 
 namespace TFSAggregator
 {
@@ -15,9 +17,9 @@ namespace TFSAggregator
         /// it from the tfs store.  We want to use the list if we can so that we can save only
         /// one time.  (if not we could get conflicts in TFS for several updates to the same item.
         /// </summary>
-        public static WorkItem GetParentFromListOrStore(this WorkItem childItem, IEnumerable<WorkItem> workItemList, Store store)
+        public static IWorkItem GetParentFromListOrStore(this IWorkItem childItem, IEnumerable<IWorkItem> workItemList, IWorkItemRepository store)
         {
-            WorkItem parent;
+            IWorkItem parent;
 
             // See if the parent work item is already in our workItemList (if so just use that one).
             int targetWorkItemId = (from TFS.WorkItemLink workItemLink in childItem.WorkItemLinks
@@ -30,7 +32,7 @@ namespace TFSAggregator
             {
                 parent = (from TFS.WorkItemLink workItemLink in childItem.WorkItemLinks
                                   where workItemLink.LinkTypeEnd.Name == "Parent"
-                                  select store.Access.GetWorkItem(workItemLink.TargetId)).FirstOrDefault();
+                                  select store.GetWorkItem(workItemLink.TargetId)).FirstOrDefault();
             }
 
             return parent;
@@ -39,14 +41,14 @@ namespace TFSAggregator
         /// <summary>
         /// Gets the children of a work item
         /// </summary>
-        public static IEnumerable<WorkItem> GetChildrenFromListOrStore(this WorkItem parent, IEnumerable<WorkItem> workItemList, Store store)
+        public static IEnumerable<IWorkItem> GetChildrenFromListOrStore(this IWorkItem parent, IEnumerable<IWorkItem> workItemList, IWorkItemRepository store)
         {
-            List<WorkItem> decendants = new List<WorkItem>();
+            var decendants = new List<IWorkItem>();
 
             // Go through all the links for the work item passed in (parent)
             foreach (TFS.WorkItemLink link in parent.WorkItemLinks)
             {
-                WorkItem childWorkItem;
+                IWorkItem childWorkItem;
                 // Find all the child links
                 if (link.LinkTypeEnd.Name == "Child")
                 {
@@ -59,7 +61,7 @@ namespace TFSAggregator
                     // if the item was not in our list then get it from the store
                     else
                     {
-                        childWorkItem = store.Access.GetWorkItem(link.TargetId);
+                        childWorkItem = store.GetWorkItem(link.TargetId);
                     }
 
                     decendants.Add(childWorkItem);
@@ -70,7 +72,7 @@ namespace TFSAggregator
         }
         
 
-        public static void TransitionToState(this WorkItem workItem, string state, string commentPrefix)
+        public static void TransitionToState(this IWorkItem workItem, string state, string commentPrefix)
         {
             // Set the sourceWorkItem's state so that it is clear that it has been moved.
             string originalState = (string)workItem.Fields["State"].Value;
@@ -112,7 +114,7 @@ namespace TFSAggregator
 
             }
         }
-        private static bool ChangeWorkItemState(this WorkItem workItem, string orginalSourceState, string destState, String comment)
+        private static bool ChangeWorkItemState(this IWorkItem workItem, string orginalSourceState, string destState, String comment)
         {
             // Try to save the new state.  If that fails then we also go back to the orginal state.
             try
@@ -121,10 +123,10 @@ namespace TFSAggregator
                 workItem.Fields["State"].Value = destState;
                 workItem.History = comment;
 
-                if(TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}{0}{0}{0}Attempting to move {1} [{2}] from {3} state to {4} state. (ChangeWorkItemState)", "  ", workItem.Type.Name, workItem.Id, orginalSourceState, destState));
+                if(TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}{0}{0}{0}Attempting to move {1} [{2}] from {3} state to {4} state. (ChangeWorkItemState)", "  ", workItem.TypeName, workItem.Id, orginalSourceState, destState));
                 if (workItem.IsValid())
                 {
-                    if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}{0}{0}{0}{0}{1} [{2}] is valid to save.", "  ", workItem.Type.Name, workItem.Id));
+                    if (TFSAggregatorSettings.LoggingIsEnabled) MiscHelpers.LogMessage(String.Format("{0}{0}{0}{0}{0}{0}{1} [{2}] is valid to save.", "  ", workItem.TypeName, workItem.Id));
                 }
                 else
                 {
@@ -151,7 +153,7 @@ namespace TFSAggregator
         /// <param name="fromState"></param>
         /// <param name="toState"></param>
         /// <returns></returns>
-        public static IEnumerable<string> FindNextState(this TFS.WorkItemType wiType, string fromState, string toState)
+        public static IEnumerable<string> FindNextState(this IWorkItem workItem, string fromState, string toState)
         {
             var map = new Dictionary<string, string>();
             var edges = wiType.GetTransitions().ToDictionary(i => i.From, i => i.To);

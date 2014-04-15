@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using TFSAggregator.TfsFacade;
+using TFSAggregator.TfSFacade;
 
 namespace TFSAggregator
 {
@@ -12,7 +13,7 @@ namespace TFSAggregator
     {
         static string runSeparator = new string('-', 80);
 
-        public static void AddIfUnique(this List<WorkItem> workItemList, WorkItem workItem)
+        public static void AddIfUnique(this List<IWorkItem> workItemList, IWorkItem workItem)
         {
             if (workItemList.Where(x=>x.Id == workItem.Id).Count() == 0)
                 workItemList.Add(workItem);
@@ -56,7 +57,7 @@ namespace TFSAggregator
         /// <param name="conditions"></param>
         /// <param name="workItem"></param>
         /// <returns></returns>
-        public static bool AreAllConditionsMet(this List<Condition> conditions, WorkItem workItem)
+        public static bool AreAllConditionsMet(this List<Condition> conditions, IWorkItem workItem)
         {
             return AreAllConditionsMet(conditions, workItem, workItem);
         }
@@ -67,7 +68,7 @@ namespace TFSAggregator
         /// <param name="conditions"></param>
         /// <param name="workItem"></param>
         /// <returns></returns>
-        public static bool AreAllConditionsMet(this List<Condition> conditions, WorkItem sourceItem, WorkItem parentItem)
+        public static bool AreAllConditionsMet(this List<Condition> conditions, IWorkItem sourceItem, IWorkItem parentItem)
         {
             bool areAllTrue = true;
             foreach (Condition condition in conditions)
@@ -113,7 +114,7 @@ namespace TFSAggregator
             Diagnostic
         }
 
-        public static StringBuilder GetInvalidWorkItemFieldsList(WorkItem wi)
+        public static StringBuilder GetInvalidWorkItemFieldsList(IWorkItem wi)
         {
             StringBuilder sb = new StringBuilder();
             if (wi.IsValid())

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace TFSAggregator.TfSFacade
 {
-    public class Notification
+    public class NotificationWrapper : INotification
     {
         private NotificationType notification;
         private WorkItemChangedEvent eventArgs;
-        public Notification(NotificationType notification, WorkItemChangedEvent eventArgs)
+        public NotificationWrapper(NotificationType notification, WorkItemChangedEvent eventArgs)
         {
             this.notification = notification;
             this.eventArgs = eventArgs;

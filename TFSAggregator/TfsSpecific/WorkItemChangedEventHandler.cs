@@ -44,8 +44,8 @@ namespace TFSAggregator.TfsSpecific
                 //Check if we have a workitem changed event before proceeding
                 if (notificationType == NotificationType.Notification && notificationEventArgs is WorkItemChangedEvent)
                 {
-                    var context = new RequestContext(requestContext);
-                    var notification = new Notification(notificationType, notificationEventArgs as WorkItemChangedEvent);
+                    var context = new RequestContextWrapper(requestContext);
+                    var notification = new NotificationWrapper(notificationType, notificationEventArgs as WorkItemChangedEvent);
                     result = eventProcessor.ProcessEvent(context, notification);
                 }
             }

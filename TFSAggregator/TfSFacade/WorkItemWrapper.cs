@@ -4,22 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TFSAggregator.TfSFacade;
 using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 
 namespace TFSAggregator.TfsFacade
 {
-    public class WorkItem
+    public class WorkItemWrapper : IWorkItem
     {
         private TFS.WorkItem workItem;
-        public WorkItem(TFS.WorkItem workItem)
+        public WorkItemWrapper(TFS.WorkItem workItem)
         {
             this.workItem = workItem;
         }
 
         public string TypeName { get {return workItem.Type.Name;}}
-
-        public TFS.WorkItemType Type { get { return workItem.Type; } }
 
         public string History { 
             get { return workItem.History; }
@@ -97,6 +96,5 @@ namespace TFSAggregator.TfsFacade
                 return defaultValue;
             }
         }
-
     }
 }

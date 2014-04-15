@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace TFSAggregator.TfSFacade
 {
-    public class RequestContext
+    public class RequestContextWrapper : IRequestContext
     {
         private TeamFoundationRequestContext context;
-        public RequestContext(TeamFoundationRequestContext context)
+        public RequestContextWrapper(TeamFoundationRequestContext context)
         {
             this.context = context;
         }

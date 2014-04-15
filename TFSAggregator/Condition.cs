@@ -1,5 +1,6 @@
 ﻿using System;
 using TFSAggregator.TfsFacade;
+using TFSAggregator.TfSFacade;
 
 namespace TFSAggregator
 {
@@ -11,7 +12,7 @@ namespace TFSAggregator
         public string RightValue { get; set; }
         public string RightFieldName { get; set; }
 
-        private object getFieldValue(string fieldName, WorkItem sourceItem, WorkItem parentItem = null)
+        private object getFieldValue(string fieldName, IWorkItem sourceItem, IWorkItem parentItem = null)
         {
             object value;
             if (fieldName.StartsWith("Source."))
@@ -26,7 +27,7 @@ namespace TFSAggregator
             return value;
         }
 
-        private static object workItemFieldValue(string fieldName, WorkItem item)
+        private static object workItemFieldValue(string fieldName, IWorkItem item)
         {
             object value;
             if (fieldName.EndsWith("WorkItemType", StringComparison.InvariantCultureIgnoreCase))
@@ -42,7 +43,7 @@ namespace TFSAggregator
         /// </summary>
         /// <param name="workItem"></param>
         /// <returns></returns>
-        public bool Compare(WorkItem sourceItem, WorkItem parentItem=null)
+        public bool Compare(IWorkItem sourceItem, IWorkItem parentItem=null)
         {
             object leftSideValue;
             object rightSideValue;
@@ -90,7 +91,7 @@ namespace TFSAggregator
             }
         }
 
-        private void GetValues<T>(WorkItem workItem, out T leftValue, out T rightValue) where T : IConvertible
+        private void GetValues<T>(IWorkItem workItem, out T leftValue, out T rightValue) where T : IConvertible
         {
             leftValue = (T)workItem[LeftFieldName];
             if (RightValue != null)
