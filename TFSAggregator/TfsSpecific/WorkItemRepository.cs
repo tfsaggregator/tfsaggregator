@@ -2,7 +2,9 @@
 using Microsoft.TeamFoundation.Client;
 using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 using TFSAggregator.TfsFacade;
-using TFSAggregator.TfSFacade;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using System.Collections.Generic;
+using System.Xml;
 
 namespace TFSAggregator.TfsSpecific
 {

@@ -1,6 +1,5 @@
 ﻿using System;
 using TFSAggregator.TfsFacade;
-using TFSAggregator.TfSFacade;
 
 namespace TFSAggregator
 {

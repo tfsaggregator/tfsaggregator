@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using TFSAggregator.TfsFacade;
-using TFSAggregator.TfSFacade;
+
 namespace TFSAggregator.TfsSpecific
 {
     public interface IWorkItemRepository

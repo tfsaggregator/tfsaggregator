@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TFSAggregator.TfSFacade
+namespace TFSAggregator.TfsFacade
 {
     public class RequestContextWrapper : IRequestContext
     {

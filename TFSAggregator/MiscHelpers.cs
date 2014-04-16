@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using TFSAggregator.TfsFacade;
-using TFSAggregator.TfSFacade;
 
 namespace TFSAggregator
 {

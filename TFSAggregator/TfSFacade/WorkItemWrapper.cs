@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TFSAggregator.TfSFacade;
+using TFSAggregator.TfsFacade;
 using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 
@@ -17,6 +17,8 @@ namespace TFSAggregator.TfsFacade
         {
             this.workItem = workItem;
         }
+
+        public TFS.WorkItemType Type { get { return workItem.Type; } }
 
         public string TypeName { get {return workItem.Type.Name;}}
 

@@ -5,7 +5,7 @@ using System.Text;
 using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 using TFSAggregator.ConfigTypes;
 using TFSAggregator.TfsFacade;
-using TFSAggregator.TfSFacade;
+using TFSAggregator;
 
 namespace TFSAggregator
 {

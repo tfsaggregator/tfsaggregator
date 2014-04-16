@@ -6,11 +6,10 @@ using System.Text;
 using TFSAggregator.TfsFacade;
 using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 using TFSAggregator.TfsSpecific;
-using TFSAggregator.TfSFacade;
 
 namespace TFSAggregator
 {
-    public static class WorkItemHelper
+    public static class TfsWorkItemExtensions
     {
         /// <summary>
         /// Gets the workItem's parent from the list (if it is in there) or it will load
@@ -70,9 +69,8 @@ namespace TFSAggregator
             
             return decendants;
         }
-        
 
-        public static void TransitionToState(this IWorkItem workItem, string state, string commentPrefix)
+        public static void TransitionToState(this TFSAggregator.TfsFacade.IWorkItem workItem, string state, string commentPrefix)
         {
             // Set the sourceWorkItem's state so that it is clear that it has been moved.
             string originalState = (string)workItem.Fields["State"].Value;
@@ -92,7 +90,7 @@ namespace TFSAggregator
                 workItem.Fields["State"].Value = workItem.Fields["State"].OriginalValue;
 
                 // If we can't then try to go from the current state to another state.  Saving each time till we get to where we are going.
-                foreach (string curState in workItem.Type.FindNextState((string)workItem.Fields["State"].Value, state))
+                foreach (string curState in workItem.FindNextState((string)workItem.Fields["State"].Value, state))
                 {
                     string comment;
                     if (curState == state)
@@ -113,7 +111,9 @@ namespace TFSAggregator
                 ChangeWorkItemState(workItem, originalState, state, comment);
 
             }
+
         }
+        
         private static bool ChangeWorkItemState(this IWorkItem workItem, string orginalSourceState, string destState, String comment)
         {
             // Try to save the new state.  If that fails then we also go back to the orginal state.
@@ -156,7 +156,7 @@ namespace TFSAggregator
         public static IEnumerable<string> FindNextState(this IWorkItem workItem, string fromState, string toState)
         {
             var map = new Dictionary<string, string>();
-            var edges = wiType.GetTransitions().ToDictionary(i => i.From, i => i.To);
+            var edges = workItem.GetTransitions().ToDictionary(i => i.From, i => i.To);
             var q = new Queue<string>();
             map.Add(fromState, null);
             q.Enqueue(fromState);
@@ -188,7 +188,7 @@ namespace TFSAggregator
             // no path exists
         }
 
-        private static readonly Dictionary<TFS.WorkItemType, List<Transition>> _allTransistions = new Dictionary<TFS.WorkItemType, List<Transition>>();
+        private static readonly Dictionary<string, IEnumerable<Transition>> _allTransistions = new Dictionary<string, IEnumerable<Transition>>();
 
         /// <summary>
         /// Deprecated
@@ -196,26 +196,29 @@ namespace TFSAggregator
         /// </summary>
         /// <param name="workItemType"></param>
         /// <returns></returns>
-        public static List<Transition> GetTransitions(this TFS.WorkItemType workItemType)
+        public static IEnumerable<Transition> GetTransitions(this IWorkItem workItem)
         {
-            List<Transition> currentTransistions;
+            var wi = workItem as WorkItemWrapper;
+            var wiType = wi.Type;
+
+            IEnumerable<Transition> currentTransistions;
 
             // See if this WorkItemType has already had it's transistions figured out.
-            _allTransistions.TryGetValue(workItemType, out currentTransistions);
+            _allTransistions.TryGetValue(workItem.TypeName, out currentTransistions);
             if (currentTransistions != null)
                 return currentTransistions;
 
             // Get this worktype type as xml
-            XmlDocument workItemTypeXml = workItemType.Export(false);
+            var workItemTypeXml = wiType.Export(false);
 
             // Create a dictionary to allow us to look up the "to" state using a "from" state.
             var newTransistions = new List<Transition>();
 
             // get the transistions node.
-            XmlNodeList transitionsList = workItemTypeXml.GetElementsByTagName("TRANSITIONS");
+            var transitionsList = workItemTypeXml.GetElementsByTagName("TRANSITIONS");
 
             // As there is only one transistions item we can just get the first
-            XmlNode transitions = transitionsList[0];
+            var transitions = transitionsList[0];
 
             // Iterate all the transitions
             foreach (XmlNode transitionXML in transitions)
@@ -240,7 +243,7 @@ namespace TFSAggregator
             }
 
             // Save off this transition so we don't do it again if it is needed.
-            _allTransistions.Add(workItemType, newTransistions);
+            _allTransistions.Add(workItem.TypeName, newTransistions);
 
             return newTransistions;
         }

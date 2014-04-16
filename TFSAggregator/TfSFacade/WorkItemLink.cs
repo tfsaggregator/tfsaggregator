@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 
-namespace TFSAggregator.TfSFacade
+namespace TFSAggregator.TfsFacade
 {
     public class WorkItemLink
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace TFSAggregator.TfSFacade
+namespace TFSAggregator.TfsFacade
 {
     public interface INotification
     {

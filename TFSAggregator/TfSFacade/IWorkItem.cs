@@ -1,7 +1,7 @@
 ﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using System;
 using System.Collections;
-namespace TFSAggregator.TfSFacade
+namespace TFSAggregator.TfsFacade
 {
     public interface IWorkItem
     {

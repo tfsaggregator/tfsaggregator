@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using TFSAggregator.ConfigTypes;
-using TFSAggregator.TfSFacade;
+using TFSAggregator.TfsFacade;
 using TFSAggregator.TfsSpecific;
 
 namespace TFSAggregator

@@ -1,11 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TFSAggregator;
-using TFSAggregator.TfSFacade;
+using TFSAggregator.TfsFacade;
 using Microsoft.TeamFoundation.Framework.Server;
 using NSubstitute;
 using TFSAggregator.TfsSpecific;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace UnitTests
 {

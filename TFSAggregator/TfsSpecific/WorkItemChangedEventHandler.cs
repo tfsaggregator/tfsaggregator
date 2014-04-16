@@ -9,7 +9,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.Server;
 using System.Text;
 using TFSAggregator.ConfigTypes;
 using WorkItem = Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItem;
-using TFSAggregator.TfSFacade;
+using TFSAggregator.TfsFacade;
 
 namespace TFSAggregator.TfsSpecific
 {
