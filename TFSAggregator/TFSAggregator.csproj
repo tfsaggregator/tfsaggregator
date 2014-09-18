@@ -83,6 +83,8 @@
     <Compile Include="ConfigTypes\ConfigItemType.cs" />
     <Compile Include="ConfigTypes\ConfigLinkType.cs" />
     <Compile Include="ConfigTypes\Mapping.cs" />
+    <Compile Include="TfsFacade\FieldCollectionWrapper.cs" />
+    <Compile Include="TfsFacade\FieldWrapper.cs" />
     <Compile Include="TfsFacade\IWorkItem.cs" />
     <Compile Include="TfsSpecific\IWorkItemRepository.cs" />
     <Compile Include="MiscHelpers.cs" />

@@ -5,19 +5,39 @@ using TFSAggregator.TfsFacade;
 using Microsoft.TeamFoundation.Framework.Server;
 using NSubstitute;
 using TFSAggregator.TfsSpecific;
+using System.Linq;
+using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace UnitTests
 {
     [TestClass]
     public class SingleParentChildAggregations
     {
+        private IWorkItemRepository repository;
+        private IWorkItem workItem;
+
         private IWorkItemRepository SetupFakeRepository()
         {
-            var repository = Substitute.For<IWorkItemRepository>();
+            repository = Substitute.For<IWorkItemRepository>();
 
-            var workItem = Substitute.For<IWorkItem>();
+            workItem = Substitute.For<IWorkItem>();
+            //workItem.Fields.Returns(Substitute.For<IFieldCollectionWrapper>());
+            var estWorkField = Substitute.For<IFieldWrapper>();
+            workItem.Fields["EstimatedWork"] = estWorkField;
             workItem.Id.Returns(1);
+            double fieldValue = 0.0D;
+            var f = workItem.Fields;
+            var x = workItem.Fields["Estimated Work"];
+            workItem.Fields["Estimated Work"].Value = fieldValue;
+
+            workItem.When(w => w[Arg.Any<string>()] = Arg.Any<Double>())
+                .Do(c => {
+                    workItem.Fields[(string)c[0]].Value = (double)c[1];
+                });
+            workItem.GetField("Estimated Dev Work",0.0D).Returns(1.0D);
+            workItem.GetField("Estimated Test Work",0.0D).Returns(2.0D);
             workItem.TypeName.Returns("Task");
+            workItem.IsValid().Returns(true);
 
             repository.GetWorkItem(1).Returns(workItem);
 
@@ -37,7 +57,10 @@ namespace UnitTests
             notification.WorkItemId.Returns(1);
 
             var result = processor.ProcessEvent(context, notification);
-            Assert.AreEqual(result.NotificationStatus, EventNotificationStatus.ActionApproved);
+            Assert.AreEqual(0, result.ExceptionProperties.Count());
+            workItem.Received().Save();
+            Assert.AreEqual(3.0D, workItem.Fields["Estimated Work"].Value);
+            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
         }
     }
 }

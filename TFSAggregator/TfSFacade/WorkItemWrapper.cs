@@ -20,9 +20,10 @@ namespace TFSAggregator.TfsFacade
 
         public TFS.WorkItemType Type { get { return workItem.Type; } }
 
-        public string TypeName { get {return workItem.Type.Name;}}
+        public string TypeName { get { return workItem.Type.Name; } }
 
-        public string History { 
+        public string History
+        {
             get { return workItem.History; }
             set { workItem.History = value; }
         }
@@ -47,7 +48,12 @@ namespace TFSAggregator.TfsFacade
             }
         }
 
-        public TFS.FieldCollection Fields { get { return workItem.Fields; } }
+        public IFieldCollectionWrapper Fields
+        {
+            get {
+                return new FieldCollectionWrapper(workItem.Fields); 
+            }
+        }
 
         public bool IsValid() { return workItem.IsValid(); }
 

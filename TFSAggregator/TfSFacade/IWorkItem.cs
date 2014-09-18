@@ -5,7 +5,7 @@ namespace TFSAggregator.TfsFacade
 {
     public interface IWorkItem
     {
-        FieldCollection Fields { get; }
+        IFieldCollectionWrapper Fields { get; }
         TType GetField<TType>(string fieldName, TType defaultValue);
         string History { get; set; }
         int Id { get; }

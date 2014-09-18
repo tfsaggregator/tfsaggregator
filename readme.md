@@ -13,7 +13,7 @@ It enhances the original project in the following ways:
 
 CopyFrom and CopyTo both support the new &lt;OutputFormat formatString="{0}" /&gt; element to determine how the value should be formatted in the taregt item.
 
-In the sample config XML for the CopyFrom and CopyTo operations, a custom field 'Timesheet Job' was added to show how you might use this. The intent would be that in child work items the Timesheet fiels is readonly (except for the TFSService) and channging the timesheet on a feature would cascade changes to the children.
+In the sample config XML for the CopyFrom and CopyTo operations, a custom field 'Timesheet Job' was added to show how you might use this. The intent would be that in child work items the Timesheet field is readonly (except for the TFSService account) and channging the timesheet on a feature would cascade changes to the children.
 
 ####Installation
 

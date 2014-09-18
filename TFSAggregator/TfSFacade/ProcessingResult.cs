@@ -13,7 +13,7 @@ namespace TFSAggregator.TfsFacade
         public ProcessingResult()
         {
             StatusCode = 0;
-            ExceptionProperties = null;
+            ExceptionProperties = new ExceptionPropertyCollection();
             StatusMessage = String.Empty;
             NotificationStatus = EventNotificationStatus.ActionPermitted;
         }
