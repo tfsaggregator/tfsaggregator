@@ -70,14 +70,10 @@ namespace TFSAggregator
                 }
                 if (leftType == typeof(double))
                 {
-                    //double leftValue, rightValue;
-                    //GetValues(workItem, out leftValue, out rightValue);
                     return CompOperator.Compare((double)leftSideValue, (double)rightSideValue);
                 }
                 if (leftType == typeof(DateTime))
                 {
-                    //DateTime leftValue, rightValue;
-                    //GetValues(workItem, out leftValue, out rightValue);
                     return CompOperator.Compare((DateTime)leftSideValue, (DateTime)rightSideValue);
                 }
 

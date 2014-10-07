@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TFSAggregator;
 using TFSAggregator.TfsFacade;
-using Microsoft.TeamFoundation.Framework.Server;
 using NSubstitute;
 using TFSAggregator.TfsSpecific;
 using System.Linq;
@@ -10,6 +9,8 @@ using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace UnitTests
 {
+    using Microsoft.TeamFoundation.Framework.Server;
+
     [TestClass]
     public class SingleParentChildAggregations
     {
