@@ -3,6 +3,8 @@ using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace TFSAggregator
 {
+    using TfsAggregator;
+
     public enum ComparisionOperator
     {
         LessThan,
@@ -26,6 +28,27 @@ namespace TFSAggregator
                     return leftSide != rightSide;
                 default:
                     return leftSide == rightSide;
+            }
+        }
+
+        public static bool Compare(this ComparisionOperator oper, double leftSide, double rightSide)
+        {
+            switch (oper)
+            {
+                case ComparisionOperator.LessThan:
+                    return leftSide.SafeCompareTo(rightSide) < 0;
+                case ComparisionOperator.GreaterThan:
+                    return leftSide.SafeCompareTo(rightSide) > 0;
+                case ComparisionOperator.LessThanOrEqualTo:
+                    return leftSide.SafeCompareTo(rightSide) <= 0;
+                case ComparisionOperator.GreaterThanOrEqualTo:
+                    return leftSide.SafeCompareTo(rightSide) >= 0;
+                case ComparisionOperator.EqualTo:
+                    return leftSide.SafeEquals(rightSide);
+                case ComparisionOperator.NotEqualTo:
+                    return !leftSide.SafeEquals(rightSide);
+                default:
+                    throw new ArgumentOutOfRangeException("oper");
             }
         }
 

@@ -9,6 +9,8 @@ using TFSAggregator;
 
 namespace TFSAggregator
 {
+    using TfsAggregator;
+
     public static class Aggregator
     {
         /// <summary>
@@ -46,7 +48,7 @@ namespace TFSAggregator
         {
             double aggregateValue = 0;
             // Iterate through all of the work items that we are pulling data from.
-            // For link typ of "Self" this will be just one item.  For "Parent" this will be all of the co-children of the work item sent in the event.
+            // For link type of "Self" this will be just one item.  For "Parent" this will be all of the co-children of the work item sent in the event.
             foreach (var sourceWorkItem in sourceWorkItems)
             {
                 // Iterate through all of the TFS Fields that we are aggregating.
@@ -57,7 +59,8 @@ namespace TFSAggregator
                 }
             }
 
-            if (aggregateValue != targetWorkItem.GetField<double>(configAggregatorItem.TargetField.Name, 0))
+            double currentValue = targetWorkItem.GetField<double>(configAggregatorItem.TargetField.Name, 0);
+            if (!aggregateValue.SafeEquals(currentValue))
             {
                 targetWorkItem[configAggregatorItem.TargetField.Name] = aggregateValue;
                 return targetWorkItem;

@@ -3,6 +3,8 @@ using TFSAggregator.ConfigTypes;
 
 namespace TFSAggregator
 {
+    using TfsAggregator;
+
     public static class Operations
     {
     
@@ -14,7 +16,7 @@ namespace TFSAggregator
                 return aggregateValue - sourceValue;
             if (operation == OperationEnum.Multiply)
             {
-                if  (aggregateValue == 0.0D)
+                if (aggregateValue.SafeEquals(0.0d))
                 {
                     aggregateValue = +1;
                 }
@@ -22,7 +24,7 @@ namespace TFSAggregator
             }
             if (operation == OperationEnum.Divide)
             {
-                if (aggregateValue == 0.0D)
+                if (aggregateValue.SafeEquals(0.0d))
                 {
                     aggregateValue = +1;
                     return (sourceValue / aggregateValue);
