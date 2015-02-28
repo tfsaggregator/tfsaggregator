@@ -1,40 +1,59 @@
-###Overview
 
-This is a fork of http://tfsaggregator.codeplex.com.
+[![Build status](https://ci.appveyor.com/api/projects/status/8xecaabbs9r4prmt)](https://ci.appveyor.com/project/giuliov/tfs-aggregator)
 
-It enhances the original project in the following ways:
+This server side plugin for TFS 2010/2012/2013 enables dynamic calculation of field values in TFS.
+(For example: Dev work + Test Work = Total Work). It supports same work item and parent-child links.
+It also has support for aggregating string values (i.e. Children are Done so the parent is Done).
 
-1. Multiple WorkItem Types are now supported. Separate them with a semicolon (;).
-2. Added a new operation type **CopyFrom**. Allows you to copy a field value from the parent onto a changed work item.
-3. Added a new operation type **CopyTo**. Allows you to change a parent workitem and copy field values into the children.
-4. Added 'Source.' and 'Parent.' prefixes to work item fields to support value comparisons between work items when checking Conditions.
-5. Renamed TargetItem and SourceItem elements in the config file to TargetField and SourceField to improve readability.
-6. Allow comparisons to reference the WorkItemType value. (build from source to get this)
+Because this is a server side plug-in, it is **very fast**.
+The very first aggregation takes about 7-10 seconds (as it caches connection information).
+After that updates usually take place faster than you can refresh your client.
 
-CopyFrom and CopyTo both support the new &lt;OutputFormat formatString="{0}" /&gt; element to determine how the value should be formatted in the taregt item.
+Example Uses
+================================================
 
-In the sample config XML for the CopyFrom and CopyTo operations, a custom field 'Timesheet Job' was added to show how you might use this. The intent would be that in child work items the Timesheet field is readonly (except for the TFSService account) and channging the timesheet on a feature would cascade changes to the children.
+ - Update the state of a Bug, PBI (or any parent) to "In Progress" when a child gets moved to "In Progress"
+ - Update the state of a Bug, PBI (or any parent) to "Done" when all children get moved to "Done" or "Removed"
+ - Update the "Work Remaining" on a Bug, PBI, etc with the sum of all the Task's "Work Remaining".
+ - Update the "Work Remaining" on a Sprint with the sum of all the "Work Remaining" of its grandchildren (i.e. tasks of the PBIs and Bugs in the Sprint).
+ - Sum up totals on a single work item (ie Dev Estimate + Test Estimate = Total Estimate)
 
-####Installation
+Setup
+================================================
 
-Requires TFS2013.
+ 1. Download and extract the binaries from the latest release
+ 2. Open up AggregatorItems.xml and change the example settings to your actual settings.
+    - See AggregatorItems.xml Options below to find out how to correctly customize your AggregatorItems.xml file to fit your needs.
 
-Copy TFSAggregator.dll and AggregatorItems.xml to the plugin folder of your Application Tier. This is usually at C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins
+Installation
+================================================
 
-Be aware that changing files in the Plugins folder will cause the TFS App Pool to recycle.
+ 1. Copy TFSAggregator.dll and AggregatorItems.xml to the plugin location on the Application Tier of your TFS Server
+     - The plugin folder is usually at this path: `C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins`
 
-####Developers
 
-To build this project you will need to copy a few files from your TFS server (they're non-redistributable, sorry)
+That is all. TFS will detect that a file was copied in and will load it in.
 
-You're looking for:
-- Microsoft.TeamFoundation.Framework.Server.dll
-- Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll
-- Microsoft.TeamFoundation.WorkItemTracking.Server.dll
+Troubleshooting
+================================================
+Is it not working? Here is the troubleshooting and how to get help page: [TFS Aggregator Troubleshooting](docs/Troubleshooting.md)
 
-For the best development experience, use a TFS2013 VM with VS2013 installed and work directly on the machine.
 
-You can then set the output folder for the project to 
-C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins\
+AggregatorItems.xml Options
+================================================
+See the [Syntax](docs/AggregatorItems-Syntax.md) page.
+For some [Example Aggregations](docs/Example-Aggregations.md).
 
-You can also debug by attaching to the w3wp.exe on the server and setting breakpoints as you would normally.
+Future Features
+================================================
+These are a list of features I would like to see in TFS Aggregator.
+I don't really need them so they have not made the cut yet.
+If this turns out to be a tool that others use and they vote for some of the items below then they may get added at some point.
+
+ -  Parent To Child Aggregations.
+     -  This would be useful so that when a work item (i.e. PBI/Bug) gets its iteration changed then the TFS Aggregator could change the children to that iteration too.
+ -  Make an editor for the options file.
+ -  More than one type allowed in workItemType on AggregatorItem.
+ -  More support for conditions (allowing differentials). For example having Today - 5 days.
+ -  Find a way to filter out repeat messages without having to re-do the aggregation.
+    -   A successful aggregations makes changes. That causes the aggregation code to fire again. The second time through it sees that no changes need to be made (because the totals are already right). But it would be nice to have a way to see that up front and not do it again.

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration logLevel="Diagnostic">
+
+    <!-- Add up the estimated work on the task -->
+    <rule name="CalcEstimated"
+          appliesTo="Task">
+        $self.Field['Estimated Work'] = $self.Field['Estimated Dev Work'] + $self.Field['Estimated Test Work']
+        $self.Field['Remaining Work'] = $self.Field['Remaining Dev Work'] + $self.Field['Remaining Test Work']
+    </rule>
+
+    <policy name="DefaultPolicy">
+        <collectionScope collections="*" />
+        <ruleRef name="CalcEstimated" />
+    </policy>
+
+</AggregatorConfiguration>
