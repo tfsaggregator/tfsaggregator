@@ -21,5 +21,7 @@ namespace Aggregator.Core
     {
         void WorkItemWrapperTryOpenException(IWorkItem workItem, Exception e);
         void ResultsFromScriptRun(string scriptName, System.Collections.ObjectModel.Collection<System.Management.Automation.PSObject> results);
+        void ResultsFromScriptRun(string scriptName, object result);
+        void ScriptHasError(string scriptName, int line, int column, string errorCode, string errorText);
     }
 }

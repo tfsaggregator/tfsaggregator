@@ -10,22 +10,14 @@ namespace Aggregator.Core
     /// <summary>
     /// Invokes Powershell scripting engine
     /// </summary>
-    public class ScriptEngine
+    public class PsScriptEngine : ScriptEngine
     {
-        ILogEvents logger;
-        private string scriptName;
-        private string script;
-        private IWorkItemRepository store;
-
-        public ScriptEngine(string scriptName, string script, IWorkItemRepository store, ILogEvents logger)
+        public PsScriptEngine(string scriptName, string script, IWorkItemRepository store, ILogEvents logger)
+            : base(scriptName, script, store, logger)
         {
-            this.logger = logger;
-            this.scriptName = scriptName;
-            this.script = script;
-            this.store = store;
         }
 
-        public void Run(IWorkItem workItem)
+        override public void Run(IWorkItem workItem)
         {
             var config = RunspaceConfiguration.Create();
             using (var runspace = RunspaceFactory.CreateRunspace(config))

@@ -43,5 +43,19 @@ namespace Aggregator.ServerPlugin
                     "Exception encountered processing notification: {0} \nStack Trace:{1}", e.Message, e.StackTrace);
             }
         }
+
+
+        public void ResultsFromScriptRun(string scriptName, object result)
+        {
+            Log(LogLevel.Verbose, "Output from script {0}: {1}", scriptName, result);
+        }
+
+
+        public void ScriptHasError(string scriptName, int line, int column, string errorCode, string errorText)
+        {
+            Log(LogLevel.Error,
+                "Error {3} in script {0} at line {1}, column {2}: {4}",
+                scriptName, line, column, errorCode, errorText);
+        }
     }
 }

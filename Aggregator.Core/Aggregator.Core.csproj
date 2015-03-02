@@ -78,6 +78,8 @@
     <Compile Include="Facade\NotificationWrapper.cs" />
     <Compile Include="Facade\RequestContextWrapper.cs" />
     <Compile Include="ILogEvents.cs" />
+    <Compile Include="Script\CsScriptEngine.cs" />
+    <Compile Include="Script\ScriptEngine.cs" />
     <Compile Include="WorkItemLazyReference.cs" />
     <Compile Include="Interfaces\IFieldCollectionWrapper.cs" />
     <Compile Include="Interfaces\IFieldWrapper.cs" />
@@ -90,7 +92,7 @@
     <Compile Include="Facade\WorkItemRepository.cs" />
     <Compile Include="Facade\WorkItemWrapper.cs" />
     <Compile Include="Configuration\TFSAggregatorSettings.cs" />
-    <Compile Include="ScriptEngine.cs" />
+    <Compile Include="Script\PsScriptEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

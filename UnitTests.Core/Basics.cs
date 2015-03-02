@@ -22,30 +22,51 @@ namespace UnitTests.Core
         }
 
         [TestMethod]
-        public void Can_execute_a_script_interacting_with_an_object_model()
+        [TestCategory("CSharpScript")]
+        public void CS__Can_run_a_script_interacting_with_an_object_model()
         {
-            //string script = @" $self.Fields[""z""].Value ";
-            string script = @" $z = $self.Fields['z']; $z.Value ";
+            string script = @" return self.Fields[""z""].Value; ";
             var repository = Substitute.For<IWorkItemRepository>();
             var workItem = Substitute.For<IWorkItem>();
             workItem.Id.Returns(1);
             workItem.Fields["z"].Value.Returns(42);
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new ScriptEngine("test", script, repository, logger);
+            var engine = new CsScriptEngine("test", script, repository, logger);
             //sanity check
             Assert.AreEqual(42, workItem.Fields["z"].Value);
 
             engine.Run(workItem);
 
-            /*var expected = new System.Collections.ObjectModel.Collection<System.Management.Automation.PSObject>();
-            expected.Add(new System.Management.Automation.PSObject(42));
+            var expected = 42;
             logger.Received().ResultsFromScriptRun("test", expected);
-             */
         }
 
         [TestMethod]
-        public void Can_execute_a_noop_rule()
+        [TestCategory("Powershell")]
+        public void PS__Can_run_a_script_interacting_with_an_object_model()
+        {
+            string script = @" $self.Fields[""z""].Value ";
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            workItem.Id.Returns(1);
+            workItem.Fields["z"].Value.Returns(42);
+            repository.GetWorkItem(1).Returns(workItem);
+            var logger = Substitute.For<ILogEvents>();
+            var engine = new PsScriptEngine("test", script, repository, logger);
+            //sanity check
+            Assert.AreEqual(42, workItem.Fields["z"].Value);
+
+            engine.Run(workItem);
+
+            var expected = new System.Collections.ObjectModel.Collection<System.Management.Automation.PSObject>();
+            expected.Add(new System.Management.Automation.PSObject(42));
+            logger.Received().ResultsFromScriptRun("test", expected);
+        }
+
+        [TestMethod]
+        [TestCategory("Powershell")]
+        public void PS__Can_execute_a_noop_rule()
         {
             var settings = TestHelpers.LoadConfigFromResourceFile("NoOp.policies");
             var repository = Substitute.For<IWorkItemRepository>();
@@ -67,8 +88,9 @@ namespace UnitTests.Core
         }
 
         [TestMethod]
+        [TestCategory("Powershell")]
         [Ignore]
-        public void Can_execute_a_noop_rule_100_times()
+        public void PS__Can_execute_a_noop_rule_100_times()
         {
             var settings = TestHelpers.LoadConfigFromResourceFile("NoOp.policies");
             var repository = Substitute.For<IWorkItemRepository>();
