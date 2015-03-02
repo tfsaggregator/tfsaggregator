@@ -20,22 +20,11 @@ namespace UnitTests.Core
             repository = Substitute.For<IWorkItemRepository>();
 
             workItem = Substitute.For<IWorkItem>();
-            //workItem.Fields.Returns(Substitute.For<IFieldCollectionWrapper>());
-            var estWorkField = Substitute.For<IFieldWrapper>();
-            workItem.Fields["Estimated Work"] = estWorkField;
             workItem.Id.Returns(1);
-            double fieldValue = 0.0D;
-            var f = workItem.Fields;
-            var x = workItem.Fields["Estimated Work"];
-            workItem.Fields["Estimated Work"].Value = fieldValue;
-
-            workItem.When(w => w[Arg.Any<string>()] = Arg.Any<Double>())
-                .Do(c => {
-                    workItem.Fields[(string)c[0]].Value = (double)c[1];
-                });
-            workItem.GetField("Estimated Dev Work",0.0D).Returns(1.0D);
-            workItem.GetField("Estimated Test Work",0.0D).Returns(2.0D);
             workItem.TypeName.Returns("Task");
+            workItem.Fields["Estimated Work"].Value = 0.0D;
+            workItem.Fields["Estimated Dev Work"].Value.Returns(1.0D);
+            workItem.Fields["Estimated Test Work"].Value.Returns(2.0D);
             workItem.IsValid().Returns(true);
 
             repository.GetWorkItem(1).Returns(workItem);

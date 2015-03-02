@@ -29,15 +29,30 @@ namespace Aggregator.Core
             return @"
 namespace DO_NOT_CLASH
 {
+  using Microsoft.TeamFoundation.WorkItemTracking.Client;
   public class Script_" + this.scriptName + @" : Aggregator.Core.CsScriptEngine.IScript
   {
     public object RunScript(Aggregator.Core.IWorkItem self, Aggregator.Core.IWorkItem parent)
     {
 "+ script + @"
+      return null;
     }
   }
 }
 ";
+        }
+
+        string[] GetAssemblyReferences()
+        {
+            string baseDir = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            var refList = new List<string>();
+
+            refList.Add(Assembly.GetExecutingAssembly().Location);
+            // CAREFUL HERE and remember to AddReference and set CopyLocal=true in UnitTest project!
+            refList.Add(System.IO.Path.Combine(baseDir, "Microsoft.TeamFoundation.WorkItemTracking.Client.dll"));
+
+            return refList.ToArray();
         }
 
         private Assembly CompileCode(string code)
@@ -47,10 +62,10 @@ namespace DO_NOT_CLASH
             // Setup our options
             var compilerOptions = new CompilerParameters();
             compilerOptions.GenerateExecutable = false;
-            compilerOptions.GenerateInMemory = true;
-
-            // CAREFUL HERE
-            compilerOptions.ReferencedAssemblies.Add(Assembly.GetExecutingAssembly().Location);
+            compilerOptions.GenerateInMemory = false;//debugging only!!!
+            compilerOptions.IncludeDebugInformation = true;
+            // critical step
+            compilerOptions.ReferencedAssemblies.AddRange(GetAssemblyReferences());
 
             CompilerResults compilerResult;
             compilerResult = csharpProvider.CompileAssemblyFromSource(compilerOptions, code);
@@ -59,7 +74,7 @@ namespace DO_NOT_CLASH
             {
                 foreach (CompilerError err in compilerResult.Errors)
                 {
-                    logger.ScriptHasError(this.scriptName, err.Line - 8, err.Column, err.ErrorNumber, err.ErrorText);
+                    logger.ScriptHasError(this.scriptName, err.Line - 9, err.Column, err.ErrorNumber, err.ErrorText);
                 }
                 return null;
             }

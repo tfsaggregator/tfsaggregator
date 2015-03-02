@@ -4,8 +4,8 @@
     <!-- Add up the estimated work on the task -->
     <rule name="CalcEstimated"
           appliesTo="Task">
-        $self.Field['Estimated Work'] = $self.Field['Estimated Dev Work'] + $self.Field['Estimated Test Work']
-        $self.Field['Remaining Work'] = $self.Field['Remaining Dev Work'] + $self.Field['Remaining Test Work']
+        self.Fields["Estimated Work"].Value = (double)self.Fields["Estimated Dev Work"].Value + (double)self.Fields["Estimated Test Work"].Value;
+        // self.Fields["Remaining Work"].Value = (double)self.Fields["Remaining Dev Work"].Value + (double)self.Fields["Remaining Test Work"].Value;
     </rule>
 
     <policy name="DefaultPolicy">

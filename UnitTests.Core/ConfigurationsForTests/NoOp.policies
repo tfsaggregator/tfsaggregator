@@ -3,7 +3,7 @@
 
     <!-- Do nothing -->
     <rule name="Noop" appliesTo="Task">
-        42
+        return 42;
     </rule>
 
     <policy name="DefaultPolicy">
