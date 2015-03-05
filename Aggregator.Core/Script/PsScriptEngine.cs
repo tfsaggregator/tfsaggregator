@@ -27,18 +27,17 @@ namespace Aggregator.Core
                 runspace.SessionStateProxy.SetVariable("id", workItem.Id);
                 runspace.SessionStateProxy.SetVariable("self", workItem);
                 runspace.SessionStateProxy.SetVariable("selfFields", workItem.Fields);
-                runspace.SessionStateProxy.SetVariable("selfZ", workItem.Fields["z"]); // <-- works!
                 runspace.SessionStateProxy.SetVariable("parent", workItem.Parent);
 
-                using (var ri = new RunspaceInvoke(runspace))
-                {
-                    // execute
-                    var results = ri.Invoke(script);
+                Pipeline pipeline = runspace.CreatePipeline();
+                pipeline.Commands.AddScript(script);
 
-                    logger.ResultsFromScriptRun(this.scriptName, results);
+                // execute
+                var results = pipeline.Invoke();
 
-                    // TODO manage results
-                }//using
+                logger.ResultsFromScriptRun(this.scriptName, results);
+
+
             }//using
         }
     }
