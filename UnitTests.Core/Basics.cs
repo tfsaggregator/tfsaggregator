@@ -88,7 +88,8 @@ return $self.Fields[""z""].Value ";
 
             logger.Received().ResultsFromScriptRun(
                 "test", 
-                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject))));
+                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject)))
+            );
 
             
         }
@@ -98,20 +99,30 @@ return $self.Fields[""z""].Value ";
         public void PS__Can_run_a_script_returning_a_value()
         {
             string script = @" return $Id ";
-            var repository = Substitute.For<IWorkItemRepository>();
-            
-            var workItem = Substitute.For<IWorkItem>();
-            workItem.Id.Returns(1);
-            repository.GetWorkItem(1).Returns(workItem);
+
+            var repository = new WorkItemRepositoryMock();
+            var workItem = new WorkItemMock();
+
+            workItem.Id = 1;
+
+            repository.SetWorkItems(new[] { workItem });
             var logger = Substitute.For<ILogEvents>();
+
+            Assert.IsNotNull((repository.GetWorkItem(1)));
+
             var engine = new PsScriptEngine("test", script, repository, logger);
             //sanity check
             
+
             engine.Run(workItem);
 
-            var expected = new int[]{1};
+            var expected = new Collection<PSObject>();
+            expected.Add(new PSObject(1));
 
-            logger.Received().ResultsFromScriptRun("test", expected);
+            logger.Received().ResultsFromScriptRun(
+                "test",
+                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject)))
+            );
         }
 
         [TestMethod]
