@@ -9,38 +9,23 @@ using System.Text;
 
 namespace Aggregator.Core
 {
-    /// <summary>
-    /// Compiles C# code on the fly as if scripting engine
-    /// </summary>
-    public class CsScriptEngine : ScriptEngine
+    public interface IDotNetScript
     {
-        public CsScriptEngine(string scriptName, string script, IWorkItemRepository store, ILogEvents logger)
+        object RunScript(IWorkItem self, IWorkItem parent);
+    }
+
+    /// <summary>
+    /// Compiles .Net code on the fly as if scripting engine
+    /// </summary>
+    public abstract class DotNetScriptEngine<TCodeDomProvider> : ScriptEngine
+        where TCodeDomProvider : CodeDomProvider, new()
+    {
+        protected DotNetScriptEngine(string scriptName, string script, IWorkItemRepository store, ILogEvents logger)
             : base(scriptName, script, store, logger)
         {
         }
 
-        public interface IScript
-        {
-            object RunScript(IWorkItem self, IWorkItem parent);
-        }
-
-        private string WrapScript(string script)
-        {
-            return @"
-namespace DO_NOT_CLASH
-{
-  using Microsoft.TeamFoundation.WorkItemTracking.Client;
-  public class Script_" + this.scriptName + @" : Aggregator.Core.CsScriptEngine.IScript
-  {
-    public object RunScript(Aggregator.Core.IWorkItem self, Aggregator.Core.IWorkItem parent)
-    {
-"+ script + @"
-      return null;
-    }
-  }
-}
-";
-        }
+        protected abstract string WrapScript(string script);
 
         string[] GetAssemblyReferences()
         {
@@ -48,7 +33,10 @@ namespace DO_NOT_CLASH
 
             var refList = new List<string>();
 
+
             refList.Add(Assembly.GetExecutingAssembly().Location);
+            // from GAC
+            refList.Add("System.dll");
             // CAREFUL HERE and remember to AddReference and set CopyLocal=true in UnitTest project!
             refList.Add(System.IO.Path.Combine(baseDir, "Microsoft.TeamFoundation.WorkItemTracking.Client.dll"));
 
@@ -57,18 +45,18 @@ namespace DO_NOT_CLASH
 
         private Assembly CompileCode(string code)
         {
-            var csharpProvider = new Microsoft.CSharp.CSharpCodeProvider();
+            var codeDomProvider = new TCodeDomProvider();
 
             // Setup our options
             var compilerOptions = new CompilerParameters();
             compilerOptions.GenerateExecutable = false;
-            compilerOptions.GenerateInMemory = false;//debugging only!!!
+            compilerOptions.GenerateInMemory = true;//debugging only!!!
             compilerOptions.IncludeDebugInformation = true;
             // critical step
             compilerOptions.ReferencedAssemblies.AddRange(GetAssemblyReferences());
 
             CompilerResults compilerResult;
-            compilerResult = csharpProvider.CompileAssemblyFromSource(compilerOptions, code);
+            compilerResult = codeDomProvider.CompileAssemblyFromSource(compilerOptions, code);
 
             if (compilerResult.Errors.HasErrors)
             {
@@ -98,13 +86,13 @@ namespace DO_NOT_CLASH
             {
                 foreach (Type iface in type.GetInterfaces())
                 {
-                    if (iface == typeof(IScript))
+                    if (iface == typeof(IDotNetScript))
                     {
                         ConstructorInfo constructor = type.GetConstructor(System.Type.EmptyTypes);
                         if (constructor != null && constructor.IsPublic)
                         {
                             // we specified that we wanted a constructor that doesn't take parameters, so don't pass parameters
-                            IScript scriptObject = constructor.Invoke(null) as IScript;
+                            IDotNetScript scriptObject = constructor.Invoke(null) as IDotNetScript;
                             if (scriptObject != null)
                             {
                                 //Lets run our script and display its results

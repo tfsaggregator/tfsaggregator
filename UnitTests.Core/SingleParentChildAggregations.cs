@@ -32,6 +32,23 @@ namespace UnitTests.Core
             return repository;
         }
 
+        private IWorkItemRepository SetupFakeRepository_Short()
+        {
+            repository = Substitute.For<IWorkItemRepository>();
+
+            workItem = Substitute.For<IWorkItem>();
+            workItem.Id.Returns(1);
+            workItem.TypeName.Returns("Task");
+            workItem["Estimated Work"] = 0.0D;
+            workItem["Estimated Dev Work"].Returns(1.0D);
+            workItem["Estimated Test Work"].Returns(2.0D);
+            workItem.IsValid().Returns(true);
+
+            repository.GetWorkItem(1).Returns(workItem);
+
+            return repository;
+        }
+
         [TestMethod]
         public void Should_aggregate_a_numeric_field()
         {
@@ -48,6 +65,25 @@ namespace UnitTests.Core
             Assert.AreEqual(0, result.ExceptionProperties.Count());
             workItem.Received().Save();
             Assert.AreEqual(3.0D, workItem.Fields["Estimated Work"].Value);
+            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+        }
+
+        [TestMethod]
+        public void Should_aggregate_a_numeric_field_short()
+        {
+            var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem-Short.policies");
+            var repository = SetupFakeRepository_Short();
+            var logger = Substitute.For<ILogEvents>();
+            var processor = new EventProcessor(repository, logger);
+            var context = Substitute.For<IRequestContext>();
+            var notification = Substitute.For<INotification>();
+            notification.WorkItemId.Returns(1);
+
+            var result = processor.ProcessEvent(context, notification, settings);
+
+            Assert.AreEqual(0, result.ExceptionProperties.Count());
+            workItem.Received().Save();
+            Assert.AreEqual(3.0D, workItem["Estimated Work"]);
             Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
         }
     }

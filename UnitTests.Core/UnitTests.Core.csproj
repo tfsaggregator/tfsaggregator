@@ -88,6 +88,7 @@
     <EmbeddedResource Include="ConfigurationsForTests\allInOne.policies" />
     <EmbeddedResource Include="ConfigurationsForTests\SumFieldsOnSingleWorkItem.policies" />
     <EmbeddedResource Include="ConfigurationsForTests\NoOp.policies" />
+    <EmbeddedResource Include="ConfigurationsForTests\SumFieldsOnSingleWorkItem-Short.policies" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

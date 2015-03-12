@@ -69,7 +69,7 @@ namespace Aggregator.Core
         {
             if (rule.ApplicableTypes.Contains(workItem.TypeName))
             {
-                var engine = new CsScriptEngine(rule.Name, rule.Script, this.store, this.logger);
+                var engine = new CSharpScriptEngine(rule.Name, rule.Script, this.store, this.logger);
                 engine.Run(workItem);
                 // TODO to save all workitems we must trace them in WorkItemLazyReference... we need a queue in the RequestContext 
                 workItem.Save();

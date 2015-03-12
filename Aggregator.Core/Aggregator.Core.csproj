@@ -78,7 +78,9 @@
     <Compile Include="Facade\NotificationWrapper.cs" />
     <Compile Include="Facade\RequestContextWrapper.cs" />
     <Compile Include="ILogEvents.cs" />
-    <Compile Include="Script\CsScriptEngine.cs" />
+    <Compile Include="Script\VBNetScriptEngine.cs" />
+    <Compile Include="Script\CSharpScriptEngine.cs" />
+    <Compile Include="Script\DotNetScriptEngine.cs" />
     <Compile Include="Script\ScriptEngine.cs" />
     <Compile Include="WorkItemLazyReference.cs" />
     <Compile Include="Interfaces\IFieldCollectionWrapper.cs" />
