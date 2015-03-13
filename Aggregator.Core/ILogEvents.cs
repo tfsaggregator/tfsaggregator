@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Aggregator.Core
 {
+    using System.Collections.ObjectModel;
+    using System.Management.Automation;
+
     public enum LogLevel
     {
         Critical = 1,
@@ -20,7 +23,7 @@ namespace Aggregator.Core
     public interface ILogEvents
     {
         void WorkItemWrapperTryOpenException(IWorkItem workItem, Exception e);
-        void ResultsFromScriptRun(string scriptName, System.Collections.ObjectModel.Collection<System.Management.Automation.PSObject> results);
+        void ResultsFromScriptRun(string scriptName, Collection<PSObject> results);
         void ResultsFromScriptRun(string scriptName, object result);
         void ScriptHasError(string scriptName, int line, int column, string errorCode, string errorText);
     }

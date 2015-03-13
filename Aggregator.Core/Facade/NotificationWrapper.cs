@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Aggregator.Core.Facade
 {
+
     public class NotificationWrapper : INotification
     {
         private NotificationType notification;

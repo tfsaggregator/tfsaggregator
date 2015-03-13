@@ -12,6 +12,10 @@ using Aggregator.Core.Configuration;
 
 namespace TFSAggregator.TfsSpecific
 {
+
+
+    using NotificationType = Microsoft.TeamFoundation.Framework.Server.NotificationType;
+
     /// <summary>
     /// The class that subscribes to server side events on the TFS server.
     /// We're only interested in WorkItemChanged events, so we'll filter that out before calling our main logic.
@@ -29,11 +33,17 @@ namespace TFSAggregator.TfsSpecific
             return new Type[1] { typeof(WorkItemChangedEvent) };
         }
 
+
         /// <summary>
         /// This is the one where all the magic starts.  Main() so to speak.  I will load the settings, connect to TFS and apply the aggregation rules.
         /// </summary>
-        public EventNotificationStatus ProcessEvent(TeamFoundationRequestContext requestContext, NotificationType notificationType, object notificationEventArgs,
-                                                    out int statusCode, out string statusMessage, out ExceptionPropertyCollection properties)
+        public EventNotificationStatus ProcessEvent(
+            TeamFoundationRequestContext requestContext,
+            NotificationType notificationType,
+            object notificationEventArgs,
+            out int statusCode,
+            out string statusMessage,
+            out ExceptionPropertyCollection properties)
         {
             var uri = GetCollectionUriFromContext(requestContext);
             // the level will change as soon as we get the configuration

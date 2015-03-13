@@ -10,6 +10,13 @@ using System.Threading.Tasks;
 
 namespace UnitTests.Core
 {
+    using System.Collections.ObjectModel;
+    using System.Management.Automation;
+
+
+
+    using UnitTests.Core.Mock;
+
     [TestClass]
     public class Basics
     {
@@ -106,22 +113,71 @@ return self(""z"")
         [Ignore] // Will fail as PS do not understand Castle's proxies
         public void Can_run_a_Powershell_script_interacting_with_an_object_model()
         {
-            string script = @" $self.Fields[""z""].Value ";
-            var repository = Substitute.For<IWorkItemRepository>();
-            var workItem = Substitute.For<IWorkItem>();
-            workItem.Id.Returns(1);
-            workItem.Fields["z"].Value.Returns(42);
-            repository.GetWorkItem(1).Returns(workItem);
+            string script = @" 
+
+$self.Fields[""x""].Value = 33
+return $self.Fields[""z""].Value ";
+
+            var repository = new WorkItemRepositoryMock();
+            var workItem = new WorkItemMock();
+
+            workItem.Fields["z"].Value = 42;
+            workItem.Fields["x"].Value = 0;
+            workItem.Id = 1;
+            
+            repository.SetWorkItems(new []{workItem});
             var logger = Substitute.For<ILogEvents>();
+
+            Assert.IsNotNull((repository.GetWorkItem(1)));
+            
             var engine = new PsScriptEngine("test", script, repository, logger);
             //sanity check
             Assert.AreEqual(42, workItem.Fields["z"].Value);
 
             engine.Run(workItem);
 
-            var expected = new System.Collections.ObjectModel.Collection<System.Management.Automation.PSObject>();
-            expected.Add(new System.Management.Automation.PSObject(42));
-            logger.Received().ResultsFromScriptRun("test", expected);
+            var expected = new Collection<PSObject>();
+            expected.Add(new PSObject(42));
+
+            Assert.AreEqual(33, workItem.Fields["x"].Value);
+
+            logger.Received().ResultsFromScriptRun(
+                "test", 
+                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject)))
+            );
+
+            
+        }
+
+        [TestMethod]
+        [TestCategory("Powershell")]
+        public void PS__Can_run_a_script_returning_a_value()
+        {
+            string script = @" return $Id ";
+
+            var repository = new WorkItemRepositoryMock();
+            var workItem = new WorkItemMock();
+
+            workItem.Id = 1;
+
+            repository.SetWorkItems(new[] { workItem });
+            var logger = Substitute.For<ILogEvents>();
+
+            Assert.IsNotNull((repository.GetWorkItem(1)));
+
+            var engine = new PsScriptEngine("test", script, repository, logger);
+            //sanity check
+            
+
+            engine.Run(workItem);
+
+            var expected = new Collection<PSObject>();
+            expected.Add(new PSObject(1));
+
+            logger.Received().ResultsFromScriptRun(
+                "test",
+                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject)))
+            );
         }
 
         [TestMethod]
