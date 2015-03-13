@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40121.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.Core", "Aggregator.Core\Aggregator.Core.csproj", "{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.ServerPlugin", "Aggregator.ServerPlugin\Aggregator.ServerPlugin.csproj", "{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Core", "UnitTests.Core\UnitTests.Core.csproj", "{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B94443D9-A5EE-4114-9C4F-F5C6B5401731}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		AssemblyVersion.cs = AssemblyVersion.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E0E7919C-5F01-45CC-A758-C3AF34F32F16}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE-2.0.txt = LICENSE-2.0.txt
+		README.md = README.md
+		docs\Troubleshooting.md = docs\Troubleshooting.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "references", "references", "{6D32EAB0-0194-408F-91EB-B2E2E0125C3E}"
+	ProjectSection(SolutionItems) = preProject
+		References\Microsoft.TeamFoundation.Client.dll = References\Microsoft.TeamFoundation.Client.dll
+		References\Microsoft.TeamFoundation.Common.dll = References\Microsoft.TeamFoundation.Common.dll
+		References\Microsoft.TeamFoundation.Framework.Server.dll = References\Microsoft.TeamFoundation.Framework.Server.dll
+		References\Microsoft.TeamFoundation.WorkItemTracking.Client.dll = References\Microsoft.TeamFoundation.WorkItemTracking.Client.dll
+		References\Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll = References\Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll
+		References\Microsoft.TeamFoundation.WorkItemTracking.Server.dll = References\Microsoft.TeamFoundation.WorkItemTracking.Server.dll
+		References\Microsoft.VisualStudio.Services.WebApi.dll = References\Microsoft.VisualStudio.Services.WebApi.dll
+		References\PLACEHOLDER.txt = References\PLACEHOLDER.txt
+		References\TfsReferences.target = References\TfsReferences.target
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B1913F70-5A32-4EAE-BDD2-0C46295656A6}"
+	ProjectSection(SolutionItems) = preProject
+		UnitTests.Core\ConfigurationsForTests\allInOne.policies = UnitTests.Core\ConfigurationsForTests\allInOne.policies
+		UnitTests.Core\ConfigurationsForTests\SumFieldsOnSingleWorkItem.policies = UnitTests.Core\ConfigurationsForTests\SumFieldsOnSingleWorkItem.policies
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
