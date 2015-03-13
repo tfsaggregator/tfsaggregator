@@ -65,6 +65,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="ScriptEngines.cs" />
     <Compile Include="Basics.cs" />
     <Compile Include="Mock\FieldCollectionMock.cs" />
     <Compile Include="Mock\FieldMock.cs" />
