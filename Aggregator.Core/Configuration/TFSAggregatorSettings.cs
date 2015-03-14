@@ -13,15 +13,20 @@ namespace Aggregator.Core.Configuration
 
         public static TFSAggregatorSettings LoadFromFile(string settingsPath)
         {
-            throw new NotImplementedException();
+            return Load((xmlLoadOptions) => XDocument.Load(settingsPath, xmlLoadOptions));
         }
 
         public static TFSAggregatorSettings LoadXml(string content)
         {
+            return Load((xmlLoadOptions) => XDocument.Parse(content, xmlLoadOptions));
+        }
+
+        public static TFSAggregatorSettings Load(Func<LoadOptions, XDocument> load)
+        {
             var instance = new TFSAggregatorSettings();
 
             LoadOptions xmlLoadOptions = LoadOptions.PreserveWhitespace | LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
-            XDocument doc = XDocument.Parse(content, xmlLoadOptions);
+            XDocument doc = load(xmlLoadOptions);
 
             LogLevel logLevel;
             if (Enum.TryParse<LogLevel>(doc.Root.Attribute("logLevel").Value, out logLevel))
