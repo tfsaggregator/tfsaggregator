@@ -1,13 +1,8 @@
 
-[![Build status](https://ci.appveyor.com/api/projects/status/8xecaabbs9r4prmt)](https://ci.appveyor.com/project/giuliov/tfs-aggregator)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/tfsaggregator/tfsaggregator?svg=true)](https://ci.appveyor.com/project/giuliov/tfsaggregator)
 
-This server side plugin for TFS 2010/2012/2013 enables dynamic calculation of field values in TFS.
-(For example: Dev work + Test Work = Total Work). It supports same work item and parent-child links.
-It also has support for aggregating string values (i.e. Children are Done so the parent is Done).
-
-Because this is a server side plug-in, it is **very fast**.
-The very first aggregation takes about 7-10 seconds (as it caches connection information).
-After that updates usually take place faster than you can refresh your client.
+This server side plugin for TFS 2013 enables dynamic calculation of field values in TFS.
+(For example: Dev work + Test Work = Total Work).
 
 Example Uses
 ================================================
@@ -28,7 +23,7 @@ Setup
 Installation
 ================================================
 
- 1. Copy TFSAggregator.dll and AggregatorItems.xml to the plugin location on the Application Tier of your TFS Server
+ 1. Copy `Aggregator.ServerPlugin.dll` and `Aggregator.ServerPlugin.policies` to the plugin location on the Application Tier of your TFS Server
      - The plugin folder is usually at this path: `C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins`
 
 
@@ -39,21 +34,8 @@ Troubleshooting
 Is it not working? Here is the troubleshooting and how to get help page: [TFS Aggregator Troubleshooting](docs/Troubleshooting.md)
 
 
-AggregatorItems.xml Options
+Aggregator.ServerPlugin.policies Options
 ================================================
-See the [Syntax](docs/AggregatorItems-Syntax.md) page.
+See the [Syntax](docs/Syntax.md) page.
 For some [Example Aggregations](docs/Example-Aggregations.md).
 
-Future Features
-================================================
-These are a list of features I would like to see in TFS Aggregator.
-I don't really need them so they have not made the cut yet.
-If this turns out to be a tool that others use and they vote for some of the items below then they may get added at some point.
-
- -  Parent To Child Aggregations.
-     -  This would be useful so that when a work item (i.e. PBI/Bug) gets its iteration changed then the TFS Aggregator could change the children to that iteration too.
- -  Make an editor for the options file.
- -  More than one type allowed in workItemType on AggregatorItem.
- -  More support for conditions (allowing differentials). For example having Today - 5 days.
- -  Find a way to filter out repeat messages without having to re-do the aggregation.
-    -   A successful aggregations makes changes. That causes the aggregation code to fire again. The second time through it sees that no changes need to be made (because the totals are already right). But it would be nice to have a way to see that up front and not do it again.

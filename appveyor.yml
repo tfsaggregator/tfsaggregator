@@ -22,8 +22,8 @@ build:
   project: TFS-Aggregator-2.sln
   verbosity: normal
 after_build:
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ServerPlugin\bin\$(configuration)\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ConsoleApp\bin\$(configuration)\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ServerPlugin\bin\%CONFIGURATION%\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ConsoleApp\bin\%CONFIGURATION%\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
   - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\*.md -r
   - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\LICENSE*.txt
   # pick samples
