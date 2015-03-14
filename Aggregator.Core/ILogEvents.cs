@@ -26,5 +26,6 @@ namespace Aggregator.Core
         void ResultsFromScriptRun(string scriptName, Collection<PSObject> results);
         void ResultsFromScriptRun(string scriptName, object result);
         void ScriptHasError(string scriptName, int line, int column, string errorCode, string errorText);
+        void Saving(IWorkItem workItem, bool isValid);
     }
 }

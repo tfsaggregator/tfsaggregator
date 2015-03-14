@@ -52,6 +52,7 @@
     <Compile Include="Configuration\Rule.cs" />
     <Compile Include="Configuration\Scope.cs" />
     <Compile Include="EventProcessor.cs" />
+    <Compile Include="Extensions\WorkItemExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Facade\FieldCollectionWrapper.cs" />
     <Compile Include="Facade\FieldWrapper.cs" />

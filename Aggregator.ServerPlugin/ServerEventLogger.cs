@@ -57,5 +57,17 @@ namespace Aggregator.ServerPlugin
                 "Error {3} in script {0} at line {1}, column {2}: {4}",
                 scriptName, line, column, errorCode, errorText);
         }
+
+
+        public void Saving(IWorkItem workItem, bool isValid)
+        {
+            Log(LogLevel.Verbose, "{0} [{1}] {2} valid to save.",
+                workItem.TypeName,
+                workItem.Id,
+                isValid ? "is" : "is NOT");
+            if (!isValid)
+                Log(LogLevel.Verbose, "Invalid fields: {0}",
+                    workItem.GetInvalidWorkItemFieldsList());
+        }
     }
 }

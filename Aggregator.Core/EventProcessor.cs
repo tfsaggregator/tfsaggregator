@@ -43,13 +43,7 @@ namespace Aggregator.Core
                 ApplyRules(workItem, policy.Rules);
             }//if
 
-            // TODO log this.store.LoadedWorkItems
-            // TODO validate
-            // TODO move to IWorkItemRepository
-            foreach (IWorkItem workItem in this.store.LoadedWorkItems)
-            {
-                workItem.Save();
-            }//for
+            SaveChangedWorkItems();
 
             return result;
         }
@@ -80,6 +74,21 @@ namespace Aggregator.Core
                 var engine = new CSharpScriptEngine(rule.Name, rule.Script, this.store, this.logger);
                 engine.Run(workItem);
             }
+        }
+
+        private void SaveChangedWorkItems()
+        {
+            // Save any changes to the target work items.
+            foreach (IWorkItem workItem in this.store.LoadedWorkItems)
+            {
+                bool isValid = workItem.IsValid();
+                logger.Saving(workItem, isValid);
+                if (isValid)
+                {
+                    workItem.PartialOpen();
+                    workItem.Save();
+                }
+            }//for
         }
     }
 }
