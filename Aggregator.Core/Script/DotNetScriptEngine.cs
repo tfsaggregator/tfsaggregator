@@ -43,15 +43,17 @@ namespace Aggregator.Core
             return refList.ToArray();
         }
 
-        private Assembly CompileCode(string code)
+        private CompilerResults CompileCode(string code, bool debug = false)
         {
             var codeDomProvider = new TCodeDomProvider();
 
             // Setup our options
             var compilerOptions = new CompilerParameters();
             compilerOptions.GenerateExecutable = false;
-            compilerOptions.GenerateInMemory = true;//debugging only!!!
-            compilerOptions.IncludeDebugInformation = true;
+            compilerOptions.GenerateInMemory = true;
+            compilerOptions.IncludeDebugInformation = debug;
+            // save temp files to permit debugging
+            compilerOptions.TempFiles.KeepFiles = debug;
             // critical step
             compilerOptions.ReferencedAssemblies.AddRange(GetAssemblyReferences());
 
@@ -76,7 +78,7 @@ namespace Aggregator.Core
                 }
             }
 
-            return compilerResult.CompiledAssembly;
+            return compilerResult;
         }
 
         private void RunScript(Assembly assembly, IWorkItem self, IWorkItem parent)
@@ -117,16 +119,27 @@ namespace Aggregator.Core
             }
         }
 
+        private static void CleanUp(bool debug, CompilerResults compilerResult)
+        {
+            if (debug)
+            {
+                compilerResult.TempFiles.KeepFiles = false;
+                compilerResult.TempFiles.Delete();
+            }
+        }
+
         override public void Run(IWorkItem workItem)
         {
             // TODO we can build a single assembly and class from multiple scripts
             // a method for each script
             string code = WrapScript(this.script);
-            var asm = CompileCode(code);
-            if (asm != null)
+            bool debug = true;
+            var compilerResult = CompileCode(code, debug);
+            if (!compilerResult.Errors.HasErrors)
             {
-                RunScript(asm, workItem, workItem.Parent);
+                RunScript(compilerResult.CompiledAssembly, workItem, workItem.Parent);
             }
+            CleanUp(debug, compilerResult);
         }
     }
 }
