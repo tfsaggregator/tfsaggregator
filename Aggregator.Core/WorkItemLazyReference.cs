@@ -10,7 +10,7 @@ namespace Aggregator.Core
     /// <summary>
     /// Lazy navigation
     /// </summary>
-    class WorkItemLazyReference : IWorkItem
+    public class WorkItemLazyReference : IWorkItem
     {
         int targetWorkItemId;
         IWorkItemRepository store;
@@ -23,6 +23,19 @@ namespace Aggregator.Core
             this.targetWorkItemId = (from WorkItemLink workItemLink in sourceItem.WorkItemLinks
                                      where workItemLink.LinkTypeEnd.ImmutableName == relationship
                                      select workItemLink.TargetId).FirstOrDefault();
+            this.store = store;
+            this.targetWorkItem = null;
+        }
+
+        /// <summary>
+        /// This constructor is designed for Mocking
+        /// </summary>
+        /// <param name="sourceItem"></param>
+        /// <param name="relationship"></param>
+        /// <param name="store"></param>
+        public WorkItemLazyReference(int targetWorkItemId, IWorkItemRepository store)
+        {
+            this.targetWorkItemId = targetWorkItemId;
             this.store = store;
             this.targetWorkItem = null;
         }

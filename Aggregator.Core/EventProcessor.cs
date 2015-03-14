@@ -43,6 +43,14 @@ namespace Aggregator.Core
                 ApplyRules(workItem, policy.Rules);
             }//if
 
+            // TODO log this.store.LoadedWorkItems
+            // TODO validate
+            // TODO move to IWorkItemRepository
+            foreach (IWorkItem workItem in this.store.LoadedWorkItems)
+            {
+                workItem.Save();
+            }//for
+
             return result;
         }
 
@@ -71,8 +79,6 @@ namespace Aggregator.Core
             {
                 var engine = new CSharpScriptEngine(rule.Name, rule.Script, this.store, this.logger);
                 engine.Run(workItem);
-                // TODO to save all workitems we must trace them in WorkItemLazyReference... we need a queue in the RequestContext 
-                workItem.Save();
             }
         }
     }

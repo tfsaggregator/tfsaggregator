@@ -178,19 +178,16 @@ return $self.Fields[""z""].Value ";
             var settings = TestHelpers.LoadConfigFromResourceFile("NoOp.policies");
             var repository = Substitute.For<IWorkItemRepository>();
             var workItem = Substitute.For<IWorkItem>();
-            workItem.TypeName.Returns("Task");
-            workItem.IsValid().Returns(true);
-            repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
             var processor = new EventProcessor(repository, logger);
             var context = Substitute.For<IRequestContext>();
             var notification = Substitute.For<INotification>();
             notification.WorkItemId.Returns(1);
+            repository.LoadedWorkItems.Returns(new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>() { workItem }));
 
             var result = processor.ProcessEvent(context, notification, settings);
 
             Assert.AreEqual(0, result.ExceptionProperties.Count());
-            workItem.Received().Save();
             Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
         }
     }

@@ -42,8 +42,11 @@ namespace UnitTests.Core.Mock
             
         }
 
+        bool saveCalled = false;
+        public bool _SaveCalled { get { return saveCalled; } }
         public void Save()
         {
+            saveCalled = true;
         }
 
         public object this[string name]
