@@ -22,15 +22,14 @@ build:
   project: TFS-Aggregator-2.sln
   verbosity: normal
 after_build:
-  - cd Aggregator.ServerPlugin\bin\%CONFIGURATION%
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" * -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
-  - cd ..\..
-  - cd Aggregator.ConsoleApp\bin\%CONFIGURATION%
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" * -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
-  - cd ..\..
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ServerPlugin\bin\$(configuration)\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ConsoleApp\bin\$(configuration)\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\*.md -r
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\LICENSE*.txt
+  # pick samples
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\*.policies -r
 test:
   assemblies:
     - UnitTests.Core.dll
 artifacts:
-  - path: 'Aggregator.ServerPlugin\bin\$(configuration)\*.zip'
-  - path: 'Aggregator.ConsoleApp\bin\$(configuration)\*.zip'
+  - path: '*.zip'
