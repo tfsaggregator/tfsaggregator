@@ -5,14 +5,14 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-#if _DEBUG
+#if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
 #else
 [assembly: AssemblyConfiguration("Release")]
 #endif
 [assembly: AssemblyCompany("TFS Aggregator Team")]
 [assembly: AssemblyProduct("TFS Aggregator")]
-[assembly: AssemblyCopyright("Copyright © TFS Aggregator Team 2015")]
+[assembly: AssemblyCopyright("Copyright (c) TFS Aggregator Team 2015")]
 [assembly: AssemblyTrademark("")]
 
 // Version information for an assembly consists of the following four values:
