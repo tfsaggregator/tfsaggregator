@@ -173,3 +173,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+# local
+References/*.dll
+*.GhostDoc.xml
