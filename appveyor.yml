@@ -1,15 +1,23 @@
-version: 2.0.{build}
-configuration: Release
+version: 2.0.{build}-{branch}
+configuration: Debug
 environment:
   containerURL:
     secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3XOLD5ID2nweLVV5CitmsDsC6PVlxsbfDFgmolBxKHg4=
   referenceFolder: References
 install:
-  # get all files from container
+  # get referenced DLL files from container
   - ps: $containerList = "$env:TEMP\references.xml"
   - ps: Invoke-RestMethod -Uri "$env:containerURL`?restype=container&comp=list" -OutFile $containerList
   - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
   - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL/$file" -OutFile "$env:referenceFolder\$file" }
+assembly_info:
+  patch: true
+  file: AssemblyVersion.cs
+  assembly_version: "2.0.{build}"
+  assembly_file_version: "2.0.{build}"
+  assembly_informational_version: "{version}"
+before_build:
+  nuget restore
 build:
   project: TFS-Aggregator-2.sln
   verbosity: normal
@@ -20,6 +28,9 @@ after_build:
   - cd Aggregator.ConsoleApp\bin\%CONFIGURATION%
   - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%_(%APPVEYOR_REPO_BRANCH%).zip" * -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
   - cd ..
+test:
+  assemblies:
+    - UnitTests.Core.dll
 artifacts:
   - path: 'Aggregator.ServerPlugin\bin\$(configuration)\*.zip'
   - path: 'Aggregator.ConsoleApp\bin\$(configuration)\*.zip'
