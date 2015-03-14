@@ -8,6 +8,7 @@ namespace Aggregator.Core
 {
     public interface INotification
     {
+        string ProjectUri { get; }
         int WorkItemId { get; }
     }
 }

@@ -25,5 +25,10 @@ namespace Aggregator.ConsoleApp
                 return this.teamProjectCollectionUrl.Split('/').LastOrDefault();
             }
         }
+
+        public string GetProjectName(string projectName)
+        {
+            return projectName;
+        }
     }
 }

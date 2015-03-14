@@ -1,5 +1,6 @@
 ﻿using Aggregator.Core;
 using Microsoft.TeamFoundation.Framework.Server;
+using Microsoft.TeamFoundation.Integration.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,14 @@ namespace Aggregator.Core.Facade
                 // HACK
                 return context.ServiceHost.VirtualDirectory.Replace("/tfs/", "").Replace("/", "");
             }
+        }
+
+        public string GetProjectName(string teamProjectUri)
+        {
+            // HACK is this cheap?
+            var commonService = context.GetService<CommonStructureService>();
+            string projectName = commonService.GetProject(context, teamProjectUri).Name;
+            return projectName;
         }
     }
 }

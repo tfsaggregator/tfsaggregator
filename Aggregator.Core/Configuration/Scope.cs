@@ -16,6 +16,7 @@ namespace Aggregator.Core.Configuration
 
         public override bool Matches(IRequestContext requestContext, INotification notification)
         {
+            // TODO, see http://geekswithblogs.net/TarunArora/archive/2011/11/15/tfs-api-process-template-currently-applied-to-the-team-project.aspx
             throw new NotImplementedException();
         }
     }
@@ -37,7 +38,10 @@ namespace Aggregator.Core.Configuration
 
         public override bool Matches(IRequestContext requestContext, INotification notification)
         {
-            throw new NotImplementedException();
+            if (!this.CollectionName.SameAs(requestContext.CollectionName))
+                return false;
+            string projectName = requestContext.GetProjectName(notification.ProjectUri);
+            return this.ProjectNames.Any(c => projectName.SameAs(c));
         }
     }
 }

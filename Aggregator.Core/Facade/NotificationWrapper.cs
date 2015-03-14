@@ -27,5 +27,14 @@ namespace Aggregator.Core.Facade
                 return eventArgs.CoreFields.IntegerFields[0].NewValue;
             }
         }
+
+        public string ProjectUri
+        {
+            get
+            {
+                // HACK
+                return string.Format("vstfs:///Classification/TeamProject/{0}", eventArgs.ProjectNodeId);
+            }
+        }
     }
 }

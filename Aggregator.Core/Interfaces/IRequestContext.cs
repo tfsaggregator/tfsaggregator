@@ -9,5 +9,6 @@ namespace Aggregator.Core
     public interface IRequestContext
     {
         string CollectionName { get; }
+        string GetProjectName(string teamProjectUri);
     }
 }

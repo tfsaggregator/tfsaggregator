@@ -14,6 +14,7 @@ namespace Aggregator.ConsoleApp
         internal bool ShowHelp { get; set; }
         internal string PolicyFile { get; set; }
         internal string TeamProjectCollectionUrl { get; set; }
+        internal string TeamProjectName { get; set; }
         internal int WorkItemId { get; set; }
 
         public RunCommand()
@@ -22,11 +23,13 @@ namespace Aggregator.ConsoleApp
 
             this.HasOption("h|help", "Shows this message and exit",
               value => this.ShowHelp = value != null);
-            this.HasRequiredOption("f|p|policyFile=", "Policy file to apply",
+            this.HasRequiredOption("f|policyFile=", "Policy file to apply",
               value => this.PolicyFile = value);
             this.HasRequiredOption("c|teamProjectCollectionUrl=", "TFS Team Project Collection Url, e.g. http://localhost:8080/tfs/DefaultCollection",
               value => this.TeamProjectCollectionUrl = value);
-            this.HasRequiredOption("n|id|workItem=",  "Work Item Id",
+            this.HasRequiredOption("p|teamProjectName=", "TFS Team Project",
+              value => this.TeamProjectName = value);
+            this.HasRequiredOption("n|id|workItem=", "Work Item Id",
               value => this.WorkItemId = int.Parse(value));
         }
 
@@ -40,7 +43,7 @@ namespace Aggregator.ConsoleApp
             try
             {
                 var context = new RequestContextConsoleApp(this.TeamProjectCollectionUrl);
-                var notification = new NotificationConsoleApp(this.WorkItemId);
+                var notification = new NotificationConsoleApp(this.WorkItemId, this.TeamProjectName);
 
                 var settings = TFSAggregatorSettings.LoadFromFile(this.PolicyFile);
 
