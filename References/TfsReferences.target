@@ -28,6 +28,9 @@
     <Reference Include="Microsoft.TeamFoundation.Framework.Server">
       <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Framework.Server.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.TeamFoundation.Server.Core">
+      <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Server.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server">
       <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.dll</HintPath>
     </Reference>

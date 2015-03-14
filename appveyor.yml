@@ -11,11 +11,15 @@ install:
   - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
   - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL/$file" -OutFile "$env:referenceFolder\$file" }
 build:
-  project: TFSAggregator.sln
+  project: TFS-Aggregator-2.sln
   verbosity: normal
 after_build:
-  - cd bin\%CONFIGURATION%
+  - cd Aggregator.ServerPlugin\bin\%CONFIGURATION%
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%_(%APPVEYOR_REPO_BRANCH%).zip" * -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
+  - cd ..
+  - cd Aggregator.ConsoleApp\bin\%CONFIGURATION%
   - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%_(%APPVEYOR_REPO_BRANCH%).zip" * -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
   - cd ..
 artifacts:
-  - path: 'bin\$(configuration)\*.zip'
+  - path: 'Aggregator.ServerPlugin\bin\$(configuration)\*.zip'
+  - path: 'Aggregator.ConsoleApp\bin\$(configuration)\*.zip'
