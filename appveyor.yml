@@ -23,11 +23,11 @@ build:
   verbosity: normal
 after_build:
   - cd Aggregator.ServerPlugin\bin\%CONFIGURATION%
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%_(%APPVEYOR_REPO_BRANCH%).zip" * -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
-  - cd ..
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" * -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
+  - cd ..\..
   - cd Aggregator.ConsoleApp\bin\%CONFIGURATION%
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%_(%APPVEYOR_REPO_BRANCH%).zip" * -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
-  - cd ..
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" * -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
+  - cd ..\..
 test:
   assemblies:
     - UnitTests.Core.dll
