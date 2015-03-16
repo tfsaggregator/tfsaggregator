@@ -46,7 +46,7 @@ namespace TFSAggregator
         /// <returns>true if a change was made.  False if not</returns>
         private static IWorkItem NumericAggregation(IEnumerable<IWorkItem> sourceWorkItems, IWorkItem targetWorkItem, ConfigAggregatorItem configAggregatorItem)
         {
-            double aggregateValue = 0;
+            double? aggregateValue = 0;
             // Iterate through all of the work items that we are pulling data from.
             // For link type of "Self" this will be just one item.  For "Parent" this will be all of the co-children of the work item sent in the event.
             foreach (var sourceWorkItem in sourceWorkItems)
@@ -60,9 +60,9 @@ namespace TFSAggregator
             }
 
             double currentValue = targetWorkItem.GetField<double>(configAggregatorItem.TargetField.Name, 0);
-            if (!aggregateValue.SafeEquals(currentValue))
+            if (!(aggregateValue ?? 0).SafeEquals(currentValue))
             {
-                targetWorkItem[configAggregatorItem.TargetField.Name] = aggregateValue;
+                targetWorkItem[configAggregatorItem.TargetField.Name] = aggregateValue ?? 0;
                 return targetWorkItem;
             }
             return null;

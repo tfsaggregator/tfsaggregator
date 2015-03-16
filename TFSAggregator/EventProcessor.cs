@@ -170,7 +170,6 @@ namespace TFSAggregator
                             // Make sure that all conditions are true before we do the aggregation
                             // In a copyTo operation, the conditions are evaluated per child workitem.
                             // If any fail then we don't do this aggregation.
-                            bool processItems = true;
                             foreach (var childItem in sourceWorkItems)
                             {
                                 if (!configAggregatorItem.Conditions.AreAllConditionsMet(childItem, parentWorkItem))

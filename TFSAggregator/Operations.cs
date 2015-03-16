@@ -7,34 +7,33 @@ namespace TFSAggregator
 
     public static class Operations
     {
-    
-        public static double Perform(this OperationEnum operation, double aggregateValue, double sourceValue)
+        public static double Perform(this OperationEnum operation, double? aggregateValue, double sourceValue)
         {
+
             if (operation == OperationEnum.Sum)
-                return aggregateValue + sourceValue;
+                return (aggregateValue ?? 0) + sourceValue;
             if (operation == OperationEnum.Subtract)
-                return aggregateValue - sourceValue;
+                return (aggregateValue ?? 0) - sourceValue;
             if (operation == OperationEnum.Multiply)
             {
-                if (aggregateValue.SafeEquals(0.0d))
-                {
-                    aggregateValue = +1;
-                }
-                return (aggregateValue*sourceValue);
+                return ((aggregateValue ?? 1) * sourceValue);
             }
             if (operation == OperationEnum.Divide)
             {
-                if (aggregateValue.SafeEquals(0.0d))
+                if (!aggregateValue.HasValue)
                 {
-                    aggregateValue = +1;
-                    return (sourceValue / aggregateValue);
+                    return sourceValue;
+                }
+                else if (sourceValue.SafeEquals(0d))
+                {
+                    return 0;
                 }
                 else
                 {
-                    return (aggregateValue / sourceValue);
-                
+                    return (aggregateValue.Value / sourceValue);
                 }
             }
+
             throw new InvalidOperationException("Unsupported Aggregation Operation");
         }
 
