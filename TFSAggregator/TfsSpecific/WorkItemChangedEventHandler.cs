@@ -44,6 +44,9 @@ namespace TFSAggregator.TfsSpecific
             //Abort early if there is a context mismatch
             if (ShouldAbort(requestContext, new Uri(TFSAggregatorSettings.TFSUri)))
             {
+                statusCode = 0;
+                statusMessage = "";
+                properties = new ExceptionPropertyCollection();
                 return EventNotificationStatus.ActionPermitted;
             }
 
