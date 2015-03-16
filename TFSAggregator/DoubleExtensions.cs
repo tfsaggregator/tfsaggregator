@@ -11,7 +11,6 @@ namespace TfsAggregator
         public const double TfsEpsylon = 1e-15d;
 
 
-
         public static bool SafeEquals(this double a, double b)
         {
             return SafeEquals(a, b, TfsEpsylon);
@@ -38,6 +37,7 @@ namespace TfsAggregator
                 return diff / (absA + absB) < epsilon;
             }
         }
+
 
         public static int SafeCompareTo(this double a, double b)
         {

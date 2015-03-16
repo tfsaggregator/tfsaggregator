@@ -12,6 +12,8 @@ namespace TFSAggregator.TfsFacade
         object Value { get; set; }
         TFS.FieldStatus Status { get; }
         object OriginalValue { get; }
+
+        Type DataType { get; }
     }
 
     public class FieldWrapper : IFieldWrapper
@@ -42,6 +44,14 @@ namespace TFSAggregator.TfsFacade
         public object OriginalValue
         {
             get { return tfsField.OriginalValue; }
+        }
+
+        public Type DataType
+        {
+            get
+            {
+                return tfsField.FieldDefinition.SystemType;
+            }
         }
     }
 }

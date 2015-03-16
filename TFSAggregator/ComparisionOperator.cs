@@ -52,6 +52,7 @@ namespace TFSAggregator
             }
         }
 
+
         public static bool Compare<T>(this ComparisionOperator oper, T leftSide, T rightSide) where T : IComparable<T>
         {
             switch (oper)
