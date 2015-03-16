@@ -13,6 +13,8 @@ using TFSAggregator.TfsFacade;
 
 namespace TFSAggregator.TfsSpecific
 {
+    using Microsoft.TeamFoundation.Client;
+
     /// <summary>
     /// The class that subscribes to server side events on the TFS server.
     /// We're only interested in WorkItemChanged events, so we'll filter that out before calling our main logic.
@@ -38,6 +40,13 @@ namespace TFSAggregator.TfsSpecific
         public EventNotificationStatus ProcessEvent(TeamFoundationRequestContext requestContext, NotificationType notificationType, object notificationEventArgs,
                                                     out int statusCode, out string statusMessage, out ExceptionPropertyCollection properties)
         {
+            //Abort for non-configured ProjectCollection:
+            //Abort early if there is a context mismatch
+            if (ShouldAbort(requestContext, new Uri(TFSAggregatorSettings.TFSUri)))
+            {
+                return EventNotificationStatus.ActionPermitted;
+            }
+
             var result = new ProcessingResult();
             try
             {
@@ -63,6 +72,16 @@ namespace TFSAggregator.TfsSpecific
             statusMessage = result.StatusMessage;
             properties = result.ExceptionProperties;
             return result.NotificationStatus;
+        }
+
+        private bool ShouldAbort(TeamFoundationRequestContext requestContext, Uri configuredUri)
+        {
+            TeamFoundationLocationService service = requestContext.GetService<TeamFoundationLocationService>();
+            Uri selfReferenceUri = service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));
+            MiscHelpers.LogMessage("Self reference uri = " + selfReferenceUri, false);
+            MiscHelpers.LogMessage("Configured uri = " + configuredUri, false);
+            var collection = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(selfReferenceUri);
+            return !collection.Uri.AbsoluteUri.Equals(configuredUri.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
         }
 
         public string Name
