@@ -40,7 +40,7 @@ namespace Aggregator.Core
             if (policy != null)
             {
                 IWorkItem workItem = store.GetWorkItem(notification.WorkItemId);
-                ApplyRules(workItem, policy.Rules);
+                ApplyRules(workItem, policy.Rules, settings.ScriptLanguage);
             }//if
 
             SaveChangedWorkItems();
@@ -58,20 +58,20 @@ namespace Aggregator.Core
             return null;
         }
 
-        private void ApplyRules(IWorkItem workItem, IEnumerable<Rule> rules)
+        private void ApplyRules(IWorkItem workItem, IEnumerable<Rule> rules, string scriptLanguage)
         {
             foreach (var rule in rules)
             {
                 if (rule.ApplicableTypes.Contains(workItem.TypeName))
-                    ApplyRule(rule, workItem);
+                    ApplyRule(rule, workItem, scriptLanguage);
             }
         }
 
-        private void ApplyRule(Rule rule, IWorkItem workItem)
+        private void ApplyRule(Rule rule, IWorkItem workItem, string scriptLanguage)
         {
             if (rule.ApplicableTypes.Contains(workItem.TypeName))
             {
-                var engine = new CSharpScriptEngine(rule.Name, rule.Script, this.store, this.logger);
+                ScriptEngine engine = MakeEngine(scriptLanguage, rule.Name, rule.Script, this.store, this.logger);
                 engine.Run(workItem);
             }
         }
@@ -89,6 +89,34 @@ namespace Aggregator.Core
                     workItem.Save();
                 }
             }//for
+        }
+
+        private ScriptEngine MakeEngine(string scriptLanguage, string ruleName, string script, IWorkItemRepository workItemRepository, ILogEvents logEvents)
+        {
+            Type t = GetScriptEngineType(scriptLanguage);
+            var ctor = t.GetConstructor(new Type[]{typeof(string),typeof(string),typeof(IWorkItemRepository),typeof(ILogEvents)});
+            ScriptEngine engine = ctor.Invoke(new object[] { ruleName, script, this.store, this.logger }) as ScriptEngine;
+            return engine;
+        }
+
+        private Type GetScriptEngineType(string scriptLanguage)
+        {
+            switch (scriptLanguage.ToLowerInvariant())
+            {
+                case "cs":
+                case "csharp":
+                case "c#":
+                    return typeof(CSharpScriptEngine);
+                case "vb":
+                case "vb.net":
+                case "vbnet":
+                    return typeof(VBNetScriptEngine);
+                case "ps":
+                case "powershell":
+                    return typeof(PsScriptEngine);
+                default:
+                    return typeof(CSharpScriptEngine);
+            }
         }
     }
 }

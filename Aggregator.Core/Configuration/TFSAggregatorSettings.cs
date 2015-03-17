@@ -32,6 +32,9 @@ namespace Aggregator.Core.Configuration
             if (Enum.TryParse<LogLevel>(doc.Root.Attribute("logLevel").Value, out logLevel))
                 instance.LogLevel = logLevel;
 
+            var scriptLangAttribute = doc.Root.Attribute("scriptLanguage");
+            instance.ScriptLanguage = scriptLangAttribute != null ? scriptLangAttribute.Value : "CSharp";
+
             var rules = new Dictionary<string, Rule>();
             foreach (var ruleElem in doc.Root.Elements("rule"))
             {
@@ -81,5 +84,6 @@ namespace Aggregator.Core.Configuration
         }
 
         public LogLevel LogLevel { get; set; }
+        public string ScriptLanguage { get; set; }
     }
 }

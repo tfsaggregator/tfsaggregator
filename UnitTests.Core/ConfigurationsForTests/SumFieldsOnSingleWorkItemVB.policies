@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration logLevel="Diagnostic" scriptLanguage="VB">
+
+    <!-- Add up the estimated work on the task -->
+    <rule name="CalcEstimated"
+          appliesTo="Task">
+        self("Estimated Work") = self("Estimated Dev Work") + self("Estimated Test Work")
+    </rule>
+
+    <policy name="DefaultPolicy">
+        <collectionScope collections="*" />
+        <ruleRef name="CalcEstimated" />
+    </policy>
+
+</AggregatorConfiguration>

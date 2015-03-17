@@ -92,6 +92,25 @@ namespace UnitTests.Core
             Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
         }
 
+        [TestMethod]
+        public void Should_aggregate_a_numeric_field_VB()
+        {
+            var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItemVB.policies");
+            var repository = SetupFakeRepository_Short();
+            var logger = Substitute.For<ILogEvents>();
+            var processor = new EventProcessor(repository, logger);
+            var context = Substitute.For<IRequestContext>();
+            var notification = Substitute.For<INotification>();
+            notification.WorkItemId.Returns(1);
+
+            var result = processor.ProcessEvent(context, notification, settings);
+
+            Assert.AreEqual(0, result.ExceptionProperties.Count());
+            workItem.Received().Save();
+            Assert.AreEqual(3.0D, workItem["Estimated Work"]);
+            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+        }
+
 
         [TestMethod]
         public void Should_aggregate_to_parent()
