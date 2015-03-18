@@ -75,6 +75,6 @@ namespace UnitTests.Core.Mock
 
         public Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItemLinkCollection WorkItemLinks { get; set; }
 
-        public IWorkItem Parent { get; set; }
+        public IWorkItemExposed Parent { get; set; }
     }
 }

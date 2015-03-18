@@ -26,8 +26,6 @@ namespace Aggregator.Core
 
                 runspace.SessionStateProxy.SetVariable("id", workItem.Id);
                 runspace.SessionStateProxy.SetVariable("self", workItem);
-                runspace.SessionStateProxy.SetVariable("selfFields", workItem.Fields);
-                runspace.SessionStateProxy.SetVariable("parent", workItem.Parent);
 
                 Pipeline pipeline = runspace.CreatePipeline();
                 pipeline.Commands.AddScript(script);

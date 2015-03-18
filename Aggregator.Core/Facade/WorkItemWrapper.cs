@@ -108,7 +108,7 @@ namespace Aggregator.Core.Facade
             }
         }
 
-        public IWorkItem Parent
+        public IWorkItemExposed Parent
         {
             get
             {

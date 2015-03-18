@@ -10,7 +10,7 @@ namespace Aggregator.Core
     /// <summary>
     /// Lazy navigation
     /// </summary>
-    public class WorkItemLazyReference : IWorkItem
+    public class WorkItemLazyReference : IWorkItemExposed
     {
         int targetWorkItemId;
         IWorkItemRepository store;
@@ -40,7 +40,7 @@ namespace Aggregator.Core
             this.targetWorkItem = null;
         }
 
-        protected IWorkItem Target
+        protected IWorkItemExposed Target
         {
             get
             {
@@ -84,16 +84,6 @@ namespace Aggregator.Core
             return this.Target.IsValid();
         }
 
-        public void PartialOpen()
-        {
-            this.Target.PartialOpen();
-        }
-
-        public void Save()
-        {
-            this.Target.Save();
-        }
-
         public object this[string name]
         {
             get
@@ -106,27 +96,12 @@ namespace Aggregator.Core
             }
         }
 
-        public void TryOpen()
-        {
-            this.Target.TryOpen();
-        }
-
         public string TypeName
         {
             get { return this.Target.TypeName; }
         }
 
-        public System.Collections.ArrayList Validate()
-        {
-            return this.Target.Validate();
-        }
-
-        public Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItemLinkCollection WorkItemLinks
-        {
-            get { return this.Target.WorkItemLinks; }
-        }
-
-        public IWorkItem Parent
+        public IWorkItemExposed Parent
         {
             get
             {

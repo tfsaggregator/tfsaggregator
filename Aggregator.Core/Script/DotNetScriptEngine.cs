@@ -11,7 +11,7 @@ namespace Aggregator.Core
 {
     public interface IDotNetScript
     {
-        object RunScript(IWorkItem self, IWorkItem parent);
+        object RunScript(IWorkItem self);
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ namespace Aggregator.Core
             return compilerResult;
         }
 
-        private void RunScript(Assembly assembly, IWorkItem self, IWorkItem parent)
+        private void RunScript(Assembly assembly, IWorkItem self)
         {
             // Now that we have a compiled script, lets run them
             foreach (Type type in assembly.GetExportedTypes())
@@ -98,7 +98,7 @@ namespace Aggregator.Core
                             if (scriptObject != null)
                             {
                                 //Lets run our script and display its results
-                                object result = scriptObject.RunScript(self, parent);
+                                object result = scriptObject.RunScript(self);
                                 logger.ResultsFromScriptRun(this.scriptName, result);
                             }
                             else
@@ -137,7 +137,7 @@ namespace Aggregator.Core
             var compilerResult = CompileCode(code, debug);
             if (!compilerResult.Errors.HasErrors)
             {
-                RunScript(compilerResult.CompiledAssembly, workItem, workItem.Parent);
+                RunScript(compilerResult.CompiledAssembly, workItem);
             }
             CleanUp(debug, compilerResult);
         }
