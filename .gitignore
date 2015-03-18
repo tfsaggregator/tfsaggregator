@@ -176,3 +176,4 @@ FakesAssemblies/
 # local
 References/*.dll
 *.GhostDoc.xml
+*.wit
