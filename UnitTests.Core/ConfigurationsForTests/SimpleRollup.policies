@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration logLevel="Diagnostic">
+
+    <!-- Add the time from the task up to the parent (Bug or PBI) -->
+    <rule name="Rollup"
+          appliesTo="Task">
+            <![CDATA[
+        self.Parent["Custom.RemainingWork"] = (double)self.Parent["Custom.RemainingWork"] + (double)self["Microsoft.VSTS.Scheduling.RemainingWork"];
+    ]]>
+    </rule>
+
+    <policy name="DefaultPolicy">
+        <collectionScope collections="*" />
+        <ruleRef name="Rollup" />
+    </policy>
+
+</AggregatorConfiguration>

@@ -36,12 +36,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "references", "references", 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B1913F70-5A32-4EAE-BDD2-0C46295656A6}"
-	ProjectSection(SolutionItems) = preProject
-		UnitTests.Core\ConfigurationsForTests\allInOne.policies = UnitTests.Core\ConfigurationsForTests\allInOne.policies
-		UnitTests.Core\ConfigurationsForTests\SumFieldsOnSingleWorkItem.policies = UnitTests.Core\ConfigurationsForTests\SumFieldsOnSingleWorkItem.policies
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.ConsoleApp", "Aggregator.ConsoleApp\Aggregator.ConsoleApp.csproj", "{200CF240-476E-4429-A8FC-66001806A2DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SimpleRollup", "SimpleRollup", "{17EF831E-EB65-431C-B398-4FED5CA44F98}"
+	ProjectSection(SolutionItems) = preProject
+		samples\SimpleRollup\install.ps1 = samples\SimpleRollup\install.ps1
+		samples\SimpleRollup\Requirement.xml = samples\SimpleRollup\Requirement.xml
+		samples\SimpleRollup\Simple rollup sample.md = samples\SimpleRollup\Simple rollup sample.md
+		UnitTests.Core\ConfigurationsForTests\SimpleRollup.policies = UnitTests.Core\ConfigurationsForTests\SimpleRollup.policies
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,5 +72,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{17EF831E-EB65-431C-B398-4FED5CA44F98} = {B1913F70-5A32-4EAE-BDD2-0C46295656A6}
 	EndGlobalSection
 EndGlobal
