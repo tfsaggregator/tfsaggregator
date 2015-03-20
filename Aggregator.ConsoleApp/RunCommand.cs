@@ -35,9 +35,9 @@ namespace Aggregator.ConsoleApp
 
         public override int Run(string[] remainingArguments)
         {
-            // the level will change as soon as we get the configuration
-            var logger = new ConsoleEventLogger(LogLevel.Warning);
-            EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, logger); //we only need one for the whole app
+            var settings = TFSAggregatorSettings.LoadFromFile(this.PolicyFile);
+            var logger = new ConsoleEventLogger(settings.LogLevel);
+            EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, logger, settings); //we only need one for the whole app
 
             var result = new ProcessingResult();
             try
@@ -45,10 +45,7 @@ namespace Aggregator.ConsoleApp
                 var context = new RequestContextConsoleApp(this.TeamProjectCollectionUrl);
                 var notification = new NotificationConsoleApp(this.WorkItemId, this.TeamProjectName);
 
-                var settings = TFSAggregatorSettings.LoadFromFile(this.PolicyFile);
-
-                logger.Level = settings.LogLevel;
-                result = eventProcessor.ProcessEvent(context, notification, settings);
+                result = eventProcessor.ProcessEvent(context, notification);
 
                 return result.StatusCode;
             }

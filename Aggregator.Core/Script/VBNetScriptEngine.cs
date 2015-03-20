@@ -8,18 +8,18 @@ namespace Aggregator.Core
 {
     public class VBNetScriptEngine : DotNetScriptEngine<Microsoft.VisualBasic.VBCodeProvider>
     {
-        public VBNetScriptEngine(string scriptName, string script, IWorkItemRepository store, ILogEvents logger)
-            : base(scriptName, script, store, logger)
+        public VBNetScriptEngine(IWorkItemRepository store, ILogEvents logger)
+            : base(store, logger)
         {
         }
 
-        protected override string WrapScript(string script)
+        protected override string WrapScript(string scriptName, string script)
         {
             return @"
 Imports Microsoft.TeamFoundation.WorkItemTracking.Client
 
 Namespace RESERVED
-  Public Class Script_" + this.scriptName + @"
+  Public Class Script_" + scriptName + @"
     Implements Aggregator.Core.IDotNetScript
   
     Public Function RunScript(ByVal self As Aggregator.Core.IWorkItem) As Object Implements Aggregator.Core.IDotNetScript.RunScript

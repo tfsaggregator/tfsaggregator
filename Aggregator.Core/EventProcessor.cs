@@ -14,33 +14,42 @@ namespace Aggregator.Core
     /// </summary>
     public class EventProcessor
     {
+        TFSAggregatorSettings settings;
         ILogEvents logger;
         IWorkItemRepository store;
+        ScriptEngine engine;
 
-        public EventProcessor(string tfsCollectionUrl, ILogEvents logger)
-            : this(new WorkItemRepository(tfsCollectionUrl, logger), logger)
+        public EventProcessor(string tfsCollectionUrl, ILogEvents logger, TFSAggregatorSettings settings)
+            : this(new WorkItemRepository(tfsCollectionUrl, logger), logger, settings)
         {
         }
 
-        public EventProcessor(IWorkItemRepository workItemStore, ILogEvents logger)
+        public EventProcessor(IWorkItemRepository workItemStore, ILogEvents logger, TFSAggregatorSettings settings)
         {
             this.logger = logger;
             this.store = workItemStore;
+            // TODO caching
+            this.settings = settings;
+            engine = MakeEngine(settings.ScriptLanguage, this.store, this.logger);
+            foreach (var rule in settings.Rules)
+            {
+                engine.Load(rule.Name, rule.Script);
+            }
+            engine.LoadCompleted();
         }
 
         /// <summary>
         /// This is the one where all the magic happens.
         /// </summary>
-        public ProcessingResult ProcessEvent(IRequestContext requestContext, INotification notification, TFSAggregatorSettings settings)
+        public ProcessingResult ProcessEvent(IRequestContext requestContext, INotification notification)
         {
-            // TODO
             var result = new ProcessingResult();
 
             Policy policy = FindApplicablePolicy(settings.Policies, requestContext, notification);
             if (policy != null)
             {
                 IWorkItem workItem = store.GetWorkItem(notification.WorkItemId);
-                ApplyRules(workItem, policy.Rules, settings.ScriptLanguage);
+                ApplyRules(workItem, policy.Rules);
             }//if
 
             SaveChangedWorkItems();
@@ -58,21 +67,20 @@ namespace Aggregator.Core
             return null;
         }
 
-        private void ApplyRules(IWorkItem workItem, IEnumerable<Rule> rules, string scriptLanguage)
+        private void ApplyRules(IWorkItem workItem, IEnumerable<Rule> rules)
         {
             foreach (var rule in rules)
             {
                 if (rule.ApplicableTypes.Contains(workItem.TypeName))
-                    ApplyRule(rule, workItem, scriptLanguage);
+                    ApplyRule(rule, workItem);
             }
         }
 
-        private void ApplyRule(Rule rule, IWorkItem workItem, string scriptLanguage)
+        private void ApplyRule(Rule rule, IWorkItem workItem)
         {
             if (rule.ApplicableTypes.Contains(workItem.TypeName))
             {
-                ScriptEngine engine = MakeEngine(scriptLanguage, rule.Name, rule.Script, this.store, this.logger);
-                engine.Run(workItem);
+                engine.Run(rule.Name, workItem);
             }
         }
 
@@ -91,11 +99,11 @@ namespace Aggregator.Core
             }//for
         }
 
-        private ScriptEngine MakeEngine(string scriptLanguage, string ruleName, string script, IWorkItemRepository workItemRepository, ILogEvents logEvents)
+        private ScriptEngine MakeEngine(string scriptLanguage, IWorkItemRepository workItemRepository, ILogEvents logEvents)
         {
             Type t = GetScriptEngineType(scriptLanguage);
-            var ctor = t.GetConstructor(new Type[]{typeof(string),typeof(string),typeof(IWorkItemRepository),typeof(ILogEvents)});
-            ScriptEngine engine = ctor.Invoke(new object[] { ruleName, script, this.store, this.logger }) as ScriptEngine;
+            var ctor = t.GetConstructor(new Type[] { typeof(IWorkItemRepository), typeof(ILogEvents) });
+            ScriptEngine engine = ctor.Invoke(new object[] { this.store, this.logger }) as ScriptEngine;
             return engine;
         }
 
@@ -115,6 +123,7 @@ namespace Aggregator.Core
                 case "powershell":
                     return typeof(PsScriptEngine);
                 default:
+                    // TODO Log unsupported or wrong code
                     return typeof(CSharpScriptEngine);
             }
         }

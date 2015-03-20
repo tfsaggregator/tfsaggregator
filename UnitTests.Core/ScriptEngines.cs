@@ -39,9 +39,8 @@ return self.Fields[""z""].Value;
             zField.Value.Returns(42);
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine("test", script, repository, logger);
-
-            engine.Run(workItem);
+            var engine = new CSharpScriptEngine(repository, logger);
+            engine.LoadAndRun("test", script, workItem);
 
             //logger.DidNotReceiveWithAnyArgs().ScriptHasError();
             Assert.AreEqual(33, xField.Value);
@@ -64,9 +63,8 @@ return self[""z""];
             workItem["z"].Returns(42);
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine("test", script, repository, logger);
-
-            engine.Run(workItem);
+            var engine = new CSharpScriptEngine(repository, logger);
+            engine.LoadAndRun("test", script, workItem);
 
             //logger.DidNotReceiveWithAnyArgs().ScriptHasError();
             Assert.AreEqual(33, workItem["x"]);
@@ -90,9 +88,9 @@ return self(""z"")
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
             logger.WhenForAnyArgs(c => System.Diagnostics.Debug.WriteLine(c));
-            var engine = new VBNetScriptEngine("test", script, repository, logger);
+            var engine = new VBNetScriptEngine(repository, logger);
 
-            engine.Run(workItem);
+            engine.LoadAndRun("test", script, workItem);
 
             //logger.DidNotReceiveWithAnyArgs().ScriptHasError();
             Assert.AreEqual(33, workItem["x"]);
@@ -121,11 +119,11 @@ return $self.Fields[""z""].Value ";
 
             Assert.IsNotNull((repository.GetWorkItem(1)));
             
-            var engine = new PsScriptEngine("test", script, repository, logger);
+            var engine = new PsScriptEngine(repository, logger);
             //sanity check
             Assert.AreEqual(42, workItem.Fields["z"].Value);
 
-            engine.Run(workItem);
+            engine.LoadAndRun("test", script, workItem);
 
             var expected = new Collection<PSObject>();
             expected.Add(new PSObject(42));
@@ -144,7 +142,7 @@ return $self.Fields[""z""].Value ";
         [TestCategory("Powershell")]
         public void Can_run_a_Powershell_script_returning_a_value()
         {
-            string script = @" return $Id ";
+            string script = @" return $self.Id ";
 
             var repository = new WorkItemRepositoryMock();
             var workItem = new WorkItemMock();
@@ -156,11 +154,9 @@ return $self.Fields[""z""].Value ";
 
             Assert.IsNotNull((repository.GetWorkItem(1)));
 
-            var engine = new PsScriptEngine("test", script, repository, logger);
-            //sanity check
-            
+            var engine = new PsScriptEngine(repository, logger);
 
-            engine.Run(workItem);
+            engine.LoadAndRun("test", script, workItem);
 
             var expected = new Collection<PSObject>();
             expected.Add(new PSObject(1));
@@ -179,13 +175,13 @@ return $self.Fields[""z""].Value ";
             var repository = Substitute.For<IWorkItemRepository>();
             var workItem = Substitute.For<IWorkItem>();
             var logger = Substitute.For<ILogEvents>();
-            var processor = new EventProcessor(repository, logger);
+            var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
             var notification = Substitute.For<INotification>();
             notification.WorkItemId.Returns(1);
             repository.LoadedWorkItems.Returns(new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>() { workItem }));
 
-            var result = processor.ProcessEvent(context, notification, settings);
+            var result = processor.ProcessEvent(context, notification);
 
             Assert.AreEqual(0, result.ExceptionProperties.Count());
             Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);

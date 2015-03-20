@@ -33,5 +33,12 @@ namespace UnitTests.Core
             var configXml = LoadTextFromEmbeddedResource(fileName);
             return TFSAggregatorSettings.LoadXml(configXml);
         }
+
+        public static void LoadAndRun(this Aggregator.Core.ScriptEngine engine, string scriptName, string script, Aggregator.Core.IWorkItem workItem)
+        {
+            engine.Load(scriptName, script);
+            engine.LoadCompleted();
+            engine.Run(scriptName, workItem);
+        }
     }
 }

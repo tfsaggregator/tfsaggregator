@@ -46,9 +46,11 @@ namespace TFSAggregator.TfsSpecific
             out ExceptionPropertyCollection properties)
         {
             var uri = GetCollectionUriFromContext(requestContext);
-            // the level will change as soon as we get the configuration
-            var logger = new Aggregator.ServerPlugin.ServerEventLogger(LogLevel.Warning);
-            EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, logger); //we only need one for the whole app
+            string settingsPath = GetSettingsFullPath();
+            // TODO avoid reload every time
+            var settings = TFSAggregatorSettings.LoadFromFile(settingsPath);
+            var logger = new Aggregator.ServerPlugin.ServerEventLogger(settings.LogLevel);
+            EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, logger, settings); //we only need one for the whole app
 
             var result = new ProcessingResult();
             try
@@ -59,11 +61,7 @@ namespace TFSAggregator.TfsSpecific
                     var context = new RequestContextWrapper(requestContext);
                     var notification = new NotificationWrapper(notificationType, notificationEventArgs as WorkItemChangedEvent);
 
-                    string settingsPath = GetSettingsFullPath();
-                    var settings = TFSAggregatorSettings.LoadFromFile(settingsPath);
-
-                    logger.Level = settings.LogLevel;
-                    result = eventProcessor.ProcessEvent(context, notification, settings);
+                    result = eventProcessor.ProcessEvent(context, notification);
                 }//if
             }
             catch (Exception e)

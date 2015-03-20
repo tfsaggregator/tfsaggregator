@@ -20,12 +20,12 @@ namespace Aggregator.Core
     public abstract class DotNetScriptEngine<TCodeDomProvider> : ScriptEngine
         where TCodeDomProvider : CodeDomProvider, new()
     {
-        protected DotNetScriptEngine(string scriptName, string script, IWorkItemRepository store, ILogEvents logger)
-            : base(scriptName, script, store, logger)
+        protected DotNetScriptEngine(IWorkItemRepository store, ILogEvents logger)
+            : base(store, logger)
         {
         }
 
-        protected abstract string WrapScript(string script);
+        protected abstract string WrapScript(string scriptName, string script);
 
         string[] GetAssemblyReferences()
         {
@@ -43,7 +43,7 @@ namespace Aggregator.Core
             return refList.ToArray();
         }
 
-        private CompilerResults CompileCode(string code, bool debug = false)
+        private CompilerResults CompileCode(string[] code, bool debug = false)
         {
             var codeDomProvider = new TCodeDomProvider();
 
@@ -64,7 +64,7 @@ namespace Aggregator.Core
             {
                 foreach (CompilerError err in compilerResult.Errors)
                 {
-                    logger.ScriptHasError(this.scriptName, err.Line - 9, err.Column, err.ErrorNumber, err.ErrorText);
+                    logger.ScriptHasError("***", err.Line - 9, err.Column, err.ErrorNumber, err.ErrorText);
                 }
                 return null;
             }
@@ -74,14 +74,14 @@ namespace Aggregator.Core
                 foreach (CompilerError err in compilerResult.Errors)
                 {
                     //TODO warning instead of errors
-                    logger.ScriptHasError(this.scriptName, err.Line - 8, err.Column, err.ErrorNumber, err.ErrorText);
+                    logger.ScriptHasError("***", err.Line - 8, err.Column, err.ErrorNumber, err.ErrorText);
                 }
             }
 
             return compilerResult;
         }
 
-        private void RunScript(Assembly assembly, IWorkItem self)
+        private void RunScript(Assembly assembly, string scriptName, IWorkItem self)
         {
             // Now that we have a compiled script, lets run them
             foreach (Type type in assembly.GetExportedTypes())
@@ -99,7 +99,7 @@ namespace Aggregator.Core
                             {
                                 //Lets run our script and display its results
                                 object result = scriptObject.RunScript(self);
-                                logger.ResultsFromScriptRun(this.scriptName, result);
+                                logger.ResultsFromScriptRun(scriptName, result);
                             }
                             else
                             {
@@ -128,16 +128,29 @@ namespace Aggregator.Core
             }
         }
 
-        override public void Run(IWorkItem workItem)
+        bool debug = true;
+        Dictionary<string, string> sourceCode = new Dictionary<string, string>();
+        CompilerResults compilerResult;
+
+        public override bool Load(string scriptName, string script)
         {
-            // TODO we can build a single assembly and class from multiple scripts
-            // a method for each script
-            string code = WrapScript(this.script);
-            bool debug = true;
-            var compilerResult = CompileCode(code, debug);
+            string code = WrapScript(scriptName, script);
+            sourceCode.Add(scriptName, code);
+            return true;
+        }
+
+        public override bool LoadCompleted()
+        {
+            // build a single assembly and class from multiple scripts
+            compilerResult = CompileCode(sourceCode.Values.ToArray(), debug);
+            return !compilerResult.Errors.HasErrors;
+        }
+
+        public override void Run(string scriptName, IWorkItem workItem)
+        {
             if (!compilerResult.Errors.HasErrors)
             {
-                RunScript(compilerResult.CompiledAssembly, workItem);
+                RunScript(compilerResult.CompiledAssembly, scriptName, workItem);
             }
             CleanUp(debug, compilerResult);
         }

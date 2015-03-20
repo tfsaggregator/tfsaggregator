@@ -12,19 +12,34 @@ namespace Aggregator.Core
     /// </summary>
     public class PsScriptEngine : ScriptEngine
     {
-        public PsScriptEngine(string scriptName, string script, IWorkItemRepository store, ILogEvents logger)
-            : base(scriptName, script, store, logger)
+        public PsScriptEngine(IWorkItemRepository store, ILogEvents logger)
+            : base(store, logger)
         {
         }
 
-        override public void Run(IWorkItem workItem)
+        Dictionary<string, string> scripts = new Dictionary<string, string>();
+
+        public override bool Load(string scriptName, string script)
         {
+            scripts.Add(scriptName, script);
+            return true;
+        }
+
+        public override bool LoadCompleted()
+        {
+            //no-op
+            return true;
+        }
+
+        override public void Run(string scriptName, IWorkItem workItem)
+        {
+            string script = scripts[scriptName];
+
             var config = RunspaceConfiguration.Create();
             using (var runspace = RunspaceFactory.CreateRunspace(config))
             {
                 runspace.Open();
 
-                runspace.SessionStateProxy.SetVariable("id", workItem.Id);
                 runspace.SessionStateProxy.SetVariable("self", workItem);
 
                 Pipeline pipeline = runspace.CreatePipeline();
@@ -33,7 +48,7 @@ namespace Aggregator.Core
                 // execute
                 var results = pipeline.Invoke();
 
-                logger.ResultsFromScriptRun(this.scriptName, results);
+                logger.ResultsFromScriptRun(scriptName, results);
 
 
             }//using
