@@ -67,6 +67,10 @@ namespace TFSAggregator.TfsSpecific
             catch (Exception e)
             {
                 logger.ProcessEventException(requestContext, e);
+                // notify failure
+                result.StatusCode = -1;
+                result.StatusMessage = "Unexpected error: " + e.Message;
+                result.NotificationStatus = EventNotificationStatus.ActionPermitted;
             }//try
 
             statusCode = result.StatusCode;
