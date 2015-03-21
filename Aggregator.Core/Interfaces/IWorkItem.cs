@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Aggregator.Core
 {
+    /// <summary>
+    /// This interface is visible to scripts.
+    /// </summary>
     public interface IWorkItemExposed
     {
         IFieldCollectionWrapper Fields { get; }
@@ -20,6 +23,10 @@ namespace Aggregator.Core
         IWorkItemExposed Parent { get; }
     }
 
+    /// <summary>
+    /// This interface extends <see cref="IWorkItemExposed"/> with any WorkItem feature used in TFS Aggregator
+    /// but not exposed to scripts.
+    /// </summary>
     public interface IWorkItem : IWorkItemExposed
     {
         void PartialOpen();

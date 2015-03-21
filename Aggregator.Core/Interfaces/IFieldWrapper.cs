@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Aggregator.Core
 {
+    /// <summary>
+    /// Decouples Core from TFS Client API <see cref="Microsoft.TeamFoundation.WorkItemTracking.Client.Field"/>
+    /// </summary>
     public interface IFieldWrapper
     {
         object Value { get; set; }

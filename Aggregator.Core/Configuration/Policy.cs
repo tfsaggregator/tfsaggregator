@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Aggregator.Core.Configuration
 {
+    /// <summary>
+    /// Represents a Policy of <see cref="TFSAggregatorSettings"/>.
+    /// </summary>
     public class Policy
     {
         public string Name { get; set; }

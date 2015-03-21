@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Aggregator.Core.Configuration
 {
+    /// <summary>
+    /// Represents a Scope clause of <see cref="TFSAggregatorSettings"/>.
+    /// </summary>
     public abstract class Scope
     {
         public abstract bool Matches(IRequestContext requestContext, INotification notification);

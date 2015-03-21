@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Aggregator.Core
 {
+    /// <summary>
+    /// Decouples Core from TFS Client API <see cref="Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItemStore"/>
+    /// </summary>
     public interface IWorkItemRepository
     {
         IWorkItem GetWorkItem(int workItemId);

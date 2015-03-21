@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 namespace Aggregator.Core
 {
     /// <summary>
-    /// This is the core class with complete logic, independent from being a server plug-in
+    /// This is the core class with complete logic, independent from being a server plug-in.
+    /// It is the entry point of the Core assembly.
     /// </summary>
     public class EventProcessor
     {

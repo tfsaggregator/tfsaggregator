@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Aggregator.Core.Configuration
 {
+    /// <summary>
+    /// Represents a Rule of <see cref="TFSAggregatorSettings"/>.
+    /// </summary>
     public class Rule
     {
         public string Name { get; set; }

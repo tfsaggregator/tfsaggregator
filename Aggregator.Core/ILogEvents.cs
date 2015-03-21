@@ -9,6 +9,10 @@ namespace Aggregator.Core
     using System.Collections.ObjectModel;
     using System.Management.Automation;
 
+    /// <summary>
+    /// Levels of logging.
+    /// </summary>
+    /// <remarks>While this enumerator is not used within Core, it is read by the configuration class <see cref="TFSAggregatorSettings"/>.</remarks>
     public enum LogLevel
     {
         Critical = 1,
@@ -20,6 +24,10 @@ namespace Aggregator.Core
         Diagnostic = 99,
     }
 
+    /// <summary>
+    /// Core Clients will be called on this interface to log events and errors.
+    /// </summary>
+    /// <remarks>The method *must* not raise exception.</remarks>
     public interface ILogEvents
     {
         void WorkItemWrapperTryOpenException(IWorkItem workItem, Exception e);

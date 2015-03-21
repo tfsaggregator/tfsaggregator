@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace Aggregator.ConsoleApp
 {
+    /// <summary>
+    /// Implements the <i>run</i> command.
+    /// </summary>
+    /// See ManyConsole framework for more information.
     class RunCommand : ConsoleCommand
     {
         internal bool ShowHelp { get; set; }
@@ -17,6 +21,9 @@ namespace Aggregator.ConsoleApp
         internal string TeamProjectName { get; set; }
         internal int WorkItemId { get; set; }
 
+        /// <summary>
+        /// Informs the ManyConsole framework of the command line arguments required by the  <i>run</i> command.
+        /// </summary>
         public RunCommand()
         {
             this.IsCommand("run", "Applies a policy file to specified work item");
@@ -33,6 +40,11 @@ namespace Aggregator.ConsoleApp
               value => this.WorkItemId = int.Parse(value));
         }
 
+        /// <summary>
+        /// Called by the ManyConsole framework to execute the  <i>run</i> command.
+        /// </summary>
+        /// <param name="remainingArguments">Unparsed command line arguments.</param>
+        /// <returns>0 for success, error code otherwise</returns>
         public override int Run(string[] remainingArguments)
         {
             var settings = TFSAggregatorSettings.LoadFromFile(this.PolicyFile);

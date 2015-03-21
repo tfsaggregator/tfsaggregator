@@ -6,6 +6,9 @@ using System.Xml.Linq;
 
 namespace Aggregator.Core.Configuration
 {
+    /// <summary>
+    /// This class' represents Core settings as properties
+    /// </summary>
     public class TFSAggregatorSettings
     {
         public IEnumerable<Rule> Rules { get; set; }
@@ -21,6 +24,11 @@ namespace Aggregator.Core.Configuration
             return Load((xmlLoadOptions) => XDocument.Parse(content, xmlLoadOptions));
         }
 
+        /// <summary>
+        /// Parse the specified <see cref="XDocument"/> to build a <see cref="TFSAggregatorSettings"/> instance.
+        /// </summary>
+        /// <param name="load">A lambda returning the <see cref="XDocument"/> to parse.</param>
+        /// <returns></returns>
         public static TFSAggregatorSettings Load(Func<LoadOptions, XDocument> load)
         {
             var instance = new TFSAggregatorSettings();
