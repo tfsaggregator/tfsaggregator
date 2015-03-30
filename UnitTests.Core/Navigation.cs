@@ -48,7 +48,15 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
 
 
-            var searchResult = grandParent.GetRelatives("Task", 2, "*").ToArray();
+            var searchResult = grandParent
+                .WhereTypeIs("Task")
+                .AtMost(2)
+                .FollowingLinks("*")
+                .ToArray();
+
+            Assert.AreEqual(2, searchResult.Length);
+            Assert.AreEqual(3, searchResult[0].Id);
+            Assert.AreEqual(4, searchResult[1].Id);
         }
     }
 }

@@ -100,11 +100,12 @@ namespace UnitTests.Core.Mock
             }
         }
 
-        public IEnumerable<IWorkItemExposed> GetRelatives(string workItemType = "*", int levels = 1, string linkType = "*")
+        public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
             return WorkItemLazyVisitor
-                .MakeRelativesLazyVisitor(this, workItemType, levels, linkType, store);
+                .MakeRelativesLazyVisitor(this, query, store);
         }
+
 
         public void TransitionToState(string state, string comment)
         {

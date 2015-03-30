@@ -122,9 +122,24 @@ namespace Aggregator.Core.Navigation
             get { return this.Target.Children; }
         }
 
-        public IEnumerable<IWorkItemExposed> GetRelatives(string workItemType = "*", int levels = 1, string linkType = "*")
+        public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
-            return this.Target.GetRelatives(workItemType, levels, linkType);
+            return this.Target.GetRelatives(query);
+        }
+
+        public FluentQuery WhereTypeIs(string workItemType)
+        {
+            return new FluentQuery(this).WhereTypeIs(workItemType);
+        }
+
+        public FluentQuery AtMost(int levels)
+        {
+            return new FluentQuery(this).AtMost(levels);
+        }
+
+        public FluentQuery FollowingLinks(string linkType)
+        {
+            return new FluentQuery(this).FollowingLinks(linkType);
         }
 
 

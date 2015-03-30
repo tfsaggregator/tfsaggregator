@@ -61,6 +61,7 @@
     <Compile Include="Facade\WorkItemLinkCollectionWrapper.cs" />
     <Compile Include="Facade\WorkItemLinkWrapper.cs" />
     <Compile Include="ILogEvents.cs" />
+    <Compile Include="Navigation\FluentQuery.cs" />
     <Compile Include="Interfaces\IWorkItemLink.cs" />
     <Compile Include="Interfaces\IWorkItemLinkCollection.cs" />
     <Compile Include="Script\VBNetScriptEngine.cs" />

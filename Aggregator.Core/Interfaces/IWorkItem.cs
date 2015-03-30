@@ -22,9 +22,7 @@ namespace Aggregator.Core
         // navigation helpers
         IWorkItemExposed Parent { get; }
         IEnumerable<IWorkItemExposed> Children { get; }
-        IEnumerable<IWorkItemExposed> GetRelatives(string workItemType = "*", int levels = 1, string linkType = "*");
-        // fluent API for GetRelatives
-
+        IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query);
         // state helpers
         void TransitionToState(string state, string comment);
     }

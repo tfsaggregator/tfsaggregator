@@ -16,22 +16,22 @@ namespace Aggregator.Core.Navigation
         int levels;
         string linkType;
 
-        public static WorkItemLazyVisitor MakeRelativesLazyVisitor(IWorkItem sourceItem, string workItemType, int levels, string linkType, IWorkItemRepository store)
+        public static WorkItemLazyVisitor MakeRelativesLazyVisitor(IWorkItem sourceItem, FluentQuery query, IWorkItemRepository store)
         {
-            return new WorkItemLazyVisitor(sourceItem, workItemType, levels, linkType, store);
+            return new WorkItemLazyVisitor(sourceItem, query, store);
         }
 
-        public WorkItemLazyVisitor(IWorkItem sourceWorkItem, string workItemType, int levels, string linkType, IWorkItemRepository store)
+        public WorkItemLazyVisitor(IWorkItem sourceWorkItem, FluentQuery query, IWorkItemRepository store)
         {
-            if (levels < 1)
+            if (query.Levels < 1)
                 throw new ArgumentOutOfRangeException("levels must be 1 or greater");
             // source info
             this.sourceWorkItem = sourceWorkItem;
             this.store = store;
             // target filter
-            this.workItemType = workItemType;
-            this.levels = levels;
-            this.linkType = linkType;
+            this.workItemType = query.WorkItemType;
+            this.levels = query.Levels;
+            this.linkType = query.LinkType;
         }
 
         public IEnumerator<IWorkItemExposed> GetEnumerator()
@@ -51,16 +51,16 @@ namespace Aggregator.Core.Navigation
                 if (relatedWorkItem.TypeName.SameAs(workItemType))
                 {
                     yield return relatedWorkItem;
+                }//if
                     if (current.Item1 > 0)
                     {
-                        // add to end => dedth-first
+                        // add to end => depth-first
                         links.AddRange(
                             relatedWorkItem.WorkItemLinks
                             .Where(link => link.LinkTypeEndImmutableName.SameAs(this.linkType))
                             .Select(link => Tuple.Create(current.Item1 - 1, link))
                             );
                     }//if
-                }//if
             }//while
         }
 
