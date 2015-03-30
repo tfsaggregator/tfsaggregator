@@ -9,10 +9,18 @@ namespace UnitTests.Core.Mock
 
     using Aggregator.Core;
     using Aggregator.Core.Facade;
+    using System.Collections.Generic;
+    using Aggregator.Core.Navigation;
 
     internal class WorkItemMock : IWorkItem
     {
         private FieldCollectionMock fields = new FieldCollectionMock();
+        private WorkItemRepositoryMock store;
+
+        public WorkItemMock(WorkItemRepositoryMock store)
+        {
+            this.store = store;
+        }
 
         public IFieldCollectionWrapper Fields { get
         {
@@ -73,8 +81,34 @@ namespace UnitTests.Core.Mock
             return new ArrayList();
         }
 
-        public Microsoft.TeamFoundation.WorkItemTracking.Client.WorkItemLinkCollection WorkItemLinks { get; set; }
+        WorkItemLinkCollectionMock workItemLinks = new WorkItemLinkCollectionMock();
+        public IWorkItemLinkCollection WorkItemLinks { get { return workItemLinks; } }
 
-        public IWorkItemExposed Parent { get; set; }
+        public IWorkItemExposed Parent
+        {
+            get
+            {
+                return WorkItemLazyReference.MakeParentLazyReference(this, store);
+            }
+        }
+
+        public IEnumerable<IWorkItemExposed> Children
+        {
+            get
+            {
+                return WorkItemLazyReference.MakeChildrenLazyReferences(this, store);
+            }
+        }
+
+        public IEnumerable<IWorkItemExposed> GetRelatives(string workItemType = "*", int levels = 1, string linkType = "*")
+        {
+            return WorkItemLazyVisitor
+                .MakeRelativesLazyVisitor(this, workItemType, levels, linkType, store);
+        }
+
+        public void TransitionToState(string state, string comment)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

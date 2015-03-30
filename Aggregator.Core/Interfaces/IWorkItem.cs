@@ -19,8 +19,14 @@ namespace Aggregator.Core
         bool IsValid();
         object this[string name] { get; set; }
         string TypeName { get; }
-        // navigation helper
+        // navigation helpers
         IWorkItemExposed Parent { get; }
+        IEnumerable<IWorkItemExposed> Children { get; }
+        IEnumerable<IWorkItemExposed> GetRelatives(string workItemType = "*", int levels = 1, string linkType = "*");
+        // fluent API for GetRelatives
+
+        // state helpers
+        void TransitionToState(string state, string comment);
     }
 
     /// <summary>
@@ -33,6 +39,6 @@ namespace Aggregator.Core
         void Save();
         void TryOpen();
         ArrayList Validate();
-        WorkItemLinkCollection WorkItemLinks { get; }
+        IWorkItemLinkCollection WorkItemLinks { get; }
     }
 }

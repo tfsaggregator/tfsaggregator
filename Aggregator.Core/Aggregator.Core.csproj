@@ -58,12 +58,16 @@
     <Compile Include="Facade\FieldWrapper.cs" />
     <Compile Include="Facade\NotificationWrapper.cs" />
     <Compile Include="Facade\RequestContextWrapper.cs" />
+    <Compile Include="Facade\WorkItemLinkCollectionWrapper.cs" />
+    <Compile Include="Facade\WorkItemLinkWrapper.cs" />
     <Compile Include="ILogEvents.cs" />
+    <Compile Include="Interfaces\IWorkItemLink.cs" />
+    <Compile Include="Interfaces\IWorkItemLinkCollection.cs" />
     <Compile Include="Script\VBNetScriptEngine.cs" />
     <Compile Include="Script\CSharpScriptEngine.cs" />
     <Compile Include="Script\DotNetScriptEngine.cs" />
     <Compile Include="Script\ScriptEngine.cs" />
-    <Compile Include="WorkItemLazyReference.cs" />
+    <Compile Include="Navigation\WorkItemLazyReference.cs" />
     <Compile Include="Interfaces\IFieldCollectionWrapper.cs" />
     <Compile Include="Interfaces\IFieldWrapper.cs" />
     <Compile Include="Interfaces\INotification.cs" />
@@ -76,6 +80,7 @@
     <Compile Include="Facade\WorkItemWrapper.cs" />
     <Compile Include="Configuration\TFSAggregatorSettings.cs" />
     <Compile Include="Script\PsScriptEngine.cs" />
+    <Compile Include="Navigation\WorkItemLazyVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

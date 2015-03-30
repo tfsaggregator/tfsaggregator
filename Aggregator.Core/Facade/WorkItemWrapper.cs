@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aggregator.Core.Navigation;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,11 +81,11 @@ namespace Aggregator.Core.Facade
             }
         }
 
-        public TFS.WorkItemLinkCollection WorkItemLinks
+        public IWorkItemLinkCollection WorkItemLinks
         {
             get
             {
-                return workItem.WorkItemLinks;
+                return new WorkItemLinkCollectionWrapper(workItem.WorkItemLinks, this.store, this.logger);
             }
         }
 
@@ -112,8 +113,28 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new WorkItemLazyReference(this, WorkItemLazyReference.ParentRelationship, store);
+                return WorkItemLazyReference.MakeParentLazyReference(this, store);
             }
+        }
+
+        public IEnumerable<IWorkItemExposed> Children
+        {
+            get
+            {
+                return WorkItemLazyReference.MakeChildrenLazyReferences(this, store);
+            }
+        }
+
+        public IEnumerable<IWorkItemExposed> GetRelatives(string workItemType = "*", int levels = 1, string linkType = "*")
+        {
+            return WorkItemLazyVisitor
+                .MakeRelativesLazyVisitor(this, workItemType, levels, linkType, store);
+        }
+
+        public void TransitionToState(string state, string comment)
+        {
+            //TODO
+            throw new NotImplementedException();
         }
     }
 }

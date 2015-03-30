@@ -11,6 +11,7 @@ namespace UnitTests.Core
     using UnitTests.Core.Mock;
     using System.Collections.ObjectModel;
     using System.Collections.Generic;
+    using Aggregator.Core.Navigation;
 
     [TestClass]
     public class SingleParentChildAggregations
@@ -119,19 +120,19 @@ namespace UnitTests.Core
             
             var repository = new WorkItemRepositoryMock();
 
-            var grandParent = new WorkItemMock();
+            var grandParent = new WorkItemMock(repository);
             grandParent.Id = 1;
             grandParent.TypeName = "Feature";
             grandParent["Dev Estimate"] = 0.0D;
             grandParent["Test Estimate"] = 0.0D;
 
-            var parent = new WorkItemMock();
+            var parent = new WorkItemMock(repository);
             parent.Id = 2;
             parent.TypeName = "Use Case";
             parent["Total Work Remaining"] = 3.0D;
             parent["Total Estimate"] = 4.0D;
 
-            var workItem = new WorkItemMock();
+            var workItem = new WorkItemMock(repository);
             workItem.Id = 3;
             workItem.TypeName = "Task";
             workItem["Estimated Dev Work"] = 10.0D;
@@ -140,8 +141,8 @@ namespace UnitTests.Core
             workItem["Remaining Test Work"] = 2.0D;
             workItem["Finish Date"] = new DateTime(2015,1,1);
 
-            workItem.Parent = new WorkItemLazyReference(parent.Id, repository);
-            parent.Parent = new WorkItemLazyReference(grandParent.Id, repository);
+            workItem.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, parent.Id, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, grandParent.Id, repository));
             repository.SetWorkItems(new[] { grandParent, parent, workItem });
 
             var logger = Substitute.For<ILogEvents>();

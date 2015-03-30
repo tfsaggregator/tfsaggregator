@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Aggregator.Core
+namespace Aggregator.Core.Navigation
 {
     /// <summary>
     /// Lazy navigation
@@ -17,14 +17,21 @@ namespace Aggregator.Core
         IWorkItem targetWorkItem;
 
         public static readonly string ParentRelationship = "System.LinkTypes.Hierarchy-Reverse";
+        public static readonly string ChildRelationship = "System.LinkTypes.Hierarchy-Reverse";
 
-        public WorkItemLazyReference(IWorkItem sourceItem, string relationship, IWorkItemRepository store)
+        public static WorkItemLazyReference MakeParentLazyReference(IWorkItem sourceItem, IWorkItemRepository store)
         {
-            this.targetWorkItemId = (from WorkItemLink workItemLink in sourceItem.WorkItemLinks
-                                     where workItemLink.LinkTypeEnd.ImmutableName == relationship
-                                     select workItemLink.TargetId).FirstOrDefault();
-            this.store = store;
-            this.targetWorkItem = null;
+            int targetWorkItemId = (from IWorkItemLink workItemLink in sourceItem.WorkItemLinks
+                                    where workItemLink.LinkTypeEndImmutableName == ParentRelationship
+                                    select workItemLink.TargetId).FirstOrDefault();
+            return new WorkItemLazyReference(targetWorkItemId, store);
+        }
+
+        public static IEnumerable<WorkItemLazyReference> MakeChildrenLazyReferences(IWorkItem sourceItem, IWorkItemRepository store)
+        {
+            return (from IWorkItemLink workItemLink in sourceItem.WorkItemLinks
+                   where workItemLink.LinkTypeEndImmutableName == ChildRelationship
+                   select new WorkItemLazyReference( workItemLink.TargetId, store));
         }
 
         /// <summary>
@@ -107,6 +114,23 @@ namespace Aggregator.Core
             {
                 return this.Target.Parent;
             }
+        }
+
+
+        public IEnumerable<IWorkItemExposed> Children
+        {
+            get { return this.Target.Children; }
+        }
+
+        public IEnumerable<IWorkItemExposed> GetRelatives(string workItemType = "*", int levels = 1, string linkType = "*")
+        {
+            return this.Target.GetRelatives(workItemType, levels, linkType);
+        }
+
+
+        public void TransitionToState(string state, string comment)
+        {
+            this.Target.TransitionToState(state, comment);
         }
     }
 }
