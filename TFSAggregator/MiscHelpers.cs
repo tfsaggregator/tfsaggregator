@@ -122,8 +122,8 @@ namespace TFSAggregator
             }
             else
             {
-                foreach (Field f in wi.Validate())
-                    sb.AppendLine(f.ReferenceName);
+                foreach (Field field in wi.Validate())
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "Field: {0}, Value: {1}", field.ReferenceName, field.Value ?? "Null");
             }
 
             return sb;
