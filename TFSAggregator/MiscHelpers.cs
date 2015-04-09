@@ -122,8 +122,8 @@ namespace TFSAggregator
             }
             else
             {
-                foreach (string s in wi.Validate())
-                    sb.AppendLine(s);
+                foreach (Field f in wi.Validate())
+                    sb.AppendLine(f.ReferenceName);
             }
 
             return sb;
