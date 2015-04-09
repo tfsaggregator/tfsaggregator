@@ -1,5 +1,7 @@
 ###Overview
 
+[![Join the chat at https://gitter.im/tfsaggregator/tfsaggregator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tfsaggregator/tfsaggregator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is a fork of http://tfsaggregator.codeplex.com.
 
 It enhances the original project in the following ways:
