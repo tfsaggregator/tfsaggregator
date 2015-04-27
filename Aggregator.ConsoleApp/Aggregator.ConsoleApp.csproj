@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Aggregator.ConsoleApp</RootNamespace>
-    <AssemblyName>Aggregator.ConsoleApp</AssemblyName>
+    <AssemblyName>TFSAggregator2.ConsoleApp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
