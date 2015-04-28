@@ -46,26 +46,25 @@ namespace Aggregator.Core
         {
             var result = new ProcessingResult();
 
-            Policy policy = FindApplicablePolicy(settings.Policies, requestContext, notification);
-            if (policy != null)
+            IEnumerable<Policy> policies = FilterPolicies(settings.Policies, requestContext, notification);
+
+            if (policies.Any())
             {
                 IWorkItem workItem = store.GetWorkItem(notification.WorkItemId);
-                ApplyRules(workItem, policy.Rules);
-            }//if
 
-            SaveChangedWorkItems();
+                foreach (var policy in policies)
+                {
+                    ApplyRules(workItem, policy.Rules);
+                }
 
+                SaveChangedWorkItems();
+            }
             return result;
         }
 
-        private Policy FindApplicablePolicy(IEnumerable<Policy> policies, IRequestContext requestContext, INotification notification)
+        private IEnumerable<Policy> FilterPolicies(IEnumerable<Policy> policies, IRequestContext requestContext, INotification notification)
         {
-            foreach (var policy in policies)
-            {
-                if (policy.Scope.Matches(requestContext, notification))
-                    return policy;
-            }
-            return null;
+            return policies.Where(policy => policy.Scope.Matches(requestContext, notification));
         }
 
         private void ApplyRules(IWorkItem workItem, IEnumerable<Rule> rules)
@@ -110,18 +109,18 @@ namespace Aggregator.Core
 
         private Type GetScriptEngineType(string scriptLanguage)
         {
-            switch (scriptLanguage.ToLowerInvariant())
+            switch (scriptLanguage.ToUpperInvariant())
             {
-                case "cs":
-                case "csharp":
-                case "c#":
+                case "CS":
+                case "CSHARP":
+                case "C#":
                     return typeof(CSharpScriptEngine);
-                case "vb":
-                case "vb.net":
-                case "vbnet":
+                case "VB":
+                case "VB.NET":
+                case "VBNET":
                     return typeof(VBNetScriptEngine);
-                case "ps":
-                case "powershell":
+                case "PS":
+                case "POWERSHELL":
                     return typeof(PsScriptEngine);
                 default:
                     // TODO Log unsupported or wrong code
