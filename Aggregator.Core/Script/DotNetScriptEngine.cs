@@ -25,6 +25,7 @@ namespace Aggregator.Core
         {
         }
 
+        protected abstract int LineOffset { get; }
         protected abstract string WrapScript(string scriptName, string script);
 
         string[] GetAssemblyReferences()
@@ -64,7 +65,7 @@ namespace Aggregator.Core
             {
                 foreach (CompilerError err in compilerResult.Errors)
                 {
-                    logger.ScriptHasError("***", err.Line - 9, err.Column, err.ErrorNumber, err.ErrorText);
+                    logger.ScriptHasError("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
                 }
                 return null;
             }

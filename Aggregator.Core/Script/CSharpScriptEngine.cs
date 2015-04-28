@@ -13,12 +13,15 @@ namespace Aggregator.Core
         {
         }
 
+        protected override int LineOffset { get { return 10; } }
+
         protected override string WrapScript(string scriptName, string script)
         {
             return @"
 namespace RESERVED
 {
   using Microsoft.TeamFoundation.WorkItemTracking.Client;
+  using Aggregator.Core;
   public class Script_" + scriptName + @" : Aggregator.Core.IDotNetScript
   {
     public object RunScript(Aggregator.Core.IWorkItem self)

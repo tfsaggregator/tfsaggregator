@@ -13,10 +13,13 @@ namespace Aggregator.Core
         {
         }
 
+        protected override int LineOffset { get { return 10; } }
+
         protected override string WrapScript(string scriptName, string script)
         {
             return @"
 Imports Microsoft.TeamFoundation.WorkItemTracking.Client
+Imports Aggregator.Core
 
 Namespace RESERVED
   Public Class Script_" + scriptName + @"
