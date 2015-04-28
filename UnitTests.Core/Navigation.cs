@@ -15,8 +15,7 @@ namespace UnitTests.Core
     [TestClass]
     public class Navigation
     {
-        [TestMethod]
-        public void Navigation_succeedes()
+        private static IWorkItemRepository MakeRepository(out IWorkItem startPoint)
         {
             var repository = new WorkItemRepositoryMock();
 
@@ -45,10 +44,18 @@ namespace UnitTests.Core
 
             repository.SetWorkItems(new[] { grandParent, parent, firstChild, secondChild });
 
+            startPoint = grandParent;
+            return repository;
+        }
+
+        [TestMethod]
+        public void FluentNavigation_succeedes()
+        {
+            IWorkItem startPoint;
+            var repository = MakeRepository(out startPoint);
             var logger = Substitute.For<ILogEvents>();
 
-
-            var searchResult = grandParent
+            var searchResult = startPoint
                 .WhereTypeIs("Task")
                 .AtMost(2)
                 .FollowingLinks("*")
@@ -57,6 +64,31 @@ namespace UnitTests.Core
             Assert.AreEqual(2, searchResult.Length);
             Assert.AreEqual(3, searchResult[0].Id);
             Assert.AreEqual(4, searchResult[1].Id);
+        }
+
+        [TestMethod]
+        public void FluentNavigation_CSharp_script_succeedes()
+        {
+            string script = @"
+var searchResult = self
+    .WhereTypeIs(""Task"")
+    .AtMost(2)
+    .FollowingLinks(""*"");
+return searchResult;
+";
+            IWorkItem startPoint;
+            var repository = MakeRepository(out startPoint);
+            var logger = Substitute.For<ILogEvents>();
+
+            var engine = new CSharpScriptEngine(repository, logger);
+            engine.LoadAndRun("test", script, startPoint);
+
+            var expected = new FluentQuery(startPoint);
+            expected
+                .WhereTypeIs("Task")
+                .AtMost(2)
+                .FollowingLinks("*");
+            logger.Received().ResultsFromScriptRun("test", (object)expected);
         }
     }
 }
