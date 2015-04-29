@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="Mock\WorkItemLinkCollectionMock.cs" />
     <Compile Include="Navigation.cs" />
+    <Compile Include="PolicyScope.cs" />
     <Compile Include="ScriptEngines.cs" />
     <Compile Include="Basics.cs" />
     <Compile Include="Mock\FieldCollectionMock.cs" />
@@ -91,7 +92,9 @@
     <EmbeddedResource Include="ConfigurationsForTests\SumFieldsOnSingleWorkItem-Short.policies" />
     <EmbeddedResource Include="ConfigurationsForTests\Rollup.policies" />
     <EmbeddedResource Include="ConfigurationsForTests\SumFieldsOnSingleWorkItemVB.policies" />
-    <EmbeddedResource Include="ConfigurationsForTests\SimpleRollup.policies" />
+    <EmbeddedResource Include="ConfigurationsForTests\SimpleRollup.policies">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

@@ -57,7 +57,7 @@
         <ruleRef name="SprintCapacity" />
     </policy>
 
-    <policy name="CustomTemplatePolicy">
+    <policy name="SpecificProject">
       <collectionScope collections="DefaultCollection" />
       <projectScope projects="One;Two" />
         <!-- no rules -->

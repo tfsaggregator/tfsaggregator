@@ -90,7 +90,7 @@ namespace TFSAggregator.TfsSpecific
             // Load the file from same folder where DLL is located
             return System.IO.Path.ChangeExtension(
                     System.IO.Path.Combine(
-                        System.IO.Path.GetDirectoryName(thisAssembly.CodeBase),
+                        System.IO.Path.GetDirectoryName(new Uri(thisAssembly.CodeBase).LocalPath),
                         baseName),
                     extension);
         }

@@ -9,6 +9,8 @@ using System.Text;
 
 namespace Aggregator.Core
 {
+    using System.Diagnostics;
+
     public interface IDotNetScript
     {
         object RunScript(IWorkItem self);
@@ -39,7 +41,10 @@ namespace Aggregator.Core
             // from GAC
             refList.Add("System.dll");
             // CAREFUL HERE and remember to AddReference and set CopyLocal=true in UnitTest project!
-            refList.Add(System.IO.Path.Combine(baseDir, "Microsoft.TeamFoundation.WorkItemTracking.Client.dll"));
+            var wiAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(ass => ass.GetName().Name == "Microsoft.TeamFoundation.WorkItemTracking.Client").First();
+
+            refList.Add(new Uri(wiAssembly.CodeBase).LocalPath);
 
             return refList.ToArray();
         }
