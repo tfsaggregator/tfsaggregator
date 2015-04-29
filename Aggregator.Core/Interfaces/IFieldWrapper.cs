@@ -11,6 +11,9 @@ namespace Aggregator.Core
     /// </summary>
     public interface IFieldWrapper
     {
+        string Name { get; }
+        string ReferenceName { get; }
+
         object Value { get; set; }
         FieldStatus Status { get; }
         object OriginalValue { get; }

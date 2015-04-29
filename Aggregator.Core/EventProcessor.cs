@@ -64,21 +64,20 @@ namespace Aggregator.Core
 
         private IEnumerable<Policy> FilterPolicies(IEnumerable<Policy> policies, IRequestContext requestContext, INotification notification)
         {
-            return policies.Where(policy => policy.Scope.Matches(requestContext, notification));
+            return policies.Where(policy => policy.Scope.All(s => s.Matches(requestContext, notification)));
         }
 
         private void ApplyRules(IWorkItem workItem, IEnumerable<Rule> rules)
         {
             foreach (var rule in rules)
             {
-                if (rule.ApplicableTypes.Contains(workItem.TypeName))
-                    ApplyRule(rule, workItem);
+                ApplyRule(rule, workItem);
             }
         }
 
         private void ApplyRule(Rule rule, IWorkItem workItem)
         {
-            if (rule.ApplicableTypes.Contains(workItem.TypeName))
+            if (rule.Scope.All(s => s.Matches(workItem)))
             {
                 engine.Run(rule.Name, workItem);
             }

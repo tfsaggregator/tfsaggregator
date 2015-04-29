@@ -1,7 +1,9 @@
 ﻿namespace UnitTests.Core.Mock
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Aggregator.Core;
 
@@ -23,6 +25,16 @@
             {
                 fields[name] = value;
             }
+        }
+
+        public IEnumerator<IFieldWrapper> GetEnumerator()
+        {
+            return this.fields.Values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

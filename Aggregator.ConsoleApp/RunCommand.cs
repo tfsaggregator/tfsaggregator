@@ -54,7 +54,7 @@ namespace Aggregator.ConsoleApp
             var result = new ProcessingResult();
             try
             {
-                var context = new RequestContextConsoleApp(this.TeamProjectCollectionUrl);
+                var context = new RequestContextConsoleApp(this.TeamProjectCollectionUrl, TeamProjectName);
                 var notification = new NotificationConsoleApp(this.WorkItemId, this.TeamProjectName);
 
                 result = eventProcessor.ProcessEvent(context, notification);

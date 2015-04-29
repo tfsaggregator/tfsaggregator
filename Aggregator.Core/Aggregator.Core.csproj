@@ -50,17 +50,20 @@
     </Compile>
     <Compile Include="Configuration\Policy.cs" />
     <Compile Include="Configuration\Rule.cs" />
-    <Compile Include="Configuration\Scope.cs" />
+    <Compile Include="Configuration\PolicyScope.cs" />
+    <Compile Include="Configuration\RuleScope.cs" />
     <Compile Include="EventProcessor.cs" />
     <Compile Include="Extensions\WorkItemExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Facade\FieldCollectionWrapper.cs" />
     <Compile Include="Facade\FieldWrapper.cs" />
     <Compile Include="Facade\NotificationWrapper.cs" />
+    <Compile Include="Facade\ProjectPropertyWrapper.cs" />
     <Compile Include="Facade\RequestContextWrapper.cs" />
     <Compile Include="Facade\WorkItemLinkCollectionWrapper.cs" />
     <Compile Include="Facade\WorkItemLinkWrapper.cs" />
     <Compile Include="ILogEvents.cs" />
+    <Compile Include="Interfaces\IProjectPropertyWrapper.cs" />
     <Compile Include="Navigation\FluentQuery.cs" />
     <Compile Include="Interfaces\IWorkItemLink.cs" />
     <Compile Include="Interfaces\IWorkItemLinkCollection.cs" />

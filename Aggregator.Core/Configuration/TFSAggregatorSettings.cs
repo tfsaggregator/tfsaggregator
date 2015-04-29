@@ -53,7 +53,11 @@ namespace Aggregator.Core.Configuration
 
                 var applicableTypes = new List<string>();
                 applicableTypes.AddRange(ruleElem.Attribute("appliesTo").Value.Split(',', ';'));
-                rule.ApplicableTypes = applicableTypes;
+                rule.Scope = new RuleScope[]
+                {
+                    new WorkItemTypeScope() { ApplicableTypes = applicableTypes.ToArray() }
+                };
+                
                 rule.Script = ruleElem.Value;
 
                 rules.Add(rule.Name, rule);
@@ -71,10 +75,13 @@ namespace Aggregator.Core.Configuration
                 var scopeElem = policyElem.Element("collectionScope");
                 var collections = new List<string>();
                 collections.AddRange(scopeElem.Attribute("collections").Value.Split(',', ';'));
-                policy.Scope = new CollectionScope()
-                {
-                    CollectionNames = collections
+                policy.Scope = new []{
+                    new CollectionScope()
+                    {
+                        CollectionNames = collections
+                    }
                 };
+
                 var referredRules = new List<Rule>();
                 foreach (var ruleRefElem in policyElem.Elements("ruleRef"))
                 {
