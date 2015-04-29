@@ -50,7 +50,7 @@
     <!-- policy order is priority -->
     <policy name="CustomTemplatePolicy">
         <templateScope
-            template="Custom"
+            name="Custom"
             />
         <ruleRef name="CalcEstimated" />
         <ruleRef name="Rollup" />
@@ -58,7 +58,8 @@
     </policy>
 
     <policy name="CustomTemplatePolicy">
-        <projectScope
+      <collectionScope collections="DefaultCollection" />
+      <projectScope
             collections="DefaultCollection"
             projects="One;Two"
             />
