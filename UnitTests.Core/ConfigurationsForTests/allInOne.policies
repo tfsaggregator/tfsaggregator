@@ -59,10 +59,7 @@
 
     <policy name="CustomTemplatePolicy">
       <collectionScope collections="DefaultCollection" />
-      <projectScope
-            collections="DefaultCollection"
-            projects="One;Two"
-            />
+      <projectScope projects="One;Two" />
         <!-- no rules -->
     </policy>
 
