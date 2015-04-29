@@ -85,7 +85,7 @@ namespace Aggregator.Core.Configuration
                 List<PolicyScope>  scope = new List<PolicyScope>();
                 var nullAttribute = new XAttribute("empty", string.Empty);
 
-                foreach (var element in doc.Root.Elements())
+                foreach (var element in policyElem.Elements())
                 {
                     switch (element.Name.LocalName)
                     {
@@ -101,7 +101,7 @@ namespace Aggregator.Core.Configuration
                             string templateName = (element.Attribute("name")       ?? nullAttribute).Value;
                             string templateId =   (element.Attribute("typeId")     ?? nullAttribute).Value;
                             string minVersion =   (element.Attribute("minVersion") ?? nullAttribute).Value;
-                            string maxVersion =   (element.Attribute("maxValue")   ?? nullAttribute).Value;
+                            string maxVersion =   (element.Attribute("maxVersion")   ?? nullAttribute).Value;
 
                             scope.Add(new TemplateScope()
                             {
