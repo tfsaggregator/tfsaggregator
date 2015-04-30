@@ -88,7 +88,7 @@ namespace Aggregator.Core
         private void SaveChangedWorkItems()
         {
             // Save any changes to the target work items.
-            foreach (IWorkItem workItem in this.store.LoadedWorkItems)
+            foreach (IWorkItem workItem in this.store.LoadedWorkItems.Where(w => w.IsDirty))
             {
                 bool isValid = workItem.IsValid();
                 logger.Saving(workItem, isValid);

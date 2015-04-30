@@ -32,18 +32,16 @@ namespace UnitTests.Core.Mock
             throw new NotImplementedException();
         }
 
-        public string History
-        {
-            get; set; }
+        public string History{ get; set; }
 
-        public int Id
-        {
-            get; set; }
+        public int Id{ get; set; }
 
         public bool IsValid()
         {
             return true;
         }
+
+        public bool IsDirty { get; set; }
 
         public void PartialOpen()
         {

@@ -81,6 +81,14 @@ namespace Aggregator.Core.Facade
             }
         }
 
+        public bool IsDirty
+        {
+            get
+            {
+                return workItem.IsDirty;
+            }
+        }
+
         public IWorkItemLinkCollection WorkItemLinks
         {
             get

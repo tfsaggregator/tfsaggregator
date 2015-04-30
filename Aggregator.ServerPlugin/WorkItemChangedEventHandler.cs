@@ -130,7 +130,6 @@ namespace TFSAggregator.TfsSpecific
                     new Guid[] { new Guid(workItemChangedEvent.ChangerTeamFoundationId) },
                     MembershipQuery.None).FirstOrDefault();
 
-
             return identity == null ? null : identity.Descriptor;
         }
 
