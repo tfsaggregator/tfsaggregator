@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Aggregator.Core.Facade
 {
+    using System.Reflection;
+
     using Aggregator.Core.Interfaces;
 
     using Microsoft.TeamFoundation.Framework.Common;
@@ -82,6 +84,17 @@ namespace Aggregator.Core.Facade
 
         private ProcessTemplateVersion GetProjectProcessVersion(string projectUri, string versionPropertyName)
         {
+            Assembly ass = Assembly.GetAssembly(typeof(TeamFoundationIdentity));
+            Type type = ass.GetType("Microsoft.TeamFoundation.Server.Core.TeamProjectUtil");
+            object result = type.InvokeMember(
+                "GetProjectProcessVersion",
+                BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod,
+                null,
+                null,
+                new object[] { context, projectUri });
+
+            
+
             ArtifactSpec processTemplateVersionSpec = GetProcessTemplateVersionSpec(projectUri);
             ProcessTemplateVersion unknown = ProcessTemplateVersion.Unknown;
 

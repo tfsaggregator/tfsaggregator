@@ -12,7 +12,9 @@ using Aggregator.Core.Configuration;
 
 namespace TFSAggregator.TfsSpecific
 {
-
+    using Microsoft.TeamFoundation.Client;
+    using Microsoft.TeamFoundation.Framework.Client;
+    using Microsoft.TeamFoundation.Framework.Common;
 
     using NotificationType = Microsoft.TeamFoundation.Framework.Server.NotificationType;
 
@@ -50,7 +52,7 @@ namespace TFSAggregator.TfsSpecific
             // TODO avoid reload every time
             var settings = TFSAggregatorSettings.LoadFromFile(settingsPath);
             var logger = new Aggregator.ServerPlugin.ServerEventLogger(settings.LogLevel);
-            EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, logger, settings); //we only need one for the whole app
+
 
             var result = new ProcessingResult();
             try
@@ -58,6 +60,15 @@ namespace TFSAggregator.TfsSpecific
                 //Check if we have a workitem changed event before proceeding
                 if (notificationType == NotificationType.Notification && notificationEventArgs is WorkItemChangedEvent)
                 {
+                    IdentityDescriptor toImpersonate = null;
+                    if (settings.AutoImpersonate)
+                    {
+                        toImpersonate = this.GetIdentityToImpersonate(requestContext, notificationEventArgs as WorkItemChangedEvent);
+                    }
+
+                    EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, toImpersonate, logger, settings); //we only need one for the whole app
+
+
                     var context = new RequestContextWrapper(requestContext);
                     var notification = new NotificationWrapper(notificationType, notificationEventArgs as WorkItemChangedEvent);
 
@@ -79,6 +90,8 @@ namespace TFSAggregator.TfsSpecific
             return result.NotificationStatus;
         }
 
+
+
         private string GetSettingsFullPath()
         {
             var thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
@@ -99,6 +112,26 @@ namespace TFSAggregator.TfsSpecific
         {
             TeamFoundationLocationService service = requestContext.GetService<TeamFoundationLocationService>();
             return service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));
+        }
+
+
+        private IdentityDescriptor GetIdentityToImpersonate(TeamFoundationRequestContext requestContext, WorkItemChangedEvent workItemChangedEvent)
+        {
+            Uri server = GetCollectionUriFromContext(requestContext);
+            
+            var configurationServer = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(server);
+            
+            //TODO: Find a way to read the identity from the server object model instead.
+            IIdentityManagementService identityManagementService =
+            configurationServer.GetService<IIdentityManagementService>();
+
+            TeamFoundationIdentity identity =
+                identityManagementService.ReadIdentities(
+                    new Guid[] { new Guid(workItemChangedEvent.ChangerTeamFoundationId) },
+                    MembershipQuery.None).FirstOrDefault();
+
+
+            return identity == null ? null : identity.Descriptor;
         }
 
         public string Name

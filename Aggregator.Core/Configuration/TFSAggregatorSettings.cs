@@ -40,6 +40,13 @@ namespace Aggregator.Core.Configuration
             if (Enum.TryParse<LogLevel>(doc.Root.Attribute("logLevel").Value, out logLevel))
                 instance.LogLevel = logLevel;
 
+            XAttribute autoImpersonateElement = doc.Root.Attribute("autoImpersonate");
+            if (autoImpersonateElement != null
+                && string.Equals(true.ToString(), autoImpersonateElement.Value, StringComparison.OrdinalIgnoreCase))
+            {
+                instance.AutoImpersonate = true;
+            }
+
             var scriptLangAttribute = doc.Root.Attribute("scriptLanguage");
             instance.ScriptLanguage = scriptLangAttribute != null ? scriptLangAttribute.Value : "CSharp";
 
@@ -143,5 +150,7 @@ namespace Aggregator.Core.Configuration
 
         public LogLevel LogLevel { get; set; }
         public string ScriptLanguage { get; set; }
+
+        public bool AutoImpersonate { get; set; }
     }
 }

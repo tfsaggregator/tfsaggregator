@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Aggregator.Core
 {
+    using Microsoft.TeamFoundation.Framework.Client;
+
     /// <summary>
     /// This is the core class with complete logic, independent from being a server plug-in.
     /// It is the entry point of the Core assembly.
@@ -20,8 +22,8 @@ namespace Aggregator.Core
         IWorkItemRepository store;
         ScriptEngine engine;
 
-        public EventProcessor(string tfsCollectionUrl, ILogEvents logger, TFSAggregatorSettings settings)
-            : this(new WorkItemRepository(tfsCollectionUrl, logger), logger, settings)
+        public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, ILogEvents logger, TFSAggregatorSettings settings)
+            : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, logger), logger, settings)
         {
         }
 
