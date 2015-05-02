@@ -293,7 +293,7 @@ namespace UnitTests.Core
             p.Scope = new[]
                       {
                           
-                          (PolicyScope) new TemplateScope() { MinVersion = "3.0" }
+                          (PolicyScope) new TemplateScope() { MaxVersion = "3.0" }
                       };
 
             var context = Substitute.For<IRequestContext>();

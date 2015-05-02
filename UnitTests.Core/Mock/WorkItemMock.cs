@@ -14,12 +14,13 @@ namespace UnitTests.Core.Mock
 
     internal class WorkItemMock : IWorkItem
     {
-        private FieldCollectionMock fields = new FieldCollectionMock();
+        private FieldCollectionMock fields;
         private WorkItemRepositoryMock store;
 
         public WorkItemMock(WorkItemRepositoryMock store)
         {
             this.store = store;
+            this.fields = new FieldCollectionMock(this);
         }
 
         public IFieldCollectionWrapper Fields { get

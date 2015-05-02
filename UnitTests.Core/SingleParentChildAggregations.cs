@@ -30,6 +30,8 @@ namespace UnitTests.Core
             workItem.Fields["Estimated Dev Work"].Value.Returns(1.0D);
             workItem.Fields["Estimated Test Work"].Value.Returns(2.0D);
             workItem.IsValid().Returns(true);
+            // triggers save
+            workItem.IsDirty.Returns(true);
 
             repository.GetWorkItem(1).Returns(workItem);
             repository.LoadedWorkItems.Returns(new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>() { workItem }));
@@ -48,6 +50,8 @@ namespace UnitTests.Core
             workItem["Estimated Test Work"].Returns(2.0D);
             workItem["Finish Date"].Returns(new DateTime(2010,1,1));
             workItem.IsValid().Returns(true);
+            // triggers save
+            workItem.IsDirty.Returns(true);
 
             repository.GetWorkItem(1).Returns(workItem);
             repository.LoadedWorkItems.Returns(new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>() { workItem }));

@@ -9,7 +9,13 @@
 
     internal class FieldCollectionMock : IFieldCollectionWrapper
     {
-        Dictionary<string, IFieldWrapper> fields = new Dictionary<string, IFieldWrapper>(); 
+        Dictionary<string, IFieldWrapper> fields = new Dictionary<string, IFieldWrapper>();
+        private WorkItemMock workItemMock;
+
+        public FieldCollectionMock(WorkItemMock workItemMock)
+        {
+            this.workItemMock = workItemMock;
+        } 
 
         public IFieldWrapper this[string name]
         {
@@ -17,7 +23,7 @@
             {
                 if (!this.fields.ContainsKey(name))
                 {
-                    this.fields.Add(name, new FieldMock(name));
+                    this.fields.Add(name, new FieldMock(this.workItemMock, name));
                 }
                 return fields[name];
             }

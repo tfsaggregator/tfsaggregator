@@ -22,6 +22,22 @@ namespace Aggregator.Core
         public int Levels { get; set; }
         public string LinkType { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == this)
+                return true;
+
+            if (!(obj is FluentQuery))
+                return base.Equals(obj);
+
+            var rhs = obj as FluentQuery;
+
+            return
+                string.Compare(this.WorkItemType, rhs.WorkItemType, true) == 0
+                && this.Levels == rhs.Levels
+                && string.Compare(this.LinkType, rhs.LinkType, true) == 0;
+        }
+
         public FluentQuery WhereTypeIs(string workItemType)
         {
             this.WorkItemType = workItemType;

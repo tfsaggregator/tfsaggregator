@@ -84,11 +84,10 @@ return searchResult;
             engine.LoadAndRun("test", script, startPoint);
 
             var expected = new FluentQuery(startPoint);
-            expected
-                .WhereTypeIs("Task")
-                .AtMost(2)
-                .FollowingLinks("*");
-            logger.Received().ResultsFromScriptRun("test", (object)expected);
+            expected.WorkItemType = "Task";
+            expected.Levels = 2;
+            expected.LinkType = "*";
+            logger.Received().ResultsFromScriptRun("test", expected);
         }
     }
 }
