@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 
 namespace Aggregator.Core.Facade
 {
+    using Microsoft.TeamFoundation.Framework.Client;
+
     /// <summary>
     /// Singleton used to access TFS Data.  This keeps us from connecting each and every time we get an update.
     /// Keeps track of all WorkItems pulled in memory that should be saved later.
@@ -17,18 +19,21 @@ namespace Aggregator.Core.Facade
     {
         ILogEvents logger;
         private readonly string tfsCollectionUrl;
+
+        private readonly IdentityDescriptor toImpersonate;
         private WorkItemStore workItemStore;
         List<IWorkItem> loadedWorkItems = new List<IWorkItem>();
 
-        public WorkItemRepository(string tfsCollectionUrl, ILogEvents logger)
+        public WorkItemRepository(string tfsCollectionUrl, IdentityDescriptor toImpersonate, ILogEvents logger)
         {
             this.logger = logger;
             this.tfsCollectionUrl = tfsCollectionUrl;
+            this.toImpersonate = toImpersonate;
         }
 
         private void ConnectToWorkItemStore()
         {
-            TfsTeamProjectCollection tfs = new TfsTeamProjectCollection(new Uri(tfsCollectionUrl));
+            TfsTeamProjectCollection tfs = new TfsTeamProjectCollection(new Uri(tfsCollectionUrl), toImpersonate);
             workItemStore = (WorkItemStore)tfs.GetService(typeof(WorkItemStore));
         }
 

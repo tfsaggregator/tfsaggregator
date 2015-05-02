@@ -49,12 +49,12 @@ namespace Aggregator.ConsoleApp
         {
             var settings = TFSAggregatorSettings.LoadFromFile(this.PolicyFile);
             var logger = new ConsoleEventLogger(settings.LogLevel);
-            EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, logger, settings); //we only need one for the whole app
+            EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, null, logger, settings); //we only need one for the whole app
 
             var result = new ProcessingResult();
             try
             {
-                var context = new RequestContextConsoleApp(this.TeamProjectCollectionUrl);
+                var context = new RequestContextConsoleApp(this.TeamProjectCollectionUrl, TeamProjectName);
                 var notification = new NotificationConsoleApp(this.WorkItemId, this.TeamProjectName);
 
                 result = eventProcessor.ProcessEvent(context, notification);

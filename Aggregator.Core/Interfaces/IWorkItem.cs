@@ -33,6 +33,7 @@ namespace Aggregator.Core
     /// </summary>
     public interface IWorkItem : IWorkItemExposed
     {
+        bool IsDirty { get; }
         void PartialOpen();
         void Save();
         void TryOpen();

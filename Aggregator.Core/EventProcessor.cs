@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Aggregator.Core
 {
+    using Microsoft.TeamFoundation.Framework.Client;
+
     /// <summary>
     /// This is the core class with complete logic, independent from being a server plug-in.
     /// It is the entry point of the Core assembly.
@@ -20,8 +22,8 @@ namespace Aggregator.Core
         IWorkItemRepository store;
         ScriptEngine engine;
 
-        public EventProcessor(string tfsCollectionUrl, ILogEvents logger, TFSAggregatorSettings settings)
-            : this(new WorkItemRepository(tfsCollectionUrl, logger), logger, settings)
+        public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, ILogEvents logger, TFSAggregatorSettings settings)
+            : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, logger), logger, settings)
         {
         }
 
@@ -46,40 +48,38 @@ namespace Aggregator.Core
         {
             var result = new ProcessingResult();
 
-            Policy policy = FindApplicablePolicy(settings.Policies, requestContext, notification);
-            if (policy != null)
+            IEnumerable<Policy> policies = FilterPolicies(settings.Policies, requestContext, notification);
+
+            if (policies.Any())
             {
                 IWorkItem workItem = store.GetWorkItem(notification.WorkItemId);
-                ApplyRules(workItem, policy.Rules);
-            }//if
 
-            SaveChangedWorkItems();
+                foreach (var policy in policies)
+                {
+                    ApplyRules(workItem, policy.Rules);
+                }
 
+                SaveChangedWorkItems();
+            }
             return result;
         }
 
-        private Policy FindApplicablePolicy(IEnumerable<Policy> policies, IRequestContext requestContext, INotification notification)
+        private IEnumerable<Policy> FilterPolicies(IEnumerable<Policy> policies, IRequestContext requestContext, INotification notification)
         {
-            foreach (var policy in policies)
-            {
-                if (policy.Scope.Matches(requestContext, notification))
-                    return policy;
-            }
-            return null;
+            return policies.Where(policy => policy.Scope.All(s => s.Matches(requestContext, notification)));
         }
 
         private void ApplyRules(IWorkItem workItem, IEnumerable<Rule> rules)
         {
             foreach (var rule in rules)
             {
-                if (rule.ApplicableTypes.Contains(workItem.TypeName))
-                    ApplyRule(rule, workItem);
+                ApplyRule(rule, workItem);
             }
         }
 
         private void ApplyRule(Rule rule, IWorkItem workItem)
         {
-            if (rule.ApplicableTypes.Contains(workItem.TypeName))
+            if (rule.Scope.All(s => s.Matches(workItem)))
             {
                 engine.Run(rule.Name, workItem);
             }
@@ -88,7 +88,7 @@ namespace Aggregator.Core
         private void SaveChangedWorkItems()
         {
             // Save any changes to the target work items.
-            foreach (IWorkItem workItem in this.store.LoadedWorkItems)
+            foreach (IWorkItem workItem in this.store.LoadedWorkItems.Where(w => w.IsDirty))
             {
                 bool isValid = workItem.IsValid();
                 logger.Saving(workItem, isValid);
@@ -110,18 +110,18 @@ namespace Aggregator.Core
 
         private Type GetScriptEngineType(string scriptLanguage)
         {
-            switch (scriptLanguage.ToLowerInvariant())
+            switch (scriptLanguage.ToUpperInvariant())
             {
-                case "cs":
-                case "csharp":
-                case "c#":
+                case "CS":
+                case "CSHARP":
+                case "C#":
                     return typeof(CSharpScriptEngine);
-                case "vb":
-                case "vb.net":
-                case "vbnet":
+                case "VB":
+                case "VB.NET":
+                case "VBNET":
                     return typeof(VBNetScriptEngine);
-                case "ps":
-                case "powershell":
+                case "PS":
+                case "POWERSHELL":
                     return typeof(PsScriptEngine);
                 default:
                     // TODO Log unsupported or wrong code

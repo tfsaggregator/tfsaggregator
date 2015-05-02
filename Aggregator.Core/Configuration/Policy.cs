@@ -11,7 +11,7 @@ namespace Aggregator.Core.Configuration
     public class Policy
     {
         public string Name { get; set; }
-        public Scope Scope { get; set; }
+        public IEnumerable<PolicyScope> Scope { get; set; }
         public IEnumerable<Rule> Rules { get; set; }
     }
 }

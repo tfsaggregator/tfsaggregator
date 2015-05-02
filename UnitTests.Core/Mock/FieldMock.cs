@@ -16,6 +16,10 @@ namespace UnitTests.Core.Mock
             
         }
 
+        public string Name { get; set; }
+
+        public string ReferenceName { get; set; }
+
         public object Value { get; set; }
 
         public FieldStatus Status { get; set; }

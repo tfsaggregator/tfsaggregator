@@ -40,6 +40,13 @@ namespace Aggregator.Core.Configuration
             if (Enum.TryParse<LogLevel>(doc.Root.Attribute("logLevel").Value, out logLevel))
                 instance.LogLevel = logLevel;
 
+            XAttribute autoImpersonateElement = doc.Root.Attribute("autoImpersonate");
+            if (autoImpersonateElement != null
+                && string.Equals(true.ToString(), autoImpersonateElement.Value, StringComparison.OrdinalIgnoreCase))
+            {
+                instance.AutoImpersonate = true;
+            }
+
             var scriptLangAttribute = doc.Root.Attribute("scriptLanguage");
             instance.ScriptLanguage = scriptLangAttribute != null ? scriptLangAttribute.Value : "CSharp";
 
@@ -51,9 +58,23 @@ namespace Aggregator.Core.Configuration
                     Name = ruleElem.Attribute("name").Value,
                 };
 
-                var applicableTypes = new List<string>();
-                applicableTypes.AddRange(ruleElem.Attribute("appliesTo").Value.Split(',', ';'));
-                rule.ApplicableTypes = applicableTypes;
+                var ruleScopes = new List<RuleScope>();
+
+                if (ruleElem.Attribute("appliesTo") != null)
+                {
+                    var applicableTypes = new List<string>();
+                    applicableTypes.AddRange(ruleElem.Attribute("appliesTo").Value.Split(',', ';'));
+                    ruleScopes.Add( new WorkItemTypeScope() { ApplicableTypes = applicableTypes.ToArray() });
+                }
+
+                if (ruleElem.Attribute("hasFields") != null)
+                {
+                    var hasFields = new List<string>();
+                    hasFields.AddRange(ruleElem.Attribute("hasFields").Value.Split(',', ';'));
+                    ruleScopes.Add( new HasFieldsScope() { FieldNames = hasFields.ToArray() });
+                }
+
+                rule.Scope = ruleScopes.ToArray();
                 rule.Script = ruleElem.Value;
 
                 rules.Add(rule.Name, rule);
@@ -67,14 +88,49 @@ namespace Aggregator.Core.Configuration
                 {
                     Name = policyElem.Attribute("name").Value,
                 };
-                //TODO fails for other scope types
-                var scopeElem = policyElem.Element("collectionScope");
-                var collections = new List<string>();
-                collections.AddRange(scopeElem.Attribute("collections").Value.Split(',', ';'));
-                policy.Scope = new CollectionScope()
+
+                List<PolicyScope>  scope = new List<PolicyScope>();
+                var nullAttribute = new XAttribute("empty", string.Empty);
+
+                foreach (var element in policyElem.Elements())
                 {
-                    CollectionNames = collections
-                };
+                    switch (element.Name.LocalName)
+                    {
+                        case "collectionScope":
+                        {
+                            var collections = new List<string>();
+                            collections.AddRange((element.Attribute("collections") ?? nullAttribute).Value.Split(',', ';'));
+                            scope.Add(new CollectionScope() { CollectionNames = collections });
+                            break;
+                        }
+                        case "templateScope":
+                        {
+                            string templateName = (element.Attribute("name")       ?? nullAttribute).Value;
+                            string templateId =   (element.Attribute("typeId")     ?? nullAttribute).Value;
+                            string minVersion =   (element.Attribute("minVersion") ?? nullAttribute).Value;
+                            string maxVersion =   (element.Attribute("maxVersion")   ?? nullAttribute).Value;
+
+                            scope.Add(new TemplateScope()
+                            {
+                                TemplateName = templateName,
+                                TemplateTypeId = templateId,
+                                MinVersion = minVersion,
+                                MaxVersion = maxVersion
+                            });            
+                            break;
+                        }
+                        case "projectScope":
+                        {
+                            var projects = new List<string>();
+                            projects.AddRange((element.Attribute("projects") ?? nullAttribute).Value.Split(',', ';'));
+                            scope.Add(new ProjectScope() { ProjectNames = projects });
+                            break;
+                        }
+                    }
+                }
+
+                policy.Scope = scope;
+
                 var referredRules = new List<Rule>();
                 foreach (var ruleRefElem in policyElem.Elements("ruleRef"))
                 {
@@ -85,7 +141,8 @@ namespace Aggregator.Core.Configuration
                 policy.Rules = referredRules;
                 
                 policies.Add(policy);
-            }//for
+            }
+
             instance.Policies = policies;
 
             return instance;
@@ -93,5 +150,7 @@ namespace Aggregator.Core.Configuration
 
         public LogLevel LogLevel { get; set; }
         public string ScriptLanguage { get; set; }
+
+        public bool AutoImpersonate { get; set; }
     }
 }

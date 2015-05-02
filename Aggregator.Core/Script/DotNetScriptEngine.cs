@@ -9,6 +9,10 @@ using System.Text;
 
 namespace Aggregator.Core
 {
+    using System.Diagnostics;
+    using System.IO;
+    using System.Text.RegularExpressions;
+
     public interface IDotNetScript
     {
         object RunScript(IWorkItem self);
@@ -39,7 +43,10 @@ namespace Aggregator.Core
             // from GAC
             refList.Add("System.dll");
             // CAREFUL HERE and remember to AddReference and set CopyLocal=true in UnitTest project!
-            refList.Add(System.IO.Path.Combine(baseDir, "Microsoft.TeamFoundation.WorkItemTracking.Client.dll"));
+            var wiAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(ass => ass.GetName().Name == "Microsoft.TeamFoundation.WorkItemTracking.Client").First();
+
+            refList.Add(new Uri(wiAssembly.CodeBase).LocalPath);
 
             return refList.ToArray();
         }
@@ -151,9 +158,35 @@ namespace Aggregator.Core
         {
             if (!compilerResult.Errors.HasErrors)
             {
+                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
                 RunScript(compilerResult.CompiledAssembly, scriptName, workItem);
+                AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
             }
             CleanUp(debug, compilerResult);
+        }
+
+        Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            Match m = Regex.Match(
+                args.Name,
+                "^[a-z0-9]+(\\.[a-z0-9]+)",
+                RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+            var loadedAssembly = AppDomain.CurrentDomain
+                .GetAssemblies().FirstOrDefault(ass => string.Equals(ass.GetName().Name, m.Value, StringComparison.OrdinalIgnoreCase));
+
+            if (loadedAssembly != null)
+            {
+                return loadedAssembly;
+            }
+            else
+            {
+                var dir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+                var file = Path.Combine(dir, args.Name + ".dll");
+                if (File.Exists(file))
+                    return Assembly.LoadFile(file);
+            }
+            return null;
         }
     }
 }
