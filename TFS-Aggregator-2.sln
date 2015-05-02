@@ -17,9 +17,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B94443D9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E0E7919C-5F01-45CC-A758-C3AF34F32F16}"
 	ProjectSection(SolutionItems) = preProject
+		docs\Install.md = docs\Install.md
+		docs\Internals.md = docs\Internals.md
 		LICENSE-2.0.txt = LICENSE-2.0.txt
+		docs\Policy-Examples.md = docs\Policy-Examples.md
+		docs\Policy-Syntax.md = docs\Policy-Syntax.md
 		README.md = README.md
+		docs\Scripting.md = docs\Scripting.md
 		docs\Troubleshooting.md = docs\Troubleshooting.md
+		docs\Upgrade-from-v1.md = docs\Upgrade-from-v1.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "references", "references", "{6D32EAB0-0194-408F-91EB-B2E2E0125C3E}"
