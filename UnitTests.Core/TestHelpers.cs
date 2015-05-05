@@ -28,10 +28,10 @@ namespace UnitTests.Core
             }
         }
 
-        public static TFSAggregatorSettings LoadConfigFromResourceFile(string fileName)
+        public static TFSAggregatorSettings LoadConfigFromResourceFile(string fileName, Aggregator.Core.ILogEvents logger)
         {
             var configXml = LoadTextFromEmbeddedResource(fileName);
-            return TFSAggregatorSettings.LoadXml(configXml);
+            return TFSAggregatorSettings.LoadXml(configXml, logger);
         }
 
         public static void LoadAndRun(this Aggregator.Core.ScriptEngine engine, string scriptName, string script, Aggregator.Core.IWorkItem workItem)

@@ -23,8 +23,11 @@ namespace UnitTests.Core
         [TestMethod]
         public void Can_load_a_fake_xml_configuration()
         {
-            var settings = TestHelpers.LoadConfigFromResourceFile("NoOp.policies");
+            var logger = Substitute.For<ILogEvents>();
+
+            var settings = TestHelpers.LoadConfigFromResourceFile("NoOp.policies", logger);
             var level = settings.LogLevel;
+
             Assert.AreEqual(LogLevel.Diagnostic, level);
         }
     }

@@ -47,8 +47,10 @@ namespace Aggregator.ConsoleApp
         /// <returns>0 for success, error code otherwise</returns>
         public override int Run(string[] remainingArguments)
         {
-            var settings = TFSAggregatorSettings.LoadFromFile(this.PolicyFile);
-            var logger = new ConsoleEventLogger(settings.LogLevel);
+            // need a logger to show errors in config file (Catch 22)
+            var logger = new ConsoleEventLogger(LogLevel.Error);
+            var settings = TFSAggregatorSettings.LoadFromFile(this.PolicyFile, logger);
+            logger.Level = settings.LogLevel;
             EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, null, logger, settings); //we only need one for the whole app
 
             var result = new ProcessingResult();

@@ -62,9 +62,9 @@ namespace UnitTests.Core
         [TestMethod]
         public void Should_aggregate_a_numeric_field()
         {
-            var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem.policies");
-            var repository = SetupFakeRepository();
             var logger = Substitute.For<ILogEvents>();
+            var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem.policies", logger);
+            var repository = SetupFakeRepository();
             var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
             var notification = Substitute.For<INotification>();
@@ -81,9 +81,9 @@ namespace UnitTests.Core
         [TestMethod]
         public void Should_aggregate_a_numeric_field_short()
         {
-            var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem-Short.policies");
-            var repository = SetupFakeRepository_Short();
             var logger = Substitute.For<ILogEvents>();
+            var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem-Short.policies", logger);
+            var repository = SetupFakeRepository_Short();
             var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
             var notification = Substitute.For<INotification>();
@@ -100,9 +100,9 @@ namespace UnitTests.Core
         [TestMethod]
         public void Should_aggregate_a_numeric_field_VB()
         {
-            var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItemVB.policies");
-            var repository = SetupFakeRepository_Short();
             var logger = Substitute.For<ILogEvents>();
+            var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItemVB.policies", logger);
+            var repository = SetupFakeRepository_Short();
             var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
             var notification = Substitute.For<INotification>();
@@ -120,7 +120,8 @@ namespace UnitTests.Core
         [TestMethod]
         public void Should_aggregate_to_parent()
         {
-            var settings = TestHelpers.LoadConfigFromResourceFile("Rollup.policies");
+            var logger = Substitute.For<ILogEvents>();
+            var settings = TestHelpers.LoadConfigFromResourceFile("Rollup.policies", logger);
             
             var repository = new WorkItemRepositoryMock();
 
@@ -149,7 +150,6 @@ namespace UnitTests.Core
             parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, grandParent.Id, repository));
             repository.SetWorkItems(new[] { grandParent, parent, workItem });
 
-            var logger = Substitute.For<ILogEvents>();
             var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
             var notification = Substitute.For<INotification>();

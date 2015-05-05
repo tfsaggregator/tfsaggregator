@@ -168,10 +168,10 @@ return $self.Fields[""z""].Value ";
         [TestCategory("Powershell")]
         public void Can_execute_a_Powershell_noop_rule()
         {
-            var settings = TestHelpers.LoadConfigFromResourceFile("NoOp.policies");
+            var logger = Substitute.For<ILogEvents>();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NoOp.policies", logger);
             var repository = Substitute.For<IWorkItemRepository>();
             var workItem = Substitute.For<IWorkItem>();
-            var logger = Substitute.For<ILogEvents>();
             var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
             var notification = Substitute.For<INotification>();

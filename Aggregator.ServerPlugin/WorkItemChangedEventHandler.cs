@@ -49,9 +49,10 @@ namespace TFSAggregator.TfsSpecific
         {
             var uri = GetCollectionUriFromContext(requestContext);
             string settingsPath = GetSettingsFullPath();
+            var logger = new Aggregator.ServerPlugin.ServerEventLogger(LogLevel.Warning);
             // TODO avoid reload every time
-            var settings = TFSAggregatorSettings.LoadFromFile(settingsPath);
-            var logger = new Aggregator.ServerPlugin.ServerEventLogger(settings.LogLevel);
+            var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
+            logger.Level = settings.LogLevel;
 
 
             var result = new ProcessingResult();

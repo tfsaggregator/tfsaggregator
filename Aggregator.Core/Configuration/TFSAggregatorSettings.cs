@@ -14,14 +14,14 @@ namespace Aggregator.Core.Configuration
         public IEnumerable<Rule> Rules { get; set; }
         public IEnumerable<Policy> Policies { get; set; }
 
-        public static TFSAggregatorSettings LoadFromFile(string settingsPath)
+        public static TFSAggregatorSettings LoadFromFile(string settingsPath, ILogEvents logger)
         {
-            return Load((xmlLoadOptions) => XDocument.Load(settingsPath, xmlLoadOptions));
+            return Load(logger, (xmlLoadOptions) => XDocument.Load(settingsPath, xmlLoadOptions));
         }
 
-        public static TFSAggregatorSettings LoadXml(string content)
+        public static TFSAggregatorSettings LoadXml(string content, ILogEvents logger)
         {
-            return Load((xmlLoadOptions) => XDocument.Parse(content, xmlLoadOptions));
+            return Load(logger, (xmlLoadOptions) => XDocument.Parse(content, xmlLoadOptions));
         }
 
         /// <summary>
@@ -29,14 +29,14 @@ namespace Aggregator.Core.Configuration
         /// </summary>
         /// <param name="load">A lambda returning the <see cref="XDocument"/> to parse.</param>
         /// <returns></returns>
-        public static TFSAggregatorSettings Load(Func<LoadOptions, XDocument> load)
+        public static TFSAggregatorSettings Load(ILogEvents logger, Func<LoadOptions, XDocument> load)
         {
             var instance = new TFSAggregatorSettings();
 
             LoadOptions xmlLoadOptions = LoadOptions.PreserveWhitespace | LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
             XDocument doc = load(xmlLoadOptions);
 
-            LogLevel logLevel;
+            LogLevel logLevel = LogLevel.Normal;
             if (Enum.TryParse<LogLevel>(doc.Root.Attribute("logLevel").Value, out logLevel))
                 instance.LogLevel = logLevel;
 
