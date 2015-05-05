@@ -31,7 +31,7 @@ You can get the [`Id`](https://msdn.microsoft.com/en-us/library/microsoft.teamfo
 Helper property to navigate a work item's parent in the Parent-Child hierarchy.
 
 ```
-self.Parent["Title"]
+self.Parent["System.Title"]
 ```
 
 ## Children
