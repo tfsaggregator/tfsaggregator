@@ -31,7 +31,7 @@ Valid values are:
 See the Help page for more info: [TFS Aggregator Troubleshooting](Troubleshooting.md)
 
 ```
-    <rule name="Noop" appliesTo="Task" hasFields="Title,Description">
+    <rule name="Noop" appliesTo="Task" hasFields="System.Title,System.Description">
     </rule>
 ```
 
