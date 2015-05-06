@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace Aggregator.ServerPlugin
 {
@@ -68,6 +69,22 @@ namespace Aggregator.ServerPlugin
             if (!isValid)
                 Log(LogLevel.Verbose, "Invalid fields: {0}",
                     workItem.GetInvalidWorkItemFieldsList());
+        }
+
+        public void InvalidConfiguration(XmlSeverityType severity, string message, int lineNumber, int linePosition)
+        {
+            switch (severity)
+            {
+                case XmlSeverityType.Error:
+                    Log(LogLevel.Error, "Error in policy file at line {1}, position {2}: {0}", message, lineNumber, linePosition);
+                    break;
+                case XmlSeverityType.Warning:
+                    Log(LogLevel.Warning, "Policy file at line {1}, position {2}: {0}", message, lineNumber, linePosition);
+                    break;
+                default:
+                    Log(LogLevel.Information, "Policy file at line {1}, position {2}: {0}", message, lineNumber, linePosition);
+                    break;
+            }//switch
         }
     }
 }

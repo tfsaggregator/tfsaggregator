@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace Aggregator.Core.Configuration
 {
@@ -35,6 +37,20 @@ namespace Aggregator.Core.Configuration
 
             LoadOptions xmlLoadOptions = LoadOptions.PreserveWhitespace | LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
             XDocument doc = load(xmlLoadOptions);
+
+            XmlSchemaSet schemas = new XmlSchemaSet();
+            var thisAssembly = Assembly.GetAssembly(typeof(TFSAggregatorSettings));
+            var stream = thisAssembly.GetManifestResourceStream("Aggregator.Core.Configuration.AggregatorConfiguration.xsd");
+            schemas.Add("", System.Xml.XmlReader.Create(stream));
+            bool errors = false;
+            doc.Validate(schemas, (o, e) =>
+            {
+                logger.InvalidConfiguration(e.Severity, e.Message, e.Exception.LineNumber, e.Exception.LinePosition);
+                errors = true;
+            }, true);
+            if (errors)
+                // HACK we must handle this scenario with clean exit
+                return null;
 
             LogLevel logLevel = LogLevel.Normal;
             if (Enum.TryParse<LogLevel>(doc.Root.Attribute("logLevel").Value, out logLevel))

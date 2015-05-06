@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="AggregatorConfiguration">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="unbounded" name="rule">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="name" type="xs:ID" use="required" />
+                                <xs:attribute name="appliesTo" type="xs:string" use="optional" />
+                                <xs:attribute name="hasFields" type="xs:string" use="optional" />
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                    <xs:unique name="uniqueRuleName">
+                        <xs:selector xpath="./rule"/>
+                        <xs:field xpath="name"/>
+                    </xs:unique>
+                </xs:element>
+                <xs:element minOccurs="1" maxOccurs="unbounded" name="policy">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" maxOccurs="1" name="collectionScope">
+                                <xs:complexType>
+                                    <xs:attribute name="collections" type="xs:string" use="required" />
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="0" maxOccurs="1" name="templateScope">
+                                <xs:complexType>
+                                    <xs:attribute name="name" type="xs:string" use="required" />
+                                    <xs:attribute name="typeId" type="xs:string" use="required" />
+                                    <xs:attribute name="minVersion" type="xs:decimal" use="required" />
+                                    <xs:attribute name="maxVersion" type="xs:decimal" use="required" />
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="0" maxOccurs="1" name="projectScope">
+                                <xs:complexType>
+                                    <xs:attribute name="projects" type="xs:string" use="required" />
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="1" maxOccurs="unbounded" name="ruleRef">
+                                <xs:complexType>
+                                    <xs:attribute name="name" type="xs:IDREF" use="required" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="name" type="xs:string" use="required" />
+                    </xs:complexType>
+                    <xs:unique name="uniquePolicyName">
+                        <xs:selector xpath="./policy"/>
+                        <xs:field xpath="name"/>
+                    </xs:unique>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="logLevel" use="optional" default="Normal" >
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="Critical"/>
+                        <xs:enumeration value="Error"/>
+                        <xs:enumeration value="Warning"/>
+                        <xs:enumeration value="Information"/>
+                        <xs:enumeration value="Normal"/>
+                        <xs:enumeration value="Verbose"/>
+                        <xs:enumeration value="Diagnostic"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="autoImpersonate" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="scriptLanguage" type="xs:string" use="optional" default="C#" />
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

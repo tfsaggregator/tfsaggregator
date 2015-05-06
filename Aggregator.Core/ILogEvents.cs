@@ -8,6 +8,8 @@ namespace Aggregator.Core
 {
     using System.Collections.ObjectModel;
     using System.Management.Automation;
+    using System.Xml.Schema;
+
 
     /// <summary>
     /// Levels of logging.
@@ -35,5 +37,6 @@ namespace Aggregator.Core
         void ResultsFromScriptRun(string scriptName, object result);
         void ScriptHasError(string scriptName, int line, int column, string errorCode, string errorText);
         void Saving(IWorkItem workItem, bool isValid);
+        void InvalidConfiguration(XmlSeverityType severity, string message, int lineNumber, int linePosition);
     }
 }
