@@ -86,5 +86,10 @@ namespace Aggregator.ServerPlugin
                     break;
             }//switch
         }
+
+        public void UnreferencedRule(string ruleName)
+        {
+            Log(LogLevel.Warning, "Rule {0} is never used", ruleName);
+        }
     }
 }

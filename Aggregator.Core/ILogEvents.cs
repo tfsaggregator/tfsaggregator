@@ -38,5 +38,6 @@ namespace Aggregator.Core
         void ScriptHasError(string scriptName, int line, int column, string errorCode, string errorText);
         void Saving(IWorkItem workItem, bool isValid);
         void InvalidConfiguration(XmlSeverityType severity, string message, int lineNumber, int linePosition);
+        void UnreferencedRule(string ruleName);
     }
 }

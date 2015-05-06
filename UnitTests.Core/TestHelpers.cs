@@ -12,7 +12,7 @@ namespace UnitTests.Core
 {
     internal static class TestHelpers
     {
-        private static string LoadTextFromEmbeddedResource(string resourceName)
+        public static string LoadTextFromEmbeddedResource(string resourceName)
         {
             try
             {
