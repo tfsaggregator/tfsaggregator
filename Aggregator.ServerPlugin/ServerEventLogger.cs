@@ -59,6 +59,12 @@ namespace Aggregator.ServerPlugin
                 scriptName, line, column, errorCode, errorText);
         }
 
+        public void ScriptHasWarning(string scriptName, int line, int column, string errorCode, string errorText)
+        {
+            Log(LogLevel.Warning,
+                "Warning {3} in script {0} at line {1}, column {2}: {4}",
+                scriptName, line, column, errorCode, errorText);
+        }
 
         public void Saving(IWorkItem workItem, bool isValid)
         {
@@ -90,6 +96,41 @@ namespace Aggregator.ServerPlugin
         public void UnreferencedRule(string ruleName)
         {
             Log(LogLevel.Warning, "Rule {0} is never used", ruleName);
+        }
+
+        public void ConfigurationLoaded(string policyFile)
+        {
+            Log(LogLevel.Information, "Configuration loaded successfully from {0}", policyFile);
+        }
+
+        public void StartingProcessing(IRequestContext context, INotification notification)
+        {
+            Log(LogLevel.Information, "Starting processing on workitem #{0}", notification.WorkItemId);
+        }
+
+        public void ProcessingCompleted(ProcessingResult result)
+        {
+            Log(LogLevel.Information, "Processing completed: {0}", result.StatusMessage);
+        }
+
+        public void ApplyingPolicy(string name)
+        {
+            Log(LogLevel.Verbose, "Applying Policy {0}", name);
+        }
+
+        public void ApplyingRule(string name)
+        {
+            Log(LogLevel.Verbose, "Applying Rule {0}", name);
+        }
+
+        public void BuildingScriptEngine(string scriptLanguage)
+        {
+            Log(LogLevel.Verbose, "Building Script Engine for {0}", scriptLanguage);
+        }
+
+        public void RunningRule(string name, IWorkItem workItem)
+        {
+            Log(LogLevel.Verbose, "Executing Rule {0} on #{1}", name, workItem.Id);
         }
     }
 }

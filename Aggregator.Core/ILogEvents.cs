@@ -32,12 +32,20 @@ namespace Aggregator.Core
     /// <remarks>The method *must* not raise exception.</remarks>
     public interface ILogEvents
     {
+        void ConfigurationLoaded(string policyFile);
+        void StartingProcessing(IRequestContext context, INotification notification);
+        void ProcessingCompleted(ProcessingResult result);
         void WorkItemWrapperTryOpenException(IWorkItem workItem, Exception e);
         void ResultsFromScriptRun(string scriptName, Collection<PSObject> results);
         void ResultsFromScriptRun(string scriptName, object result);
         void ScriptHasError(string scriptName, int line, int column, string errorCode, string errorText);
+        void ScriptHasWarning(string scriptName, int line, int column, string errorCode, string errorText);
         void Saving(IWorkItem workItem, bool isValid);
         void InvalidConfiguration(XmlSeverityType severity, string message, int lineNumber, int linePosition);
         void UnreferencedRule(string ruleName);
+        void ApplyingPolicy(string name);
+        void ApplyingRule(string name);
+        void BuildingScriptEngine(string scriptLanguage);
+        void RunningRule(string name, IWorkItem workItem);
     }
 }

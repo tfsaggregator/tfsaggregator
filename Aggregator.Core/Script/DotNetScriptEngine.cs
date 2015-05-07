@@ -67,25 +67,6 @@ namespace Aggregator.Core
 
             CompilerResults compilerResult;
             compilerResult = codeDomProvider.CompileAssemblyFromSource(compilerOptions, code);
-
-            if (compilerResult.Errors.HasErrors)
-            {
-                foreach (CompilerError err in compilerResult.Errors)
-                {
-                    logger.ScriptHasError("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
-                }
-                return null;
-            }
-
-            if (compilerResult.Errors.HasWarnings)
-            {
-                foreach (CompilerError err in compilerResult.Errors)
-                {
-                    //TODO warning instead of errors
-                    logger.ScriptHasError("***", err.Line - 8, err.Column, err.ErrorNumber, err.ErrorText);
-                }
-            }
-
             return compilerResult;
         }
 
@@ -151,6 +132,23 @@ namespace Aggregator.Core
         {
             // build a single assembly and class from multiple scripts
             compilerResult = CompileCode(sourceCode.Values.ToArray(), debug);
+
+            // TODO find a way to get where the error is
+            if (compilerResult.Errors.HasErrors)
+            {
+                foreach (CompilerError err in compilerResult.Errors)
+                {
+                    logger.ScriptHasError("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
+                }
+            }
+            if (compilerResult.Errors.HasWarnings)
+            {
+                foreach (CompilerError err in compilerResult.Errors)
+                {
+                    logger.ScriptHasWarning("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
+                }
+            }
+
             return !compilerResult.Errors.HasErrors;
         }
 

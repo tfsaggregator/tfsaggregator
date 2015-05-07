@@ -52,8 +52,14 @@ namespace TFSAggregator.TfsSpecific
             var logger = new Aggregator.ServerPlugin.ServerEventLogger(LogLevel.Warning);
             // TODO avoid reload every time
             var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
+            if (settings == null)
+            {
+                statusCode = 99;
+                statusMessage = "Errors in configuration file " + settingsPath;
+                properties = null;
+                return EventNotificationStatus.ActionPermitted;
+            }
             logger.Level = settings.LogLevel;
-
 
             var result = new ProcessingResult();
             try
@@ -69,11 +75,12 @@ namespace TFSAggregator.TfsSpecific
 
                     EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, toImpersonate, logger, settings); //we only need one for the whole app
 
-
                     var context = new RequestContextWrapper(requestContext);
                     var notification = new NotificationWrapper(notificationType, notificationEventArgs as WorkItemChangedEvent);
 
+                    logger.StartingProcessing(context, notification);
                     result = eventProcessor.ProcessEvent(context, notification);
+                    logger.ProcessingCompleted(result);
                 }//if
             }
             catch (Exception e)

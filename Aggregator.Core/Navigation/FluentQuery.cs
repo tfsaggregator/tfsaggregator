@@ -38,6 +38,11 @@ namespace Aggregator.Core
                 && string.Compare(this.LinkType, rhs.LinkType, true) == 0;
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public FluentQuery WhereTypeIs(string workItemType)
         {
             this.WorkItemType = workItemType;

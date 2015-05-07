@@ -56,6 +56,7 @@ namespace Aggregator.Core
 
                 foreach (var policy in policies)
                 {
+                    logger.ApplyingPolicy(policy.Name);
                     ApplyRules(workItem, policy.Rules);
                 }
 
@@ -73,6 +74,7 @@ namespace Aggregator.Core
         {
             foreach (var rule in rules)
             {
+                logger.ApplyingRule(rule.Name);
                 ApplyRule(rule, workItem);
             }
         }
@@ -81,6 +83,7 @@ namespace Aggregator.Core
         {
             if (rule.Scope.All(s => s.Matches(workItem)))
             {
+                logger.RunningRule(rule.Name, workItem);
                 engine.Run(rule.Name, workItem);
             }
         }
@@ -102,6 +105,7 @@ namespace Aggregator.Core
 
         private ScriptEngine MakeEngine(string scriptLanguage, IWorkItemRepository workItemRepository, ILogEvents logEvents)
         {
+            logger.BuildingScriptEngine(scriptLanguage);
             Type t = GetScriptEngineType(scriptLanguage);
             var ctor = t.GetConstructor(new Type[] { typeof(IWorkItemRepository), typeof(ILogEvents) });
             ScriptEngine engine = ctor.Invoke(new object[] { this.store, this.logger }) as ScriptEngine;

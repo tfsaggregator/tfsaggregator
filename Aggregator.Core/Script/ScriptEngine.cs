@@ -31,7 +31,7 @@ namespace Aggregator.Core
         /// <summary>
         /// Informs the engine that all script has been loaded.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>true when succeeded</returns>
         public abstract bool LoadCompleted();
 
         /// <summary>

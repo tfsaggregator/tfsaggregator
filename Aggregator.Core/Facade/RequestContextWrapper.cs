@@ -55,7 +55,7 @@ namespace Aggregator.Core.Facade
             
             string ProjectName = string.Empty; 
             string ProjectState = String.Empty;
-            int templateId = 0;
+            //int templateId = 0;
             CommonStructureProjectProperty[] ProjectProperties = null;
 
             ics.GetProjectProperties(context, projectUri.ToString(), out ProjectName, out ProjectState, out ProjectProperties);

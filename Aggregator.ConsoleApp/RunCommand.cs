@@ -50,7 +50,12 @@ namespace Aggregator.ConsoleApp
             // need a logger to show errors in config file (Catch 22)
             var logger = new ConsoleEventLogger(LogLevel.Error);
             var settings = TFSAggregatorSettings.LoadFromFile(this.PolicyFile, logger);
+            if (settings == null)
+            {
+                return 99;
+            }
             logger.Level = settings.LogLevel;
+            logger.ConfigurationLoaded(this.PolicyFile);
             EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, null, logger, settings); //we only need one for the whole app
 
             var result = new ProcessingResult();
@@ -59,7 +64,9 @@ namespace Aggregator.ConsoleApp
                 var context = new RequestContextConsoleApp(this.TeamProjectCollectionUrl, TeamProjectName);
                 var notification = new NotificationConsoleApp(this.WorkItemId, this.TeamProjectName);
 
+                logger.StartingProcessing(context, notification);
                 result = eventProcessor.ProcessEvent(context, notification);
+                logger.ProcessingCompleted(result);
 
                 return result.StatusCode;
             }
