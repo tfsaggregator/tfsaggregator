@@ -60,9 +60,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="deploy.cmd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>IF EXIST "$(ProjectDir)deploy.cmd" (
+  cmd /D /E:ON /C "$(ProjectDir)deploy.cmd $(ConfigurationName) $(TargetDir)"
+)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
