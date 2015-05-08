@@ -109,11 +109,10 @@ namespace TFSAggregator.TfsSpecific
             string extension = ".policies";
 
             // Load the file from same folder where DLL is located
-            return System.IO.Path.ChangeExtension(
-                    System.IO.Path.Combine(
+            return System.IO.Path.Combine(
                         System.IO.Path.GetDirectoryName(new Uri(thisAssembly.CodeBase).LocalPath),
-                        baseName),
-                    extension);
+                        baseName)
+                    + extension;
         }
 
         private Uri GetCollectionUriFromContext(TeamFoundationRequestContext requestContext)
@@ -126,9 +125,9 @@ namespace TFSAggregator.TfsSpecific
         private IdentityDescriptor GetIdentityToImpersonate(TeamFoundationRequestContext requestContext, WorkItemChangedEvent workItemChangedEvent)
         {
             Uri server = GetCollectionUriFromContext(requestContext);
-            
+
             var configurationServer = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(server);
-            
+
             //TODO: Find a way to read the identity from the server object model instead.
             IIdentityManagementService identityManagementService =
             configurationServer.GetService<IIdentityManagementService>();
