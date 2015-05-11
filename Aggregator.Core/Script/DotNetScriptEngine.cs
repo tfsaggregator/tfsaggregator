@@ -44,9 +44,14 @@ namespace Aggregator.Core
             refList.Add("System.dll");
             // CAREFUL HERE and remember to AddReference and set CopyLocal=true in UnitTest project!
             var wiAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(ass => ass.GetName().Name == "Microsoft.TeamFoundation.WorkItemTracking.Client").First();
-
-            refList.Add(new Uri(wiAssembly.CodeBase).LocalPath);
+                .Where(ass => ass.GetName().Name == "Microsoft.TeamFoundation.WorkItemTracking.Client").FirstOrDefault();
+            if (wiAssembly != null)
+                refList.Add(new Uri(wiAssembly.CodeBase).LocalPath);
+            else {
+                string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string asmPath = Path.Combine(dir, "Microsoft.TeamFoundation.WorkItemTracking.Client.dll");
+                refList.Add(asmPath);
+            }
 
             return refList.ToArray();
         }
@@ -92,16 +97,12 @@ namespace Aggregator.Core
                             }
                             else
                             {
-                                // hmmm, for some reason it didn't create the object
-                                // this shouldn't happen, as we have been doing checks all along, but we should
-                                // inform the user something bad has happened, and possibly request them to send
-                                // you the script so you can debug this problem
+                                logger.FailureLoadingScript(scriptName);
                             }
                         }
                         else
                         {
-                            // and even more friendly and explain that there was no valid constructor
-                            // found and that's why this script object wasn't run
+                            logger.FailureLoadingScript(scriptName);
                         }
                     }
                 }
@@ -157,8 +158,14 @@ namespace Aggregator.Core
             if (!compilerResult.Errors.HasErrors)
             {
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-                RunScript(compilerResult.CompiledAssembly, scriptName, workItem);
-                AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
+                try
+                {
+                    RunScript(compilerResult.CompiledAssembly, scriptName, workItem);
+                }
+                finally
+                {
+                    AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
+                }
             }
             CleanUp(debug, compilerResult);
         }

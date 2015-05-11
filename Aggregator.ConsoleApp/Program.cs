@@ -21,7 +21,10 @@ namespace Aggregator.ConsoleApp
                 int rc = ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out);
                 if (rc == 0)
                 {
+                    ConsoleColor save = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Succeeded.");
+                    Console.ForegroundColor = save;
                 }//if
                 return rc;
             }

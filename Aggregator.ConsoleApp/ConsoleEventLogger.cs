@@ -132,5 +132,10 @@ namespace Aggregator.ConsoleApp
         {
             Log(LogLevel.Verbose, "Executing Rule {0} on #{1}", name, workItem.Id);
         }
+
+        public void FailureLoadingScript(string scriptName)
+        {
+            Log(LogLevel.Error, "Failure in parsing {0} script", scriptName);
+        }
     }
 }
