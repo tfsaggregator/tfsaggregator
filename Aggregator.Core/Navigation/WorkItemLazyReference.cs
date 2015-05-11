@@ -17,7 +17,7 @@ namespace Aggregator.Core.Navigation
         IWorkItem targetWorkItem;
 
         public static readonly string ParentRelationship = "System.LinkTypes.Hierarchy-Reverse";
-        public static readonly string ChildRelationship = "System.LinkTypes.Hierarchy-Reverse";
+        public static readonly string ChildRelationship = "System.LinkTypes.Hierarchy-Forward";
 
         public static WorkItemLazyReference MakeParentLazyReference(IWorkItem sourceItem, IWorkItemRepository store)
         {

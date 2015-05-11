@@ -31,7 +31,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return link.LinkTypeEnd.Id;
+                return link.TargetId;
             }
         }
 
