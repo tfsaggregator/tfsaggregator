@@ -159,5 +159,35 @@ return searchResult;
             Assert.AreEqual(workItem.Fields["State"].OriginalValue, workItem.Fields["State"].Value);
             Assert.IsFalse(workItem._SaveCalled);
         }
+
+        [TestMethod]
+        public void TransitionStateCSharp_New_to_Done_succeeded_via_InProgress()
+        {
+            string script = @"
+self.TransitionToState(""Done"", ""script test"");
+";
+            var repository = new WorkItemRepositoryMock();
+            var logger = Substitute.For<ILogEvents>();
+            repository.Logger = logger;
+            var workItem = new WorkItemMock(repository);
+            var workItemType = new WorkItemTypeMock()
+            {
+                Name = "Task",
+                DocumentContent = TestHelpers.LoadTextFromEmbeddedResource("task.xml")
+            };
+            workItem.Id = 42;
+            workItem.Type = workItemType;
+            workItem.TypeName = workItemType.Name;
+            ((FieldMock)workItem.Fields["State"]).OriginalValue = "";
+            workItem.Fields["State"].Value = workItem.Fields["State"].OriginalValue;
+            ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
+            repository.SetWorkItems(new[] { workItem });
+
+            var engine = new CSharpScriptEngine(repository, logger);
+            engine.LoadAndRun("test", script, workItem);
+
+            Assert.AreEqual("Done", workItem.Fields["State"].Value);
+            Assert.AreEqual(2, workItem._SaveCount);
+        }
     }
 }
