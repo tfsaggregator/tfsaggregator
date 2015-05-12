@@ -13,6 +13,8 @@ namespace UnitTests.Core.Mock
     {
         private List<IWorkItem> _workItems = new List<IWorkItem>();
         List<IWorkItem> loadedWorkItems = new List<IWorkItem>();
+
+        public ILogEvents Logger { get; set; }
         
         public IWorkItem GetWorkItem(int workItemId)
         {

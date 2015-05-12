@@ -137,5 +137,22 @@ namespace Aggregator.ServerPlugin
         {
             Log(LogLevel.Error, "Failure in parsing {0} script", scriptName);
         }
+
+        public void AttemptingToMoveWorkItemToState(IWorkItem workItem, string orginalSourceState, string destState)
+        {
+            Log(LogLevel.Verbose, "Attempting to move {0} [{1}] from {2} state to {3} state"
+                , workItem.Type.Name, workItem.Id, orginalSourceState, destState);
+        }
+
+        public void WorkItemIsValidToSave(IWorkItem workItem)
+        {
+            Log(LogLevel.Verbose, "WorkItem {0} [{1}] is valid to save", workItem.Type.Name, workItem.Id);
+        }
+
+        public void WorkItemIsInvalidInState(IWorkItem workItem, string destState)
+        {
+            Log(LogLevel.Warning, "WorkItem is invalid in the {0} state. Invalid fields: {1}"
+                , destState, workItem.GetInvalidWorkItemFieldsList());
+        }
     }
 }

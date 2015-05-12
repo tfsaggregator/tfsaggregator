@@ -89,5 +89,75 @@ return searchResult;
             expected.LinkType = "*";
             logger.Received().ResultsFromScriptRun("test", expected);
         }
+
+        [TestMethod]
+        public void TransitionState_InProgress_to_Done_succeeded()
+        {
+            var repository = new WorkItemRepositoryMock();
+            repository.Logger = Substitute.For<ILogEvents>();
+            var workItem = new WorkItemMock(repository);
+            workItem.Id = 42;
+            workItem.TypeName = "Task";
+            workItem.Fields["State"].Value = "In Progress";
+            repository.SetWorkItems(new[] { workItem });
+            string targetState = "Done";
+
+            workItem.TransitionToState(targetState, "test");
+
+            Assert.AreEqual(targetState, workItem.Fields["State"].Value);
+            Assert.IsTrue(workItem._SaveCalled);
+        }
+
+        [TestMethod]
+        public void TransitionState_New_to_Done_succeeded_via_InProgress()
+        {
+            var repository = new WorkItemRepositoryMock();
+            repository.Logger = Substitute.For<ILogEvents>();
+            var workItem = new WorkItemMock(repository);
+            var workItemType = new WorkItemTypeMock() {
+                Name = "Task",
+                DocumentContent = TestHelpers.LoadTextFromEmbeddedResource("task.xml")
+            };
+            workItem.Id = 42;
+            workItem.Type = workItemType;
+            workItem.TypeName = workItemType.Name;
+            ((FieldMock)workItem.Fields["State"]).OriginalValue = "";
+            workItem.Fields["State"].Value = workItem.Fields["State"].OriginalValue;
+            ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
+            repository.SetWorkItems(new[] { workItem });
+            string targetState = "Done";
+
+            workItem.TransitionToState(targetState, "test");
+
+            Assert.AreEqual(targetState, workItem.Fields["State"].Value);
+            Assert.AreEqual(2, workItem._SaveCount);
+        }
+
+        [TestMethod]
+        public void TransitionState_to_non_existing()
+        {
+            var repository = new WorkItemRepositoryMock();
+            repository.Logger = Substitute.For<ILogEvents>();
+            var workItem = new WorkItemMock(repository);
+            var workItemType = new WorkItemTypeMock()
+            {
+                Name = "Task",
+                DocumentContent = TestHelpers.LoadTextFromEmbeddedResource("task.xml")
+            };
+            workItem.Id = 42;
+            workItem.Type = workItemType;
+            workItem.TypeName = workItemType.Name;
+            workItem.Fields["State"].Value = "";
+            ((FieldMock)workItem.Fields["State"]).OriginalValue = "";
+            ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
+            repository.SetWorkItems(new[] { workItem });
+            string targetState = "DoesNotExists";
+
+            workItem.TransitionToState(targetState, "test");
+
+            Assert.AreNotEqual(targetState, workItem.Fields["State"].Value);
+            Assert.AreEqual(workItem.Fields["State"].OriginalValue, workItem.Fields["State"].Value);
+            Assert.IsFalse(workItem._SaveCalled);
+        }
     }
 }

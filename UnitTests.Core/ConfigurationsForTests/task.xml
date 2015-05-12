@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<witd:WITD application="Work item type editor" version="1.0" xmlns:witd="http://schemas.microsoft.com/VisualStudio/2008/workitemtracking/typedef">
+    <WORKITEMTYPE name="Task">
+        <DESCRIPTION>Tracks work that needs to be done.</DESCRIPTION>
+        <FIELDS>
+            <FIELD name="Iteration Path" refname="System.IterationPath" type="TreePath" reportable="dimension" />
+            <FIELD name="Iteration ID" refname="System.IterationId" type="Integer" />
+            <FIELD name="External Link Count" refname="System.ExternalLinkCount" type="Integer" />
+            <FIELD name="Team Project" refname="System.TeamProject" type="String" reportable="dimension" />
+            <FIELD name="Hyperlink Count" refname="System.HyperLinkCount" type="Integer" />
+            <FIELD name="Attached File Count" refname="System.AttachedFileCount" type="Integer" />
+            <FIELD name="Node Name" refname="System.NodeName" type="String" />
+            <FIELD name="Area Path" refname="System.AreaPath" type="TreePath" reportable="dimension" />
+            <FIELD name="Revised Date" refname="System.RevisedDate" type="DateTime" reportable="detail" />
+            <FIELD name="Changed Date" refname="System.ChangedDate" type="DateTime" reportable="dimension" />
+            <FIELD name="ID" refname="System.Id" type="Integer" reportable="dimension" />
+            <FIELD name="Area ID" refname="System.AreaId" type="Integer" />
+            <FIELD name="Authorized As" refname="System.AuthorizedAs" type="String" syncnamechanges="true" />
+            <FIELD name="Title" refname="System.Title" type="String" reportable="dimension">
+                <REQUIRED />
+            </FIELD>
+            <FIELD name="State" refname="System.State" type="String" reportable="dimension" />
+            <FIELD name="Authorized Date" refname="System.AuthorizedDate" type="DateTime" />
+            <FIELD name="Watermark" refname="System.Watermark" type="Integer" />
+            <FIELD name="Rev" refname="System.Rev" type="Integer" reportable="dimension" />
+            <FIELD name="Changed By" refname="System.ChangedBy" type="String" syncnamechanges="true" reportable="dimension" />
+            <FIELD name="Reason" refname="System.Reason" type="String" reportable="dimension" />
+            <FIELD name="Assigned To" refname="System.AssignedTo" type="String" syncnamechanges="true" reportable="dimension">
+                <ALLOWEXISTINGVALUE />
+                <VALIDUSER />
+            </FIELD>
+            <FIELD name="Work Item Type" refname="System.WorkItemType" type="String" reportable="dimension" />
+            <FIELD name="Created Date" refname="System.CreatedDate" type="DateTime" reportable="dimension" />
+            <FIELD name="Created By" refname="System.CreatedBy" type="String" syncnamechanges="true" reportable="dimension" />
+            <FIELD name="Description" refname="System.Description" type="HTML" />
+            <FIELD name="History" refname="System.History" type="History" />
+            <FIELD name="Related Link Count" refname="System.RelatedLinkCount" type="Integer" />
+            <FIELD name="Tags" refname="System.Tags" type="PlainText" />
+            <FIELD name="Closed Date" refname="Microsoft.VSTS.Common.ClosedDate" type="DateTime" reportable="dimension">
+                <WHENNOTCHANGED field="System.State">
+                    <READONLY />
+                </WHENNOTCHANGED>
+            </FIELD>
+            <FIELD name="Integration Build" refname="Microsoft.VSTS.Build.IntegrationBuild" type="String" reportable="dimension">
+                <SUGGESTEDVALUES expanditems="true">
+                    <LISTITEM value="&lt;None&gt;" />
+                </SUGGESTEDVALUES>
+            </FIELD>
+            <FIELD name="Blocked" refname="Microsoft.VSTS.CMMI.Blocked" type="String" reportable="dimension">
+                <ALLOWEDVALUES expanditems="true">
+                    <LISTITEM value="Yes" />
+                </ALLOWEDVALUES>
+            </FIELD>
+            <FIELD name="Remaining Work" refname="Microsoft.VSTS.Scheduling.RemainingWork" type="Double" reportable="measure" formula="sum" />
+            <FIELD name="Backlog Priority" refname="Microsoft.VSTS.Common.BacklogPriority" type="Double" reportable="detail" />
+            <FIELD name="Activity" refname="Microsoft.VSTS.Common.Activity" type="String" reportable="dimension">
+                <SUGGESTEDVALUES expanditems="true">
+                    <LISTITEM value="Development" />
+                    <LISTITEM value="Testing" />
+                    <LISTITEM value="Requirements" />
+                    <LISTITEM value="Design" />
+                    <LISTITEM value="Deployment" />
+                    <LISTITEM value="Documentation" />
+                </SUGGESTEDVALUES>
+            </FIELD>
+        </FIELDS>
+        <WORKFLOW>
+            <STATES>
+                <STATE value="To Do">
+                    <FIELDS>
+                        <FIELD refname="Microsoft.VSTS.Common.ClosedDate">
+                            <EMPTY />
+                        </FIELD>
+                    </FIELDS>
+                </STATE>
+                <STATE value="In Progress">
+                    <FIELDS>
+                        <FIELD refname="Microsoft.VSTS.Common.ClosedDate">
+                            <EMPTY />
+                        </FIELD>
+                    </FIELDS>
+                </STATE>
+                <STATE value="Done">
+                    <FIELDS>
+                        <FIELD refname="Microsoft.VSTS.Common.ClosedDate">
+                            <REQUIRED />
+                        </FIELD>
+                        <FIELD refname="Microsoft.VSTS.CMMI.Blocked">
+                            <EMPTY />
+                        </FIELD>
+                        <FIELD refname="Microsoft.VSTS.Scheduling.RemainingWork">
+                            <EMPTY />
+                        </FIELD>
+                    </FIELDS>
+                </STATE>
+                <STATE value="Removed">
+                    <FIELDS>
+                        <FIELD refname="Microsoft.VSTS.CMMI.Blocked">
+                            <EMPTY />
+                        </FIELD>
+                        <FIELD refname="Microsoft.VSTS.Scheduling.RemainingWork">
+                            <EMPTY />
+                        </FIELD>
+                    </FIELDS>
+                </STATE>
+            </STATES>
+            <TRANSITIONS>
+                <TRANSITION from="To Do" to="Done">
+                    <REASONS>
+                        <DEFAULTREASON value="Work finished" />
+                    </REASONS>
+                    <FIELDS>
+                        <FIELD refname="Microsoft.VSTS.Common.ClosedDate">
+                            <SERVERDEFAULT from="clock" />
+                        </FIELD>
+                    </FIELDS>
+                    <ACTIONS>
+                        <ACTION value="Microsoft.VSTS.Actions.Checkin" />
+                    </ACTIONS>
+                </TRANSITION>
+                <TRANSITION from="In Progress" to="Done">
+                    <REASONS>
+                        <DEFAULTREASON value="Work finished" />
+                    </REASONS>
+                    <FIELDS>
+                        <FIELD refname="Microsoft.VSTS.Common.ClosedDate">
+                            <SERVERDEFAULT from="clock" />
+                        </FIELD>
+                    </FIELDS>
+                    <ACTIONS>
+                        <ACTION value="Microsoft.VSTS.Actions.Checkin" />
+                    </ACTIONS>
+                </TRANSITION>
+                <TRANSITION from="Done" to="To Do">
+                    <REASONS>
+                        <DEFAULTREASON value="Additional work found" />
+                    </REASONS>
+                </TRANSITION>
+                <TRANSITION from="" to="To Do">
+                    <REASONS>
+                        <DEFAULTREASON value="New task" />
+                    </REASONS>
+                </TRANSITION>
+                <TRANSITION from="In Progress" to="To Do">
+                    <REASONS>
+                        <DEFAULTREASON value="Work stopped" />
+                    </REASONS>
+                    <ACTIONS>
+                        <ACTION value="Microsoft.VSTS.Actions.StopWork" />
+                    </ACTIONS>
+                </TRANSITION>
+                <TRANSITION from="Removed" to="To Do">
+                    <REASONS>
+                        <DEFAULTREASON value="Reconsidering the Task" />
+                    </REASONS>
+                </TRANSITION>
+                <TRANSITION from="Done" to="In Progress">
+                    <REASONS>
+                        <DEFAULTREASON value="Additional work found" />
+                    </REASONS>
+                    <FIELDS>
+                        <FIELD refname="Microsoft.VSTS.Scheduling.RemainingWork">
+                            <REQUIRED />
+                        </FIELD>
+                    </FIELDS>
+                </TRANSITION>
+                <TRANSITION from="To Do" to="In Progress">
+                    <REASONS>
+                        <DEFAULTREASON value="Work started" />
+                    </REASONS>
+                    <ACTIONS>
+                        <ACTION value="Microsoft.VSTS.Actions.StartWork" />
+                    </ACTIONS>
+                </TRANSITION>
+                <TRANSITION from="To Do" to="Removed">
+                    <REASONS>
+                        <DEFAULTREASON value="Removed from the backlog" />
+                    </REASONS>
+                </TRANSITION>
+                <TRANSITION from="In Progress" to="Removed">
+                    <REASONS>
+                        <DEFAULTREASON value="Removed from the backlog" />
+                    </REASONS>
+                </TRANSITION>
+            </TRANSITIONS>
+        </WORKFLOW>
+        <FORM>
+            <Layout HideReadOnlyEmptyFields="true" HideControlBorders="true">
+                <Group Margin="(4,0,0,0)">
+                    <Column PercentWidth="100">
+                        <Control FieldName="System.Title" Type="FieldControl" ControlFontSize="large" EmptyText="&lt;Enter title here&gt;" />
+                    </Column>
+                </Group>
+                <Group Margin="(10,0,0,0)">
+                    <Column PercentWidth="100">
+                        <Control FieldName="System.IterationPath" Type="WorkItemClassificationControl" Label="Ite&amp;ration" LabelPosition="Left" />
+                    </Column>
+                </Group>
+                <Group Margin="(10,0,0,0)">
+                    <Column PercentWidth="50">
+                        <Group Label="Status">
+                            <Column PercentWidth="100">
+                                <Control FieldName="System.AssignedTo" Type="FieldControl" Label="Assi&amp;gned To" LabelPosition="Left" />
+                                <Control FieldName="System.State" Type="FieldControl" Label="Stat&amp;e" LabelPosition="Left" />
+                                <Control FieldName="System.Reason" Type="FieldControl" Label="Reason" LabelPosition="Left" ReadOnly="True" />
+                                <Control FieldName="Microsoft.VSTS.CMMI.Blocked" Type="FieldControl" Label="Blocked" LabelPosition="Left" />
+                            </Column>
+                        </Group>
+                    </Column>
+                    <Column PercentWidth="50">
+                        <Group Label="Details">
+                            <Column PercentWidth="100">
+                                <Control FieldName="Microsoft.VSTS.Scheduling.RemainingWork" Type="FieldControl" Label="Remaining Work" LabelPosition="Left" />
+                                <Control FieldName="Microsoft.VSTS.Common.BacklogPriority" Type="FieldControl" Label="Backlog Priority" LabelPosition="Left" />
+                                <Control FieldName="Microsoft.VSTS.Common.Activity" Type="FieldControl" Label="Activity" LabelPosition="Left" />
+                                <Control FieldName="System.AreaPath" Type="WorkItemClassificationControl" Label="&amp;Area" LabelPosition="Left" />
+                            </Column>
+                        </Group>
+                    </Column>
+                </Group>
+                <Group>
+                    <Column PercentWidth="50">
+                        <TabGroup>
+                            <Tab Label="Description">
+                                <Control FieldName="System.Description" Type="HtmlFieldControl" Label="" LabelPosition="Top" Dock="Fill" />
+                            </Tab>
+                        </TabGroup>
+                    </Column>
+                    <Column PercentWidth="50">
+                        <TabGroup Margin="(5,0,0,0)">
+                            <Tab Label="History">
+                                <Control FieldName="System.History" Type="WorkItemLogControl" Label="" LabelPosition="Top" Dock="Fill" />
+                            </Tab>
+                            <Tab Label="Links">
+                                <Control Type="LinksControl" Label="" LabelPosition="Top" Name="GeneralLinks">
+                                    <LinksControlOptions>
+                                        <LinkColumns>
+                                            <LinkColumn RefName="System.Id" />
+                                            <LinkColumn RefName="System.WorkItemType" />
+                                            <LinkColumn RefName="System.Title" />
+                                            <LinkColumn RefName="System.AssignedTo" />
+                                            <LinkColumn RefName="System.State" />
+                                            <LinkColumn LinkAttribute="System.Links.Comment" />
+                                        </LinkColumns>
+                                        <WorkItemLinkFilters FilterType="includeAll" />
+                                        <ExternalLinkFilters FilterType="includeAll" />
+                                        <WorkItemTypeFilters FilterType="includeAll" />
+                                    </LinksControlOptions>
+                                </Control>
+                            </Tab>
+                            <Tab Label="Attachments">
+                                <Control Type="AttachmentsControl" Label="" LabelPosition="Top" />
+                            </Tab>
+                        </TabGroup>
+                    </Column>
+                </Group>
+            </Layout>
+        </FORM>
+    </WORKITEMTYPE>
+</witd:WITD>

@@ -62,11 +62,15 @@
     <Compile Include="Facade\RequestContextWrapper.cs" />
     <Compile Include="Facade\WorkItemLinkCollectionWrapper.cs" />
     <Compile Include="Facade\WorkItemLinkWrapper.cs" />
+    <Compile Include="Facade\WorkItemTypeWrapper.cs" />
     <Compile Include="ILogEvents.cs" />
     <Compile Include="Interfaces\IProjectPropertyWrapper.cs" />
+    <Compile Include="Interfaces\IWorkItemType.cs" />
     <Compile Include="Navigation\FluentQuery.cs" />
     <Compile Include="Interfaces\IWorkItemLink.cs" />
     <Compile Include="Interfaces\IWorkItemLinkCollection.cs" />
+    <Compile Include="Navigation\StateTransition.cs" />
+    <Compile Include="Navigation\StateWorkflow.cs" />
     <Compile Include="Script\VBNetScriptEngine.cs" />
     <Compile Include="Script\CSharpScriptEngine.cs" />
     <Compile Include="Script\DotNetScriptEngine.cs" />

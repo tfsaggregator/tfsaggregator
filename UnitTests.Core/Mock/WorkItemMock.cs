@@ -49,11 +49,12 @@ namespace UnitTests.Core.Mock
             
         }
 
-        bool saveCalled = false;
-        public bool _SaveCalled { get { return saveCalled; } }
+        int saveCalled = 0;
+        public bool _SaveCalled { get { return saveCalled > 0; } }
+        public int _SaveCount { get { return saveCalled; } }
         public void Save()
         {
-            saveCalled = true;
+            saveCalled++;
         }
 
         public object this[string name]
@@ -99,16 +100,17 @@ namespace UnitTests.Core.Mock
             }
         }
 
+        public IWorkItemType Type { get; set; }
+
         public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
             return WorkItemLazyVisitor
                 .MakeRelativesLazyVisitor(this, query, store);
         }
 
-
         public void TransitionToState(string state, string comment)
         {
-            throw new NotImplementedException();
+            StateWorkflow.TransitionToState(this, state, comment, store.Logger);
         }
     }
 }

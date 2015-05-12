@@ -133,23 +133,23 @@ namespace Aggregator.Core.Facade
             }
         }
 
+        IWorkItemType IWorkItem.Type
+        {
+            get
+            {
+                return new WorkItemTypeWrapper(this.Type);
+            }
+        }
+
         public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
             return WorkItemLazyVisitor
                 .MakeRelativesLazyVisitor(this, query, store);
         }
 
-
         public void TransitionToState(string state, string comment)
         {
-            //TODO
-            /*
-> **Note on States**: TFS has controls setup on State Transitions.
-> Most templates do not allow you to go directly from a New state to a Done state.
-> TFS Aggregator will cycle the target work item through what ever states it needs to to find the **shortest route** to the target state.
-> (For most templates that is also the route that makes the most sense from a business perspective too.)
-             */
-            throw new NotImplementedException();
+            StateWorkflow.TransitionToState(this, state, comment, this.logger);
         }
     }
 }

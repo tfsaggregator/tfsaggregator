@@ -47,7 +47,9 @@ namespace Aggregator.Core
         void ApplyingRule(string name);
         void BuildingScriptEngine(string scriptLanguage);
         void RunningRule(string name, IWorkItem workItem);
-
         void FailureLoadingScript(string scriptName);
+        void AttemptingToMoveWorkItemToState(IWorkItem workItem, string orginalSourceState, string destState);
+        void WorkItemIsValidToSave(IWorkItem workItem);
+        void WorkItemIsInvalidInState(IWorkItem workItem, string destState);
     }
 }

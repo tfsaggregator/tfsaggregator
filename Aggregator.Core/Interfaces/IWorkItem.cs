@@ -23,7 +23,7 @@ namespace Aggregator.Core
         IWorkItemExposed Parent { get; }
         IEnumerable<IWorkItemExposed> Children { get; }
         IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query);
-        // state helpers
+        // state helpers; must be on interface to work on WorkItemLazyReference
         void TransitionToState(string state, string comment);
     }
 
@@ -39,5 +39,6 @@ namespace Aggregator.Core
         void TryOpen();
         ArrayList Validate();
         IWorkItemLinkCollection WorkItemLinks { get; }
+        IWorkItemType Type { get; }
     }
 }

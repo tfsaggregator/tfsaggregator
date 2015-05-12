@@ -142,7 +142,6 @@ namespace Aggregator.Core.Navigation
             return new FluentQuery(this).FollowingLinks(linkType);
         }
 
-
         public void TransitionToState(string state, string comment)
         {
             this.Target.TransitionToState(state, comment);

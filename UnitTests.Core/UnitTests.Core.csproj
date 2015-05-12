@@ -65,6 +65,7 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Mock\WorkItemLinkCollectionMock.cs" />
+    <Compile Include="Mock\WorkItemTypeMock.cs" />
     <Compile Include="Navigation.cs" />
     <Compile Include="PolicyScope.cs" />
     <Compile Include="ScriptEngines.cs" />
@@ -101,6 +102,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ConfigurationsForTests\syntax.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ConfigurationsForTests\task.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
