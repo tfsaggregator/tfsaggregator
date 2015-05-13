@@ -60,7 +60,7 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="ExceptionExtensions.cs" />
-    <Compile Include="LoggerBase.cs" />
+    <Compile Include="ConsoleTextLogger.cs" />
     <Compile Include="NotificationConsoleApp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

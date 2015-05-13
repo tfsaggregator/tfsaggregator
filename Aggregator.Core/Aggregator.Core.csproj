@@ -63,9 +63,11 @@
     <Compile Include="Facade\WorkItemLinkCollectionWrapper.cs" />
     <Compile Include="Facade\WorkItemLinkWrapper.cs" />
     <Compile Include="Facade\WorkItemTypeWrapper.cs" />
-    <Compile Include="ILogEvents.cs" />
+    <Compile Include="Monitoring\ILogEvents.cs" />
     <Compile Include="Interfaces\IProjectPropertyWrapper.cs" />
     <Compile Include="Interfaces\IWorkItemType.cs" />
+    <Compile Include="Monitoring\ITextLogger.cs" />
+    <Compile Include="Monitoring\TextLogComposer.cs" />
     <Compile Include="Navigation\FluentQuery.cs" />
     <Compile Include="Interfaces\IWorkItemLink.cs" />
     <Compile Include="Interfaces\IWorkItemLinkCollection.cs" />

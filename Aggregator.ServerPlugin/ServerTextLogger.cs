@@ -1,13 +1,14 @@
 ﻿using Aggregator.Core;
+using Aggregator.Core.Monitoring;
 using System.Diagnostics;
 
 namespace Aggregator.ServerPlugin
 {
-    class LoggerBase
+    internal class ServerTextLogger : ITextLogger
     {
         private LogLevel minLevel;
 
-        protected LoggerBase(LogLevel level)
+        internal ServerTextLogger(LogLevel level)
         {
             this.minLevel = level;
         }
@@ -18,7 +19,7 @@ namespace Aggregator.ServerPlugin
             set { minLevel = value; }
         }
 
-        protected void Log(LogLevel level, string format, params object[] args)
+        public void Log(LogLevel level, string format, params object[] args)
         {
             if (level > this.minLevel)
                 return;
