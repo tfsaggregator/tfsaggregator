@@ -3,6 +3,53 @@
     <xs:element name="AggregatorConfiguration">
         <xs:complexType>
             <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" name="runtime">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" maxOccurs="1" name="logging">
+                                <xs:complexType>
+                                    <xs:attribute name="level" use="optional" default="Normal" >
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="Critical"/>
+                                                <xs:enumeration value="Error"/>
+                                                <xs:enumeration value="Warning"/>
+                                                <xs:enumeration value="Information"/>
+                                                <xs:enumeration value="Normal"/>
+                                                <xs:enumeration value="Verbose"/>
+                                                <xs:enumeration value="Diagnostic"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="0" maxOccurs="1" name="script">
+                                <xs:complexType>
+                                    <xs:attribute name="language" use="optional" default="C#">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="CS"/>
+                                                <xs:enumeration value="CSharp"/>
+                                                <xs:enumeration value="C#"/>
+                                                <xs:enumeration value="VB"/>
+                                                <xs:enumeration value="VB.NET"/>
+                                                <xs:enumeration value="VBNET"/>
+                                                <xs:enumeration value="PS"/>
+                                                <xs:enumeration value="Powershell"/>
+                                                <xs:enumeration value="PowerShell"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="0" maxOccurs="1" name="authentication">
+                                <xs:complexType>
+                                    <xs:attribute name="autoImpersonate" type="xs:boolean" use="optional" default="false" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
                 <xs:element minOccurs="1" maxOccurs="unbounded" name="rule">
                     <xs:complexType>
                         <xs:simpleContent>
@@ -53,21 +100,6 @@
                     </xs:unique>
                 </xs:element>
             </xs:sequence>
-            <xs:attribute name="logLevel" use="optional" default="Normal" >
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:enumeration value="Critical"/>
-                        <xs:enumeration value="Error"/>
-                        <xs:enumeration value="Warning"/>
-                        <xs:enumeration value="Information"/>
-                        <xs:enumeration value="Normal"/>
-                        <xs:enumeration value="Verbose"/>
-                        <xs:enumeration value="Diagnostic"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="autoImpersonate" type="xs:boolean" use="optional" default="false" />
-            <xs:attribute name="scriptLanguage" type="xs:string" use="optional" default="C#" />
         </xs:complexType>
     </xs:element>
 </xs:schema>
