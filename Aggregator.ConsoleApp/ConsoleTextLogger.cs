@@ -9,10 +9,12 @@ namespace Aggregator.ConsoleApp
     internal class ConsoleTextLogger : ITextLogger
     {
         private LogLevel minLevel;
+        private Stopwatch clock = new Stopwatch();
 
         internal ConsoleTextLogger(LogLevel level)
         {
             this.minLevel = level;
+            this.clock.Restart();
         }
 
         static ConsoleColor MapColor(LogLevel level)
@@ -47,16 +49,27 @@ namespace Aggregator.ConsoleApp
             if (level > this.minLevel)
                 return;
 
-            string message = args != null ? string.Format(format, args: args) : format;
+            clock.Stop();
+            try
+            {
+                string message = args != null ? string.Format(format, args: args) : format;
 
-            ConsoleColor save = Console.ForegroundColor;
-            Console.ForegroundColor = MapColor(level);
+                ConsoleColor save = Console.ForegroundColor;
+                Console.ForegroundColor = MapColor(level);
 
-            string levelAsString = level.ToString();
-            Console.Write("[{0}]{1}", levelAsString, string.Empty.PadLeft(12 - levelAsString.Length));
-            Console.WriteLine(message);
-            
-            Console.ForegroundColor = save;
+                const int LogLevelMaximumStringLength = 11; // Len(Information)
+                string levelAsString = level.ToString();
+                Console.Write("[{0}]{1} {2:00}.{3:000} "
+                    , levelAsString, string.Empty.PadLeft(LogLevelMaximumStringLength - levelAsString.Length)
+                    , clock.ElapsedMilliseconds / 1000, clock.ElapsedMilliseconds % 1000);
+                Console.WriteLine(message);
+
+                Console.ForegroundColor = save;
+            }
+            finally
+            {
+                clock.Start();
+            }//try
         }
 
     }
