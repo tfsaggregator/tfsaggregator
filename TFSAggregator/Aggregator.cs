@@ -66,12 +66,12 @@ namespace TFSAggregator
                 // Iterate through all of the TFS Fields that we are aggregating.
                 foreach (ConfigItemType sourceField in configAggregatorItem.SourceFields)
                 {
-                    double sourceValue = sourceWorkItem.GetField(sourceField.Name, 0);
+                    double sourceValue = sourceWorkItem.GetField<double>(sourceField.Name, 0d);
                     aggregateValue = configAggregatorItem.Operation.Perform(aggregateValue, sourceValue);
                 }
             }
 
-            double currentValue = targetWorkItem.GetField<double>(configAggregatorItem.TargetField.Name, 0);
+            double currentValue = targetWorkItem.GetField<double>(configAggregatorItem.TargetField.Name, 0d);
             if (!(aggregateValue ?? 0).SafeEquals(currentValue))
             {
                targetWorkItem[configAggregatorItem.TargetField.Name] = aggregateValue ?? 0;
@@ -90,7 +90,7 @@ namespace TFSAggregator
                 // Iterate through all of the TFS Fields that we are aggregating.
                 foreach (ConfigItemType sourceField in configAggregatorItem.SourceFields)
                 {
-                    int sourceValue = sourceWorkItem.GetField(sourceField.Name, 0);
+                    int sourceValue = sourceWorkItem.GetField<int>(sourceField.Name, 0);
                     aggregateValue = configAggregatorItem.Operation.Perform(aggregateValue, sourceValue);
                 }
             }
