@@ -27,7 +27,7 @@ Be aware that changing files in the Plugins folder will cause the TFS App Pool t
 
 ####Developers
 
-To build this project you will need to copy a few files from your TFS server (they're non-redistributable, sorry)
+To build this project you will need to copy a few files from your TFS server (they're non-redistributable, sorry). These files must be at least TFS 2013 Update 2, as Microsoft shuffled some assemblies and types around between 2013 RTM and the later updates.
 
 You're looking for:
 - Microsoft.TeamFoundation.Framework.Server.dll
