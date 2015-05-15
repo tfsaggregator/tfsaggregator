@@ -217,7 +217,7 @@ namespace TFSAggregator
                 aggregateSourceValues.Add(sourceValue);
             }
             
-            var resultValue = string.Format(configAggregatorItem.OutputFormat, aggregateSourceValues.ToArray());
+            var resultValue = string.Format(configAggregatorItem.OutputFormat ?? "{0}", aggregateSourceValues.ToArray());
 
             // see if we need to make a change:
             if (childWorkItem[configAggregatorItem.TargetField.Name].ToString() != resultValue)
@@ -251,7 +251,7 @@ namespace TFSAggregator
                 aggregateSourceValues.Add(sourceValue);
             }
 
-            var resultValue = string.Format(configAggregatorItem.OutputFormat, aggregateSourceValues.ToArray());
+            string resultValue = string.Format(configAggregatorItem.OutputFormat ?? "{0}", aggregateSourceValues.ToArray());
 
             // see if we need to make a change:
             if (childWorkItem[configAggregatorItem.TargetField.Name].ToString() != resultValue)

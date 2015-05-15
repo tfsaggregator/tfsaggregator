@@ -8,6 +8,10 @@ using TFSAggregator.TfsFacade;
 
 namespace TFSAggregator
 {
+    using System.Globalization;
+
+    using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
     public static class MiscHelpers
     {
         static string runSeparator = new string('-', 80);
