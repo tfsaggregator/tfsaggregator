@@ -55,15 +55,18 @@ namespace Aggregator.Core.Configuration
                 return null;
 
             // XML Schema has done lot of checking and set defaults, no need to recheck here
-            var loggingNode = doc.Root.Element("runtime")?.Element("logging");
+            var loggingNode = doc.Root.Element("runtime") != null ? 
+                doc.Root.Element("runtime").Element("logging") : null;
             instance.LogLevel = loggingNode != null ?
                 (LogLevel)Enum.Parse(typeof(LogLevel), loggingNode.Attribute("level").Value)
                 : LogLevel.Normal;
-            var authenticationNode = doc.Root.Element("runtime")?.Element("authentication");
+            var authenticationNode = doc.Root.Element("runtime") != null ?
+                doc.Root.Element("runtime").Element("authentication") : null;
             instance.AutoImpersonate = authenticationNode != null ?
                 bool.Parse(authenticationNode.Attribute("autoImpersonate").Value)
                 : false;
-            var scriptNode = doc.Root.Element("runtime")?.Element("script");
+            var scriptNode = doc.Root.Element("runtime") != null ?
+                doc.Root.Element("runtime").Element("script") : null;
             instance.ScriptLanguage = scriptNode != null ?
                 scriptNode.Attribute("language").Value
                 : "C#";
