@@ -108,6 +108,21 @@ namespace Aggregator.Core.Navigation
             get { return this.Target.TypeName; }
         }
 
+        public bool HasParent()
+        {
+            return this.Target.HasParent();
+        }
+
+        public bool HasChildren()
+        {
+            return this.Target.HasChildren();
+        }
+
+        public bool HasRelation(string relation)
+        {
+            return this.Target.HasRelation(relation);
+        }
+
         public IWorkItemExposed Parent
         {
             get

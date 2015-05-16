@@ -76,6 +76,34 @@ namespace UnitTests.Core.Mock
 
         public string TypeName { get; set; }
 
+        public bool HasParent()
+        {
+            return HasRelation("Parent");
+        }
+
+        public bool HasChildren()
+        {
+            return HasRelation("Child");
+        }
+
+        public bool HasRelation(string relation)
+        {
+            if (string.IsNullOrWhiteSpace(relation))
+            {
+                throw new ArgumentNullException("relation");
+            }
+
+            foreach (var link in this.WorkItemLinks)
+            {
+                if (string.Equals(relation, link.LinkTypeEndImmutableName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public System.Collections.ArrayList Validate()
         {
             return new ArrayList();

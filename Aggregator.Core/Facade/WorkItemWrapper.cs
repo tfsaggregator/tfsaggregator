@@ -25,6 +25,34 @@ namespace Aggregator.Core.Facade
 
         public string TypeName { get { return workItem.Type.Name; } }
 
+        public bool HasParent()
+        {
+            return this.HasRelation("Parent");
+        }
+
+        public bool HasChildren()
+        {
+            return this.HasRelation("Child");
+        }
+
+        public bool HasRelation(string relation)
+        {
+            if (string.IsNullOrWhiteSpace(relation))
+            {
+                throw new ArgumentNullException("relation");
+            }
+
+            foreach (var link in this.WorkItemLinks)
+            {
+                if (string.Equals(relation, link.LinkTypeEndImmutableName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public string History
         {
             get { return workItem.History; }

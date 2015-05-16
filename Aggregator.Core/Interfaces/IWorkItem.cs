@@ -7,6 +7,8 @@ using System.Text;
 
 namespace Aggregator.Core
 {
+    using Microsoft.VisualStudio.Services.Profile;
+
     /// <summary>
     /// This interface is visible to scripts.
     /// </summary>
@@ -19,6 +21,13 @@ namespace Aggregator.Core
         bool IsValid();
         object this[string name] { get; set; }
         string TypeName { get; }
+
+        bool HasParent();
+
+        bool HasChildren();
+
+        bool HasRelation(string relation);
+
         // navigation helpers
         IWorkItemExposed Parent { get; }
         IEnumerable<IWorkItemExposed> Children { get; }
