@@ -134,12 +134,16 @@ namespace UnitTests.Core
             var parent = new WorkItemMock(repository);
             parent.Id = 2;
             parent.TypeName = "Use Case";
+            parent.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 1, repository));
+            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 2, repository));
             parent["Total Work Remaining"] = 3.0D;
             parent["Total Estimate"] = 4.0D;
 
             var workItem = new WorkItemMock(repository);
             workItem.Id = 3;
             workItem.TypeName = "Task";
+            workItem.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 2, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 3, repository));
             workItem["Estimated Dev Work"] = 10.0D;
             workItem["Estimated Test Work"] = 20.0D;
             workItem["Remaining Dev Work"] = 1.0D;

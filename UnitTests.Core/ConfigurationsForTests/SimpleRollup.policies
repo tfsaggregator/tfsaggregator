@@ -5,7 +5,10 @@
     <rule name="Rollup"
           appliesTo="Task">
             <![CDATA[
-        self.Parent["Custom.RemainingWork"] = (double)self.Parent["Custom.RemainingWork"] + (double)self["Microsoft.VSTS.Scheduling.RemainingWork"];
+		if (self.HasParent())
+		{
+            self.Parent["Custom.RemainingWork"] = (double)self.Parent["Custom.RemainingWork"] + (double)self["Microsoft.VSTS.Scheduling.RemainingWork"];
+		}
     ]]>
     </rule>
 
