@@ -1,4 +1,9 @@
 version: 2.0.{build}-{branch}
+branches:
+  only:
+    - master
+    - develop
+skip_tags: true
 configuration: Debug
 environment:
   containerURL:
