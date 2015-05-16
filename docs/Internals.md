@@ -28,5 +28,5 @@ TODO
 The Core is decoupled from the logging sub-system: interesting events are pushed via the `Aggregator.Core.ILogEvents` interface that each client must implement.
 
 # Build
-We used Visual Studio Community Edition 2013 Update 4 to develop this version.
-It requires a number of TFS assemblies that cannot be redistributed. You can find the complete
+We used Visual Studio Community Edition 2013 Update 4 and Visual Studio Community Edition 2015 to develop this version.
+It requires a number of TFS assemblies that cannot be redistributed. You can find the complete list [here](../references/PLACEHOLDER.txt).
