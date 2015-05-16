@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Aggregator.Core
+﻿namespace Aggregator.Core
 {
+    using System.Collections;
+    using System.Collections.Generic;
+
     public class FluentQuery : IEnumerable<IWorkItemExposed>
     {
         IWorkItemExposed host;
@@ -71,7 +69,7 @@ namespace Aggregator.Core
             return this.host.GetRelatives(this).GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }

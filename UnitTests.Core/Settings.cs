@@ -1,17 +1,20 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Aggregator.Core.Configuration;
-using NSubstitute;
-using Aggregator.Core;
-using System.Xml.Schema;
-
-namespace UnitTests.Core
+﻿namespace UnitTests.Core
 {
+    using System.IO;
+    using System.Xml.Schema;
+
+    using Aggregator.Core;
+    using Aggregator.Core.Configuration;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using NSubstitute;
+
     [TestClass]
     public class SettingsTests
     {
         [TestMethod]
-        [ExpectedException(typeof(System.IO.FileNotFoundException))]
+        [ExpectedException(typeof(FileNotFoundException))]
         public void Raise_error_for_non_existing_file()
         {
             var logger = Substitute.For<ILogEvents>();

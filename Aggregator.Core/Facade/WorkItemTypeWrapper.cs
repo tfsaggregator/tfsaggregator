@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
-
-namespace Aggregator.Core.Facade
+﻿namespace Aggregator.Core.Facade
 {
+    using System.Xml;
+
+    using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
     public class WorkItemTypeWrapper : IWorkItemType
     {
         private WorkItemType type;

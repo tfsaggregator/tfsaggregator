@@ -1,20 +1,15 @@
-﻿using Aggregator.Core;
-using Microsoft.TeamFoundation.Framework.Server;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.ConsoleApp
+﻿namespace Aggregator.ConsoleApp
 {
+    using System;
+    using System.Linq;
+
+    using Aggregator.Core;
     using Aggregator.Core.Facade;
     using Aggregator.Core.Interfaces;
 
     using Microsoft.TeamFoundation.Client;
-    using Microsoft.TeamFoundation.Common;
     using Microsoft.TeamFoundation.Framework.Common;
-    using Microsoft.TeamFoundation.Integration.Server;
+    using Microsoft.TeamFoundation.Framework.Server;
     using Microsoft.TeamFoundation.Server;
     using Microsoft.TeamFoundation.Server.Core;
 
@@ -34,7 +29,7 @@ namespace Aggregator.ConsoleApp
         {
             get
             {
-                var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(teamProjectCollectionUrl));
+                var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(this.teamProjectCollectionUrl));
                 return context.Name;
             }
         }
@@ -46,17 +41,17 @@ namespace Aggregator.ConsoleApp
 
         public IProjectPropertyWrapper[] GetProjectProperties(Uri projectUri)
         {
-            var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(teamProjectCollectionUrl));
+            var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(this.teamProjectCollectionUrl));
             var ics = context.GetService<ICommonStructureService4>();
             
-            string ProjectName = string.Empty;
-            string ProjectState = String.Empty;
+            string projectName;
+            string projectState;
             int templateId = 0;
-            ProjectProperty[] ProjectProperties = null;
+            ProjectProperty[] projectProperties = null;
             
-            ics.GetProjectProperties(projectUri.ToString(), out ProjectName, out ProjectState, out templateId, out ProjectProperties);
+            ics.GetProjectProperties(projectUri.ToString(), out projectName, out projectState, out templateId, out projectProperties);
 
-            return ProjectProperties.Select(p => (IProjectPropertyWrapper)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
+            return projectProperties.Select(p => (IProjectPropertyWrapper)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
         }
 
         public ProcessTemplateVersion GetCurrentProjectProcessVersion(Uri projectUri)

@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Aggregator.Core.Configuration
+﻿namespace Aggregator.Core.Configuration
 {
+    using System;
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
 
     using Aggregator.Core.Interfaces;
-
-    using Microsoft.TeamFoundation.Server;
-    using Microsoft.TeamFoundation.Server.Core;
-
-    using ICommonStructureService = Microsoft.TeamFoundation.Integration.Server.ICommonStructureService;
 
     /// <summary>
     /// Represents a Scope clause of <see cref="TFSAggregatorSettings"/>.
@@ -49,54 +42,54 @@ namespace Aggregator.Core.Configuration
 
         private bool MatchesMaxVersion()
         {
-            if (string.IsNullOrWhiteSpace(MaxVersion))
+            if (string.IsNullOrWhiteSpace(this.MaxVersion))
             {
                 return true;
             }
 
-            var currentversion = context.GetCurrentProjectProcessVersion(new Uri(notification.ProjectUri));
+            var currentversion = this.context.GetCurrentProjectProcessVersion(new Uri(notification.ProjectUri));
                 
             var current = Version.Parse(
                 string.Format(CultureInfo.InvariantCulture, "{0}.{1}", currentversion.Major, currentversion.Minor));
-            var max = Version.Parse(MaxVersion);
+            var max = Version.Parse(this.MaxVersion);
 
             return current <= max;
         }
 
         private bool MatchesMinVersion()
         {
-            if (string.IsNullOrWhiteSpace(MinVersion))
+            if (string.IsNullOrWhiteSpace(this.MinVersion))
             {
                 return true;
             }
 
-            var currentversion = context.GetCurrentProjectProcessVersion(new Uri(notification.ProjectUri));
+            var currentversion = this.context.GetCurrentProjectProcessVersion(new Uri(notification.ProjectUri));
 
             var current = Version.Parse(
                 string.Format(CultureInfo.InvariantCulture, "{0}.{1}", currentversion.Major, currentversion.Minor));
-            var min = Version.Parse(MinVersion);
+            var min = Version.Parse(this.MinVersion);
 
             return current >= min;
         }
 
         private bool MatchesId()
         {
-            if (string.IsNullOrWhiteSpace(TemplateTypeId))
+            if (string.IsNullOrWhiteSpace(this.TemplateTypeId))
             {
                 return true;
             }
-            var currentversion = context.GetCurrentProjectProcessVersion(new Uri(notification.ProjectUri));
-            return currentversion.TypeId.Equals(new Guid(TemplateTypeId));
+            var currentversion = this.context.GetCurrentProjectProcessVersion(new Uri(notification.ProjectUri));
+            return currentversion.TypeId.Equals(new Guid(this.TemplateTypeId));
         }
 
         private bool MatchesName()
         {
-            if (string.IsNullOrWhiteSpace(TemplateName))
+            if (string.IsNullOrWhiteSpace(this.TemplateName))
             {
                 return true;
             }
             
-            IProjectPropertyWrapper[] properties = context.GetProjectProperties(new Uri(notification.ProjectUri));
+            IProjectPropertyWrapper[] properties = this.context.GetProjectProperties(new Uri(notification.ProjectUri));
             var templateNameProperty =
                 properties.FirstOrDefault(
                     p => string.Equals(TemplateNamekey, p.Name, StringComparison.OrdinalIgnoreCase));

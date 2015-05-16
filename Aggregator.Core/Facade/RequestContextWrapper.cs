@@ -1,23 +1,15 @@
-﻿using Aggregator.Core;
-using Microsoft.TeamFoundation.Framework.Server;
-using Microsoft.TeamFoundation.Integration.Server;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.Core.Facade
+﻿namespace Aggregator.Core.Facade
 {
+    using System;
+    using System.Linq;
     using System.Reflection;
 
     using Aggregator.Core.Interfaces;
 
     using Microsoft.TeamFoundation.Framework.Common;
-    using Microsoft.TeamFoundation.Server;
+    using Microsoft.TeamFoundation.Framework.Server;
+    using Microsoft.TeamFoundation.Integration.Server;
     using Microsoft.TeamFoundation.Server.Core;
-
-    using ICommonStructureService = Microsoft.TeamFoundation.Integration.Server.ICommonStructureService;
 
     public class RequestContextWrapper : IRequestContext
     {
@@ -31,36 +23,36 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return context.ServiceHost.Name;
+                return this.context.ServiceHost.Name;
             }
         }
 
         public string GetProjectName(Uri teamProjectUri)
         {
             // HACK is this cheap?
-            var commonService = context.GetService<CommonStructureService>();
-            string projectName = commonService.GetProject(context, teamProjectUri.AbsoluteUri).Name;
+            var commonService = this.context.GetService<CommonStructureService>();
+            string projectName = commonService.GetProject(this.context, teamProjectUri.AbsoluteUri).Name;
             return projectName;
         }
 
         public Uri GetProjectCollectionUri()
         {
-            TeamFoundationLocationService service = context.GetService<TeamFoundationLocationService>();
-            return service.GetSelfReferenceUri(context, service.GetDefaultAccessMapping(context));
+            TeamFoundationLocationService service = this.context.GetService<TeamFoundationLocationService>();
+            return service.GetSelfReferenceUri(this.context, service.GetDefaultAccessMapping(this.context));
         }
 
         public IProjectPropertyWrapper[] GetProjectProperties(Uri projectUri)
         {
             var ics = context.GetService<ICommonStructureService>();
             
-            string ProjectName = string.Empty; 
-            string ProjectState = String.Empty;
+            string projectName; 
+            string projectState;
             //int templateId = 0;
-            CommonStructureProjectProperty[] ProjectProperties = null;
+            CommonStructureProjectProperty[] projectProperties = null;
 
-            ics.GetProjectProperties(context, projectUri.ToString(), out ProjectName, out ProjectState, out ProjectProperties);
+            ics.GetProjectProperties(this.context, projectUri.ToString(), out projectName, out projectState, out projectProperties);
             
-            return ProjectProperties.Select(p => (IProjectPropertyWrapper) new ProjectPropertyWrapper(){ Name = p.Name, Value = p.Value} ).ToArray();
+            return projectProperties.Select(p => (IProjectPropertyWrapper) new ProjectPropertyWrapper(){ Name = p.Name, Value = p.Value} ).ToArray();
         }
 
         private ArtifactSpec GetProcessTemplateVersionSpec(string projectUri)
@@ -84,21 +76,10 @@ namespace Aggregator.Core.Facade
 
         private ProcessTemplateVersion GetProjectProcessVersion(string projectUri, string versionPropertyName)
         {
-            Assembly ass = Assembly.GetAssembly(typeof(TeamFoundationIdentity));
-            Type type = ass.GetType("Microsoft.TeamFoundation.Server.Core.TeamProjectUtil");
-            object result = type.InvokeMember(
-                "GetProjectProcessVersion",
-                BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod,
-                null,
-                null,
-                new object[] { context, projectUri });
-
-            
-
-            ArtifactSpec processTemplateVersionSpec = GetProcessTemplateVersionSpec(projectUri);
+            ArtifactSpec processTemplateVersionSpec = this.GetProcessTemplateVersionSpec(projectUri);
             ProcessTemplateVersion unknown = ProcessTemplateVersion.Unknown;
 
-            using (TeamFoundationDataReader reader = context.GetService<TeamFoundationPropertyService>().GetProperties(context, processTemplateVersionSpec, new string[] { versionPropertyName }))
+            using (TeamFoundationDataReader reader = this.context.GetService<TeamFoundationPropertyService>().GetProperties(this.context, processTemplateVersionSpec, new string[] { versionPropertyName }))
             {
                 foreach (ArtifactPropertyValue value2 in reader)
                 {

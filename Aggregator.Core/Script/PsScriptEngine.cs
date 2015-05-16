@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management.Automation;
-using System.Management.Automation.Runspaces;
-using System.Text;
-
-namespace Aggregator.Core
+﻿namespace Aggregator.Core
 {
+    using System.Collections.Generic;
+    using System.Management.Automation.Runspaces;
+
     /// <summary>
     /// Invokes Powershell scripting engine
     /// </summary>

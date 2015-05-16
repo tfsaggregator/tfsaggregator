@@ -1,16 +1,11 @@
-﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management.Automation;
-using System.Management.Automation.Runspaces;
-using System.Reflection;
-using System.Text;
-
-namespace Aggregator.Core
+﻿namespace Aggregator.Core
 {
-    using System.Diagnostics;
+    using System;
+    using System.CodeDom.Compiler;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
+    using System.Reflection;
     using System.Text.RegularExpressions;
 
     public interface IDotNetScript
@@ -34,7 +29,7 @@ namespace Aggregator.Core
 
         string[] GetAssemblyReferences()
         {
-            string baseDir = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             var refList = new List<string>();
 
@@ -84,7 +79,7 @@ namespace Aggregator.Core
                 {
                     if (iface == typeof(IDotNetScript))
                     {
-                        ConstructorInfo constructor = type.GetConstructor(System.Type.EmptyTypes);
+                        ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes);
                         if (constructor != null && constructor.IsPublic)
                         {
                             // we specified that we wanted a constructor that doesn't take parameters, so don't pass parameters

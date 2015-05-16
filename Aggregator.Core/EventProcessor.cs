@@ -1,14 +1,12 @@
-﻿using Aggregator.Core;
-using Aggregator.Core.Configuration;
-using Aggregator.Core.Facade;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.Core
+﻿namespace Aggregator.Core
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using Aggregator.Core.Configuration;
+    using Aggregator.Core.Facade;
+
     using Microsoft.TeamFoundation.Framework.Client;
 
     /// <summary>
@@ -33,12 +31,12 @@ namespace Aggregator.Core
             this.store = workItemStore;
             // TODO caching
             this.settings = settings;
-            engine = MakeEngine(settings.ScriptLanguage, this.store, this.logger);
+            this.engine = this.MakeEngine(settings.ScriptLanguage, this.store, this.logger);
             foreach (var rule in settings.Rules)
             {
-                engine.Load(rule.Name, rule.Script);
+                this.engine.Load(rule.Name, rule.Script);
             }
-            engine.LoadCompleted();
+            this.engine.LoadCompleted();
         }
 
         /// <summary>
@@ -48,19 +46,19 @@ namespace Aggregator.Core
         {
             var result = new ProcessingResult();
 
-            IEnumerable<Policy> policies = FilterPolicies(settings.Policies, requestContext, notification);
+            IEnumerable<Policy> policies = this.FilterPolicies(this.settings.Policies, requestContext, notification);
 
             if (policies.Any())
             {
-                IWorkItem workItem = store.GetWorkItem(notification.WorkItemId);
+                IWorkItem workItem = this.store.GetWorkItem(notification.WorkItemId);
 
                 foreach (var policy in policies)
                 {
                     logger.ApplyingPolicy(policy.Name);
-                    ApplyRules(workItem, policy.Rules);
+                    this.ApplyRules(workItem, policy.Rules);
                 }
 
-                SaveChangedWorkItems();
+                this.SaveChangedWorkItems();
             }
             return result;
         }
@@ -74,8 +72,8 @@ namespace Aggregator.Core
         {
             foreach (var rule in rules)
             {
-                logger.ApplyingRule(rule.Name);
-                ApplyRule(rule, workItem);
+                this.logger.ApplyingRule(rule.Name);
+                this.ApplyRule(rule, workItem);
             }
         }
 
@@ -83,8 +81,8 @@ namespace Aggregator.Core
         {
             if (rule.Scope.All(s => s.Matches(workItem)))
             {
-                logger.RunningRule(rule.Name, workItem);
-                engine.Run(rule.Name, workItem);
+                this.logger.RunningRule(rule.Name, workItem);
+                this.engine.Run(rule.Name, workItem);
             }
         }
 
@@ -94,7 +92,7 @@ namespace Aggregator.Core
             foreach (IWorkItem workItem in this.store.LoadedWorkItems.Where(w => w.IsDirty))
             {
                 bool isValid = workItem.IsValid();
-                logger.Saving(workItem, isValid);
+                this.logger.Saving(workItem, isValid);
                 if (isValid)
                 {
                     workItem.PartialOpen();
@@ -105,8 +103,8 @@ namespace Aggregator.Core
 
         private ScriptEngine MakeEngine(string scriptLanguage, IWorkItemRepository workItemRepository, ILogEvents logEvents)
         {
-            logger.BuildingScriptEngine(scriptLanguage);
-            Type t = GetScriptEngineType(scriptLanguage);
+            this.logger.BuildingScriptEngine(scriptLanguage);
+            Type t = this.GetScriptEngineType(scriptLanguage);
             var ctor = t.GetConstructor(new Type[] { typeof(IWorkItemRepository), typeof(ILogEvents) });
             ScriptEngine engine = ctor.Invoke(new object[] { this.store, this.logger }) as ScriptEngine;
             return engine;

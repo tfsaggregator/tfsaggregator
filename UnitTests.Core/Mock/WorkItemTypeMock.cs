@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UnitTests.Core.Mock
+﻿namespace UnitTests.Core.Mock
 {
     using System.Xml;
+
     using Aggregator.Core;
 
     internal class WorkItemTypeMock : IWorkItemType

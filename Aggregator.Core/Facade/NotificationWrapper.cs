@@ -1,14 +1,7 @@
-﻿using Aggregator.Core;
-using Microsoft.TeamFoundation.Framework.Server;
-using Microsoft.TeamFoundation.WorkItemTracking.Server;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.Core.Facade
+﻿namespace Aggregator.Core.Facade
 {
+    using Microsoft.TeamFoundation.Framework.Server;
+    using Microsoft.TeamFoundation.WorkItemTracking.Server;
 
     public class NotificationWrapper : INotification
     {
@@ -24,7 +17,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return eventArgs.CoreFields.IntegerFields[0].NewValue;
+                return this.eventArgs.CoreFields.IntegerFields[0].NewValue;
             }
         }
 
@@ -33,7 +26,7 @@ namespace Aggregator.Core.Facade
             get
             {
                 // HACK
-                return string.Format("vstfs:///Classification/TeamProject/{0}", eventArgs.ProjectNodeId);
+                return string.Format("vstfs:///Classification/TeamProject/{0}", this.eventArgs.ProjectNodeId);
             }
         }
     }

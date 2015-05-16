@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.Core
+﻿namespace Aggregator.Core
 {
-    public class VBNetScriptEngine : DotNetScriptEngine<Microsoft.VisualBasic.VBCodeProvider>
+    using Microsoft.VisualBasic;
+
+    public class VBNetScriptEngine : DotNetScriptEngine<VBCodeProvider>
     {
         public VBNetScriptEngine(IWorkItemRepository store, ILogEvents logger)
             : base(store, logger)

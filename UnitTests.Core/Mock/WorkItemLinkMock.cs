@@ -1,18 +1,14 @@
-﻿using Aggregator.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace UnitTests.Core.Mock
+﻿namespace UnitTests.Core.Mock
 {
+    using Aggregator.Core;
+
     class WorkItemLinkMock : IWorkItemLink
     {
         private string relationship;
         private int id;
-        private WorkItemRepositoryMock store;
+        private IWorkItemRepository store;
 
-        public WorkItemLinkMock(string relationship, int id, WorkItemRepositoryMock store)
+        public WorkItemLinkMock(string relationship, int id, IWorkItemRepository store)
         {
             this.relationship = relationship;
             this.id = id;

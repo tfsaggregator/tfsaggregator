@@ -1,11 +1,11 @@
-﻿using Aggregator.Core;
-using Aggregator.Core.Monitoring;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
-namespace Aggregator.ConsoleApp
+﻿namespace Aggregator.ConsoleApp
 {
+    using System;
+    using System.Diagnostics;
+
+    using Aggregator.Core;
+    using Aggregator.Core.Monitoring;
+
     internal class ConsoleTextLogger : ITextLogger
     {
         private LogLevel minLevel;

@@ -1,12 +1,8 @@
-﻿using Aggregator.Core.Facade;
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Aggregator.Core.Navigation
+﻿namespace Aggregator.Core.Navigation
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// Lazy navigation
     /// </summary>
@@ -51,11 +47,11 @@ namespace Aggregator.Core.Navigation
         {
             get
             {
-                if (targetWorkItem == null)
+                if (this.targetWorkItem == null)
                 {
-                    targetWorkItem = store.GetWorkItem(targetWorkItemId);
+                    this.targetWorkItem = this.store.GetWorkItem(this.targetWorkItemId);
                 }
-                return targetWorkItem;
+                return this.targetWorkItem;
             }
         }
 
@@ -83,7 +79,7 @@ namespace Aggregator.Core.Navigation
 
         public int Id
         {
-            get { return targetWorkItemId; }
+            get { return this.targetWorkItemId; }
         }
 
         public bool IsValid()

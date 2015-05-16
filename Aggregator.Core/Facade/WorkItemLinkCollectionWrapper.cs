@@ -1,11 +1,11 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Aggregator.Core.Facade
+﻿namespace Aggregator.Core.Facade
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
+    using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
     class WorkItemLinkCollectionWrapper : IWorkItemLinkCollection
     {
         ILogEvents logger;
@@ -27,7 +27,7 @@ namespace Aggregator.Core.Facade
             }
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }

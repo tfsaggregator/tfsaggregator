@@ -1,13 +1,7 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Aggregator.Core
+﻿namespace Aggregator.Core
 {
-    using Microsoft.VisualStudio.Services.Profile;
+    using System.Collections;
+    using System.Collections.Generic;
 
     /// <summary>
     /// This interface is visible to scripts.

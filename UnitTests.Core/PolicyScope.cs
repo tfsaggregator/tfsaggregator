@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UnitTests.Core
+﻿namespace UnitTests.Core
 {
+    using System;
+    using System.Linq;
+
     using Aggregator.Core;
     using Aggregator.Core.Configuration;
     using Aggregator.Core.Facade;

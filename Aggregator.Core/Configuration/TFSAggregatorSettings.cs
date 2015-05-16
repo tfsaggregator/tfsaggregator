@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Xml.Linq;
-using System.Xml.Schema;
-
-namespace Aggregator.Core.Configuration
+﻿namespace Aggregator.Core.Configuration
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Xml;
+    using System.Xml.Linq;
+    using System.Xml.Schema;
+
     /// <summary>
     /// This class' represents Core settings as properties
     /// </summary>
@@ -43,7 +43,7 @@ namespace Aggregator.Core.Configuration
             XmlSchemaSet schemas = new XmlSchemaSet();
             var thisAssembly = Assembly.GetAssembly(typeof(TFSAggregatorSettings));
             var stream = thisAssembly.GetManifestResourceStream("Aggregator.Core.Configuration.AggregatorConfiguration.xsd");
-            schemas.Add("", System.Xml.XmlReader.Create(stream));
+            schemas.Add("", XmlReader.Create(stream));
             bool errors = false;
             doc.Validate(schemas, (o, e) =>
             {

@@ -1,17 +1,18 @@
-﻿using Aggregator.Core;
-using Microsoft.TeamFoundation.Framework.Server;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UnitTests.Core
+﻿namespace UnitTests.Core
 {
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
+    using System.Linq;
     using System.Management.Automation;
+
+    using Aggregator.Core;
+
+    using Microsoft.TeamFoundation.Framework.Server;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using NSubstitute;
+
     using UnitTests.Core.Mock;
 
     [TestClass]
@@ -39,7 +40,6 @@ return self.Fields[""z""].Value;
             var engine = new CSharpScriptEngine(repository, logger);
             engine.LoadAndRun("test", script, workItem);
 
-            //logger.DidNotReceiveWithAnyArgs().ScriptHasError();
             Assert.AreEqual(33, xField.Value);
             object expected = 42;
             logger.Received().ResultsFromScriptRun("test", expected);
@@ -63,7 +63,6 @@ return self[""z""];
             var engine = new CSharpScriptEngine(repository, logger);
             engine.LoadAndRun("test", script, workItem);
 
-            //logger.DidNotReceiveWithAnyArgs().ScriptHasError();
             Assert.AreEqual(33, workItem["x"]);
             object expected = 42;
             logger.Received().ResultsFromScriptRun("test", expected);
@@ -84,12 +83,11 @@ return self(""z"")
             workItem["z"].Returns(42);
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            logger.WhenForAnyArgs(c => System.Diagnostics.Debug.WriteLine(c));
+            logger.WhenForAnyArgs(c => Debug.WriteLine(c));
             var engine = new VBNetScriptEngine(repository, logger);
 
             engine.LoadAndRun("test", script, workItem);
 
-            //logger.DidNotReceiveWithAnyArgs().ScriptHasError();
             Assert.AreEqual(33, workItem["x"]);
             object expected = 42;
             logger.Received().ResultsFromScriptRun("test", expected);

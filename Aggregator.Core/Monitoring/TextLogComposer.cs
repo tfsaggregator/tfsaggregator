@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Schema;
-
-namespace Aggregator.Core.Monitoring
+﻿namespace Aggregator.Core.Monitoring
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.Management.Automation;
+    using System.Xml.Schema;
+
+    using Microsoft.TeamFoundation.Framework.Server;
+
     public class TextLogComposer : ILogEvents
     {
         ITextLogger logger;
@@ -17,7 +17,7 @@ namespace Aggregator.Core.Monitoring
 
         public ITextLogger TextLogger { get { return logger; } }
 
-        public void ResultsFromScriptRun(string scriptName, System.Collections.ObjectModel.Collection<System.Management.Automation.PSObject> results)
+        public void ResultsFromScriptRun(string scriptName, Collection<PSObject> results)
         {
             logger.Log(LogLevel.Verbose, "--- Output for script {0} follows", scriptName);
             foreach (var item in results)
@@ -32,7 +32,7 @@ namespace Aggregator.Core.Monitoring
             logger.Log(LogLevel.Error, "Unable to open work item '{0}'\nException: {1}", workItem.Id.ToString(), e.Message);
         }
 
-        public void ProcessEventException(Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext requestContext, Exception e)
+        public void ProcessEventException(TeamFoundationRequestContext requestContext, Exception e)
         {
             if (e.InnerException != null)
             {

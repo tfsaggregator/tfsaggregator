@@ -1,13 +1,12 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-
-namespace Aggregator.Core.Navigation
+﻿namespace Aggregator.Core.Navigation
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml;
+
+    using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
     static public class StateWorkflow
     {
         // caches info on work item states

@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Microsoft.TeamFoundation.Common;
-using Microsoft.TeamFoundation.Framework.Server;
-using Microsoft.TeamFoundation.WorkItemTracking.Server;
-using System.Text;
-using Aggregator.Core;
-using Aggregator.Core.Facade;
-using Aggregator.Core.Configuration;
-
-namespace TFSAggregator.TfsSpecific
+﻿namespace TFSAggregator.TfsSpecific
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+
+    using Aggregator.Core;
+    using Aggregator.Core.Configuration;
+    using Aggregator.Core.Facade;
+    using Aggregator.ServerPlugin;
+
     using Microsoft.TeamFoundation.Client;
+    using Microsoft.TeamFoundation.Common;
     using Microsoft.TeamFoundation.Framework.Client;
     using Microsoft.TeamFoundation.Framework.Common;
-
-    using NotificationType = Microsoft.TeamFoundation.Framework.Server.NotificationType;
+    using Microsoft.TeamFoundation.Framework.Server;
+    using Microsoft.TeamFoundation.WorkItemTracking.Server;
 
     /// <summary>
     /// The class that subscribes to server side events on the TFS server.
@@ -47,9 +46,9 @@ namespace TFSAggregator.TfsSpecific
             out string statusMessage,
             out ExceptionPropertyCollection properties)
         {
-            var uri = GetCollectionUriFromContext(requestContext);
-            string settingsPath = GetSettingsFullPath();
-            var logger = new Aggregator.ServerPlugin.ServerEventLogger(LogLevel.Warning);
+            var uri = this.GetCollectionUriFromContext(requestContext);
+            string settingsPath = this.GetSettingsFullPath();
+            var logger = new ServerEventLogger(LogLevel.Warning);
             // TODO avoid reload every time
             var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
             if (settings == null)
@@ -102,15 +101,15 @@ namespace TFSAggregator.TfsSpecific
 
         private string GetSettingsFullPath()
         {
-            var thisAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var thisAssembly = Assembly.GetExecutingAssembly();
 
             // Load the options from file with same name as DLL
             string baseName = thisAssembly.GetName().Name;
             string extension = ".policies";
 
             // Load the file from same folder where DLL is located
-            return System.IO.Path.Combine(
-                        System.IO.Path.GetDirectoryName(new Uri(thisAssembly.CodeBase).LocalPath),
+            return Path.Combine(
+                        Path.GetDirectoryName(new Uri(thisAssembly.CodeBase).LocalPath),
                         baseName)
                     + extension;
         }
@@ -124,7 +123,7 @@ namespace TFSAggregator.TfsSpecific
 
         private IdentityDescriptor GetIdentityToImpersonate(TeamFoundationRequestContext requestContext, WorkItemChangedEvent workItemChangedEvent)
         {
-            Uri server = GetCollectionUriFromContext(requestContext);
+            Uri server = this.GetCollectionUriFromContext(requestContext);
 
             var configurationServer = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(server);
 

@@ -1,13 +1,13 @@
-﻿using Aggregator.Core.Navigation;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
+﻿using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
+    using Aggregator.Core.Navigation;
+
     public class WorkItemWrapper : IWorkItem
     {
         ILogEvents logger;
@@ -21,9 +21,9 @@ namespace Aggregator.Core.Facade
             this.store = store;
         }
 
-        public TFS.WorkItemType Type { get { return workItem.Type; } }
+        public TFS.WorkItemType Type { get { return this.workItem.Type; } }
 
-        public string TypeName { get { return workItem.Type.Name; } }
+        public string TypeName { get { return this.workItem.Type.Name; } }
 
         public bool HasParent()
         {
@@ -55,15 +55,20 @@ namespace Aggregator.Core.Facade
 
         public string History
         {
-            get { return workItem.History; }
-            set { workItem.History = value; }
+            get
+            {
+                return this.workItem.History;
+            }
+            set {
+                this.workItem.History = value;
+            }
         }
 
         public int Id
         {
             get
             {
-                return workItem.Id;
+                return this.workItem.Id;
             }
         }
 
@@ -71,11 +76,11 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return workItem[name];
+                return this.workItem[name];
             }
             set
             {
-                workItem[name] = value;
+                this.workItem[name] = value;
             }
         }
 
@@ -83,29 +88,36 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new FieldCollectionWrapper(workItem.Fields);
+                return new FieldCollectionWrapper(this.workItem.Fields);
             }
         }
 
-        public bool IsValid() { return workItem.IsValid(); }
+        public bool IsValid() { return this.workItem.IsValid(); }
 
         public ArrayList Validate()
         {
-            return workItem.Validate();
+            return this.workItem.Validate();
         }
 
-        public void PartialOpen() { workItem.PartialOpen(); }
-        public void Save() { workItem.Save(); }
+        public void PartialOpen()
+        {
+            this.workItem.PartialOpen();
+        }
+
+        public void Save()
+        {
+            this.workItem.Save();
+        }
 
         public void TryOpen()
         {
             try
             {
-                workItem.Open();
+                this.workItem.Open();
             }
             catch (Exception e)
             {
-                logger.WorkItemWrapperTryOpenException(this, e);
+                this.logger.WorkItemWrapperTryOpenException(this, e);
             }
         }
 
@@ -113,7 +125,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return workItem.IsDirty;
+                return this.workItem.IsDirty;
             }
         }
 
@@ -121,7 +133,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new WorkItemLinkCollectionWrapper(workItem.WorkItemLinks, this.store, this.logger);
+                return new WorkItemLinkCollectionWrapper(this.workItem.WorkItemLinks, this.store, this.logger);
             }
         }
 
@@ -136,7 +148,7 @@ namespace Aggregator.Core.Facade
         {
             try
             {
-                TType convertedValue = (TType)workItem[fieldName];
+                TType convertedValue = (TType)this.workItem[fieldName];
                 return convertedValue;
             }
             catch (Exception)
@@ -149,7 +161,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return WorkItemLazyReference.MakeParentLazyReference(this, store);
+                return WorkItemLazyReference.MakeParentLazyReference(this, this.store);
             }
         }
 
@@ -157,7 +169,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return WorkItemLazyReference.MakeChildrenLazyReferences(this, store);
+                return WorkItemLazyReference.MakeChildrenLazyReferences(this, this.store);
             }
         }
 
@@ -172,7 +184,7 @@ namespace Aggregator.Core.Facade
         public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
             return WorkItemLazyVisitor
-                .MakeRelativesLazyVisitor(this, query, store);
+                .MakeRelativesLazyVisitor(this, query, this.store);
         }
 
         public void TransitionToState(string state, string comment)

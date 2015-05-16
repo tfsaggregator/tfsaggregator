@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UnitTests.Core.Mock
+﻿namespace UnitTests.Core.Mock
 {
-    using Aggregator.Core;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
+
+    using Aggregator.Core;
 
     internal class WorkItemRepositoryMock : IWorkItemRepository
     {

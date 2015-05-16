@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.Core.Navigation
+﻿namespace Aggregator.Core.Navigation
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class WorkItemLazyVisitor : IEnumerable<IWorkItemExposed> 
     {
         // source info
@@ -48,7 +47,7 @@ namespace Aggregator.Core.Navigation
                 links.RemoveAt(0);
 
                 IWorkItem relatedWorkItem = current.Item2.Target;
-                if (relatedWorkItem.TypeName.SameAs(workItemType))
+                if (relatedWorkItem.TypeName.SameAs(this.workItemType))
                 {
                     yield return relatedWorkItem;
                 }//if
@@ -64,7 +63,7 @@ namespace Aggregator.Core.Navigation
             }//while
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }

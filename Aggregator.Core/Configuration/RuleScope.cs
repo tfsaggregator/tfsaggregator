@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.Core.Configuration
+﻿namespace Aggregator.Core.Configuration
 {
-    using Microsoft.TeamFoundation.Framework.Client.Catalog.Objects;
+    using System;
+    using System.Linq;
 
     public abstract class RuleScope
     {

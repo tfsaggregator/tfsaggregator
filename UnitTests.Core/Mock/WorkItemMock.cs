@@ -1,15 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UnitTests.Core.Mock
+﻿namespace UnitTests.Core.Mock
 {
+    using System;
     using System.Collections;
+    using System.Collections.Generic;
 
     using Aggregator.Core;
-    using Aggregator.Core.Facade;
-    using System.Collections.Generic;
     using Aggregator.Core.Navigation;
 
     internal class WorkItemMock : IWorkItem
@@ -50,11 +45,11 @@ namespace UnitTests.Core.Mock
         }
 
         int saveCalled = 0;
-        public bool _SaveCalled { get { return saveCalled > 0; } }
-        public int _SaveCount { get { return saveCalled; } }
+        public bool _SaveCalled { get { return this.saveCalled > 0; } }
+        public int _SaveCount { get { return this.saveCalled; } }
         public void Save()
         {
-            saveCalled++;
+            this.saveCalled++;
         }
 
         public object this[string name]
@@ -65,7 +60,7 @@ namespace UnitTests.Core.Mock
             }
             set
             {
-                Fields[name].Value = value;
+                this.Fields[name].Value = value;
             }
         }
 
@@ -78,12 +73,12 @@ namespace UnitTests.Core.Mock
 
         public bool HasParent()
         {
-            return HasRelation("Parent");
+            return this.HasRelation("Parent");
         }
 
         public bool HasChildren()
         {
-            return HasRelation("Child");
+            return this.HasRelation("Child");
         }
 
         public bool HasRelation(string relation)
@@ -104,19 +99,23 @@ namespace UnitTests.Core.Mock
             return false;
         }
 
-        public System.Collections.ArrayList Validate()
+        public ArrayList Validate()
         {
             return new ArrayList();
         }
 
         WorkItemLinkCollectionMock workItemLinks = new WorkItemLinkCollectionMock();
-        public IWorkItemLinkCollection WorkItemLinks { get { return workItemLinks; } }
+
+        public IWorkItemLinkCollection WorkItemLinks
+        {
+            get { return this.workItemLinks; }
+        }
 
         public IWorkItemExposed Parent
         {
             get
             {
-                return WorkItemLazyReference.MakeParentLazyReference(this, store);
+                return WorkItemLazyReference.MakeParentLazyReference(this, this.store);
             }
         }
 
@@ -124,7 +123,7 @@ namespace UnitTests.Core.Mock
         {
             get
             {
-                return WorkItemLazyReference.MakeChildrenLazyReferences(this, store);
+                return WorkItemLazyReference.MakeChildrenLazyReferences(this, this.store);
             }
         }
 
@@ -133,12 +132,12 @@ namespace UnitTests.Core.Mock
         public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
             return WorkItemLazyVisitor
-                .MakeRelativesLazyVisitor(this, query, store);
+                .MakeRelativesLazyVisitor(this, query, this.store);
         }
 
         public void TransitionToState(string state, string comment)
         {
-            StateWorkflow.TransitionToState(this, state, comment, store.Logger);
+            StateWorkflow.TransitionToState(this, state, comment, this.store.Logger);
         }
     }
 }

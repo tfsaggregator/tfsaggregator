@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.Core
+﻿namespace Aggregator.Core
 {
-    public class CSharpScriptEngine : DotNetScriptEngine<Microsoft.CSharp.CSharpCodeProvider>
+    using Microsoft.CSharp;
+
+    public class CSharpScriptEngine : DotNetScriptEngine<CSharpCodeProvider>
     {
         public CSharpScriptEngine(IWorkItemRepository store, ILogEvents logger)
             : base(store, logger)

@@ -1,15 +1,13 @@
-﻿using Aggregator.Core.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UnitTests.Core
+﻿namespace UnitTests.Core
 {
+    using System.IO;
+    using System.Reflection;
+
+    using Aggregator.Core;
+    using Aggregator.Core.Configuration;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     internal static class TestHelpers
     {
         public static string LoadTextFromEmbeddedResource(string resourceName)
@@ -28,13 +26,13 @@ namespace UnitTests.Core
             }
         }
 
-        public static TFSAggregatorSettings LoadConfigFromResourceFile(string fileName, Aggregator.Core.ILogEvents logger)
+        public static TFSAggregatorSettings LoadConfigFromResourceFile(string fileName, ILogEvents logger)
         {
             var configXml = LoadTextFromEmbeddedResource(fileName);
             return TFSAggregatorSettings.LoadXml(configXml, logger);
         }
 
-        public static void LoadAndRun(this Aggregator.Core.ScriptEngine engine, string scriptName, string script, Aggregator.Core.IWorkItem workItem)
+        public static void LoadAndRun(this ScriptEngine engine, string scriptName, string script, IWorkItem workItem)
         {
             engine.Load(scriptName, script);
             engine.LoadCompleted();

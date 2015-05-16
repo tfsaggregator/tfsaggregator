@@ -1,12 +1,12 @@
-﻿using ManyConsole;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.ConsoleApp
+﻿namespace Aggregator.ConsoleApp
 {
+    using System;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+
+    using ManyConsole;
+
     class Program
     {
         static int Main(string[] args)
@@ -38,17 +38,17 @@ namespace Aggregator.ConsoleApp
         static private T GetCustomAttribute<T>()
             where T : Attribute
         {
-            return System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(T), false).FirstOrDefault() as T;
+            return Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(T), false).FirstOrDefault() as T;
         }
 
         static internal string GetHeader()
         {
-            var title = GetCustomAttribute<System.Reflection.AssemblyTitleAttribute>();
-            var descr = GetCustomAttribute<System.Reflection.AssemblyDescriptionAttribute>();
-            var copy = GetCustomAttribute<System.Reflection.AssemblyCopyrightAttribute>();
-            var config = GetCustomAttribute<System.Reflection.AssemblyConfigurationAttribute>();
-            var fileVersion = GetCustomAttribute<System.Reflection.AssemblyFileVersionAttribute>();
-            var infoVersion = GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>();
+            var title = GetCustomAttribute<AssemblyTitleAttribute>();
+            var descr = GetCustomAttribute<AssemblyDescriptionAttribute>();
+            var copy = GetCustomAttribute<AssemblyCopyrightAttribute>();
+            var config = GetCustomAttribute<AssemblyConfigurationAttribute>();
+            var fileVersion = GetCustomAttribute<AssemblyFileVersionAttribute>();
+            var infoVersion = GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 
             var sb = new StringBuilder();
             sb.AppendFormat("{0} {1}", title.Title, infoVersion.InformationalVersion);

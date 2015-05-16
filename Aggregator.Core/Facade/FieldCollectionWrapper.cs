@@ -1,13 +1,10 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.Core.Facade
+﻿namespace Aggregator.Core.Facade
 {
     using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
     public class FieldCollectionWrapper : IFieldCollectionWrapper
     {

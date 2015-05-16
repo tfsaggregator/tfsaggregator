@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Aggregator.Core.Configuration
+﻿namespace Aggregator.Core.Configuration
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Represents a Policy of <see cref="TFSAggregatorSettings"/>.
     /// </summary>

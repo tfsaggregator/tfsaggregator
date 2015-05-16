@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-
-namespace Aggregator.Core
+﻿namespace Aggregator.Core
 {
+    using System.Xml;
+
     public interface IWorkItemType
     {
         string Name { get; }

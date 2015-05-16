@@ -1,12 +1,10 @@
-﻿using Aggregator.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UnitTests.Core.Mock
+﻿namespace UnitTests.Core.Mock
 {
+    using System.Collections;
+    using System.Collections.Generic;
+
+    using Aggregator.Core;
+
     class WorkItemLinkCollectionMock : IWorkItemLinkCollection
     {
         List<IWorkItemLink> links = new List<IWorkItemLink>();
@@ -21,7 +19,7 @@ namespace UnitTests.Core.Mock
             return links.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return links.GetEnumerator();
         }

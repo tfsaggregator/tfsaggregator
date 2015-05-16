@@ -1,14 +1,12 @@
-﻿using Aggregator.Core;
-using Aggregator.Core.Configuration;
-using ManyConsole;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.ConsoleApp
+﻿namespace Aggregator.ConsoleApp
 {
+    using System;
+
+    using Aggregator.Core;
+    using Aggregator.Core.Configuration;
+
+    using ManyConsole;
+
     /// <summary>
     /// Implements the <i>run</i> command.
     /// </summary>
@@ -61,7 +59,7 @@ namespace Aggregator.ConsoleApp
             var result = new ProcessingResult();
             try
             {
-                var context = new RequestContextConsoleApp(this.TeamProjectCollectionUrl, TeamProjectName);
+                var context = new RequestContextConsoleApp(this.TeamProjectCollectionUrl, this.TeamProjectName);
                 var notification = new NotificationConsoleApp(this.WorkItemId, this.TeamProjectName);
 
                 logger.StartingProcessing(context, notification);

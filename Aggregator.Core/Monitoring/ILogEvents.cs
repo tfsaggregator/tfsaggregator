@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.Core
+﻿namespace Aggregator.Core
 {
+    using System;
     using System.Collections.ObjectModel;
     using System.Management.Automation;
     using System.Xml.Schema;
-
 
     /// <summary>
     /// Levels of logging.

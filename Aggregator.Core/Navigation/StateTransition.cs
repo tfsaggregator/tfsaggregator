@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.Core.Navigation
+﻿namespace Aggregator.Core.Navigation
 {
+    using System;
+    using System.Collections.Generic;
+
     class StateTransition
     {
         // The state we are moving from.

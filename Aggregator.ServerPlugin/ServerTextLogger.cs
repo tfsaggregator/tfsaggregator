@@ -1,9 +1,10 @@
-﻿using Aggregator.Core;
-using Aggregator.Core.Monitoring;
-using System.Diagnostics;
-
-namespace Aggregator.ServerPlugin
+﻿namespace Aggregator.ServerPlugin
 {
+    using System.Diagnostics;
+
+    using Aggregator.Core;
+    using Aggregator.Core.Monitoring;
+
     internal class ServerTextLogger : ITextLogger
     {
         private LogLevel minLevel;
@@ -17,8 +18,9 @@ namespace Aggregator.ServerPlugin
 
         public LogLevel Level
         {
-            get { return minLevel; }
-            set { minLevel = value; }
+            get { return this.minLevel; }
+            set {
+                this.minLevel = value; }
         }
 
         public void Log(LogLevel level, string format, params object[] args)
@@ -26,7 +28,7 @@ namespace Aggregator.ServerPlugin
             if (level > this.minLevel)
                 return;
 
-            clock.Stop();
+            this.clock.Stop();
             try
             {
                 string message = args != null ? string.Format(format, args: args) : format;
@@ -49,7 +51,7 @@ namespace Aggregator.ServerPlugin
             }
             finally
             {
-                clock.Start();
+                this.clock.Start();
             }//try
         }
 

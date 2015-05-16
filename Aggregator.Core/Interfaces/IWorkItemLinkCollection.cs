@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Aggregator.Core
+﻿namespace Aggregator.Core
 {
+    using System.Collections.Generic;
+
     public interface IWorkItemLinkCollection : IEnumerable<IWorkItemLink>
     {
         void Add(IWorkItemLink link);

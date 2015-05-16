@@ -1,14 +1,6 @@
-﻿using Aggregator.Core;
-using Microsoft.TeamFoundation.Framework.Server;
-using Microsoft.TeamFoundation.WorkItemTracking.Server;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.ConsoleApp
+﻿namespace Aggregator.ConsoleApp
 {
+    using Aggregator.Core;
 
     public class NotificationConsoleApp : INotification
     {

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aggregator.Core
+﻿namespace Aggregator.Core
 {
+    using System;
+
     using Aggregator.Core.Interfaces;
 
     using Microsoft.TeamFoundation.Server.Core;

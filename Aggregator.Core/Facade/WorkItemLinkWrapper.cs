@@ -1,11 +1,7 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Aggregator.Core.Facade
+﻿namespace Aggregator.Core.Facade
 {
+    using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
     class WorkItemLinkWrapper : IWorkItemLink
     {
         ILogEvents logger;
@@ -23,7 +19,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return link.LinkTypeEnd.ImmutableName;
+                return this.link.LinkTypeEnd.ImmutableName;
             }
         }
 
@@ -31,13 +27,13 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return link.TargetId;
+                return this.link.TargetId;
             }
         }
 
         public IWorkItem Target
         {
-            get { return store.GetWorkItem(this.TargetId); }
+            get { return this.store.GetWorkItem(this.TargetId); }
         }
     }
 }

@@ -1,21 +1,10 @@
-﻿using Aggregator.Core;
-using Microsoft.TeamFoundation.Framework.Server;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UnitTests.Core
+﻿namespace UnitTests.Core
 {
-    using System.Collections.ObjectModel;
-    using System.Management.Automation;
+    using Aggregator.Core;
 
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-
-    using UnitTests.Core.Mock;
+    using NSubstitute;
 
     [TestClass]
     public class Basics
