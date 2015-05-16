@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<AggregatorConfiguration logLevel="Diagnostic" scriptLanguage="VB">
+<AggregatorConfiguration>
+
+    <runtime>
+        <logging level="Diagnostic"/>
+        <script language="VB" />
+    </runtime>
 
     <!-- Add up the estimated work on the task -->
     <rule name="CalcEstimated"

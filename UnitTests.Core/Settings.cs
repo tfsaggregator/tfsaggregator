@@ -35,15 +35,15 @@ namespace UnitTests.Core
         public void Log_error_for_configuration_invalid_loglevel()
         {
             var logger = Substitute.For<ILogEvents>();
-            string config = @"<AggregatorConfiguration logLevel='Diag'></AggregatorConfiguration>";
+            string config = @"<AggregatorConfiguration><runtime><logging level='Diag'/></runtime></AggregatorConfiguration>";
 
             var settings = TFSAggregatorSettings.LoadXml(config, logger);
 
             Assert.IsNull(settings);
             logger.Received().InvalidConfiguration(
                 XmlSeverityType.Error,
-                "The 'logLevel' attribute is invalid - The value 'Diag' is invalid according to its datatype 'String' - The Enumeration constraint failed.",
-                1, 26);
+                "The 'level' attribute is invalid - The value 'Diag' is invalid according to its datatype 'String' - The Enumeration constraint failed.",
+                1, 44);
         }
 
         [TestMethod]
