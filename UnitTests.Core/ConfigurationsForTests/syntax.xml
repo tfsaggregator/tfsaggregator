@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<AggregatorConfiguration
-    logLevel="Diagnostic" autoImpersonate="true" scriptLanguage="C#">
+<AggregatorConfiguration>
+
+    <runtime>
+        <logging level="Diagnostic"/>
+        <script language="C#" />
+        <authentication autoImpersonate="true" />
+    </runtime>
 
     <rule name="Type1"
           appliesTo="Task"><![CDATA[]]></rule>
