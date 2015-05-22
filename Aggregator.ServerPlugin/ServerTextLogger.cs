@@ -33,11 +33,15 @@
             {
                 string message = args != null ? string.Format(format, args: args) : format;
 
-                Debug.Write("TFSAggregator: ");
-                Debug.WriteLine(message);
+                // default trace use OutputDebugString but requires a single call
+                const int LogLevelMaximumStringLength = 11; // Len(Information)
+                string levelAsString = level.ToString();
+                string formattedMessage = string.Format(
+                    "TFSAggregator: [{0}]{1} {2}"
+                    , levelAsString, string.Empty.PadLeft(LogLevelMaximumStringLength - levelAsString.Length)
+                    , message);
 
-                Trace.Write("TFSAggregator: ");
-                Trace.WriteLine(message);
+                Trace.WriteLine(formattedMessage);
 
                 if (level >= LogLevel.Warning)
                 {

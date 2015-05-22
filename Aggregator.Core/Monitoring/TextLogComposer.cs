@@ -19,7 +19,7 @@
 
         public void ResultsFromScriptRun(string scriptName, Collection<PSObject> results)
         {
-            logger.Log(LogLevel.Verbose, "--- Output for script {0} follows", scriptName);
+            logger.Log(LogLevel.Verbose, "--- Output for script '{0}' follows", scriptName);
             foreach (var item in results)
             {
                 logger.Log(LogLevel.Normal, item.ToString());
@@ -51,21 +51,21 @@
 
         public void ResultsFromScriptRun(string scriptName, object result)
         {
-            logger.Log(LogLevel.Verbose, "Output from script {0}: {1}", scriptName, result);
+            logger.Log(LogLevel.Verbose, "Output from script '{0}': [{1}]", scriptName, result);
         }
 
 
         public void ScriptHasError(string scriptName, int line, int column, string errorCode, string errorText)
         {
             logger.Log(LogLevel.Error,
-                "Error {3} in script {0} at line {1}, column {2}: {4}",
+                "Error {3} in script '{0}' at line {1}, column {2}: {4}",
                 scriptName, line, column, errorCode, errorText);
         }
 
         public void ScriptHasWarning(string scriptName, int line, int column, string errorCode, string errorText)
         {
             logger.Log(LogLevel.Warning,
-                "Warning {3} in script {0} at line {1}, column {2}: {4}",
+                "Warning {3} in script '{0}' at line {1}, column {2}: {4}",
                 scriptName, line, column, errorCode, errorText);
         }
 
@@ -98,12 +98,12 @@
 
         public void UnreferencedRule(string ruleName)
         {
-            logger.Log(LogLevel.Warning, "Rule {0} is never used", ruleName);
+            logger.Log(LogLevel.Warning, "Rule '{0}' is never used", ruleName);
         }
 
         public void ConfigurationLoaded(string policyFile)
         {
-            logger.Log(LogLevel.Information, "Configuration loaded successfully from {0}", policyFile);
+            logger.Log(LogLevel.Information, "Configuration loaded successfully from '{0}'", policyFile);
         }
 
         public void StartingProcessing(IRequestContext context, INotification notification)
@@ -118,12 +118,12 @@
 
         public void ApplyingPolicy(string name)
         {
-            logger.Log(LogLevel.Verbose, "Applying Policy {0}", name);
+            logger.Log(LogLevel.Verbose, "Policy '{0}' applies", name);
         }
 
         public void ApplyingRule(string name)
         {
-            logger.Log(LogLevel.Verbose, "Applying Rule {0}", name);
+            logger.Log(LogLevel.Verbose, "Evaluating Rule '{0}'", name);
         }
 
         public void BuildingScriptEngine(string scriptLanguage)
@@ -133,17 +133,17 @@
 
         public void RunningRule(string name, IWorkItem workItem)
         {
-            logger.Log(LogLevel.Verbose, "Executing Rule {0} on #{1}", name, workItem.Id);
+            logger.Log(LogLevel.Verbose, "Applying Rule '{0}' on #{1}", name, workItem.Id);
         }
 
         public void FailureLoadingScript(string scriptName)
         {
-            logger.Log(LogLevel.Error, "Failure in parsing {0} script", scriptName);
+            logger.Log(LogLevel.Error, "Failure in parsing '{0}' script", scriptName);
         }
 
         public void AttemptingToMoveWorkItemToState(IWorkItem workItem, string orginalSourceState, string destState)
         {
-            logger.Log(LogLevel.Verbose, "Attempting to move {0} [{1}] from {2} state to {3} state"
+            logger.Log(LogLevel.Verbose, "Attempting to move {0} [{1}] from '{2}' to state '{3}'"
                 , workItem.Type.Name, workItem.Id, orginalSourceState, destState);
         }
 
@@ -154,7 +154,7 @@
 
         public void WorkItemIsInvalidInState(IWorkItem workItem, string destState)
         {
-            logger.Log(LogLevel.Warning, "WorkItem is invalid in the {0} state. Invalid fields: {1}"
+            logger.Log(LogLevel.Warning, "WorkItem is invalid in '{0}' state. Invalid fields: {1}"
                 , destState, workItem.GetInvalidWorkItemFieldsList());
         }
     }
