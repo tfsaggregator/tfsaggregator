@@ -20,12 +20,15 @@ Also if you are having issues we recommend debugging your Policies file using `T
 
 You can also enable Logging if you are using a TFS 2013 or later version. There are two parts to enable logging.
 
-The first is that you have to add a `logLevel` attribute to the `AggregatorConfiguration` element in your `TFSAggregator2.ServerPlugin.policies` file.
-Set to a value like `Verbose` or `Diagnostic`.
+The first is that you have to set a `level` attribute to the `logging` element in your `TFSAggregator2.ServerPlugin.policies` file.
+Use a value like `Verbose` or `Diagnostic`.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
-<AggregatorConfiguration logLevel="Diagnostic">
+<AggregatorConfiguration>
+    <runtime>
+        <logging level="Diagnostic"/>
+    </runtime>
 ```
 
 Then you need to download **DebugView** from Microsoft's SysInternals site.

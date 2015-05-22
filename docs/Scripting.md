@@ -27,6 +27,7 @@ The [`IsValid`](https://msdn.microsoft.com/en-us/library/microsoft.teamfoundatio
 
 You can get the [`Id`](https://msdn.microsoft.com/en-us/library/microsoft.teamfoundation.workitemtracking.client.workitem.id.aspx) and [`TypeName`](https://msdn.microsoft.com/en-us/library/microsoft.teamfoundation.workitemtracking.client.workitemtype.name.aspx) of a work item and check the [`History`](https://msdn.microsoft.com/en-us/library/microsoft.teamfoundation.workitemtracking.client.workitem.history.aspx).
 
+
 ## Parent
 Helper property to navigate a work item's parent in the Parent-Child hierarchy.
 
@@ -46,6 +47,15 @@ foreach (var child in self.Children)
    }
 }
 ```
+
+## HasParent / HasChildren / HasRelation
+Helper methods to avoid referencing null properties.
+```
+if (self.HasParent()) {
+  self.Parent["System.Title"]
+}
+```
+Use the Immutable name of the Link Type, e.g. `System.LinkTypes.Hierarchy-Reverse` instead of `Parent`.
 
 ## Fluent Queries
 

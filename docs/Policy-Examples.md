@@ -12,7 +12,9 @@ The total will be placed in the Estimated Work field on the same work item as th
 
 ```
 <rule name="Rollup" hasFields="Estimated Dev Work;Estimated Test Work"><![CDATA[
+  if (self.HasParent()) {
     self.Parent["Total Estimate"] = (double)self.Parent["Estimated Dev Work"] + (double)self["Estimated Test Work"];
+  }
 ]]></rule>
 ```
 

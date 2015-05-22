@@ -1,6 +1,10 @@
 TFSAggregator2.ServerPlugin.policies syntax
 ================================================
 
+A complete sample can be found at `..\UnitTests.Core\ConfigurationsForTests\syntax.xml`.
+
+The XML Schema definition is in file `..\Aggregator.Core\Configuration\AggregatorConfiguration.xsd`.
+
 ```
 <?xml version="1.0" encoding="utf-8"?>
 ```
@@ -8,18 +12,23 @@ TFSAggregator2.ServerPlugin.policies syntax
 This is the basic beginning to an XML file. Do not change it.
 
 ```
-<AggregatorConfiguration autoImpersonate="true" scriptLanguage="C#" logLevel="Diagnostic" >
+<AggregatorConfiguration>
 ```
 
 **AggregatorConfiguration**: The main node for all the configuration options. (Single)
 
- - **autoImpersonate**: `false` (default) the TFS Service account, `true` the user requesting. (Optional)
- - **scriptLanguage**: The language used to express the rules. (Optional)
-Valid values are:
-    * `CS`,`CSHARP`,`C#` -- default value
-    * `VB`,`VB.NET`,`VBNET`
-    * `PS`,`POWERSHELL` -- *Experimental*!
- - **logLevel**: The level of logging. (Optional)
+```
+    <runtime>
+```
+
+**runtime**: Configure generic behavior. (Once, Optional)
+
+```
+        <logging level="Diagnostic"/>
+```
+
+**logging**: Define logging behavior. (Once, Optional)
+ - **level**: The level of logging. (Optional)
 Valid values are:
      * `Critical`
      * `Error`
@@ -27,8 +36,26 @@ Valid values are:
      * `Information` or `Normal` -- default value
      * `Verbose`
      * `Diagnostic`.
- 
-See the Help page for more info: [TFS Aggregator Troubleshooting](Troubleshooting.md)
+See the Help page for more information: [TFS Aggregator Troubleshooting](Troubleshooting.md)
+
+```
+        <script language="C#" />
+```
+
+**script**: Define script engine behavior. (Once, Optional)
+ - **language**: The language used to express the rules. (Optional)
+Valid values are:
+    * `CS`,`CSHARP`,`C#` -- default value
+    * `VB`,`VB.NET`,`VBNET`
+    * `PS`,`POWERSHELL` -- *Experimental*!
+
+```
+        <authentication autoImpersonate="true" />
+```
+
+**authentication**: Define authentication behavior. (Once, Optional)
+ - **autoImpersonate**: `false` (default) the TFS Service account, `true` the user requesting. (Optional)
+
 
 ```
     <rule name="Noop" appliesTo="Task" hasFields="System.Title,System.Description">
@@ -71,7 +98,7 @@ All scopes must match for the policy to apply (logical _and_).
 
  - **name**: Name of Process Template matching. (Optional)
  - (Not working due to Microsoft not setting these values for on-premise installations)
-  - **typeId**: Process Template GUID to match. (Optional) 
+  - **typeId**: Process Template GUID to match. (Optional)
   - **minVersion**: Minimum version for Process Template. (Optional)
   - **maxVersion**: Minimum version for Process Template. (Optional)
 
@@ -87,7 +114,7 @@ All scopes must match for the policy to apply (logical _and_).
         <ruleRef name="Noop" />
 ```
 
-**ruleRef**: Reference to a previously declared rule. (Repeatable) 
+**ruleRef**: Reference to a previously declared rule. (Repeatable)
 
  - **name**: Nome of existing Rule. (Required)
 
