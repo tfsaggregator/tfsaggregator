@@ -27,12 +27,12 @@ namespace Aggregator.Core.Facade
 
         public bool HasParent()
         {
-            return this.HasRelation("Parent");
+            return this.HasRelation(WorkItemLazyReference.ParentRelationship);
         }
 
         public bool HasChildren()
         {
-            return this.HasRelation("Child");
+            return this.HasRelation(WorkItemLazyReference.ChildRelationship);
         }
 
         public bool HasRelation(string relation)
