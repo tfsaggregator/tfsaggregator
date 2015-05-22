@@ -8,12 +8,12 @@
     <!-- Add the time from the task up to the parent (Bug or PBI) -->
     <rule name="Rollup"
           appliesTo="Task">
-            <![CDATA[
-		if (self.HasParent())
-		{
+        <![CDATA[
+        if (self.HasParent())
+        {
             self.Parent["Custom.RemainingWork"] = (double)self.Parent["Custom.RemainingWork"] + (double)self["Microsoft.VSTS.Scheduling.RemainingWork"];
-		}
-    ]]>
+        }
+        ]]>
     </rule>
 
     <policy name="DefaultPolicy">

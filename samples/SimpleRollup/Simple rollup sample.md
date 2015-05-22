@@ -12,7 +12,18 @@ Set *Original Estimate* and *Remaining work* in a child task.
 
 # Expected log
 ```
-[Verbose]     Output from script Rollup:
-[Verbose]     Task [3] is valid to save.
-[Verbose]     Requirement [2] is valid to save.
+00000006	3.86630487	[8680] TFSAggregator: [Verbose]     Building Script Engine for C#
+00000007	3.94802070	[8680] TFSAggregator: [Information] Starting processing on workitem #3
+00000008	4.60871792	[8680] TFSAggregator: [Verbose]     Applying Policy 'DefaultPolicy'
+00000009	4.61040211	[8680] TFSAggregator: [Verbose]     Evaluating Rule 'Rollup'
+00000010	4.61381006	[8680] TFSAggregator: [Verbose]     Applying Rule 'Rollup' on #3
+00000011	4.68550396	[8680] TFSAggregator: [Verbose]     Output from script 'Rollup': []
+00000012	4.69083118	[8680] TFSAggregator: [Verbose]     Requirement [2] is valid to save.
+00000013	4.91187954	[8680] TFSAggregator: [Information] Processing completed: Success
+00000014	4.92762852	[8680] TFSAggregator: [Verbose]     Building Script Engine for C#
+00000015	5.01021862	[8680] TFSAggregator: [Information] Starting processing on workitem #2
+00000016	5.06257200	[8680] TFSAggregator: [Verbose]     Applying Policy 'DefaultPolicy'
+00000017	5.06319141	[8680] TFSAggregator: [Verbose]     Evaluating Rule 'Rollup'
+00000018	5.06371021	[8680] TFSAggregator: [Information] Processing completed: Success
+
 ```
