@@ -59,6 +59,13 @@
                 }
 
                 this.SaveChangedWorkItems();
+                result.StatusCode = 0;
+                result.StatusMessage = "Success";
+            }
+            else
+            {
+                result.StatusCode = 1;
+                result.StatusMessage = "No operation";
             }
             return result;
         }
