@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+
+    <runtime>
+        <logging level="Diagnostic"/>
+    </runtime>
+
+    <!-- Add up the estimated work on the task -->
+    <rule name="CalcEstimated"
+          appliesTo="Task">
+        self.Fields["Estimated Work"].Value = (double)self.Fields["Estimated Dev Work"].Value + (double)self.Fields["Estimated Test Work"].Value;
+        // self.Fields["Remaining Work"].Value = (double)self.Fields["Remaining Dev Work"].Value + (double)self.Fields["Remaining Test Work"].Value;
+    </rule>
+
+    <policy name="DefaultPolicy">
+        <collectionScope collections="*" />
+        <ruleRef name="CalcEstimated" />
+    </policy>
+
+</AggregatorConfiguration>

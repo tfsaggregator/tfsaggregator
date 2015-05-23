@@ -1,42 +1,58 @@
-###Overview
 
+[![Build status](https://ci.appveyor.com/api/projects/status/github/tfsaggregator/tfsaggregator?svg=true)](https://ci.appveyor.com/project/giuliov/tfsaggregator)
 [![Join the chat at https://gitter.im/tfsaggregator/tfsaggregator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tfsaggregator/tfsaggregator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This is a fork of http://tfsaggregator.codeplex.com.
+This server side plugin for TFS 2013 enables dynamic calculation of field values in TFS.
+(For example: Dev work + Test Work = Total Work).
 
-It enhances the original project in the following ways:
+## What's new in v2
 
-1. Multiple WorkItem Types are now supported. Separate them with a semicolon (;).
-2. Added a new operation type **CopyFrom**. Allows you to copy a field value from the parent onto a changed work item.
-3. Added a new operation type **CopyTo**. Allows you to change a parent workitem and copy field values into the children.
-4. Added 'Source.' and 'Parent.' prefixes to work item fields to support value comparisons between work items when checking Conditions.
-5. Renamed TargetItem and SourceItem elements in the config file to TargetField and SourceField to improve readability.
-6. Allow comparisons to reference the WorkItemType value. (build from source to get this)
+ * A 'real' Scripting language (C#, VB, Powershell)
+ * Scoping allows select which rules apply to which Team Project
+ * Enhanced filtering to trigger rules when conditions are met
+ * Console application to quickly test new rules
+ * Richer logging
+ * Test harness and modularity to ease adding new features
 
-CopyFrom and CopyTo both support the new &lt;OutputFormat formatString="{0}" /&gt; element to determine how the value should be formatted in the taregt item.
+Example Uses
+================================================
 
-In the sample config XML for the CopyFrom and CopyTo operations, a custom field 'Timesheet Job' was added to show how you might use this. The intent would be that in child work items the Timesheet field is readonly (except for the TFSService account) and channging the timesheet on a feature would cascade changes to the children.
+ - Update the state of a Bug, PBI (or any parent) to "In Progress" when a child gets moved to "In Progress"
+ - Update the state of a Bug, PBI (or any parent) to "Done" when all children get moved to "Done" or "Removed"
+ - Update the "Work Remaining" on a Bug, PBI, etc with the sum of all the Task's "Work Remaining".
+ - Update the "Work Remaining" on a Sprint with the sum of all the "Work Remaining" of its grandchildren (i.e. tasks of the PBIs and Bugs in the Sprint).
+ - Sum up totals on a single work item (i.e. Dev Estimate + Test Estimate = Total Estimate)
 
-####Installation
 
-Requires TFS2013.
+Setup & install
+================================================
 
-Copy TFSAggregator.dll and AggregatorItems.xml to the plugin folder of your Application Tier. This is usually at C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins
+The [Install](doc/Install.md) file contains the full details to correctly setup Aggregator. The general process is:
 
-Be aware that changing files in the Plugins folder will cause the TFS App Pool to recycle.
+ 1. Download and extract the binaries from the latest release
+ 2. Open up `TFSAggregator2.ServerPlugin.policies` and change the example settings to your actual settings.
+ 3. Test your policy using the command line tool.
+ 4. Copy `TFSAggregator2.*.dll` and `TFSAggregator2.ServerPlugin.policies` to the plugin location on the Application Tier of your TFS Servers
 
-####Developers
-
+<<<<<<< HEAD
+That is all. TFS will detect that a file was copied in and will load it in.
+=======
 To build this project you will need to copy a few files from your TFS server (they're non-redistributable, sorry). These files must be at least TFS 2013 Update 2, as Microsoft shuffled some assemblies and types around between 2013 RTM and the later updates.
+>>>>>>> master
 
-You're looking for:
-- Microsoft.TeamFoundation.Framework.Server.dll
-- Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll
-- Microsoft.TeamFoundation.WorkItemTracking.Server.dll
 
-For the best development experience, use a TFS2013 VM with VS2013 installed and work directly on the machine.
+Troubleshooting
+================================================
+Is it not working? Here is the troubleshooting and how to get help page: [TFS Aggregator Troubleshooting](docs/Troubleshooting.md)
 
-You can then set the output folder for the project to 
-C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins\
 
-You can also debug by attaching to the w3wp.exe on the server and setting breakpoints as you would normally.
+Migrating from v1
+================================================
+If you used TFS Aggregator in the past, [here](docs/Upgrade-from-v1.md) are the instructions on switching from older versions.
+
+
+Build and customize
+================================================
+We used Visual Studio Community Edition 2013 Update 4 to develop this version.
+It requires a number of TFS assemblies that cannot be redistributed. You can find the complete list [here](references/PLACEHOLDER.txt).
+More information and useful details on the internal design is [here](docs/Internals.md)

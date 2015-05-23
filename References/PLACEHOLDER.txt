@@ -1,0 +1,10 @@
+Copy here the proper version of these TFS assemblies:
+
+Microsoft.TeamFoundation.Client.dll
+Microsoft.TeamFoundation.Common.dll
+Microsoft.TeamFoundation.Framework.Server.dll
+Microsoft.TeamFoundation.Server.Core.dll
+Microsoft.TeamFoundation.WorkItemTracking.Client.dll
+Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll
+Microsoft.TeamFoundation.WorkItemTracking.Server.dll
+Microsoft.VisualStudio.Services.WebApi.dll

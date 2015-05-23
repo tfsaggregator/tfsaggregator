@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+    
+    <runtime>
+        <logging level="Verbose"/>
+        <script language="VB" />
+    </runtime>
+    
+    <!-- Add up the estimated work on the task -->
+    <rule name="CalcEstimated"
+          appliesTo="Task">
+        $self.Field['Estimated Work'] = $self.Field['Estimated Dev Work'] + $self.Field['Estimated Test Work']
+        $self.Field['Remaining Work'] = $self.Field['Remaining Dev Work'] + $self.Field['Remaining Test Work']
+    </rule>
+
+    <!-- Add the time from the task up to the parent (Bug or PBI) -->
+    <rule name="Rollup"
+          appliesTo="Task">
+		if ($self.HasParent())
+		{
+            $parent.Field['Total Work Remaining'] = $self.Field['Remaining Dev Work'] + $self.Field['Remaining Test Work']
+            $parent.Field['Total Estimate'] = $self.Field['Estimated Dev Work'] + $self.Field['Estimated Test Work']
+            # Sum up all estimates to the sprint
+            if ($self.Field['Finish Date'] -gt Get-Date) {
+                'Updating grand parent'
+                $parent.parent.Field['Dev Estimate'] = $self.Field['Estimated Dev Work']
+                $parent.parent.Field['Test Estimate'] = $self.Field['Estimated Test Work']
+            }
+		}
+    </rule>
+
+    <!-- Add up the capacity on the Sprint -->
+    <rule name="SprintCapacity"
+          appliesTo="Sprint">
+        $self.Field['Total Capacity'] = $self.Field['Dev Capacity'] + $self.Field['SQA Capacity']
+    </rule>
+
+    <!-- When all Tasks are done being worked on, set the parent (Bug or PBI) to Done (unless it is Removed) -->
+    <rule name="AutoClose"
+          appliesTo="Task">
+		if ($self.HasParent())
+		{
+		    if (-not $parent.State -eq 'Removed') {
+		        if (-not (Get-Siblings $self | where { 'Done','Removed' -notcontains $_.State })) {
+		             $parent.State = 'Done'
+		        }
+		    }
+		}
+	</rule>
+
+    <!-- When any Tasks are In Progress set the parent (Bug or PBI) to In Progress -->
+    <rule name="AutoStart"
+          appliesTo="Task">
+		if ($self.HasParent())
+		{
+		    if (-not $parent.State -eq 'Removed') {
+		        if (Get-Siblings $self | where { 'In Progress','Ready For Test' -contains $_.State }) {
+		            $parent.State = 'In Progress'
+		        }
+		    }
+		}
+	</rule>
+
+    <!-- policy order is priority -->
+    <policy name="CustomTemplatePolicy">
+        <templateScope
+            name="Custom"
+            />
+        <ruleRef name="CalcEstimated" />
+        <ruleRef name="Rollup" />
+        <ruleRef name="SprintCapacity" />
+    </policy>
+
+    <policy name="SpecificProject">
+      <collectionScope collections="DefaultCollection" />
+      <projectScope projects="One;Two" />
+        <!-- no rules -->
+    </policy>
+
+    <policy name="DefaultPolicy">
+        <collectionScope
+            collections="*"
+            />
+        <ruleRef name="AutoStart" />
+        <ruleRef name="AutoClose" />
+    </policy>
+
+</AggregatorConfiguration>

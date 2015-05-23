@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\TeamFoundationServer\12.0@InstallPath)</TfsInstallationDirectory>
+    <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\TeamFoundationServer\12.0@InstallPath)</TfsInstallationDirectory>
+    <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\VisualStudio\12.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
+    <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\VisualStudio\12.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
+    <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\VSWinExpress\12.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
+    <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\VSWinExpress\12.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
+    <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\VPDExpress\12.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
+    <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\VPDExpress\12.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
+    <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\WDExpress\12.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
+    <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\WDExpress\12.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
+    
+    <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)\Application Tier\Web Services\bin</ServerAssemblies>
+    <ClientAssembliesv20 Condition="'$(VsInstallationDirectory)'!=''">$(VsInstallationDirectory)\ReferenceAssemblies\v2.0</ClientAssembliesv20>
+    <ClientAssembliesv45 Condition="'$(VsInstallationDirectory)'!=''">$(VsInstallationDirectory)\ReferenceAssemblies\v4.5</ClientAssembliesv45>
+
+    <ServerAssemblies Condition="'$(TfsInstallationDirectory)'==''">..\References</ServerAssemblies>
+    <ClientAssembliesv20 Condition="'$(VsInstallationDirectory)'==''">..\References</ClientAssembliesv20>
+    <ClientAssembliesv45 Condition="'$(VsInstallationDirectory)'==''">..\References</ClientAssembliesv45>
+  </PropertyGroup>
+
+  <ItemGroup>
+
+    <!-- Server Assemblies -->
+    <Reference Include="Microsoft.TeamFoundation.Framework.Server">
+      <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Framework.Server.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.Server.Core">
+      <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Server.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server">
+      <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer">
+      <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll</HintPath>
+    </Reference>
+
+    <!-- Client Assemblies v2.0 -->
+    <Reference Include="Microsoft.TeamFoundation.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ClientAssembliesv20)\Microsoft.TeamFoundation.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ClientAssembliesv20)\Microsoft.TeamFoundation.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
+      <HintPath>$(ClientAssembliesv20)\Microsoft.TeamFoundation.WorkItemTracking.Client.dll</HintPath>
+    </Reference>
+
+    <!-- Client Assemblies v4.5 -->
+    <Reference Include="Microsoft.VisualStudio.Services.WebApi, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(ClientAssembliesv45)\Microsoft.VisualStudio.Services.WebApi.dll</HintPath>
+    </Reference>
+
+  </ItemGroup>
+</Project>
