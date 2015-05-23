@@ -34,11 +34,7 @@ The [Install](doc/Install.md) file contains the full details to correctly setup 
  3. Test your policy using the command line tool.
  4. Copy `TFSAggregator2.*.dll` and `TFSAggregator2.ServerPlugin.policies` to the plugin location on the Application Tier of your TFS Servers
 
-<<<<<<< HEAD
 That is all. TFS will detect that a file was copied in and will load it in.
-=======
-To build this project you will need to copy a few files from your TFS server (they're non-redistributable, sorry). These files must be at least TFS 2013 Update 2, as Microsoft shuffled some assemblies and types around between 2013 RTM and the later updates.
->>>>>>> master
 
 
 Troubleshooting
