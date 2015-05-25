@@ -45,5 +45,7 @@
         void AttemptingToMoveWorkItemToState(IWorkItem workItem, string orginalSourceState, string destState);
         void WorkItemIsValidToSave(IWorkItem workItem);
         void WorkItemIsInvalidInState(IWorkItem workItem, string destState);
+        void ConfigurationChanged(string settingsPath, DateTime lastCacheRefresh, DateTime updatedOn);
+        void UsingCachedConfiguration(string settingsPath, DateTime lastCacheRefresh, DateTime updatedOn);
     }
 }

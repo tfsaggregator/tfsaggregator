@@ -157,5 +157,15 @@
             logger.Log(LogLevel.Warning, "WorkItem is invalid in '{0}' state. Invalid fields: {1}"
                 , destState, workItem.GetInvalidWorkItemFieldsList());
         }
+
+        public void ConfigurationChanged(string settingsPath, DateTime lastCacheRefresh, DateTime updatedOn)
+        {
+            logger.Log(LogLevel.Information, "Configuration file '{0}' updated on {1:u} while cached image was read on {2:u}", settingsPath, updatedOn, lastCacheRefresh);
+        }
+
+        public void UsingCachedConfiguration(string settingsPath, DateTime lastCacheRefresh, DateTime updatedOn)
+        {
+            logger.Log(LogLevel.Diagnostic, "Using cached Configuration, last updated on {1:u}, source '{0}' ", settingsPath, lastCacheRefresh);
+        }
     }
 }

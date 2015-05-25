@@ -34,6 +34,7 @@
             return new Type[1] { typeof(WorkItemChangedEvent) };
         }
 
+        ServerEventLogger logger = new ServerEventLogger(LogLevel.Information);
 
         /// <summary>
         /// This is the one where all the magic starts.  Main() so to speak.  I will load the settings, connect to TFS and apply the aggregation rules.
@@ -46,7 +47,6 @@
             out string statusMessage,
             out ExceptionPropertyCollection properties)
         {
-            var logger = new ServerEventLogger(LogLevel.Information);
             string settingsPath = this.GetSettingsFullPath();
             var settings = GetSettingsFromCache(settingsPath, logger);
             if (settings == null)
@@ -114,17 +114,22 @@
         DateTime lastCacheRefresh = DateTime.MinValue;
         TFSAggregatorSettings cachedSettings = null;
 
-        private TFSAggregatorSettings GetSettingsFromCache(string settingsPath, ServerEventLogger logger)
+        private TFSAggregatorSettings GetSettingsFromCache(string settingsPath, ILogEvents logger)
         {
             var updatedOn = File.GetLastWriteTimeUtc(settingsPath);
             if (updatedOn > lastCacheRefresh)
             {
+                logger.ConfigurationChanged(settingsPath, lastCacheRefresh, updatedOn);
                 var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
                 lock (this)
                 {
                     lastCacheRefresh = updatedOn;
                     cachedSettings = settings;
                 }
+            }
+            else
+            {
+                logger.UsingCachedConfiguration(settingsPath, lastCacheRefresh, updatedOn);
             }
             return cachedSettings;
         }
