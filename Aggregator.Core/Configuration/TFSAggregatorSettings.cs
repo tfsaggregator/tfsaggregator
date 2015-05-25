@@ -40,36 +40,13 @@
             LoadOptions xmlLoadOptions = LoadOptions.PreserveWhitespace | LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
             XDocument doc = load(xmlLoadOptions);
 
-            XmlSchemaSet schemas = new XmlSchemaSet();
-            var thisAssembly = Assembly.GetAssembly(typeof(TFSAggregatorSettings));
-            var stream = thisAssembly.GetManifestResourceStream("Aggregator.Core.Configuration.AggregatorConfiguration.xsd");
-            schemas.Add("", XmlReader.Create(stream));
-            bool errors = false;
-            doc.Validate(schemas, (o, e) =>
-            {
-                logger.InvalidConfiguration(e.Severity, e.Message, e.Exception.LineNumber, e.Exception.LinePosition);
-                errors = true;
-            }, true);
-            if (errors)
+            if (!Validate(logger, doc))
                 // HACK we must handle this scenario with clean exit
                 return null;
 
-            // XML Schema has done lot of checking and set defaults, no need to recheck here
-            var loggingNode = doc.Root.Element("runtime") != null ? 
-                doc.Root.Element("runtime").Element("logging") : null;
-            instance.LogLevel = loggingNode != null ?
-                (LogLevel)Enum.Parse(typeof(LogLevel), loggingNode.Attribute("level").Value)
-                : LogLevel.Normal;
-            var authenticationNode = doc.Root.Element("runtime") != null ?
-                doc.Root.Element("runtime").Element("authentication") : null;
-            instance.AutoImpersonate = authenticationNode != null ?
-                bool.Parse(authenticationNode.Attribute("autoImpersonate").Value)
-                : false;
-            var scriptNode = doc.Root.Element("runtime") != null ?
-                doc.Root.Element("runtime").Element("script") : null;
-            instance.ScriptLanguage = scriptNode != null ?
-                scriptNode.Attribute("language").Value
-                : "C#";
+            // XML Schema has done lot of checking and set defaults, no need to recheck later, just manage missing pieces
+
+            ParseRuntime(instance, doc);
 
             Dictionary<string, Rule> rules = ParseRules(instance, doc);
 
@@ -90,6 +67,40 @@
             }//for
 
             return instance;
+        }
+
+        private static bool Validate(ILogEvents logger, XDocument doc)
+        {
+            XmlSchemaSet schemas = new XmlSchemaSet();
+            var thisAssembly = Assembly.GetAssembly(typeof(TFSAggregatorSettings));
+            var stream = thisAssembly.GetManifestResourceStream("Aggregator.Core.Configuration.AggregatorConfiguration.xsd");
+            schemas.Add("", XmlReader.Create(stream));
+            bool valid = true;
+            doc.Validate(schemas, (o, e) =>
+            {
+                logger.InvalidConfiguration(e.Severity, e.Message, e.Exception.LineNumber, e.Exception.LinePosition);
+                valid = false;
+            }, true);
+            return valid;
+        }
+
+        private static void ParseRuntime(TFSAggregatorSettings instance, XDocument doc)
+        {
+            var loggingNode = doc.Root.Element("runtime") != null ?
+                doc.Root.Element("runtime").Element("logging") : null;
+            instance.LogLevel = loggingNode != null ?
+                (LogLevel)Enum.Parse(typeof(LogLevel), loggingNode.Attribute("level").Value)
+                : LogLevel.Normal;
+            var authenticationNode = doc.Root.Element("runtime") != null ?
+                doc.Root.Element("runtime").Element("authentication") : null;
+            instance.AutoImpersonate = authenticationNode != null ?
+                bool.Parse(authenticationNode.Attribute("autoImpersonate").Value)
+                : false;
+            var scriptNode = doc.Root.Element("runtime") != null ?
+                doc.Root.Element("runtime").Element("script") : null;
+            instance.ScriptLanguage = scriptNode != null ?
+                scriptNode.Attribute("language").Value
+                : "C#";
         }
 
         private static List<Policy> ParsePolicies(XDocument doc, Dictionary<string, Rule> rules, Dictionary<string, bool> ruleInUse)
