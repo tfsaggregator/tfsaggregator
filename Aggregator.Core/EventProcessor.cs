@@ -20,23 +20,27 @@
         IWorkItemRepository store;
         ScriptEngine engine;
 
-        public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, ILogEvents logger, TFSAggregatorSettings settings)
-            : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, logger), logger, settings)
+        public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, ObjectCacheBase cache, TFSAggregatorSettings settings)
+            : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, cache.Logger), cache, settings)
         {
         }
 
-        public EventProcessor(IWorkItemRepository workItemStore, ILogEvents logger, TFSAggregatorSettings settings)
+        public EventProcessor(IWorkItemRepository workItemStore, ObjectCacheBase cache, TFSAggregatorSettings settings)
         {
-            this.logger = logger;
+            this.logger = cache.Logger;
             this.store = workItemStore;
-            // TODO caching
             this.settings = settings;
-            this.engine = this.MakeEngine(settings.ScriptLanguage, this.store, this.logger);
-            foreach (var rule in settings.Rules)
-            {
-                this.engine.Load(rule.Name, rule.Script);
-            }
-            this.engine.LoadCompleted();
+
+            this.engine = cache.GetEngine(workItemStore,
+                (store) => {
+                    var engine = this.MakeEngine(settings.ScriptLanguage, store, cache.Logger);
+                    foreach (var rule in settings.Rules)
+                    {
+                        engine.Load(rule.Name, rule.Script);
+                    }
+                    engine.LoadCompleted();
+                    return engine;
+                });
         }
 
         /// <summary>

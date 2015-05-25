@@ -47,6 +47,7 @@
         {
             // need a logger to show errors in config file (Catch 22)
             var logger = new ConsoleEventLogger(LogLevel.Error);
+            var cache = new ObjectCache(logger);
             var settings = TFSAggregatorSettings.LoadFromFile(this.PolicyFile, logger);
             if (settings == null)
             {
@@ -54,7 +55,7 @@
             }
             logger.Level = settings.LogLevel;
             logger.ConfigurationLoaded(this.PolicyFile);
-            EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, null, logger, settings); //we only need one for the whole app
+            EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, null, cache, settings); //we only need one for the whole app
 
             var result = new ProcessingResult();
             try

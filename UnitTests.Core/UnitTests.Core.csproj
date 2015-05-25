@@ -64,6 +64,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Mock\ObjectCacheMock.cs" />
     <Compile Include="Mock\WorkItemLinkCollectionMock.cs" />
     <Compile Include="Mock\WorkItemTypeMock.cs" />
     <Compile Include="Navigation.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="TestHelpers.cs" />
     <Compile Include="Mock\WorkItemLinkMock.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Cache.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aggregator.Core\Aggregator.Core.csproj">

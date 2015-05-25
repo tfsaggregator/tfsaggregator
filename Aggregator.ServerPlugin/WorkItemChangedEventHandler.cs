@@ -34,7 +34,7 @@
             return new Type[1] { typeof(WorkItemChangedEvent) };
         }
 
-        ServerEventLogger logger = new ServerEventLogger(LogLevel.Information);
+        ObjectCache cache = new ObjectCache(new ServerEventLogger(LogLevel.Information));
 
         /// <summary>
         /// This is the one where all the magic starts.  Main() so to speak.  I will load the settings, connect to TFS and apply the aggregation rules.
@@ -48,7 +48,8 @@
             out ExceptionPropertyCollection properties)
         {
             string settingsPath = this.GetSettingsFullPath();
-            var settings = GetSettingsFromCache(settingsPath, logger);
+
+            var settings = cache.GetSettings(settingsPath);
             if (settings == null)
             {
                 statusCode = 99;
@@ -56,7 +57,10 @@
                 properties = null;
                 return EventNotificationStatus.ActionPermitted;
             }
+
+            ServerEventLogger logger = cache.Logger as ServerEventLogger;
             logger.Level = settings.LogLevel;
+
             var uri = this.GetCollectionUriFromContext(requestContext);
 
             var result = new ProcessingResult();
@@ -71,7 +75,7 @@
                         toImpersonate = this.GetIdentityToImpersonate(requestContext, notificationEventArgs as WorkItemChangedEvent);
                     }
 
-                    EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, toImpersonate, logger, settings); //we only need one for the whole app
+                    EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, toImpersonate, cache, settings); //we only need one for the whole app
 
                     var context = new RequestContextWrapper(requestContext);
                     var notification = new NotificationWrapper(notificationType, notificationEventArgs as WorkItemChangedEvent);
@@ -109,29 +113,6 @@
                         Path.GetDirectoryName(new Uri(thisAssembly.CodeBase).LocalPath),
                         baseName)
                     + extension;
-        }
-
-        DateTime lastCacheRefresh = DateTime.MinValue;
-        TFSAggregatorSettings cachedSettings = null;
-
-        private TFSAggregatorSettings GetSettingsFromCache(string settingsPath, ILogEvents logger)
-        {
-            var updatedOn = File.GetLastWriteTimeUtc(settingsPath);
-            if (updatedOn > lastCacheRefresh)
-            {
-                logger.ConfigurationChanged(settingsPath, lastCacheRefresh, updatedOn);
-                var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
-                lock (this)
-                {
-                    lastCacheRefresh = updatedOn;
-                    cachedSettings = settings;
-                }
-            }
-            else
-            {
-                logger.UsingCachedConfiguration(settingsPath, lastCacheRefresh, updatedOn);
-            }
-            return cachedSettings;
         }
 
         private Uri GetCollectionUriFromContext(TeamFoundationRequestContext requestContext)

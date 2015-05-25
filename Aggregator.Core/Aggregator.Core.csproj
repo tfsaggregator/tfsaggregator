@@ -76,6 +76,7 @@
     <Compile Include="Interfaces\IWorkItemLinkCollection.cs" />
     <Compile Include="Navigation\StateTransition.cs" />
     <Compile Include="Navigation\StateWorkflow.cs" />
+    <Compile Include="ObjectCache.cs" />
     <Compile Include="Script\VBNetScriptEngine.cs" />
     <Compile Include="Script\CSharpScriptEngine.cs" />
     <Compile Include="Script\DotNetScriptEngine.cs" />
