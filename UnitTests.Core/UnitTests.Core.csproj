@@ -69,7 +69,6 @@
     <Compile Include="Navigation.cs" />
     <Compile Include="PolicyScope.cs" />
     <Compile Include="ScriptEngines.cs" />
-    <Compile Include="Basics.cs" />
     <Compile Include="Mock\FieldCollectionMock.cs" />
     <Compile Include="Mock\FieldMock.cs" />
     <Compile Include="Mock\WorkItemMock.cs" />
