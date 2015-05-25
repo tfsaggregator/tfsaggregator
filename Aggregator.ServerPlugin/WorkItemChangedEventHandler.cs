@@ -46,11 +46,9 @@
             out string statusMessage,
             out ExceptionPropertyCollection properties)
         {
-            var uri = this.GetCollectionUriFromContext(requestContext);
+            var logger = new ServerEventLogger(LogLevel.Information);
             string settingsPath = this.GetSettingsFullPath();
-            var logger = new ServerEventLogger(LogLevel.Warning);
-            // TODO avoid reload every time
-            var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
+            var settings = GetSettingsFromCache(settingsPath, logger);
             if (settings == null)
             {
                 statusCode = 99;
@@ -59,6 +57,7 @@
                 return EventNotificationStatus.ActionPermitted;
             }
             logger.Level = settings.LogLevel;
+            var uri = this.GetCollectionUriFromContext(requestContext);
 
             var result = new ProcessingResult();
             try
@@ -97,8 +96,6 @@
             return result.NotificationStatus;
         }
 
-
-
         private string GetSettingsFullPath()
         {
             var thisAssembly = Assembly.GetExecutingAssembly();
@@ -112,6 +109,24 @@
                         Path.GetDirectoryName(new Uri(thisAssembly.CodeBase).LocalPath),
                         baseName)
                     + extension;
+        }
+
+        DateTime lastCacheRefresh = DateTime.MinValue;
+        TFSAggregatorSettings cachedSettings = null;
+
+        private TFSAggregatorSettings GetSettingsFromCache(string settingsPath, ServerEventLogger logger)
+        {
+            var updatedOn = File.GetLastWriteTimeUtc(settingsPath);
+            if (updatedOn > lastCacheRefresh)
+            {
+                var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
+                lock (this)
+                {
+                    lastCacheRefresh = updatedOn;
+                    cachedSettings = settings;
+                }
+            }
+            return cachedSettings;
         }
 
         private Uri GetCollectionUriFromContext(TeamFoundationRequestContext requestContext)
