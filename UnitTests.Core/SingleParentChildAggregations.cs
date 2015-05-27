@@ -64,9 +64,9 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem.policies", logger);
             var repository = this.SetupFakeRepository();
-            var cache = new ObjectCacheMock(logger, settings);
-            var processor = new EventProcessor(repository, cache, settings);
             var context = Substitute.For<IRequestContext>();
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            var processor = new EventProcessor(repository, runtime);
             var notification = Substitute.For<INotification>();
             notification.WorkItemId.Returns(1);
 
@@ -84,9 +84,9 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem-Short.policies", logger);
             var repository = this.SetupFakeRepository_Short();
-            var cache = new ObjectCacheMock(logger, settings);
-            var processor = new EventProcessor(repository, cache, settings);
             var context = Substitute.For<IRequestContext>();
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            var processor = new EventProcessor(repository, runtime);
             var notification = Substitute.For<INotification>();
             notification.WorkItemId.Returns(1);
 
@@ -104,9 +104,9 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItemVB.policies", logger);
             var repository = this.SetupFakeRepository_Short();
-            var cache = new ObjectCacheMock(logger, settings);
-            var processor = new EventProcessor(repository, cache, settings);
             var context = Substitute.For<IRequestContext>();
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            var processor = new EventProcessor(repository, runtime);
             var notification = Substitute.For<INotification>();
             notification.WorkItemId.Returns(1);
 
@@ -156,9 +156,9 @@ namespace UnitTests.Core
             parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, grandParent.Id, repository));
             repository.SetWorkItems(new[] { grandParent, parent, child });
 
-            var cache = new ObjectCacheMock(logger, settings);
-            var processor = new EventProcessor(repository, cache, settings);
             var context = Substitute.For<IRequestContext>();
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            var processor = new EventProcessor(repository, runtime);
             var notification = Substitute.For<INotification>();
             notification.WorkItemId.Returns(3);
 

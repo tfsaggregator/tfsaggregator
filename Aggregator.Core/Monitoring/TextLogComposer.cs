@@ -3,8 +3,8 @@
     using System;
     using System.Collections.ObjectModel;
     using System.Management.Automation;
+    using System.Runtime.Caching;
     using System.Xml.Schema;
-
     using Microsoft.TeamFoundation.Framework.Server;
 
     public class TextLogComposer : ILogEvents
@@ -16,6 +16,20 @@
         }
 
         public ITextLogger TextLogger { get { return logger; } }
+
+        // forward to implementation
+        public LogLevel Level
+        {
+            get
+            {
+                return logger.Level;
+            }
+
+            set
+            {
+                logger.Level = value;
+            }
+        }
 
         public void ResultsFromScriptRun(string scriptName, Collection<PSObject> results)
         {
@@ -158,14 +172,19 @@
                 , destState, workItem.GetInvalidWorkItemFieldsList());
         }
 
-        public void ConfigurationChanged(string settingsPath, DateTime lastCacheRefresh, DateTime updatedOn)
+        public void LoadingConfiguration(string settingsPath)
         {
-            logger.Log(LogLevel.Information, "Configuration file '{0}' updated on {1:u} while cached image was read on {2:u}", settingsPath, updatedOn, lastCacheRefresh);
+            logger.Log(LogLevel.Diagnostic, "Loading Configuration from '{0}' ", settingsPath);
         }
 
-        public void UsingCachedConfiguration(string settingsPath, DateTime lastCacheRefresh, DateTime updatedOn)
+        public void ConfigurationChanged(string settingsPath, CacheEntryRemovedReason removedReason)
         {
-            logger.Log(LogLevel.Diagnostic, "Using cached Configuration, last updated on {1:u}, source '{0}' ", settingsPath, lastCacheRefresh);
+            logger.Log(LogLevel.Information, "Configuration file '{0}' changed {1}", settingsPath, removedReason);
+        }
+
+        public void UsingCachedConfiguration(string settingsPath)
+        {
+            logger.Log(LogLevel.Diagnostic, "Using cached Configuration for '{0}' ", settingsPath);
         }
     }
 }

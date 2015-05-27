@@ -3,6 +3,7 @@
     using System;
     using System.Collections.ObjectModel;
     using System.Management.Automation;
+    using System.Runtime.Caching;
     using System.Xml.Schema;
 
     /// <summary>
@@ -20,11 +21,16 @@
         Diagnostic = 99,
     }
 
+    public interface ILogger
+    {
+        LogLevel Level { get; set; }
+    }
+
     /// <summary>
     /// Core Clients will be called on this interface to log events and errors.
     /// </summary>
-    /// <remarks>The method *must* not raise exception.</remarks>
-    public interface ILogEvents
+    /// <remarks>The methods must *not* raise exceptions.</remarks>
+    public interface ILogEvents : ILogger
     {
         void ConfigurationLoaded(string policyFile);
         void StartingProcessing(IRequestContext context, INotification notification);
@@ -45,7 +51,8 @@
         void AttemptingToMoveWorkItemToState(IWorkItem workItem, string orginalSourceState, string destState);
         void WorkItemIsValidToSave(IWorkItem workItem);
         void WorkItemIsInvalidInState(IWorkItem workItem, string destState);
-        void ConfigurationChanged(string settingsPath, DateTime lastCacheRefresh, DateTime updatedOn);
-        void UsingCachedConfiguration(string settingsPath, DateTime lastCacheRefresh, DateTime updatedOn);
+        void LoadingConfiguration(string settingsPath);
+        void UsingCachedConfiguration(string settingsPath);
+        void ConfigurationChanged(string settingsPath, CacheEntryRemovedReason removedReason);
     }
 }

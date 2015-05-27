@@ -34,8 +34,6 @@
             return new Type[1] { typeof(WorkItemChangedEvent) };
         }
 
-        ObjectCache cache = new ObjectCache(new ServerEventLogger(LogLevel.Information));
-
         /// <summary>
         /// This is the one where all the magic starts.  Main() so to speak.  I will load the settings, connect to TFS and apply the aggregation rules.
         /// </summary>
@@ -47,21 +45,19 @@
             out string statusMessage,
             out ExceptionPropertyCollection properties)
         {
-            string settingsPath = this.GetSettingsFullPath();
-
-            var settings = cache.GetSettings(settingsPath);
-            if (settings == null)
+            var runtime = RuntimeContext.GetContext(
+                () => GetServerSettingsFullPath(),
+                new RequestContextWrapper(requestContext),
+                new ServerEventLogger(LogLevel.Normal));
+            if (runtime.HasErrors)
             {
                 statusCode = 99;
-                statusMessage = "Errors in configuration file " + settingsPath;
+                statusMessage = string.Join(". ", runtime.Errors);
                 properties = null;
                 return EventNotificationStatus.ActionPermitted;
-            }
+            }//if
 
-            ServerEventLogger logger = cache.Logger as ServerEventLogger;
-            logger.Level = settings.LogLevel;
-
-            var uri = this.GetCollectionUriFromContext(requestContext);
+            var logger = runtime.Logger as ServerEventLogger; // HACK remove cast for ProcessEventException
 
             var result = new ProcessingResult();
             try
@@ -69,15 +65,17 @@
                 //Check if we have a workitem changed event before proceeding
                 if (notificationType == NotificationType.Notification && notificationEventArgs is WorkItemChangedEvent)
                 {
+                    var uri = this.GetCollectionUriFromContext(requestContext);
+
                     IdentityDescriptor toImpersonate = null;
-                    if (settings.AutoImpersonate)
+                    if (runtime.Settings.AutoImpersonate)
                     {
                         toImpersonate = this.GetIdentityToImpersonate(requestContext, notificationEventArgs as WorkItemChangedEvent);
                     }
 
-                    EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, toImpersonate, cache, settings); //we only need one for the whole app
+                    EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, toImpersonate, runtime);
 
-                    var context = new RequestContextWrapper(requestContext);
+                    var context = runtime.RequestContext;
                     var notification = new NotificationWrapper(notificationType, notificationEventArgs as WorkItemChangedEvent);
 
                     logger.StartingProcessing(context, notification);
@@ -100,27 +98,11 @@
             return result.NotificationStatus;
         }
 
-        private string GetSettingsFullPath()
-        {
-            var thisAssembly = Assembly.GetExecutingAssembly();
-
-            // Load the options from file with same name as DLL
-            string baseName = thisAssembly.GetName().Name;
-            string extension = ".policies";
-
-            // Load the file from same folder where DLL is located
-            return Path.Combine(
-                        Path.GetDirectoryName(new Uri(thisAssembly.CodeBase).LocalPath),
-                        baseName)
-                    + extension;
-        }
-
         private Uri GetCollectionUriFromContext(TeamFoundationRequestContext requestContext)
         {
             TeamFoundationLocationService service = requestContext.GetService<TeamFoundationLocationService>();
             return service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));
         }
-
 
         private IdentityDescriptor GetIdentityToImpersonate(TeamFoundationRequestContext requestContext, WorkItemChangedEvent workItemChangedEvent)
         {
@@ -138,6 +120,22 @@
                     MembershipQuery.None).FirstOrDefault();
 
             return identity == null ? null : identity.Descriptor;
+        }
+
+        private static string GetServerSettingsFullPath()
+        {
+            const string PolicyExtension = ".policies";
+
+            var thisAssemblyName = Assembly.GetExecutingAssembly().GetName();
+
+            // Load the options from file with same name as DLL
+            string baseName = thisAssemblyName.Name;
+
+            // Load the file from same folder where DLL is located
+            return Path.Combine(
+                        Path.GetDirectoryName(new Uri(thisAssemblyName.CodeBase).LocalPath),
+                        baseName)
+                    + PolicyExtension;
         }
 
         public string Name

@@ -41,6 +41,7 @@
       <Private>True</Private>
       <HintPath>..\packages\System.Management.Automation_PowerShell_3.0.6.3.9600.17400\lib\net40\System.Management.Automation.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +56,7 @@
     <Compile Include="Configuration\Rule.cs" />
     <Compile Include="Configuration\PolicyScope.cs" />
     <Compile Include="Configuration\RuleScope.cs" />
+    <Compile Include="Context\IRuntimeContext.cs" />
     <Compile Include="EventProcessor.cs" />
     <Compile Include="Extensions\WorkItemExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -76,7 +78,7 @@
     <Compile Include="Interfaces\IWorkItemLinkCollection.cs" />
     <Compile Include="Navigation\StateTransition.cs" />
     <Compile Include="Navigation\StateWorkflow.cs" />
-    <Compile Include="ObjectCache.cs" />
+    <Compile Include="Context\RuntimeContext.cs" />
     <Compile Include="Script\VBNetScriptEngine.cs" />
     <Compile Include="Script\CSharpScriptEngine.cs" />
     <Compile Include="Script\DotNetScriptEngine.cs" />
