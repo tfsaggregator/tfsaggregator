@@ -20,12 +20,15 @@
 
         public static TFSAggregatorSettings LoadFromFile(string settingsPath, ILogEvents logger)
         {
-            return Load(logger, (xmlLoadOptions) => XDocument.Load(settingsPath, xmlLoadOptions));
+            DateTime timestamp = System.IO.File.GetLastWriteTimeUtc(settingsPath);
+            return Load(timestamp, (xmlLoadOptions) => XDocument.Load(settingsPath, xmlLoadOptions), logger);
         }
 
         public static TFSAggregatorSettings LoadXml(string content, ILogEvents logger)
         {
-            return Load(logger, (xmlLoadOptions) => XDocument.Parse(content, xmlLoadOptions));
+            // conventional
+            DateTime timestamp = new DateTime(0, DateTimeKind.Utc);
+            return Load(timestamp, (xmlLoadOptions) => XDocument.Parse(content, xmlLoadOptions), logger);
         }
 
         /// <summary>
@@ -33,12 +36,14 @@
         /// </summary>
         /// <param name="load">A lambda returning the <see cref="XDocument"/> to parse.</param>
         /// <returns></returns>
-        public static TFSAggregatorSettings Load(ILogEvents logger, Func<LoadOptions, XDocument> load)
+        public static TFSAggregatorSettings Load(DateTime timestamp, Func<LoadOptions, XDocument> load, ILogEvents logger)
         {
             var instance = new TFSAggregatorSettings();
 
             LoadOptions xmlLoadOptions = LoadOptions.PreserveWhitespace | LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
             XDocument doc = load(xmlLoadOptions);
+
+            instance.Hash = ComputeHash(doc, timestamp);
 
             if (!Validate(logger, doc))
                 // HACK we must handle this scenario with clean exit
@@ -67,6 +72,26 @@
             }//for
 
             return instance;
+        }
+
+        private static string ComputeHash(XDocument doc, DateTime timestamp)
+        {
+            using (var stream = new System.IO.MemoryStream())
+            {
+                using (var md5 = new System.Security.Cryptography.MD5CryptoServiceProvider())
+                {
+                    using (var w = new System.IO.BinaryWriter(stream))
+                    {
+                        w.Write(timestamp.ToBinary());
+                        w.Flush();
+                        doc.Save(stream, SaveOptions.OmitDuplicateNamespaces);
+                        stream.Flush();
+                        var hash = md5.ComputeHash(stream.GetBuffer());
+                        string hex = BitConverter.ToString(hash);
+                        return hex.Replace("-", "");
+                    }
+                }
+            }
         }
 
         private static bool Validate(ILogEvents logger, XDocument doc)
@@ -206,5 +231,6 @@
         public LogLevel LogLevel { get; set; }
         public string ScriptLanguage { get; set; }
         public bool AutoImpersonate { get; set; }
+        public string Hash { get; private set; }
     }
 }
