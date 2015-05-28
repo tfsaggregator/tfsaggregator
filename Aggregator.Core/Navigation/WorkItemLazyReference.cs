@@ -163,5 +163,10 @@
         {
             this.Target.AddWorkItemLink(destination, linkTypeName);
         }
+
+        public void AddHyperlink(string destination, string comment = "")
+        {
+            this.Target.AddHyperlink(destination, comment);
+        }
     }
 }

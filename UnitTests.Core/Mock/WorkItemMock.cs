@@ -144,5 +144,10 @@
         {
             throw new NotImplementedException();
         }
+
+        public void AddHyperlink(string destination, string comment = "")
+        {
+            throw new NotImplementedException();
+        }
     }
 }

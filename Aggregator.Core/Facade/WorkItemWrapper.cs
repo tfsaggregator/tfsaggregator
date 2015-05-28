@@ -208,5 +208,20 @@ namespace Aggregator.Core.Facade
                 //TODO logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
             }//if
         }
+
+        public void AddHyperlink(string destination, string comment = "")
+        {
+            var link = new TFS.Hyperlink(destination);
+            link.Comment = comment;
+            if (!this.workItem.Links.Contains(link))
+            {
+                //TODO logger.AddingHyperlink(this.Id, destination, comment);
+                this.workItem.Links.Add(link);
+            }
+            else
+            {
+                //TODO logger.HyperlinkAlreadyExists(this.Id, destination, comment);
+            }
+        }
     }
 }

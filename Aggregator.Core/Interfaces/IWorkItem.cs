@@ -20,6 +20,7 @@
         bool HasChildren();
         bool HasRelation(string relation);
         void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName);
+        void AddHyperlink(string destination, string comment = "");
 
         // navigation helpers
         IWorkItemExposed Parent { get; }
