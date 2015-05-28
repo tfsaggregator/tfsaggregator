@@ -15,9 +15,6 @@
     {
         static readonly char[] ListSeparators = new char[] { ',', ';' };
 
-        public IEnumerable<Rule> Rules { get; set; }
-        public IEnumerable<Policy> Policies { get; set; }
-
         public static TFSAggregatorSettings LoadFromFile(string settingsPath, ILogEvents logger)
         {
             DateTime timestamp = System.IO.File.GetLastWriteTimeUtc(settingsPath);
@@ -26,8 +23,13 @@
 
         public static TFSAggregatorSettings LoadXml(string content, ILogEvents logger)
         {
-            // conventional
+            // conventional point in time reference
             DateTime timestamp = new DateTime(0, DateTimeKind.Utc);
+            return LoadXml(content, timestamp, logger);
+        }
+
+        public static TFSAggregatorSettings LoadXml(string content, DateTime timestamp, ILogEvents logger)
+        {
             return Load(timestamp, (xmlLoadOptions) => XDocument.Parse(content, xmlLoadOptions), logger);
         }
 
@@ -45,15 +47,15 @@
 
             instance.Hash = ComputeHash(doc, timestamp);
 
-            if (!Validate(logger, doc))
+            if (!ValidateDocAgainstSchema(doc, logger))
                 // HACK we must handle this scenario with clean exit
                 return null;
 
             // XML Schema has done lot of checking and set defaults, no need to recheck later, just manage missing pieces
 
-            ParseRuntime(instance, doc);
+            ParseRuntimeSection(instance, doc);
 
-            Dictionary<string, Rule> rules = ParseRules(instance, doc);
+            Dictionary<string, Rule> rules = ParseRulesSection(instance, doc);
 
             var ruleInUse = new Dictionary<string, bool>();
             foreach (string ruleName in rules.Keys)
@@ -61,7 +63,7 @@
                 ruleInUse.Add(ruleName, false);
             }//for
 
-            List<Policy> policies = ParsePolicies(doc, rules, ruleInUse);
+            List<Policy> policies = ParsePoliciesSection(doc, rules, ruleInUse);
 
             instance.Policies = policies;
 
@@ -94,7 +96,7 @@
             }
         }
 
-        private static bool Validate(ILogEvents logger, XDocument doc)
+        private static bool ValidateDocAgainstSchema(XDocument doc, ILogEvents logger)
         {
             XmlSchemaSet schemas = new XmlSchemaSet();
             var thisAssembly = Assembly.GetAssembly(typeof(TFSAggregatorSettings));
@@ -109,7 +111,7 @@
             return valid;
         }
 
-        private static void ParseRuntime(TFSAggregatorSettings instance, XDocument doc)
+        private static void ParseRuntimeSection(TFSAggregatorSettings instance, XDocument doc)
         {
             var loggingNode = doc.Root.Element("runtime") != null ?
                 doc.Root.Element("runtime").Element("logging") : null;
@@ -128,7 +130,7 @@
                 : "C#";
         }
 
-        private static List<Policy> ParsePolicies(XDocument doc, Dictionary<string, Rule> rules, Dictionary<string, bool> ruleInUse)
+        private static List<Policy> ParsePoliciesSection(XDocument doc, Dictionary<string, Rule> rules, Dictionary<string, bool> ruleInUse)
         {
             var policies = new List<Policy>();
             foreach (var policyElem in doc.Root.Elements("policy"))
@@ -197,7 +199,7 @@
             return policies;
         }
 
-        private static Dictionary<string, Rule> ParseRules(TFSAggregatorSettings instance, XDocument doc)
+        private static Dictionary<string, Rule> ParseRulesSection(TFSAggregatorSettings instance, XDocument doc)
         {
             var rules = new Dictionary<string, Rule>();
             foreach (var ruleElem in doc.Root.Elements("rule"))
@@ -228,9 +230,11 @@
             return rules;
         }
 
-        public LogLevel LogLevel { get; set; }
-        public string ScriptLanguage { get; set; }
-        public bool AutoImpersonate { get; set; }
+        public LogLevel LogLevel { get; private set; }
+        public string ScriptLanguage { get; private set; }
+        public bool AutoImpersonate { get; private set; }
         public string Hash { get; private set; }
+        public IEnumerable<Rule> Rules { get; private set; }
+        public IEnumerable<Policy> Policies { get; private set; }
     }
 }
