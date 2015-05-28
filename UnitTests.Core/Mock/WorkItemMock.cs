@@ -139,5 +139,10 @@
         {
             StateWorkflow.TransitionToState(this, state, comment, this.store.Logger);
         }
+
+        public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

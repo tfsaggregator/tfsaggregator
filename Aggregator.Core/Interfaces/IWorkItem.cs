@@ -17,10 +17,9 @@
         string TypeName { get; }
 
         bool HasParent();
-
         bool HasChildren();
-
         bool HasRelation(string relation);
+        void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName);
 
         // navigation helpers
         IWorkItemExposed Parent { get; }

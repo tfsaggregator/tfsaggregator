@@ -5,6 +5,7 @@ namespace Aggregator.Core.Facade
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Aggregator.Core.Navigation;
 
@@ -190,6 +191,22 @@ namespace Aggregator.Core.Facade
         public void TransitionToState(string state, string comment)
         {
             StateWorkflow.TransitionToState(this, state, comment, this.logger);
+        }
+
+        public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            var destLinkType = this.workItem.Store.WorkItemLinkTypes.Where(t => t.ForwardEnd.Name == linkTypeName).FirstOrDefault().ForwardEnd;
+            var relationship = new TFS.WorkItemLink(destLinkType, this.Id, destination.Id);
+            // check it does not exist already
+            if (!this.workItem.WorkItemLinks.Contains(relationship))
+            {
+                //TODO logger.AddingWorkItemLink(this.Id, destLinkType, destination.Id);
+                this.workItem.WorkItemLinks.Add(relationship);
+            }
+            else
+            {
+                //TODO logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
+            }//if
         }
     }
 }

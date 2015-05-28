@@ -1,5 +1,6 @@
 ﻿namespace Aggregator.Core.Navigation
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -156,6 +157,11 @@
         public void TransitionToState(string state, string comment)
         {
             this.Target.TransitionToState(state, comment);
+        }
+
+        public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            this.Target.AddWorkItemLink(destination, linkTypeName);
         }
     }
 }
