@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Core
 {
+    using System;
     using System.IO;
     using System.Reflection;
 
@@ -14,7 +15,7 @@
         {
             try
             {
-                var thisAssembly = Assembly.GetAssembly(typeof(Basics));
+                var thisAssembly = Assembly.GetAssembly(typeof(TestHelpers));
                 var stream = thisAssembly.GetManifestResourceStream("UnitTests.Core.ConfigurationsForTests." + resourceName);
                 var textStream = new StreamReader(stream);
                 return textStream.ReadToEnd();

@@ -8,11 +8,5 @@
         public ServerEventLogger(LogLevel level)
             : base(new ServerTextLogger(level))
         { }
-
-        public LogLevel Level
-        {
-            get { return base.TextLogger.Level; }
-            set { base.TextLogger.Level = value; }
-        }
     }
 }

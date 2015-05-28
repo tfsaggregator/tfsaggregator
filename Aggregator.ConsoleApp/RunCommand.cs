@@ -46,20 +46,25 @@
         public override int Run(string[] remainingArguments)
         {
             // need a logger to show errors in config file (Catch 22)
-            var logger = new ConsoleEventLogger(LogLevel.Error);
-            var settings = TFSAggregatorSettings.LoadFromFile(this.PolicyFile, logger);
-            if (settings == null)
+            var logger = new ConsoleEventLogger(LogLevel.Warning);
+
+            var runtime = RuntimeContext.GetContext(
+                () => this.PolicyFile,
+                new RequestContextConsoleApp(this.TeamProjectCollectionUrl, this.TeamProjectName),
+                logger
+                );
+            if (runtime.HasErrors)
             {
                 return 99;
-            }
-            logger.Level = settings.LogLevel;
+            }//if
+
             logger.ConfigurationLoaded(this.PolicyFile);
-            EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, null, logger, settings); //we only need one for the whole app
+            EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, null, runtime);
 
             var result = new ProcessingResult();
             try
             {
-                var context = new RequestContextConsoleApp(this.TeamProjectCollectionUrl, this.TeamProjectName);
+                var context = runtime.RequestContext;
                 var notification = new NotificationConsoleApp(this.WorkItemId, this.TeamProjectName);
 
                 logger.StartingProcessing(context, notification);

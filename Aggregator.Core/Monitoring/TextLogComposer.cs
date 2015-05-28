@@ -3,8 +3,8 @@
     using System;
     using System.Collections.ObjectModel;
     using System.Management.Automation;
+    using System.Runtime.Caching;
     using System.Xml.Schema;
-
     using Microsoft.TeamFoundation.Framework.Server;
 
     public class TextLogComposer : ILogEvents
@@ -16,6 +16,20 @@
         }
 
         public ITextLogger TextLogger { get { return logger; } }
+
+        // forward to implementation
+        public LogLevel Level
+        {
+            get
+            {
+                return logger.Level;
+            }
+
+            set
+            {
+                logger.Level = value;
+            }
+        }
 
         public void ResultsFromScriptRun(string scriptName, Collection<PSObject> results)
         {
@@ -156,6 +170,21 @@
         {
             logger.Log(LogLevel.Warning, "WorkItem is invalid in '{0}' state. Invalid fields: {1}"
                 , destState, workItem.GetInvalidWorkItemFieldsList());
+        }
+
+        public void LoadingConfiguration(string settingsPath)
+        {
+            logger.Log(LogLevel.Diagnostic, "Loading Configuration from '{0}' ", settingsPath);
+        }
+
+        public void ConfigurationChanged(string settingsPath, CacheEntryRemovedReason removedReason)
+        {
+            logger.Log(LogLevel.Information, "Configuration file '{0}' changed {1}", settingsPath, removedReason);
+        }
+
+        public void UsingCachedConfiguration(string settingsPath)
+        {
+            logger.Log(LogLevel.Diagnostic, "Using cached Configuration for '{0}' ", settingsPath);
         }
     }
 }

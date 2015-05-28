@@ -11,7 +11,7 @@
 
     /// <summary>
     /// This is the core class with complete logic, independent from being a server plug-in.
-    /// It is the entry point of the Core assembly.
+    /// It is the entry point of the Core assembly to manage a single request/event
     /// </summary>
     public class EventProcessor
     {
@@ -20,23 +20,20 @@
         IWorkItemRepository store;
         ScriptEngine engine;
 
-        public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, ILogEvents logger, TFSAggregatorSettings settings)
-            : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, logger), logger, settings)
+        // server ctor
+        public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, IRuntimeContext runtime)
+            : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, runtime.Logger), runtime)
         {
         }
 
-        public EventProcessor(IWorkItemRepository workItemStore, ILogEvents logger, TFSAggregatorSettings settings)
+        // common ctor
+        public EventProcessor(IWorkItemRepository workItemStore, IRuntimeContext runtime)
         {
-            this.logger = logger;
+            this.logger = runtime.Logger;
             this.store = workItemStore;
-            // TODO caching
-            this.settings = settings;
-            this.engine = this.MakeEngine(settings.ScriptLanguage, this.store, this.logger);
-            foreach (var rule in settings.Rules)
-            {
-                this.engine.Load(rule.Name, rule.Script);
-            }
-            this.engine.LoadCompleted();
+            this.settings = runtime.Settings;
+
+            this.engine = runtime.GetEngine(workItemStore);                
         }
 
         /// <summary>
@@ -106,36 +103,6 @@
                     workItem.Save();
                 }
             }//for
-        }
-
-        private ScriptEngine MakeEngine(string scriptLanguage, IWorkItemRepository workItemRepository, ILogEvents logEvents)
-        {
-            this.logger.BuildingScriptEngine(scriptLanguage);
-            Type t = this.GetScriptEngineType(scriptLanguage);
-            var ctor = t.GetConstructor(new Type[] { typeof(IWorkItemRepository), typeof(ILogEvents) });
-            ScriptEngine engine = ctor.Invoke(new object[] { this.store, this.logger }) as ScriptEngine;
-            return engine;
-        }
-
-        private Type GetScriptEngineType(string scriptLanguage)
-        {
-            switch (scriptLanguage.ToUpperInvariant())
-            {
-                case "CS":
-                case "CSHARP":
-                case "C#":
-                    return typeof(CSharpScriptEngine);
-                case "VB":
-                case "VB.NET":
-                case "VBNET":
-                    return typeof(VBNetScriptEngine);
-                case "PS":
-                case "POWERSHELL":
-                    return typeof(PsScriptEngine);
-                default:
-                    // TODO Log unsupported or wrong code
-                    return typeof(CSharpScriptEngine);
-            }
         }
     }
 }
