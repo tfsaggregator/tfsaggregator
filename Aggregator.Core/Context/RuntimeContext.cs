@@ -8,6 +8,7 @@ using Aggregator.Core.Facade;
 using System.Reflection;
 using System.IO;
 using System.Runtime.Caching;
+using System.Collections.Concurrent;
 
 namespace Aggregator.Core
 {
@@ -69,13 +70,22 @@ namespace Aggregator.Core
         public IRequestContext RequestContext { get; private set; }
         public string SettingsPath { get; private set; }
         public TFSAggregatorSettings Settings { get; private set; }
-        public string Hash { get { return this.Settings.Hash; } }
+        public string Hash
+        {
+            get
+            {
+                // TODO instead of GetHashCode need a unique per-Collection Id
+                int dictHash = scriptEngines.Keys.Aggregate(0,
+                    (running, current) => { return (int)(((long)running + current.GetHashCode()) % 0xffffffff); });
+                return this.Settings.Hash + dictHash.ToString("x8");
+            }
+        }
         public ILogEvents Logger { get; private set; }
 
-        private Dictionary<IWorkItemRepository, ScriptEngine> scriptEngines = new Dictionary<IWorkItemRepository, ScriptEngine>();
+        private ConcurrentDictionary<IWorkItemRepository, ScriptEngine> scriptEngines = new ConcurrentDictionary<IWorkItemRepository, ScriptEngine>();
         public ScriptEngine GetEngine(IWorkItemRepository workItemStore)
         {
-            Func<ScriptEngine> builder = () => {
+            Func<IWorkItemRepository, ScriptEngine> builder = (IWorkItemRepository store) => {
                 var newEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, workItemStore, this.Logger);
                 foreach (var rule in this.Settings.Rules)
                 {
@@ -85,16 +95,7 @@ namespace Aggregator.Core
                 return newEngine;
             };
 
-            ScriptEngine engine = null;
-            if (scriptEngines.ContainsKey(workItemStore))
-            {
-                engine = scriptEngines[workItemStore];
-            }
-            else
-            {
-                engine = builder();
-                scriptEngines.Add(workItemStore, engine);
-            }
+            ScriptEngine engine = scriptEngines.GetOrAdd(workItemStore, builder);
             return engine;
         }
 
