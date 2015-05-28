@@ -9,5 +9,6 @@
     {
         IWorkItem GetWorkItem(int workItemId);
         ReadOnlyCollection<IWorkItem> LoadedWorkItems { get; }
+        IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName);
     }
 }

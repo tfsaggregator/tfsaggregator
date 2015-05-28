@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Core.Mock
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -23,6 +24,11 @@
         internal void SetWorkItems(IEnumerable<IWorkItem> items)
         {
             _workItems = new List<IWorkItem>(items);
+        }
+
+        public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
+        {
+            throw new NotImplementedException();
         }
 
         public ReadOnlyCollection<IWorkItem> LoadedWorkItems

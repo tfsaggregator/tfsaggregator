@@ -49,5 +49,20 @@
         {
             get { return new ReadOnlyCollection<IWorkItem>(this.loadedWorkItems); }
         }
+
+        public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
+        {
+            if (this.workItemStore == null)
+            {
+                this.ConnectToWorkItemStore();
+            }
+
+            var targetType = workItemStore.Projects[projectName].WorkItemTypes[workItemTypeName];
+            var target = new WorkItem(targetType);
+
+            IWorkItem justCreated = new WorkItemWrapper(target, this, this.logger);
+            this.loadedWorkItems.Add(justCreated);
+            return justCreated;
+        }
     }
 }
