@@ -152,8 +152,8 @@ namespace UnitTests.Core
             child["Remaining Test Work"] = 2.0D;
             child["Finish Date"] = new DateTime(2015,1,1);
 
-            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, parent.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, grandParent.Id, repository));
+            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, repository));
             repository.SetWorkItems(new[] { grandParent, parent, child });
 
             var context = Substitute.For<IRequestContext>();

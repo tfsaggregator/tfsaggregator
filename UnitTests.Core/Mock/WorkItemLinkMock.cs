@@ -27,7 +27,6 @@
 
         public IWorkItem Target
         {
-            //TODO
             get { return store.GetWorkItem(this.id); }
         }
     }

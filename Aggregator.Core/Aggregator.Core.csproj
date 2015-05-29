@@ -52,12 +52,14 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="WorkItemImplementationBase.cs" />
     <Compile Include="Configuration\Policy.cs" />
     <Compile Include="Configuration\Rule.cs" />
     <Compile Include="Configuration\PolicyScope.cs" />
     <Compile Include="Configuration\RuleScope.cs" />
     <Compile Include="Context\IRuntimeContext.cs" />
     <Compile Include="EventProcessor.cs" />
+    <Compile Include="Extensions\IWorkItemExposedExtensions.cs" />
     <Compile Include="Extensions\WorkItemExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Facade\FieldCollectionWrapper.cs" />
@@ -83,7 +85,6 @@
     <Compile Include="Script\CSharpScriptEngine.cs" />
     <Compile Include="Script\DotNetScriptEngine.cs" />
     <Compile Include="Script\ScriptEngine.cs" />
-    <Compile Include="Navigation\WorkItemLazyReference.cs" />
     <Compile Include="Interfaces\IFieldCollectionWrapper.cs" />
     <Compile Include="Interfaces\IFieldWrapper.cs" />
     <Compile Include="Interfaces\INotification.cs" />

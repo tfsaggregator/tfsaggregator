@@ -9,39 +9,41 @@
     public interface IWorkItemExposed
     {
         IFieldCollectionWrapper Fields { get; }
-        TType GetField<TType>(string fieldName, TType defaultValue);
         string History { get; set; }
-        int Id { get; }
         bool IsValid();
         object this[string name] { get; set; }
         string TypeName { get; }
-
-        bool HasParent();
-        bool HasChildren();
-        bool HasRelation(string relation);
-        void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName);
-        void AddHyperlink(string destination, string comment = "");
+        int Id { get; }
 
         // navigation helpers
+        bool HasRelation(string relation);
         IWorkItemExposed Parent { get; }
         IEnumerable<IWorkItemExposed> Children { get; }
         IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query);
+        // links management
+        void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName);
+        void AddHyperlink(string destination, string comment = "");
         // state helpers; must be on interface to work on WorkItemLazyReference
         void TransitionToState(string state, string comment);
+    }
+
+    // common implmementation
+    public interface IWorkItemImplementation
+    {
+        IWorkItemLinkCollection WorkItemLinks { get; }
     }
 
     /// <summary>
     /// This interface extends <see cref="IWorkItemExposed"/> with any WorkItem feature used in TFS Aggregator
     /// but not exposed to scripts.
     /// </summary>
-    public interface IWorkItem : IWorkItemExposed
+    public interface IWorkItem : IWorkItemExposed, IWorkItemImplementation
     {
         bool IsDirty { get; }
         void PartialOpen();
         void Save();
         void TryOpen();
         ArrayList Validate();
-        IWorkItemLinkCollection WorkItemLinks { get; }
         IWorkItemType Type { get; }
     }
 }
