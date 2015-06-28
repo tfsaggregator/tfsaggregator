@@ -67,6 +67,8 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="ContextCache.cs" />
+    <Compile Include="DebugEventLogger.cs" />
+    <Compile Include="ItemCreationTests.cs" />
     <Compile Include="Mock\WorkItemLinkCollectionMock.cs" />
     <Compile Include="Mock\WorkItemTypeMock.cs" />
     <Compile Include="Navigation.cs" />
@@ -89,7 +91,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConfigurationsForTests\allInOne.policies" />
+    <None Include="ConfigurationsForTests\allInOne.policies" />
     <EmbeddedResource Include="ConfigurationsForTests\SumFieldsOnSingleWorkItem.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -98,6 +100,9 @@
     <EmbeddedResource Include="ConfigurationsForTests\Rollup.policies" />
     <EmbeddedResource Include="ConfigurationsForTests\SumFieldsOnSingleWorkItemVB.policies" />
     <EmbeddedResource Include="ConfigurationsForTests\SimpleRollup.policies">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigurationsForTests\NewObjects.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />

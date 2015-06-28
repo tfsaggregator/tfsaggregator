@@ -9,6 +9,11 @@
     {
         List<IWorkItemLink> links = new List<IWorkItemLink>();
 
+        public bool Contains(IWorkItemLink link)
+        {
+            return links.Contains(link);
+        }
+
         public void Add(IWorkItemLink link)
         {
             links.Add(link);

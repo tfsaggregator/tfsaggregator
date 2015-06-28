@@ -15,7 +15,7 @@ namespace UnitTests.Core
     [TestClass]
     public class Navigation
     {
-        private static IWorkItemRepository MakeRepository(out IWorkItem startPoint)
+        private static WorkItemRepositoryMock MakeRepository(out IWorkItem startPoint)
         {
             var repository = new WorkItemRepositoryMock();
 
@@ -79,6 +79,7 @@ return searchResult;
             IWorkItem startPoint;
             var repository = MakeRepository(out startPoint);
             var logger = Substitute.For<ILogEvents>();
+            repository.Logger = logger;
 
             var engine = new CSharpScriptEngine(repository, logger);
             engine.LoadAndRun("test", script, startPoint);

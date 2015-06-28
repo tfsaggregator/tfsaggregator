@@ -29,5 +29,16 @@
         {
             get { return store.GetWorkItem(this.id); }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is WorkItemLinkMock))
+                return false;
+
+            var rhs = obj as WorkItemLinkMock;
+
+            return this.LinkTypeEndImmutableName == rhs.LinkTypeEndImmutableName
+                && this.TargetId == rhs.TargetId;
+        }
     }
 }

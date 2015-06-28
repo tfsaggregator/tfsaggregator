@@ -15,6 +15,7 @@
             : base(store, store.Logger)
         {
             this.fields = new FieldCollectionMock(this);
+            this.IsDirty = false;
         }
 
         public IFieldCollectionWrapper Fields { get
@@ -93,7 +94,15 @@
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
         {
-            workItemLinks.Add(new WorkItemLinkMock(linkTypeName, destination.Id, store));
+            //HACK should use the code in wrapper...
+            var relationship = new WorkItemLinkMock(linkTypeName, destination.Id, store);
+            // check it does not exist already
+            if (!workItemLinks.Contains(relationship))
+            {
+                workItemLinks.Add(relationship);
+                this.IsDirty = true;
+            }//if
+
         }
 
         public void AddHyperlink(string destination, string comment = "")

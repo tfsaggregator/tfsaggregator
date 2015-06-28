@@ -10,7 +10,7 @@
 
     public interface IDotNetScript
     {
-        object RunScript(IWorkItem self);
+        object RunScript(IWorkItemExposed self, IWorkItemRepositoryExposed store);
     }
 
     /// <summary>
@@ -72,36 +72,38 @@
 
         private void RunScript(Assembly assembly, string scriptName, IWorkItem self)
         {
-            // Now that we have a compiled script, lets run them
-            foreach (Type type in assembly.GetExportedTypes())
+            // HACK name must match C# and VB.NET implementations
+            var classForScript = assembly.GetType("RESERVED.Script_" + scriptName);
+            if (classForScript == null)
             {
-                foreach (Type iface in type.GetInterfaces())
-                {
-                    if (iface == typeof(IDotNetScript))
-                    {
-                        ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes);
-                        if (constructor != null && constructor.IsPublic)
-                        {
-                            // we specified that we wanted a constructor that doesn't take parameters, so don't pass parameters
-                            IDotNetScript scriptObject = constructor.Invoke(null) as IDotNetScript;
-                            if (scriptObject != null)
-                            {
-                                //Lets run our script and display its results
-                                object result = scriptObject.RunScript(self);
-                                logger.ResultsFromScriptRun(scriptName, result);
-                            }
-                            else
-                            {
-                                logger.FailureLoadingScript(scriptName);
-                            }
-                        }
-                        else
-                        {
-                            logger.FailureLoadingScript(scriptName);
-                        }
-                    }
-                }
+                logger.FailureLoadingScript(scriptName);
+                return;
             }
+            var interfaceForScript = classForScript.GetInterface(typeof(IDotNetScript).Name);
+            if (interfaceForScript == null)
+            {
+                logger.FailureLoadingScript(scriptName);
+                return;
+            }
+
+            ConstructorInfo constructor = classForScript.GetConstructor(Type.EmptyTypes);
+            if (constructor == null || !constructor.IsPublic)
+            {
+                logger.FailureLoadingScript(scriptName);
+                return;
+            }
+            // we specified that we wanted a constructor that doesn't take parameters, so don't pass parameters
+            IDotNetScript scriptObject = constructor.Invoke(null) as IDotNetScript;
+            if (scriptObject == null)
+            {
+                logger.FailureLoadingScript(scriptName);
+                return;
+            }
+
+            System.Diagnostics.Debug.WriteLine("*** about to execute {0}", scriptName, null);
+            //Lets run our script and display its results
+            object result = scriptObject.RunScript(self, this.store);
+            logger.ResultsFromScriptRun(scriptName, result);
         }
 
         private static void CleanUp(bool debug, CompilerResults compilerResult)
@@ -162,7 +164,14 @@
                     AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
                 }
             }
-            CleanUp(debug, compilerResult);
+            else
+            {
+                // compile errors slip away in the log, reinstate that something is wrong
+                logger.FailureLoadingScript(scriptName);
+            }//if
+
+            //BUG must have a "clean up event" fired at shutdown time
+            //CleanUp(debug, compilerResult);
         }
 
         Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)

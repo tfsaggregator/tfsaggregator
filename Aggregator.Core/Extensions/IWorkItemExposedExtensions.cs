@@ -37,5 +37,21 @@ namespace Aggregator.Core
         {
             return self.HasRelation(WorkItemImplementationBase.ChildRelationship);
         }
+
+        // fluent API for GetRelatives
+        public static FluentQuery WhereTypeIs(this IWorkItemExposed wi, string workItemType)
+        {
+            return new FluentQuery(wi).WhereTypeIs(workItemType);
+        }
+
+        public static FluentQuery AtMost(this IWorkItemExposed wi, int levels)
+        {
+            return new FluentQuery(wi).AtMost(levels);
+        }
+
+        public static FluentQuery FollowingLinks(this IWorkItemExposed wi, string linkType)
+        {
+            return new FluentQuery(wi).FollowingLinks(linkType);
+        }
     }
 }

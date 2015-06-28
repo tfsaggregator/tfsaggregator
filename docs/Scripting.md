@@ -5,7 +5,10 @@ You can use only types from `System.dll` or `Microsoft.TeamFoundation.WorkItemTr
 
 # Object Model
 
-Aggregator exposes a pre-defined variable `self` as the pivot for all computation.
+Aggregator exposes two pre-defined variables:
+
+ - `self` as the pivot for all computation.
+ - `store` to access the entire set of work items.
 
 ## self
 
@@ -18,14 +21,39 @@ or simply
 self["field_name"]
 ```
 
+Prefer using Reference names e.g. `System.Title`.
+
 For numeric and dates you may prefer using
 ```
-var num = self.GetField<int>("", 42);
+var num = self.GetField<int>("field_name", 42);
 ```
 
 The [`IsValid`](https://msdn.microsoft.com/en-us/library/microsoft.teamfoundation.workitemtracking.client.workitem.isvalid.aspx) method is important to check is you set some invalid field value on a work item.
 
 You can get the [`Id`](https://msdn.microsoft.com/en-us/library/microsoft.teamfoundation.workitemtracking.client.workitem.id.aspx) and [`TypeName`](https://msdn.microsoft.com/en-us/library/microsoft.teamfoundation.workitemtracking.client.workitemtype.name.aspx) of a work item and check the [`History`](https://msdn.microsoft.com/en-us/library/microsoft.teamfoundation.workitemtracking.client.workitem.history.aspx).
+
+
+## store
+
+Represents the current Collection's Work Items and exposes only two methods `GetWorkItem` and `MakeNewWorkItem`.
+
+### GetWorkItem
+
+Retrieves a work item from the current Collection by ID.
+
+```
+var myWorkitem = store.GetWorkItem(42);
+```
+
+### MakeNewWorkItem
+Add a new WorkItem to current Collection.
+
+```
+var newWorkItem = MakeNewWorkItem("MyProject", "Bug");
+```
+
+You must specify the project and the type. The new work item Fields have default values;
+it is not committed to the database until all the rules have fired and Aggregator returns control to TFS.
 
 
 ## Parent
@@ -52,7 +80,7 @@ foreach (var child in self.Children)
 Helper methods to avoid referencing null properties.
 ```
 if (self.HasParent()) {
-  self.Parent["System.Title"]
+   self.Parent["System.Title"] = "*** " + self.Parent["System.Title"];
 }
 ```
 Use the Immutable name of the Link Type, e.g. `System.LinkTypes.Hierarchy-Reverse` instead of `Parent`.
@@ -68,9 +96,11 @@ You can get work items related using the utility methods to build a query.
 ### Example
 
 ```
-var tests = self.WhereTypeIs("Test Case").FollowingLinks("Tested-By");
+var tests = self.FollowingLinks("Tested-By").WhereTypeIs("Test Case");
 foreach (var test in tests)
 {
-   test[""];
+   if (test["Microsoft.VSTS.Common.Severity"] == "1 - Critical") {
+      // do something
+   }
 }
 ```
