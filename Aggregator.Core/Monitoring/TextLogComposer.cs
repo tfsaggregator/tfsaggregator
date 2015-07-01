@@ -6,6 +6,7 @@
     using System.Runtime.Caching;
     using System.Xml.Schema;
     using Microsoft.TeamFoundation.Framework.Server;
+    using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
     public class TextLogComposer : ILogEvents
     {
@@ -185,6 +186,26 @@
         public void UsingCachedConfiguration(string settingsPath)
         {
             logger.Log(LogLevel.Diagnostic, "Using cached Configuration for '{0}' ", settingsPath);
+        }
+
+        public void AddingWorkItemLink(int sourceId, WorkItemLinkTypeEnd destLinkType, int destId)
+        {
+            logger.Log(LogLevel.Information, "Adding work item link '{1}' from #{0} to #{2}", sourceId, destLinkType, destId);
+        }
+
+        public void WorkItemLinkAlreadyExists(int sourceId, WorkItemLinkTypeEnd destLinkType, int destId)
+        {
+            logger.Log(LogLevel.Warning, "Work item link '{1}' from #{0} to #{2} already exists", sourceId, destLinkType, destId);
+        }
+
+        public void AddingHyperlink(int id, string destination, string comment)
+        {
+            logger.Log(LogLevel.Information, "Adding hyperlink '{1}' on work item #{0} (comment: '{2}')", id, destination, comment);
+        }
+
+        public void HyperlinkAlreadyExists(int id, string destination, string comment)
+        {
+            logger.Log(LogLevel.Information, "Hyperlink '{1}' on work item #{0} already exists", id, destination);
         }
     }
 }

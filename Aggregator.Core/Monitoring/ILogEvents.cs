@@ -5,6 +5,8 @@
     using System.Management.Automation;
     using System.Runtime.Caching;
     using System.Xml.Schema;
+    using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
 
     /// <summary>
     /// Levels of logging.
@@ -54,5 +56,9 @@
         void LoadingConfiguration(string settingsPath);
         void UsingCachedConfiguration(string settingsPath);
         void ConfigurationChanged(string settingsPath, CacheEntryRemovedReason removedReason);
+        void AddingWorkItemLink(int sourceId, WorkItemLinkTypeEnd destLinkType, int destId);
+        void WorkItemLinkAlreadyExists(int sourceId, WorkItemLinkTypeEnd destLinkType, int destId);
+        void AddingHyperlink(int id, string destination, string comment);
+        void HyperlinkAlreadyExists(int id, string destination, string comment);
     }
 }

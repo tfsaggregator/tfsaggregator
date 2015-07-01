@@ -135,12 +135,12 @@ namespace Aggregator.Core.Facade
             // check it does not exist already
             if (!this.workItem.WorkItemLinks.Contains(relationship))
             {
-                //TODO logger.AddingWorkItemLink(this.Id, destLinkType, destination.Id);
+                logger.AddingWorkItemLink(this.Id, destLinkType, destination.Id);
                 this.workItem.WorkItemLinks.Add(relationship);
             }
             else
             {
-                //TODO logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
+                logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
             }//if
         }
 
@@ -150,12 +150,12 @@ namespace Aggregator.Core.Facade
             link.Comment = comment;
             if (!this.workItem.Links.Contains(link))
             {
-                //TODO logger.AddingHyperlink(this.Id, destination, comment);
+                logger.AddingHyperlink(this.Id, destination, comment);
                 this.workItem.Links.Add(link);
             }
             else
             {
-                //TODO logger.HyperlinkAlreadyExists(this.Id, destination, comment);
+                logger.HyperlinkAlreadyExists(this.Id, destination, comment);
             }//if
         }
     }
