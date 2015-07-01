@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+
+    <runtime>
+        <logging level="Diagnostic"/>
+    </runtime>
+
+    <rule name="Noop1" appliesTo="Task">
+        return 42;
+    </rule>
+
+    <rule name="Noop2" appliesTo="Task">
+        return 42;
+    </rule>
+
+    <rule name="Noop3" appliesTo="Bug">
+        return 42;
+    </rule>
+
+    <policy name="Collection1Policy">
+        <collectionScope collections="Collection1" />
+        <ruleRef name="Noop1" />
+    </policy>
+
+    <policy name="DefaultPolicy">
+        <collectionScope collections="*" />
+        <ruleRef name="Noop2" />
+        <ruleRef name="Noop3" />
+    </policy>
+
+</AggregatorConfiguration>

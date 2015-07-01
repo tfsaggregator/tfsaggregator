@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="ContextCache.cs" />
     <Compile Include="DebugEventLogger.cs" />
+    <Compile Include="RulesAndPolicyTests.cs" />
     <Compile Include="ItemCreationTests.cs" />
     <Compile Include="Mock\WorkItemLinkCollectionMock.cs" />
     <Compile Include="Mock\WorkItemTypeMock.cs" />
@@ -103,6 +104,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ConfigurationsForTests\NewObjects.policies">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigurationsForTests\RulesAndPolicy.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
