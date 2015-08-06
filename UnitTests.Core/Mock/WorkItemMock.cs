@@ -7,26 +7,21 @@
     using Aggregator.Core;
     using Aggregator.Core.Navigation;
 
-    internal class WorkItemMock : IWorkItem
+    internal class WorkItemMock : WorkItemImplementationBase, IWorkItem
     {
         private FieldCollectionMock fields;
-        private WorkItemRepositoryMock store;
 
         public WorkItemMock(WorkItemRepositoryMock store)
+            : base(store, store.Logger)
         {
-            this.store = store;
             this.fields = new FieldCollectionMock(this);
+            this.IsDirty = false;
         }
 
         public IFieldCollectionWrapper Fields { get
         {
             return fields;
         } }
-
-        public TType GetField<TType>(string fieldName, TType defaultValue)
-        {
-            throw new NotImplementedException();
-        }
 
         public string History{ get; set; }
 
@@ -71,34 +66,6 @@
 
         public string TypeName { get; set; }
 
-        public bool HasParent()
-        {
-            return this.HasRelation("Parent");
-        }
-
-        public bool HasChildren()
-        {
-            return this.HasRelation("Child");
-        }
-
-        public bool HasRelation(string relation)
-        {
-            if (string.IsNullOrWhiteSpace(relation))
-            {
-                throw new ArgumentNullException("relation");
-            }
-
-            foreach (var link in this.WorkItemLinks)
-            {
-                if (string.Equals(relation, link.LinkTypeEndImmutableName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public ArrayList Validate()
         {
             return new ArrayList();
@@ -106,25 +73,9 @@
 
         WorkItemLinkCollectionMock workItemLinks = new WorkItemLinkCollectionMock();
 
-        public IWorkItemLinkCollection WorkItemLinks
+        public override IWorkItemLinkCollection WorkItemLinks
         {
             get { return this.workItemLinks; }
-        }
-
-        public IWorkItemExposed Parent
-        {
-            get
-            {
-                return WorkItemLazyReference.MakeParentLazyReference(this, this.store);
-            }
-        }
-
-        public IEnumerable<IWorkItemExposed> Children
-        {
-            get
-            {
-                return WorkItemLazyReference.MakeChildrenLazyReferences(this, this.store);
-            }
         }
 
         public IWorkItemType Type { get; set; }
@@ -137,7 +88,26 @@
 
         public void TransitionToState(string state, string comment)
         {
-            StateWorkflow.TransitionToState(this, state, comment, this.store.Logger);
+            //HACK
+            StateWorkflow.TransitionToState(this, state, comment, this.logger);
+        }
+
+        public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            //HACK should use the code in wrapper...
+            var relationship = new WorkItemLinkMock(linkTypeName, destination.Id, store);
+            // check it does not exist already
+            if (!workItemLinks.Contains(relationship))
+            {
+                workItemLinks.Add(relationship);
+                this.IsDirty = true;
+            }//if
+
+        }
+
+        public void AddHyperlink(string destination, string comment = "")
+        {
+            throw new NotImplementedException();
         }
     }
 }

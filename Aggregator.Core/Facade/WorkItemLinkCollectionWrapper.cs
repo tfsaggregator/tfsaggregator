@@ -36,5 +36,11 @@
         {
             throw new InvalidOperationException("Add is valid on mocks only");
         }
+
+        public bool Contains(IWorkItemLink link)
+        {
+            WorkItemLink item = ((WorkItemLinkWrapper)link).WorkItemLink;
+            return this.workItemLinkCollection.Contains(item);
+        }
     }
 }

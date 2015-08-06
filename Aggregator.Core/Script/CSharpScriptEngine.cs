@@ -18,9 +18,10 @@ namespace RESERVED
 {
   using Microsoft.TeamFoundation.WorkItemTracking.Client;
   using Aggregator.Core;
+  using Aggregator.Core.Navigation;
   public class Script_" + scriptName + @" : Aggregator.Core.IDotNetScript
   {
-    public object RunScript(Aggregator.Core.IWorkItem self)
+    public object RunScript(Aggregator.Core.IWorkItemExposed self, Aggregator.Core.IWorkItemRepositoryExposed store)
     {
 " + script + @"
       return null;

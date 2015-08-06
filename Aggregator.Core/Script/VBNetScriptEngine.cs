@@ -21,7 +21,7 @@ Namespace RESERVED
   Public Class Script_" + scriptName + @"
     Implements Aggregator.Core.IDotNetScript
   
-    Public Function RunScript(ByVal self As Aggregator.Core.IWorkItem) As Object Implements Aggregator.Core.IDotNetScript.RunScript
+    Public Function RunScript(ByVal self As Aggregator.Core.IWorkItemExposed, ByVal store As Aggregator.Core.IWorkItemRepositoryExposed) As Object Implements Aggregator.Core.IDotNetScript.RunScript
 " + script + @"
       Return Nothing
     End Function

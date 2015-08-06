@@ -64,8 +64,9 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem.policies", logger);
             var repository = this.SetupFakeRepository();
-            var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            var processor = new EventProcessor(repository, runtime);
             var notification = Substitute.For<INotification>();
             notification.WorkItemId.Returns(1);
 
@@ -83,8 +84,9 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem-Short.policies", logger);
             var repository = this.SetupFakeRepository_Short();
-            var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            var processor = new EventProcessor(repository, runtime);
             var notification = Substitute.For<INotification>();
             notification.WorkItemId.Returns(1);
 
@@ -102,8 +104,9 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItemVB.policies", logger);
             var repository = this.SetupFakeRepository_Short();
-            var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            var processor = new EventProcessor(repository, runtime);
             var notification = Substitute.For<INotification>();
             notification.WorkItemId.Returns(1);
 
@@ -149,19 +152,20 @@ namespace UnitTests.Core
             child["Remaining Test Work"] = 2.0D;
             child["Finish Date"] = new DateTime(2015,1,1);
 
-            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, parent.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, grandParent.Id, repository));
+            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, repository));
             repository.SetWorkItems(new[] { grandParent, parent, child });
 
-            var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            var processor = new EventProcessor(repository, runtime);
             var notification = Substitute.For<INotification>();
             notification.WorkItemId.Returns(3);
 
             var result = processor.ProcessEvent(context, notification);
 
             Assert.AreEqual(0, result.ExceptionProperties.Count());
-            Assert.IsTrue(child._SaveCalled);
+            Assert.IsFalse(child._SaveCalled);
             Assert.IsTrue(parent._SaveCalled);
             Assert.IsFalse(grandParent._SaveCalled);
             Assert.AreEqual(3.0D, parent["Total Work Remaining"]);

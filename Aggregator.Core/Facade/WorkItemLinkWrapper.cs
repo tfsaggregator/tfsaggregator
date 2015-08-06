@@ -35,5 +35,7 @@
         {
             get { return this.store.GetWorkItem(this.TargetId); }
         }
+
+        internal WorkItemLink WorkItemLink { get { return link; } }
     }
 }

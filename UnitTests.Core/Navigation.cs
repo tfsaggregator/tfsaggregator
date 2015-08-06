@@ -15,7 +15,7 @@ namespace UnitTests.Core
     [TestClass]
     public class Navigation
     {
-        private static IWorkItemRepository MakeRepository(out IWorkItem startPoint)
+        private static WorkItemRepositoryMock MakeRepository(out IWorkItem startPoint)
         {
             var repository = new WorkItemRepositoryMock();
 
@@ -34,13 +34,13 @@ namespace UnitTests.Core
             secondChild.Id = 4;
             secondChild.TypeName = "Task";
 
-            firstChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, parent.Id, repository));
-            secondChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, parent.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, grandParent.Id, repository));
+            firstChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
+            secondChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, repository));
 
-            grandParent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ChildRelationship, parent.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ChildRelationship, firstChild.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ChildRelationship, secondChild.Id, repository));
+            grandParent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, parent.Id, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, firstChild.Id, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, secondChild.Id, repository));
 
             repository.SetWorkItems(new[] { grandParent, parent, firstChild, secondChild });
 
@@ -79,6 +79,7 @@ return searchResult;
             IWorkItem startPoint;
             var repository = MakeRepository(out startPoint);
             var logger = Substitute.For<ILogEvents>();
+            repository.Logger = logger;
 
             var engine = new CSharpScriptEngine(repository, logger);
             engine.LoadAndRun("test", script, startPoint);

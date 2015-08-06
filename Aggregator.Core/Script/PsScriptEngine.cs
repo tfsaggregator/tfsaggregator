@@ -37,6 +37,7 @@
                 runspace.Open();
 
                 runspace.SessionStateProxy.SetVariable("self", workItem);
+                runspace.SessionStateProxy.SetVariable("store", store);
 
                 Pipeline pipeline = runspace.CreatePipeline();
                 pipeline.Commands.AddScript(script);
