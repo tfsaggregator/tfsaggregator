@@ -3,8 +3,8 @@ Setup & install
 
  1. Download and extract the binaries from the latest release
  2. Open up `TFSAggregator2.ServerPlugin.policies` and change the example settings to your actual settings.
-    - You will find the [complete syntax](docs/Policy-Syntax.md) and [examples](docs/Policy-Examples.md) following the links.
- 3. Test your policy using the command line tool, see [TFS Aggregator Troubleshooting](docs/Troubleshooting.md).
+    - You will find the [complete syntax](Policy-Syntax.md) and [examples](Policy-Examples.md) following the links.
+ 3. Test your policy using the command line tool, see [TFS Aggregator Troubleshooting](Troubleshooting.md).
  4. Register the EventLog source for TFS Aggregator, using an elevated Powershell prompt, by running
     ```
 New-EventLog -LogName "Application" -Source "TFSAggregator"
