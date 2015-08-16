@@ -80,9 +80,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.TeamFoundationServer.Client.14.83.0\lib\net45\Microsoft.TeamFoundation.Discussion.WebApi.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.TeamFoundation.Framework.Server">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Microsoft.TeamFoundation.Framework.Server.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.TeamFoundation.Git.Client, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\lib\net45\Microsoft.TeamFoundation.Git.Client.dll</HintPath>
       <Private>True</Private>
@@ -109,9 +106,6 @@
     <Reference Include="Microsoft.TeamFoundation.ProjectManagement, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\lib\net45\Microsoft.TeamFoundation.ProjectManagement.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.TeamFoundation.Server.Core">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Microsoft.TeamFoundation.Server.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.SharePointReporting.Integration, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\lib\net45\Microsoft.TeamFoundation.SharePointReporting.Integration.dll</HintPath>
@@ -174,15 +168,6 @@
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Proxy, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.Proxy.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Microsoft.TeamFoundation.WorkItemTracking.Server.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.WebApi">
       <HintPath>..\packages\Microsoft.TeamFoundationServer.Client.14.83.0\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.WebApi.dll</HintPath>

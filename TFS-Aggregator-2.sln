@@ -41,6 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "references", "references", 
 		References\Microsoft.TeamFoundation.WorkItemTracking.Server.dll = References\Microsoft.TeamFoundation.WorkItemTracking.Server.dll
 		References\Microsoft.VisualStudio.Services.WebApi.dll = References\Microsoft.VisualStudio.Services.WebApi.dll
 		References\PLACEHOLDER.txt = References\PLACEHOLDER.txt
+		References\TfsReferences.target = References\TfsReferences.target
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B1913F70-5A32-4EAE-BDD2-0C46295656A6}"

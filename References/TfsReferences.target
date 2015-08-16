@@ -4,20 +4,15 @@
   <PropertyGroup>
     <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
     <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
-    <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\VisualStudio\14.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
-    <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\VisualStudio\14.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
     
     <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)\Application Tier\Web Services\bin</ServerAssemblies>
-    <TeamExplorerAssemblies Condition="'$(VsInstallationDirectory)'==''">$(VsInstallationDirectory)\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer</TeamExplorerAssemblies>
 
     <ServerAssemblies Condition="'$(TfsInstallationDirectory)'==''">..\References</ServerAssemblies>
-    <TeamExplorerAssemblies Condition="'$(VsInstallationDirectory)'==''">..\References</TeamExplorerAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
 
     <!-- Server Assemblies -->
-    <!--
     <Reference Include="Microsoft.TeamFoundation.Framework.Server">
       <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Framework.Server.dll</HintPath>
     </Reference>
@@ -27,34 +22,12 @@
     <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server">
       <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer">
-      <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll</HintPath>
+    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer">
+      <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer.dll</HintPath>
     </Reference>
-    -->
+    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices">
+      <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll</HintPath>
+    </Reference>
     
-    <!-- Client Assemblies -->
-    <!--
-    <Reference Include="Microsoft.TeamFoundation.Client">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(TeamExplorerAssemblies)\Microsoft.TeamFoundation.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.TeamFoundation.Common">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(TeamExplorerAssemblies)\Microsoft.TeamFoundation.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.TeamFoundation.Core.WebApi">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(TeamExplorerAssemblies)\Microsoft.TeamFoundation.Core.WebApi.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client">
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-      <HintPath>$(TeamExplorerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Services.WebApi">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(TeamExplorerAssemblies)\Microsoft.VisualStudio.Services.WebApi.dll</HintPath>
-    </Reference>
-    -->
   </ItemGroup>
 </Project>
