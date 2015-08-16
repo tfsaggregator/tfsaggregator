@@ -7,6 +7,9 @@
     using Microsoft.TeamFoundation.Client;
     using Microsoft.TeamFoundation.Framework.Client;
     using Microsoft.TeamFoundation.WorkItemTracking.Client;
+    using Microsoft.VisualStudio.Services.Identity;
+
+    using IdentityDescriptor = Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor;
 
     /// <summary>
     /// Singleton used to access TFS Data.  This keeps us from connecting each and every time we get an update.

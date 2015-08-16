@@ -10,6 +10,7 @@
     using Microsoft.TeamFoundation.Framework.Server;
     using Microsoft.TeamFoundation.Integration.Server;
     using Microsoft.TeamFoundation.Server.Core;
+    using Microsoft.VisualStudio.Services.Location.Server;
 
     public class RequestContextWrapper : IRequestContext
     {
@@ -37,7 +38,7 @@
 
         public Uri GetProjectCollectionUri()
         {
-            TeamFoundationLocationService service = this.context.GetService<TeamFoundationLocationService>();
+            ILocationService service = this.context.GetService<ILocationService>();
             return service.GetSelfReferenceUri(this.context, service.GetDefaultAccessMapping(this.context));
         }
 
@@ -77,7 +78,7 @@
         private ProcessTemplateVersion GetProjectProcessVersion(string projectUri, string versionPropertyName)
         {
             ArtifactSpec processTemplateVersionSpec = this.GetProcessTemplateVersionSpec(projectUri);
-            ProcessTemplateVersion unknown = ProcessTemplateVersion.Unknown;
+            ProcessTemplateVersion unknown = null;
 
             using (TeamFoundationDataReader reader = this.context.GetService<TeamFoundationPropertyService>().GetProperties(this.context, processTemplateVersionSpec, new string[] { versionPropertyName }))
             {
@@ -87,9 +88,9 @@
                     {
                         return TeamFoundationSerializationUtility.Deserialize<ProcessTemplateVersion>(value3.Value as string);
                     }
-                    return unknown;
+                    return null;
                 }
-                return unknown;
+                return null;
             }
         }
 

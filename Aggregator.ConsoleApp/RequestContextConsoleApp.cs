@@ -67,7 +67,7 @@
 
         private ProcessTemplateVersion GetProjectProcessVersion(string projectUri, string versionPropertyName)
         {
-            ProcessTemplateVersion unknown = ProcessTemplateVersion.Unknown;
+            ProcessTemplateVersion unknown = null;
 
             var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(teamProjectCollectionUrl));
             var ics = context.GetService<ICommonStructureService4>();
@@ -81,7 +81,7 @@
 
 
             string rawVersion =
-                ProjectProperties.FirstOrDefault(p => p.Name == ProcessTemplateVersionPropertyNames.CurrentVersion).Value;
+                ProjectProperties.FirstOrDefault(p => p.Name == versionPropertyName).Value;
 
             return TeamFoundationSerializationUtility.Deserialize<ProcessTemplateVersion>(rawVersion);
         }

@@ -211,6 +211,7 @@
             Assert.IsTrue(result);
         }
 
+        /*
         [TestMethod]
         public void PolicyTemplateMinVersionMatchesWhenCurrentIsHigher()
         {
@@ -393,6 +394,6 @@
 
             Assert.IsTrue(result);
         }
-
+        */
     }
 }

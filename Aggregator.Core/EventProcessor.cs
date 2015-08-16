@@ -7,7 +7,9 @@
     using Aggregator.Core.Configuration;
     using Aggregator.Core.Facade;
 
-    using Microsoft.TeamFoundation.Framework.Client;
+    using Microsoft.VisualStudio.Services.Identity;
+
+    using IdentityDescriptor = Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor;
 
     /// <summary>
     /// This is the core class with complete logic, independent from being a server plug-in.

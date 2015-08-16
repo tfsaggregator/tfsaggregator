@@ -16,6 +16,9 @@
     using Microsoft.TeamFoundation.Framework.Common;
     using Microsoft.TeamFoundation.Framework.Server;
     using Microsoft.TeamFoundation.WorkItemTracking.Server;
+    using Microsoft.VisualStudio.Services.ClientNotification;
+
+    using NotificationType = Microsoft.TeamFoundation.Framework.Server.NotificationType;
 
     /// <summary>
     /// The class that subscribes to server side events on the TFS server.
