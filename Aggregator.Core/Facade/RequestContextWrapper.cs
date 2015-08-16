@@ -64,21 +64,21 @@
             return new ArtifactSpec(ArtifactKinds.ProcessTemplate, guid.ToByteArray(), 0);
         }
 
-        public ProcessTemplateVersion GetCurrentProjectProcessVersion(Uri projectUri)
+        public IProcessTemplateVersionWrapper GetCurrentProjectProcessVersion(Uri projectUri)
         {
             return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CurrentVersion);
         }
 
 
-        public ProcessTemplateVersion GetCreationProjectProcessVersion(Uri projectUri)
+        public IProcessTemplateVersionWrapper GetCreationProjectProcessVersion(Uri projectUri)
         {
             return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CreationVersion);
         }
 
-        private ProcessTemplateVersion GetProjectProcessVersion(string projectUri, string versionPropertyName)
+        private IProcessTemplateVersionWrapper GetProjectProcessVersion(string projectUri, string versionPropertyName)
         {
             ArtifactSpec processTemplateVersionSpec = this.GetProcessTemplateVersionSpec(projectUri);
-            ProcessTemplateVersion unknown = null;
+            ProcessTemplateVersion result = null;
 
             using (TeamFoundationDataReader reader = this.context.GetService<TeamFoundationPropertyService>().GetProperties(this.context, processTemplateVersionSpec, new string[] { versionPropertyName }))
             {
@@ -86,11 +86,20 @@
                 {
                     foreach (PropertyValue value3 in value2.PropertyValues)
                     {
-                        return TeamFoundationSerializationUtility.Deserialize<ProcessTemplateVersion>(value3.Value as string);
+                        result = TeamFoundationSerializationUtility.Deserialize<ProcessTemplateVersion>(value3.Value as string);
+                        break;
                     }
-                    return null;
+                    break;
                 }
-                return null;
+            }
+
+            if (result == null)
+            {
+                return new ProcessTemplateVersionWrapper() { TypeId = Guid.Empty, Major = 0, Minor = 0 };
+            }
+            else
+            {
+                return new ProcessTemplateVersionWrapper() { TypeId = result.TypeId, Major = result.Major, Minor = result.Minor };
             }
         }
 

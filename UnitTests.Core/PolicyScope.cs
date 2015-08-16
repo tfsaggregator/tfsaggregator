@@ -211,7 +211,7 @@
             Assert.IsTrue(result);
         }
 
-        /*
+        
         [TestMethod]
         public void PolicyTemplateMinVersionMatchesWhenCurrentIsHigher()
         {
@@ -226,7 +226,7 @@
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 3, 5));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 3, 5));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -250,7 +250,7 @@
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 3, 0));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 3, 0));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -274,7 +274,7 @@
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 3, 0));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 3, 0));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -298,7 +298,7 @@
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 2, 9));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 2, 9));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -322,7 +322,7 @@
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 3, 0));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 3, 0));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -346,7 +346,7 @@
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 3, 0));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 3, 0));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -375,7 +375,7 @@
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 5, 3));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 5, 3));
             context.GetProjectProperties(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
                 .Returns(
                     new IProjectPropertyWrapper[]
@@ -394,6 +394,5 @@
 
             Assert.IsTrue(result);
         }
-        */
     }
 }

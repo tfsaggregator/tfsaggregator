@@ -54,18 +54,18 @@
             return projectProperties.Select(p => (IProjectPropertyWrapper)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
         }
 
-        public ProcessTemplateVersion GetCurrentProjectProcessVersion(Uri projectUri)
+        public IProcessTemplateVersionWrapper GetCurrentProjectProcessVersion(Uri projectUri)
         {
             return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CurrentVersion);
         }
 
 
-        public ProcessTemplateVersion GetCreationProjectProcessVersion(Uri projectUri)
+        public IProcessTemplateVersionWrapper GetCreationProjectProcessVersion(Uri projectUri)
         {
             return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CreationVersion);
         }
 
-        private ProcessTemplateVersion GetProjectProcessVersion(string projectUri, string versionPropertyName)
+        private IProcessTemplateVersionWrapper GetProjectProcessVersion(string projectUri, string versionPropertyName)
         {
             ProcessTemplateVersion unknown = null;
 
@@ -83,7 +83,15 @@
             string rawVersion =
                 ProjectProperties.FirstOrDefault(p => p.Name == versionPropertyName).Value;
 
-            return TeamFoundationSerializationUtility.Deserialize<ProcessTemplateVersion>(rawVersion);
+            if (rawVersion == null)
+            {
+                return new ProcessTemplateVersionWrapper() { TypeId = Guid.Empty, Major = 0, Minor = 0 };
+            }
+            else
+            {
+                var result = TeamFoundationSerializationUtility.Deserialize<ProcessTemplateVersion>(rawVersion);
+                return new ProcessTemplateVersionWrapper() { TypeId = result.TypeId, Major = result.Major, Minor = result.Minor };
+            }
         }
 
     }

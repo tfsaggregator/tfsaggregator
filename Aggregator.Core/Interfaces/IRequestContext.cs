@@ -16,9 +16,9 @@
 
         IProjectPropertyWrapper[] GetProjectProperties(Uri teamProjectUri);
 
-        ProcessTemplateVersion GetCurrentProjectProcessVersion(Uri projectUri);
+        IProcessTemplateVersionWrapper GetCurrentProjectProcessVersion(Uri projectUri);
 
 
-        ProcessTemplateVersion GetCreationProjectProcessVersion(Uri projectUri);
+        IProcessTemplateVersionWrapper GetCreationProjectProcessVersion(Uri projectUri);
     }
 }
