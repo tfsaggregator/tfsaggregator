@@ -27,7 +27,7 @@ Example Uses
 Setup & install
 ================================================
 
-The [Install](doc/Install.md) file contains the full details to correctly setup Aggregator. The general process is:
+The [Install](https://github.com/tfsaggregator/tfsaggregator/releases/download/2.0.22-master/tfsaggregator-2.0.22-master.zip) file contains the full details to correctly setup Aggregator. The general process is:
 
  1. Download and extract the binaries from the latest release
  2. Open up `TFSAggregator2.ServerPlugin.policies` and change the example settings to your actual settings.
