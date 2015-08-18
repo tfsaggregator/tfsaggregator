@@ -11,7 +11,7 @@ Well, this is a check list of things to double check.
  -  You copied the DLLs and the Policies file to the plugins location on all TFS Application Tier Servers (Usually at: <Drive>`:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins`)
  -  You have valid names for source and destination fields in `TFSAggregator2.ServerPlugin.policies`.
  -  When you saved the file you saved it as utf-8 encoding (in Notepad++ it is called “utf-8 without BOM”) (This should not be an issue, but it does not hurt to check).
- -  You have given permission to the user running the plugin, i.e. the "TFS Service Account"
+ -  You have given permission to the user running the plugin, i.e. add the "TFS Service Account" to the "Project Collection Administrators" TFS Group.
 
 
 Also if you are having issues we recommend debugging your Policies file using `TFSAggregator2.ConsoleApp.exe` and trying that out.
