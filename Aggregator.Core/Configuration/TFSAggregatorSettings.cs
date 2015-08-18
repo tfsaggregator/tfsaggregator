@@ -1,4 +1,6 @@
-﻿namespace Aggregator.Core.Configuration
+﻿using Aggregator.Core.Monitoring;
+
+namespace Aggregator.Core.Configuration
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +15,7 @@
     /// </summary>
     public class TFSAggregatorSettings
     {
-        static readonly char[] ListSeparators = new char[] { ',', ';' };
+        private static readonly char[] ListSeparators = new char[] { ',', ';' };
 
         public static TFSAggregatorSettings LoadFromFile(string settingsPath, ILogEvents logger)
         {
@@ -48,20 +50,17 @@
             instance.Hash = ComputeHash(doc, timestamp);
 
             if (!ValidateDocAgainstSchema(doc, logger))
+            {
                 // HACK we must handle this scenario with clean exit
                 return null;
+            }
 
             // XML Schema has done lot of checking and set defaults, no need to recheck later, just manage missing pieces
-
             ParseRuntimeSection(instance, doc);
 
             Dictionary<string, Rule> rules = ParseRulesSection(instance, doc);
 
-            var ruleInUse = new Dictionary<string, bool>();
-            foreach (string ruleName in rules.Keys)
-            {
-                ruleInUse.Add(ruleName, false);
-            }//for
+            var ruleInUse = rules.Keys.ToDictionary(ruleName => ruleName, ruleName => false);
 
             List<Policy> policies = ParsePoliciesSection(doc, rules, ruleInUse);
 
@@ -71,7 +70,7 @@
             foreach (var unusedRule in ruleInUse.Where(kv => kv.Value == false))
             {
                 logger.UnreferencedRule(unusedRule.Key);
-            }//for
+            }
 
             return instance;
         }
@@ -90,7 +89,7 @@
                         stream.Flush();
                         var hash = md5.ComputeHash(stream.GetBuffer());
                         string hex = BitConverter.ToString(hash);
-                        return hex.Replace("-", "");
+                        return hex.Replace("-", string.Empty);
                     }
                 }
             }
@@ -101,7 +100,7 @@
             XmlSchemaSet schemas = new XmlSchemaSet();
             var thisAssembly = Assembly.GetAssembly(typeof(TFSAggregatorSettings));
             var stream = thisAssembly.GetManifestResourceStream("Aggregator.Core.Configuration.AggregatorConfiguration.xsd");
-            schemas.Add("", XmlReader.Create(stream));
+            schemas.Add(string.Empty, XmlReader.Create(stream));
             bool valid = true;
             doc.Validate(schemas, (o, e) =>
             {
@@ -120,14 +119,11 @@
                 : LogLevel.Normal;
             var authenticationNode = doc.Root.Element("runtime") != null ?
                 doc.Root.Element("runtime").Element("authentication") : null;
-            instance.AutoImpersonate = authenticationNode != null ?
-                bool.Parse(authenticationNode.Attribute("autoImpersonate").Value)
-                : false;
+            instance.AutoImpersonate = authenticationNode != null 
+                && bool.Parse(authenticationNode.Attribute("autoImpersonate").Value);
             var scriptNode = doc.Root.Element("runtime") != null ?
                 doc.Root.Element("runtime").Element("script") : null;
-            instance.ScriptLanguage = scriptNode != null ?
-                scriptNode.Attribute("language").Value
-                : "C#";
+            instance.ScriptLanguage = scriptNode?.Attribute("language").Value ?? "C#";
         }
 
         private static List<Policy> ParsePoliciesSection(XDocument doc, Dictionary<string, Rule> rules, Dictionary<string, bool> ruleInUse)
@@ -148,37 +144,39 @@
                     switch (element.Name.LocalName)
                     {
                         case "collectionScope":
-                            {
-                                var collections = new List<string>();
-                                collections.AddRange((element.Attribute("collections") ?? nullAttribute).Value.Split(ListSeparators));
-                                scope.Add(new CollectionScope() { CollectionNames = collections });
-                                break;
-                            }//case
-                        case "templateScope":
-                            {
-                                string templateName = (element.Attribute("name") ?? nullAttribute).Value;
-                                string templateId = (element.Attribute("typeId") ?? nullAttribute).Value;
-                                string minVersion = (element.Attribute("minVersion") ?? nullAttribute).Value;
-                                string maxVersion = (element.Attribute("maxVersion") ?? nullAttribute).Value;
+                        {
+                            var collections = new List<string>();
+                            collections.AddRange((element.Attribute("collections") ?? nullAttribute).Value.Split(ListSeparators));
+                            scope.Add(new CollectionScope() { CollectionNames = collections });
+                            break;
+                        }
 
-                                scope.Add(new TemplateScope()
-                                {
-                                    TemplateName = templateName,
-                                    TemplateTypeId = templateId,
-                                    MinVersion = minVersion,
-                                    MaxVersion = maxVersion
-                                });
-                                break;
-                            }//case
-                        case "projectScope":
+                        case "templateScope":
+                        {
+                            string templateName = (element.Attribute("name") ?? nullAttribute).Value;
+                            string templateId = (element.Attribute("typeId") ?? nullAttribute).Value;
+                            string minVersion = (element.Attribute("minVersion") ?? nullAttribute).Value;
+                            string maxVersion = (element.Attribute("maxVersion") ?? nullAttribute).Value;
+
+                            scope.Add(new TemplateScope()
                             {
-                                var projects = new List<string>();
-                                projects.AddRange((element.Attribute("projects") ?? nullAttribute).Value.Split(ListSeparators));
-                                scope.Add(new ProjectScope() { ProjectNames = projects });
-                                break;
-                            }//case
-                    }//switch
-                }//for
+                                TemplateName = templateName,
+                                TemplateTypeId = templateId,
+                                MinVersion = minVersion,
+                                MaxVersion = maxVersion
+                            });
+                            break;
+                        }
+
+                        case "projectScope":
+                        {
+                            var projects = new List<string>();
+                            projects.AddRange((element.Attribute("projects") ?? nullAttribute).Value.Split(ListSeparators));
+                            scope.Add(new ProjectScope() { ProjectNames = projects });
+                            break;
+                        }
+                    }
+                }
 
                 policy.Scope = scope;
 
@@ -194,7 +192,7 @@
                 policy.Rules = referredRules;
 
                 policies.Add(policy);
-            }//for policy
+            }
 
             return policies;
         }
@@ -225,16 +223,23 @@
                 rule.Script = ruleElem.Value;
 
                 rules.Add(rule.Name, rule);
-            }//for rule
+            }
+
             instance.Rules = rules.Values.ToList();
             return rules;
         }
 
         public LogLevel LogLevel { get; private set; }
+
         public string ScriptLanguage { get; private set; }
+
         public bool AutoImpersonate { get; private set; }
+
         public string Hash { get; private set; }
+
         public IEnumerable<Rule> Rules { get; private set; }
+
         public IEnumerable<Policy> Policies { get; private set; }
+
     }
 }

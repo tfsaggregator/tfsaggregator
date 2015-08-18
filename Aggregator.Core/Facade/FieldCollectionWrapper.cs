@@ -1,17 +1,20 @@
-﻿namespace Aggregator.Core.Facade
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+using Aggregator.Core.Interfaces;
+
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
+namespace Aggregator.Core.Facade
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using Microsoft.TeamFoundation.WorkItemTracking.Client;
-
     public class FieldCollectionWrapper : IFieldCollectionWrapper
     {
-        private FieldCollection fields;
+        private readonly FieldCollection fields;
+
         public FieldCollectionWrapper(FieldCollection fieldCollection)
         {
-            fields = fieldCollection;
+            this.fields = fieldCollection;
         }
 
         public IFieldWrapper this[string name]
@@ -20,6 +23,7 @@
             {
                 return new FieldWrapper(fields[name]);
             }
+
             set
             {
                 //Do nothing - this is here for unit testing purposes.

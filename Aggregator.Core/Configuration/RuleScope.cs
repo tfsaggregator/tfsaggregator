@@ -1,4 +1,6 @@
-﻿namespace Aggregator.Core.Configuration
+﻿using Aggregator.Core.Interfaces;
+
+namespace Aggregator.Core.Configuration
 {
     using System;
     using System.Linq;
@@ -24,16 +26,12 @@
 
         public override bool Matches(IWorkItem item)
         {
-            var fields = item.Fields.ToArray();
+            var trigger = FieldNames;
 
-            return
-                this.FieldNames.All(
-                    fn =>
-                        fields.Any(
-                            f =>
-                                string.Equals(fn, f.Name, StringComparison.OrdinalIgnoreCase)
-                                || string.Equals(fn, f.ReferenceName, StringComparison.OrdinalIgnoreCase)));
+            var fields = item.Fields.ToArray();
+            var available = fields.Select(f => f.Name).Concat(fields.Select(f => f.ReferenceName));
+
+            return trigger.All(t => available.Contains(t, StringComparer.OrdinalIgnoreCase));
         }
     }
-
 }

@@ -1,4 +1,6 @@
-﻿namespace UnitTests.Core.Mock
+﻿using Aggregator.Core.Interfaces;
+
+namespace UnitTests.Core.Mock
 {
     using System;
     using System.Collections;
@@ -36,7 +38,7 @@
 
         public void PartialOpen()
         {
-            
+            // No fucntionality needed in mock.
         }
 
         int saveCalled = 0;
@@ -61,7 +63,7 @@
 
         public void TryOpen()
         {
-            
+            // No fucntionality needed in mock.
         }
 
         public string TypeName { get; set; }
@@ -89,7 +91,7 @@
         public void TransitionToState(string state, string comment)
         {
             //HACK
-            StateWorkflow.TransitionToState(this, state, comment, this.logger);
+            StateWorkFlow.TransitionToState(this, state, comment, this.logger);
         }
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)

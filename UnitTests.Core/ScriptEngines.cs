@@ -1,4 +1,8 @@
-﻿namespace UnitTests.Core
+﻿using Aggregator.Core.Context;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+namespace UnitTests.Core
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;

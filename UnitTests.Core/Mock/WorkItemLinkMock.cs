@@ -1,12 +1,14 @@
-﻿namespace UnitTests.Core.Mock
+﻿using Aggregator.Core.Interfaces;
+
+namespace UnitTests.Core.Mock
 {
     using Aggregator.Core;
 
     class WorkItemLinkMock : IWorkItemLink
     {
-        private string relationship;
-        private int id;
-        private IWorkItemRepository store;
+        private readonly string relationship;
+        private readonly int id;
+        private readonly IWorkItemRepository store;
 
         public WorkItemLinkMock(string relationship, int id, IWorkItemRepository store)
         {

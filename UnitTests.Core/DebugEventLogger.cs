@@ -13,7 +13,7 @@ namespace UnitTests.Core
     /// </summary>
     class DebugTextLogger : ITextLogger
     {
-        public LogLevel Level
+        public LogLevel MinimumLogLevel
         {
             get;
             set;

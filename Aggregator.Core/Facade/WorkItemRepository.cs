@@ -1,13 +1,14 @@
-﻿namespace Aggregator.Core.Facade
+﻿using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+namespace Aggregator.Core.Facade
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
     using Microsoft.TeamFoundation.Client;
-    using Microsoft.TeamFoundation.Framework.Client;
     using Microsoft.TeamFoundation.WorkItemTracking.Client;
-    using Microsoft.VisualStudio.Services.Identity;
 
     using IdentityDescriptor = Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor;
 
@@ -22,6 +23,8 @@
 
         private readonly IdentityDescriptor toImpersonate;
         private WorkItemStore workItemStore;
+
+        private TfsTeamProjectCollection tfs;
         List<IWorkItem> loadedWorkItems = new List<IWorkItem>();
 
         public WorkItemRepository(string tfsCollectionUrl, IdentityDescriptor toImpersonate, ILogEvents logger)
@@ -33,7 +36,7 @@
 
         private void ConnectToWorkItemStore()
         {
-            TfsTeamProjectCollection tfs = new TfsTeamProjectCollection(new Uri(this.tfsCollectionUrl), this.toImpersonate);
+            this.tfs = new TfsTeamProjectCollection(new Uri(this.tfsCollectionUrl), this.toImpersonate);
             this.workItemStore = (WorkItemStore)tfs.GetService(typeof(WorkItemStore));
         }
 

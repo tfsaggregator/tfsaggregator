@@ -1,8 +1,11 @@
-﻿namespace Aggregator.Core
-{
-    using System.Collections.Generic;
-    using System.Management.Automation.Runspaces;
+﻿using System.Collections.Generic;
+using System.Management.Automation.Runspaces;
 
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+namespace Aggregator.Core
+{
     /// <summary>
     /// Invokes Powershell scripting engine
     /// </summary>
@@ -13,7 +16,7 @@
         {
         }
 
-        Dictionary<string, string> scripts = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> scripts = new Dictionary<string, string>();
 
         public override bool Load(string scriptName, string script)
         {
@@ -23,7 +26,6 @@
 
         public override bool LoadCompleted()
         {
-            //no-op
             return true;
         }
 
@@ -37,7 +39,7 @@
                 runspace.Open();
 
                 runspace.SessionStateProxy.SetVariable("self", workItem);
-                runspace.SessionStateProxy.SetVariable("store", store);
+                runspace.SessionStateProxy.SetVariable("store", this.store);
 
                 Pipeline pipeline = runspace.CreatePipeline();
                 pipeline.Commands.AddScript(script);
@@ -45,10 +47,8 @@
                 // execute
                 var results = pipeline.Invoke();
 
-                logger.ResultsFromScriptRun(scriptName, results);
-
-
-            }//using
+                this.logger.ResultsFromScriptRun(scriptName, results);
+            }
         }
     }
 }

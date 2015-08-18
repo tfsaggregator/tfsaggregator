@@ -1,4 +1,6 @@
-﻿namespace UnitTests.Core.Mock
+﻿using Aggregator.Core.Interfaces;
+
+namespace UnitTests.Core.Mock
 {
     using Aggregator.Core;
 

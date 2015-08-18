@@ -1,25 +1,26 @@
-﻿using Aggregator.Core.Configuration;
-using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Aggregator.Core.Facade;
-using System.Reflection;
-using System.IO;
 using System.Runtime.Caching;
-using System.Collections.Concurrent;
 
-namespace Aggregator.Core
+using Aggregator.Core.Configuration;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+namespace Aggregator.Core.Context
 {
     /// <summary>
     /// Manages the global inter-call status
     /// </summary>
     public class RuntimeContext : IRuntimeContext
     {
-        const string CacheKey = "runtime";
-        static MemoryCache cache = new MemoryCache("TFSAggregator2");
+        private const string CacheKey = "runtime";
+        private static readonly MemoryCache Cache = new MemoryCache("TFSAggregator2");
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RuntimeContext"/> class.
+        /// </summary>
         protected RuntimeContext()
         {
             // default
@@ -32,7 +33,7 @@ namespace Aggregator.Core
         /// <returns></returns>
         public static RuntimeContext GetContext(Func<string> settingsPathGetter, IRequestContext requestContext, ILogEvents logger)
         {
-            var runtime = (RuntimeContext)cache.Get(CacheKey);
+            var runtime = (RuntimeContext)Cache.Get(CacheKey);
             if (runtime == null)
             {
                 string settingsPath = settingsPathGetter();
@@ -43,7 +44,7 @@ namespace Aggregator.Core
                 itemPolicy.Priority = CacheItemPriority.NotRemovable;
                 itemPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string>() { settingsPath }));
 
-                cache.Set(CacheKey, runtime, itemPolicy);
+                Cache.Set(CacheKey, runtime, itemPolicy);
             }//if
 
             return runtime.Clone() as RuntimeContext;
@@ -57,32 +58,39 @@ namespace Aggregator.Core
             runtime.RequestContext = requestContext;
             runtime.SettingsPath = settingsPath;
             runtime.Settings = settings;
-            logger.Level = runtime.Settings.LogLevel;
+            logger.MinimumLogLevel = runtime.Settings.LogLevel;
 
             runtime.HasErrors = false;
             return runtime;
         }
 
         public bool HasErrors { get; private set; }
-        private List<string> errorList = new List<string>();
-        public IEnumerator<string> Errors { get { return errorList.GetEnumerator(); } }
+
+        private readonly List<string> errorList = new List<string>();
+
+        public IEnumerator<string> Errors { get { return this.errorList.GetEnumerator(); } }
 
         public IRequestContext RequestContext { get; private set; }
+
         public string SettingsPath { get; private set; }
+
         public TFSAggregatorSettings Settings { get; private set; }
+
         public string Hash
         {
             get
             {
                 // TODO instead of GetHashCode need a unique per-Collection Id
-                int dictHash = scriptEngines.Keys.Aggregate(0,
+                int dictHash = this.scriptEngines.Keys.Aggregate(0,
                     (running, current) => { return (int)(((long)running + current.GetHashCode()) % 0xffffffff); });
                 return this.Settings.Hash + dictHash.ToString("x8");
             }
         }
+
         public ILogEvents Logger { get; private set; }
 
         private ConcurrentDictionary<IWorkItemRepository, ScriptEngine> scriptEngines = new ConcurrentDictionary<IWorkItemRepository, ScriptEngine>();
+
         public ScriptEngine GetEngine(IWorkItemRepository workItemStore)
         {
             Func<IWorkItemRepository, ScriptEngine> builder = (IWorkItemRepository store) => {
@@ -95,7 +103,7 @@ namespace Aggregator.Core
                 return newEngine;
             };
 
-            ScriptEngine engine = scriptEngines.GetOrAdd(workItemStore, builder);
+            ScriptEngine engine = this.scriptEngines.GetOrAdd(workItemStore, builder);
             return engine;
         }
 

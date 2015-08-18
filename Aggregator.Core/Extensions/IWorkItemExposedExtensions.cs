@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Aggregator.Core
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Navigation;
+
+namespace Aggregator.Core.Extensions
 {
     public static class IWorkItemExposedExtensions
     {
         /// <summary>
         /// Used to convert a field to a number.  If anything goes wrong then the default value is returned.
         /// </summary>
-        /// <param name="workItem"></param>
+        /// <param name="self"></param>
         /// <param name="fieldName">The name of the field to be retrieved</param>
         /// <param name="defaultValue">Value to be returned if something goes wrong.</param>
         /// <returns></returns>

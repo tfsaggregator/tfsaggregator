@@ -1,4 +1,8 @@
-﻿namespace Aggregator.Core
+﻿using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+using Aggregator.Core.Script;
+
+namespace Aggregator.Core
 {
     using Microsoft.VisualBasic;
 
@@ -16,12 +20,15 @@
             return @"
 Imports Microsoft.TeamFoundation.WorkItemTracking.Client
 Imports Aggregator.Core
+Imports Aggregator.Core.Extensions
+Imports Aggregator.Core.Interfaces
+Imports Aggregator.Core.Navigation
 
 Namespace RESERVED
   Public Class Script_" + scriptName + @"
-    Implements Aggregator.Core.IDotNetScript
+    Implements Aggregator.Core.Script.IDotNetScript
   
-    Public Function RunScript(ByVal self As Aggregator.Core.IWorkItemExposed, ByVal store As Aggregator.Core.IWorkItemRepositoryExposed) As Object Implements Aggregator.Core.IDotNetScript.RunScript
+    Public Function RunScript(ByVal self As Aggregator.Core.Interfaces.IWorkItemExposed, ByVal store As Aggregator.Core.Interfaces.IWorkItemRepositoryExposed) As Object Implements Aggregator.Core.Script.IDotNetScript.RunScript
 " + script + @"
       Return Nothing
     End Function

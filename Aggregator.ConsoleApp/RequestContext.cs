@@ -1,25 +1,25 @@
-﻿namespace Aggregator.ConsoleApp
+﻿using System;
+using System.Linq;
+
+using Aggregator.Core;
+using Aggregator.Core.Facade;
+using Aggregator.Core.Interfaces;
+
+using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.Framework.Common;
+using Microsoft.TeamFoundation.Framework.Server;
+using Microsoft.TeamFoundation.Server;
+using Microsoft.TeamFoundation.Server.Core;
+
+namespace Aggregator.ConsoleApp
 {
-    using System;
-    using System.Linq;
-
-    using Aggregator.Core;
-    using Aggregator.Core.Facade;
-    using Aggregator.Core.Interfaces;
-
-    using Microsoft.TeamFoundation.Client;
-    using Microsoft.TeamFoundation.Framework.Common;
-    using Microsoft.TeamFoundation.Framework.Server;
-    using Microsoft.TeamFoundation.Server;
-    using Microsoft.TeamFoundation.Server.Core;
-
-    public class RequestContextConsoleApp : IRequestContext
+    public class RequestContext : IRequestContext
     {
-        internal string teamProjectCollectionUrl;
+        internal readonly string teamProjectCollectionUrl;
 
-        private string teamProjectName;
+        private readonly string teamProjectName;
 
-        public RequestContextConsoleApp(string teamProjectCollectionUrl, string teamProjectName)
+        public RequestContext(string teamProjectCollectionUrl, string teamProjectName)
         {
             this.teamProjectCollectionUrl = teamProjectCollectionUrl;
             this.teamProjectName = teamProjectName;
@@ -43,12 +43,12 @@
         {
             var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(this.teamProjectCollectionUrl));
             var ics = context.GetService<ICommonStructureService4>();
-            
+
             string projectName;
             string projectState;
             int templateId = 0;
             ProjectProperty[] projectProperties = null;
-            
+
             ics.GetProjectProperties(projectUri.ToString(), out projectName, out projectState, out templateId, out projectProperties);
 
             return projectProperties.Select(p => (IProjectPropertyWrapper)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
@@ -69,19 +69,19 @@
         {
             ProcessTemplateVersion unknown = null;
 
-            var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(teamProjectCollectionUrl));
+            var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(this.teamProjectCollectionUrl));
             var ics = context.GetService<ICommonStructureService4>();
 
-            string ProjectName = string.Empty;
-            string ProjectState = String.Empty;
+            string projectName;
+            string projectState;
+
             int templateId = 0;
-            ProjectProperty[] ProjectProperties = null;
+            ProjectProperty[] projectProperties = null;
 
-            ics.GetProjectProperties(projectUri.ToString(), out ProjectName, out ProjectState, out templateId, out ProjectProperties);
-
+            ics.GetProjectProperties(projectUri.ToString(), out projectName, out projectState, out templateId, out projectProperties);
 
             string rawVersion =
-                ProjectProperties.FirstOrDefault(p => p.Name == versionPropertyName).Value;
+                projectProperties.FirstOrDefault(p => p.Name == versionPropertyName).Value;
 
             if (rawVersion == null)
             {
@@ -93,6 +93,5 @@
                 return new ProcessTemplateVersionWrapper() { TypeId = result.TypeId, Major = result.Major, Minor = result.Minor };
             }
         }
-
     }
 }

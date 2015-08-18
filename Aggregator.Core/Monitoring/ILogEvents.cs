@@ -1,17 +1,19 @@
-﻿namespace Aggregator.Core
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Management.Automation;
+using System.Runtime.Caching;
+using System.Xml.Schema;
+
+using Aggregator.Core.Interfaces;
+
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
+namespace Aggregator.Core.Monitoring
 {
-    using System;
-    using System.Collections.ObjectModel;
-    using System.Management.Automation;
-    using System.Runtime.Caching;
-    using System.Xml.Schema;
-    using Microsoft.TeamFoundation.WorkItemTracking.Client;
-
-
     /// <summary>
     /// Levels of logging.
     /// </summary>
-    /// <remarks>While this enumerator is not used within Core, it is read by the configuration class <see cref="TFSAggregatorSettings"/>.</remarks>
+    /// <remarks>While this enumeration is not used within Core, it is read by the configuration class <see cref="Aggregator.Core.Configuration.TFSAggregatorSettings"/>.</remarks>
     public enum LogLevel
     {
         Critical = 1,
@@ -25,7 +27,7 @@
 
     public interface ILogger
     {
-        LogLevel Level { get; set; }
+        LogLevel MinimumLogLevel { get; set; }
     }
 
     /// <summary>
@@ -35,30 +37,55 @@
     public interface ILogEvents : ILogger
     {
         void ConfigurationLoaded(string policyFile);
+
         void StartingProcessing(IRequestContext context, INotification notification);
+
         void ProcessingCompleted(ProcessingResult result);
+
         void WorkItemWrapperTryOpenException(IWorkItem workItem, Exception e);
+
         void ResultsFromScriptRun(string scriptName, Collection<PSObject> results);
+
         void ResultsFromScriptRun(string scriptName, object result);
+
         void ScriptHasError(string scriptName, int line, int column, string errorCode, string errorText);
+
         void ScriptHasWarning(string scriptName, int line, int column, string errorCode, string errorText);
+
         void Saving(IWorkItem workItem, bool isValid);
+
         void InvalidConfiguration(XmlSeverityType severity, string message, int lineNumber, int linePosition);
+
         void UnreferencedRule(string ruleName);
+
         void ApplyingPolicy(string name);
+
         void ApplyingRule(string name);
+
         void BuildingScriptEngine(string scriptLanguage);
+
         void RunningRule(string name, IWorkItem workItem);
+
         void FailureLoadingScript(string scriptName);
+
         void AttemptingToMoveWorkItemToState(IWorkItem workItem, string orginalSourceState, string destState);
+
         void WorkItemIsValidToSave(IWorkItem workItem);
+
         void WorkItemIsInvalidInState(IWorkItem workItem, string destState);
+
         void LoadingConfiguration(string settingsPath);
+
         void UsingCachedConfiguration(string settingsPath);
+
         void ConfigurationChanged(string settingsPath, CacheEntryRemovedReason removedReason);
+
         void AddingWorkItemLink(int sourceId, WorkItemLinkTypeEnd destLinkType, int destId);
+
         void WorkItemLinkAlreadyExists(int sourceId, WorkItemLinkTypeEnd destLinkType, int destId);
+
         void AddingHyperlink(int id, string destination, string comment);
+
         void HyperlinkAlreadyExists(int id, string destination, string comment);
     }
 }

@@ -1,12 +1,17 @@
-﻿namespace Aggregator.ServerPlugin
-{
-    using Aggregator.Core;
-    using Aggregator.Core.Monitoring;
+﻿using Aggregator.Core;
+using Aggregator.Core.Monitoring;
 
-    class ServerEventLogger : TextLogComposer
+namespace Aggregator.ServerPlugin
+{
+    internal class ServerEventLogger : TextLogComposer
     {
-        public ServerEventLogger(LogLevel level)
-            : base(new ServerTextLogger(level))
-        { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServerEventLogger"/> class.
+        /// </summary>
+        /// <param name="minLevel">The minimum level (inclusive) to write to the log.</param>
+        public ServerEventLogger(LogLevel minLevel)
+            : base(new ServerTextLogger(minLevel))
+        {
+        }
     }
 }

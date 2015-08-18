@@ -1,4 +1,7 @@
-﻿namespace Aggregator.Core.Facade
+﻿using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+namespace Aggregator.Core.Facade
 {
     using System;
     using System.Collections;
@@ -8,9 +11,10 @@
 
     class WorkItemLinkCollectionWrapper : IWorkItemLinkCollection
     {
-        ILogEvents logger;
-        IWorkItemRepository store;
-        private WorkItemLinkCollection workItemLinkCollection;
+        readonly ILogEvents logger;
+
+        readonly IWorkItemRepository store;
+        private readonly WorkItemLinkCollection workItemLinkCollection;
 
         public WorkItemLinkCollectionWrapper(WorkItemLinkCollection workItemLinkCollection, IWorkItemRepository store, ILogEvents logger)
         {

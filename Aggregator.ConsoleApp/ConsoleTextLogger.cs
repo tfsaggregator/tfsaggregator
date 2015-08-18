@@ -3,17 +3,17 @@
     using System;
     using System.Diagnostics;
 
-    using Aggregator.Core;
-    using Aggregator.Core.Monitoring;
+    using Core;
+    using Core.Monitoring;
 
     internal class ConsoleTextLogger : ITextLogger
     {
-        private LogLevel minLevel;
-        private Stopwatch clock = new Stopwatch();
+        private LogLevel minimumLogLevel;
+        private readonly Stopwatch clock = new Stopwatch();
 
-        internal ConsoleTextLogger(LogLevel level)
+        internal ConsoleTextLogger(LogLevel minimumLogLevel)
         {
-            this.minLevel = level;
+            this.minimumLogLevel = minimumLogLevel;
             this.clock.Restart();
         }
 
@@ -21,32 +21,32 @@
         {
             switch (level)
             {
+                case LogLevel.Error:
                 case LogLevel.Critical:
                     return ConsoleColor.Red;
-                case LogLevel.Error:
-                    return ConsoleColor.Red;
+
                 case LogLevel.Warning:
                     return ConsoleColor.Yellow;
-                case LogLevel.Information:
-                    return ConsoleColor.Gray;
+
                 case LogLevel.Verbose:
-                    return ConsoleColor.Cyan;
                 case LogLevel.Diagnostic:
                     return ConsoleColor.Cyan;
+
+                case LogLevel.Information:
                 default:
                     return ConsoleColor.Gray;
             }//switch
         }
 
-        public LogLevel Level
+        public LogLevel MinimumLogLevel
         {
-            get { return minLevel; }
-            set { minLevel = value; }
+            get { return this.minimumLogLevel; }
+            set { this.minimumLogLevel = value; }
         }
 
         public void Log(LogLevel level, string format, params object[] args)
         {
-            if (level > this.minLevel)
+            if (level > this.minimumLogLevel)
                 return;
 
             clock.Stop();

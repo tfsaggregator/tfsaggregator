@@ -1,4 +1,7 @@
-﻿namespace UnitTests.Core.Mock
+﻿using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+namespace UnitTests.Core.Mock
 {
     using System;
     using System.Collections.Generic;
@@ -9,8 +12,9 @@
 
     internal class WorkItemRepositoryMock : IWorkItemRepository
     {
-        private List<IWorkItem> _workItems = new List<IWorkItem>();
-        List<IWorkItem> loadedWorkItems = new List<IWorkItem>();
+        private List<IWorkItem> workItems = new List<IWorkItem>();
+
+        readonly List<IWorkItem> loadedWorkItems = new List<IWorkItem>();
 
         public ILogEvents Logger { get; set; }
 
@@ -18,16 +22,16 @@
         
         public IWorkItem GetWorkItem(int workItemId)
         {
-            IWorkItem justLoaded = _workItems.SingleOrDefault(wi => wi.Id == workItemId);
+            IWorkItem justLoaded = this.workItems.SingleOrDefault(wi => wi.Id == workItemId);
             loadedWorkItems.Add(justLoaded);
             return justLoaded;
         }
 
         internal void SetWorkItems(IEnumerable<IWorkItem> items)
         {
-            _workItems = new List<IWorkItem>(items);
+            this.workItems = new List<IWorkItem>(items);
             // reset the flag!
-            _workItems.ForEach(wi => (wi as WorkItemMock).IsDirty = false);
+            this.workItems.ForEach(wi => (wi as WorkItemMock).IsDirty = false);
         }
 
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)

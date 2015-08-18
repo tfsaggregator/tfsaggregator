@@ -1,4 +1,6 @@
-﻿namespace Aggregator.Core
+﻿using Aggregator.Core.Interfaces;
+
+namespace Aggregator.Core
 {
     using System.Text;
 
@@ -14,8 +16,11 @@
             else
             {
                 foreach (string s in wi.Validate())
+                {
                     sb.AppendLine(s);
+                }
             }
+
             return sb.ToString();
         }
     }

@@ -1,4 +1,7 @@
-﻿namespace Aggregator.Core
+﻿using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+namespace Aggregator.Core
 {
     using System;
 
@@ -24,6 +27,7 @@
         /// <returns>true if succeeded</returns>
         /// <remarks>An engine may pre-process/compile the script at this time to get better performances.</remarks>
         public abstract bool Load(string scriptName, string script);
+
         /// <summary>
         /// Informs the engine that all script has been loaded.
         /// </summary>
@@ -50,18 +54,19 @@
         {
             switch (scriptLanguage.ToUpperInvariant())
             {
-                case "CS":
-                case "CSHARP":
-                case "C#":
-                    return typeof(CSharpScriptEngine);
                 case "VB":
                 case "VB.NET":
                 case "VBNET":
                     return typeof(VBNetScriptEngine);
+
                 case "PS":
                 case "POWERSHELL":
                     return typeof(PsScriptEngine);
+
                 default:
+                case "CS":
+                case "CSHARP":
+                case "C#":
                     // TODO Log unsupported or wrong code
                     return typeof(CSharpScriptEngine);
             }

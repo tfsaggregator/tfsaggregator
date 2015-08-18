@@ -1,9 +1,11 @@
-﻿namespace Aggregator.ConsoleApp
+﻿using Aggregator.Core.Context;
+using Aggregator.Core.Monitoring;
+
+namespace Aggregator.ConsoleApp
 {
     using System;
 
-    using Aggregator.Core;
-    using Aggregator.Core.Configuration;
+    using Core;
 
     using ManyConsole;
 
@@ -50,7 +52,7 @@
 
             var runtime = RuntimeContext.GetContext(
                 () => this.PolicyFile,
-                new RequestContextConsoleApp(this.TeamProjectCollectionUrl, this.TeamProjectName),
+                new RequestContext(this.TeamProjectCollectionUrl, this.TeamProjectName),
                 logger
                 );
             if (runtime.HasErrors)
@@ -65,7 +67,7 @@
             try
             {
                 var context = runtime.RequestContext;
-                var notification = new NotificationConsoleApp(this.WorkItemId, this.TeamProjectName);
+                var notification = new Notification(this.WorkItemId, this.TeamProjectName);
 
                 logger.StartingProcessing(context, notification);
                 result = eventProcessor.ProcessEvent(context, notification);

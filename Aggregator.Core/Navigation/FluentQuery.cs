@@ -1,11 +1,15 @@
-﻿namespace Aggregator.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
+using Aggregator.Core.Interfaces;
+
+namespace Aggregator.Core.Navigation
+{
     public class FluentQuery : IEnumerable<IWorkItemExposed>
     {
-        IWorkItemExposed host;
+        private readonly IWorkItemExposed host;
+
         public FluentQuery(IWorkItemExposed host)
         {
             this.host = host;
@@ -17,23 +21,29 @@
         }
 
         public string WorkItemType { get; set; }
+
         public int Levels { get; set; }
+
         public string LinkType { get; set; }
 
         public override bool Equals(object obj)
         {
             if (obj == this)
+            {
                 return true;
+            }
 
             if (!(obj is FluentQuery))
+            {
                 return base.Equals(obj);
+            }
 
             var rhs = obj as FluentQuery;
 
             return
-                string.Compare(this.WorkItemType, rhs.WorkItemType, true) == 0
+                string.Equals(this.WorkItemType, rhs.WorkItemType, StringComparison.OrdinalIgnoreCase)
                 && this.Levels == rhs.Levels
-                && string.Compare(this.LinkType, rhs.LinkType, true) == 0;
+                && string.Equals(this.LinkType, rhs.LinkType, StringComparison.OrdinalIgnoreCase);
         }
 
         public override int GetHashCode()

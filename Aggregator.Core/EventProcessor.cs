@@ -1,51 +1,67 @@
-﻿namespace Aggregator.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Aggregator.Core.Configuration;
+using Aggregator.Core.Context;
+using Aggregator.Core.Facade;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+using IdentityDescriptor = Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor;
+
+namespace Aggregator.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using Aggregator.Core.Configuration;
-    using Aggregator.Core.Facade;
-
-    using Microsoft.VisualStudio.Services.Identity;
-
-    using IdentityDescriptor = Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor;
-
     /// <summary>
     /// This is the core class with complete logic, independent from being a server plug-in.
     /// It is the entry point of the Core assembly to manage a single request/event
     /// </summary>
     public class EventProcessor
     {
-        TFSAggregatorSettings settings;
-        ILogEvents logger;
-        IWorkItemRepository store;
-        ScriptEngine engine;
+        private readonly TFSAggregatorSettings settings;
 
-        // server ctor
+        private readonly ILogEvents logger;
+
+        private readonly IWorkItemRepository store;
+
+        private readonly ScriptEngine engine;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventProcessor"/> class.
+        /// </summary>
+        /// <param name="tfsCollectionUrl">The TFS Project Colection Uri</param>
+        /// <param name="toImpersonate">The IdentityDescriptor to Impoersonate</param>
+        /// <param name="runtime">The runtime context</param>
         public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, IRuntimeContext runtime)
             : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, runtime.Logger), runtime)
         {
         }
 
-        // common ctor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventProcessor"/> class.
+        /// </summary>
+        /// <param name="workItemStore"></param>
+        /// <param name="runtime"></param>
         public EventProcessor(IWorkItemRepository workItemStore, IRuntimeContext runtime)
         {
             this.logger = runtime.Logger;
             this.store = workItemStore;
             this.settings = runtime.Settings;
 
-            this.engine = runtime.GetEngine(workItemStore);                
+            this.engine = runtime.GetEngine(workItemStore);
         }
 
         /// <summary>
         /// This is the one where all the magic happens.
         /// </summary>
+        /// <returns>The outcome of the policy Execution as per ISubscriber's contract</returns>
+        /// <param name="requestContext">TFS Request Context</param>
+        /// <param name="notification">The <paramref name="notification"/> containing the WorkItemChangedEvent</param>
         public ProcessingResult ProcessEvent(IRequestContext requestContext, INotification notification)
         {
             var result = new ProcessingResult();
 
-            IEnumerable<Policy> policies = this.FilterPolicies(this.settings.Policies, requestContext, notification);
+            Policy[] policies = this.FilterPolicies(this.settings.Policies, requestContext, notification).ToArray();
 
             if (policies.Any())
             {
@@ -53,7 +69,7 @@
 
                 foreach (var policy in policies)
                 {
-                    logger.ApplyingPolicy(policy.Name);
+                    this.logger.ApplyingPolicy(policy.Name);
                     this.ApplyRules(workItem, policy.Rules);
                 }
 
@@ -66,6 +82,7 @@
                 result.StatusCode = 1;
                 result.StatusMessage = "No operation";
             }
+
             return result;
         }
 
@@ -99,12 +116,13 @@
             {
                 bool isValid = workItem.IsValid();
                 this.logger.Saving(workItem, isValid);
+
                 if (isValid)
                 {
                     workItem.PartialOpen();
                     workItem.Save();
                 }
-            }//for
+            }
         }
     }
 }

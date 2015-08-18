@@ -1,19 +1,24 @@
-﻿namespace Aggregator.Core.Navigation
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
-    public class WorkItemLazyVisitor : IEnumerable<IWorkItemExposed> 
+using Aggregator.Core.Extensions;
+using Aggregator.Core.Interfaces;
+
+namespace Aggregator.Core.Navigation
+{
+    public class WorkItemLazyVisitor : IEnumerable<IWorkItemExposed>
     {
-        // source info
-        IWorkItemRepository store;
-        IWorkItem sourceWorkItem;
-        // target filter
-        string workItemType;
-        int levels;
-        string linkType;
+        private readonly IWorkItem sourceWorkItem;
+
+        private readonly string workItemType;
+
+        private readonly int levels;
+
+        private readonly string linkType;
+
+        private IWorkItemRepository store;
 
         public static WorkItemLazyVisitor MakeRelativesLazyVisitor(IWorkItem sourceItem, FluentQuery query, IWorkItemRepository store)
         {
@@ -50,17 +55,18 @@
                 if (relatedWorkItem.TypeName.SameAs(this.workItemType))
                 {
                     yield return relatedWorkItem;
-                }//if
-                    if (current.Item1 > 0)
-                    {
-                        // add to end => depth-first
-                        links.AddRange(
-                            relatedWorkItem.WorkItemLinks
-                            .Where(link => link.LinkTypeEndImmutableName.SameAs(this.linkType))
-                            .Select(link => Tuple.Create(current.Item1 - 1, link))
-                            );
-                    }//if
-            }//while
+                }
+
+                if (current.Item1 > 0)
+                {
+                    // add to end => depth-first
+                    links.AddRange(
+                        relatedWorkItem.WorkItemLinks
+                        .Where(link => link.LinkTypeEndImmutableName.SameAs(this.linkType))
+                        .Select(link => Tuple.Create(current.Item1 - 1, link))
+                        );
+                }
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()

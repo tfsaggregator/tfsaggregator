@@ -1,4 +1,8 @@
-﻿namespace Aggregator.Core
+﻿using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+using Aggregator.Core.Script;
+
+namespace Aggregator.Core
 {
     using Microsoft.CSharp;
 
@@ -18,10 +22,13 @@ namespace RESERVED
 {
   using Microsoft.TeamFoundation.WorkItemTracking.Client;
   using Aggregator.Core;
+  using Aggregator.Core.Extensions;
+  using Aggregator.Core.Interfaces;
   using Aggregator.Core.Navigation;
-  public class Script_" + scriptName + @" : Aggregator.Core.IDotNetScript
+
+  public class Script_" + scriptName + @" : Aggregator.Core.Script.IDotNetScript
   {
-    public object RunScript(Aggregator.Core.IWorkItemExposed self, Aggregator.Core.IWorkItemRepositoryExposed store)
+    public object RunScript(Aggregator.Core.Interfaces.IWorkItemExposed self, Aggregator.Core.Interfaces.IWorkItemRepositoryExposed store)
     {
 " + script + @"
       return null;

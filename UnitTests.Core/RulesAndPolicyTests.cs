@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Aggregator.Core.Context;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
 namespace UnitTests.Core
 {
     using Aggregator.Core;

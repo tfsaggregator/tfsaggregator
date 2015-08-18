@@ -1,4 +1,6 @@
-﻿namespace Aggregator.Core.Facade
+﻿using Aggregator.Core.Interfaces;
+
+namespace Aggregator.Core.Facade
 {
     using System.Xml;
 

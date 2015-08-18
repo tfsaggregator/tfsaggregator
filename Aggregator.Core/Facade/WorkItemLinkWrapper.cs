@@ -1,12 +1,15 @@
-﻿namespace Aggregator.Core.Facade
+﻿using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+namespace Aggregator.Core.Facade
 {
     using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
     class WorkItemLinkWrapper : IWorkItemLink
     {
-        ILogEvents logger;
-        private WorkItemLink link;
-        private IWorkItemRepository store;
+        readonly ILogEvents logger;
+        private readonly WorkItemLink link;
+        private readonly IWorkItemRepository store;
 
         public WorkItemLinkWrapper(WorkItemLink link, IWorkItemRepository store, ILogEvents logger)
         {

@@ -1,4 +1,6 @@
-﻿namespace UnitTests.Core
+﻿using Aggregator.Core.Monitoring;
+
+namespace UnitTests.Core
 {
     using System.IO;
     using System.Xml.Schema;

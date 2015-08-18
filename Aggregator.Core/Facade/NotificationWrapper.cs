@@ -1,12 +1,16 @@
-﻿namespace Aggregator.Core.Facade
+﻿using Aggregator.Core.Interfaces;
+
+namespace Aggregator.Core.Facade
 {
     using Microsoft.TeamFoundation.Framework.Server;
     using Microsoft.TeamFoundation.WorkItemTracking.Server;
 
     public class NotificationWrapper : INotification
     {
-        private NotificationType notification;
-        private WorkItemChangedEvent eventArgs;
+        private readonly NotificationType notification;
+
+        private readonly WorkItemChangedEvent eventArgs;
+
         public NotificationWrapper(NotificationType notification, WorkItemChangedEvent eventArgs)
         {
             this.notification = notification;

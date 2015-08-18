@@ -1,25 +1,26 @@
-﻿namespace TFSAggregator.TfsSpecific
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+
+using Aggregator.Core;
+using Aggregator.Core.Facade;
+using Aggregator.ServerPlugin;
+
+using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.Common;
+using Microsoft.TeamFoundation.Framework.Client;
+using Microsoft.TeamFoundation.Framework.Common;
+using Microsoft.TeamFoundation.Framework.Server;
+using Microsoft.TeamFoundation.WorkItemTracking.Server;
+
+using Aggregator.Core.Context;
+using Aggregator.Core.Monitoring;
+
+using ILocationService = Microsoft.VisualStudio.Services.Location.Server.ILocationService;
+
+namespace TFSAggregator.TfsSpecific
 {
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-
-    using Aggregator.Core;
-    using Aggregator.Core.Configuration;
-    using Aggregator.Core.Facade;
-    using Aggregator.ServerPlugin;
-
-    using Microsoft.TeamFoundation.Client;
-    using Microsoft.TeamFoundation.Common;
-    using Microsoft.TeamFoundation.Framework.Client;
-    using Microsoft.TeamFoundation.Framework.Common;
-    using Microsoft.TeamFoundation.Framework.Server;
-    using Microsoft.TeamFoundation.WorkItemTracking.Server;
-    using Microsoft.VisualStudio.Services.ClientNotification;
-
-    using NotificationType = Microsoft.TeamFoundation.Framework.Server.NotificationType;
-
     /// <summary>
     /// The class that subscribes to server side events on the TFS server.
     /// We're only interested in WorkItemChanged events, so we'll filter that out before calling our main logic.
@@ -28,8 +29,8 @@
     {
         public WorkItemChangedEventHandler()
         {
-            //DON"T ADD ANYTHING HERE UNLESS YOU REALLY KNOW WHAT YOU ARE DOING.
-            //TFS DOES NOT LIKE CONSTRUCTORS HERE AND SEEMS TO FREEZE WHEN YOU TRY :(
+            // DON'T ADD ANYTHING HERE UNLESS YOU REALLY KNOW WHAT YOU ARE DOING.
+            // TFS DOES NOT LIKE CONSTRUCTORS HERE AND SEEMS TO FREEZE WHEN YOU TRY :(
         }
 
         public Type[] SubscribedTypes()
@@ -49,23 +50,25 @@
             out ExceptionPropertyCollection properties)
         {
             var runtime = RuntimeContext.GetContext(
-                () => GetServerSettingsFullPath(),
+                GetServerSettingsFullPath,
                 new RequestContextWrapper(requestContext),
                 new ServerEventLogger(LogLevel.Normal));
+
             if (runtime.HasErrors)
             {
                 statusCode = 99;
                 statusMessage = string.Join(". ", runtime.Errors);
                 properties = null;
                 return EventNotificationStatus.ActionPermitted;
-            }//if
+            }
 
-            var logger = runtime.Logger as ServerEventLogger; // HACK remove cast for ProcessEventException
+            // HACK: remove cast for ProcessEventException
+            var logger = (ServerEventLogger)runtime.Logger; 
 
             var result = new ProcessingResult();
             try
             {
-                //Check if we have a workitem changed event before proceeding
+                // Check if we have a workitem changed event before proceeding
                 if (notificationType == NotificationType.Notification && notificationEventArgs is WorkItemChangedEvent)
                 {
                     var uri = this.GetCollectionUriFromContext(requestContext);
@@ -84,16 +87,17 @@
                     logger.StartingProcessing(context, notification);
                     result = eventProcessor.ProcessEvent(context, notification);
                     logger.ProcessingCompleted(result);
-                }//if
+                }
             }
             catch (Exception e)
             {
                 logger.ProcessEventException(requestContext, e);
+
                 // notify failure
                 result.StatusCode = -1;
                 result.StatusMessage = "Unexpected error: " + e.Message;
                 result.NotificationStatus = EventNotificationStatus.ActionPermitted;
-            }//try
+            }
 
             statusCode = result.StatusCode;
             statusMessage = result.StatusMessage;
@@ -103,7 +107,7 @@
 
         private Uri GetCollectionUriFromContext(TeamFoundationRequestContext requestContext)
         {
-            TeamFoundationLocationService service = requestContext.GetService<TeamFoundationLocationService>();
+            ILocationService service = requestContext.GetService<ILocationService>();
             return service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));
         }
 
@@ -113,7 +117,7 @@
 
             var configurationServer = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(server);
 
-            //TODO: Find a way to read the identity from the server object model instead.
+            // TODO: Find a way to read the identity from the server object model instead.
             IIdentityManagementService identityManagementService =
             configurationServer.GetService<IIdentityManagementService>();
 
@@ -122,7 +126,7 @@
                     new Guid[] { new Guid(workItemChangedEvent.ChangerTeamFoundationId) },
                     MembershipQuery.None).FirstOrDefault();
 
-            return identity == null ? null : identity.Descriptor;
+            return identity?.Descriptor;
         }
 
         private static string GetServerSettingsFullPath()
@@ -141,11 +145,17 @@
                     + PolicyExtension;
         }
 
+        /// <summary>
+        /// Returns the ISubscriber's Name, it's used in logging and the like.
+        /// </summary>
         public string Name
         {
             get { return "TFSAggregator2"; }
         }
 
+        /// <summary>
+        /// Returns the priority, thi sis used by TFS to decide in which order to run the ISubscriber plugins.
+        /// </summary>
         public SubscriberPriority Priority
         {
             get { return SubscriberPriority.Normal; }

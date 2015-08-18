@@ -1,4 +1,7 @@
-﻿using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
+﻿using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
 {
@@ -123,14 +126,14 @@ namespace Aggregator.Core.Facade
 
         public void TransitionToState(string state, string comment)
         {
-            StateWorkflow.TransitionToState(this, state, comment, this.logger);
+            StateWorkFlow.TransitionToState(this, state, comment, this.logger);
         }
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
         {
             var destLinkType = this.workItem.Store.WorkItemLinkTypes
-                .Where(t => t.ForwardEnd.Name == linkTypeName)
-                .FirstOrDefault().ForwardEnd;
+                .FirstOrDefault(t => t.ForwardEnd.Name == linkTypeName)
+                .ForwardEnd;
             var relationship = new TFS.WorkItemLink(destLinkType, this.Id, destination.Id);
             // check it does not exist already
             if (!this.workItem.WorkItemLinks.Contains(relationship))

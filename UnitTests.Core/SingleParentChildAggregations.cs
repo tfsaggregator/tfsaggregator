@@ -3,6 +3,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using System.Linq;
 
+using Aggregator.Core.Context;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
 namespace UnitTests.Core
 {
     using Microsoft.TeamFoundation.Framework.Server;

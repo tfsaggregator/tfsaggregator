@@ -1,13 +1,16 @@
-﻿namespace Aggregator.Core
-{
-    using System;
-    using System.CodeDom.Compiler;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
+﻿using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+namespace Aggregator.Core.Script
+{
     public interface IDotNetScript
     {
         object RunScript(IWorkItemExposed self, IWorkItemRepositoryExposed store);
@@ -25,24 +28,26 @@
         }
 
         protected abstract int LineOffset { get; }
+
         protected abstract string WrapScript(string scriptName, string script);
 
-        string[] GetAssemblyReferences()
+        private string[] GetAssemblyReferences()
         {
-            string baseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
             var refList = new List<string>();
 
-
             refList.Add(Assembly.GetExecutingAssembly().Location);
-            // from GAC
-            refList.Add("System.dll");
+            refList.Add("System.dll"); // from GAC
+
             // CAREFUL HERE and remember to AddReference and set CopyLocal=true in UnitTest project!
             var wiAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(ass => ass.GetName().Name == "Microsoft.TeamFoundation.WorkItemTracking.Client").FirstOrDefault();
+                .FirstOrDefault(ass => ass.GetName().Name == "Microsoft.TeamFoundation.WorkItemTracking.Client");
+
             if (wiAssembly != null)
+            {
                 refList.Add(new Uri(wiAssembly.CodeBase).LocalPath);
-            else {
+            }
+            else
+            {
                 string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 string asmPath = Path.Combine(dir, "Microsoft.TeamFoundation.WorkItemTracking.Client.dll");
                 refList.Add(asmPath);
@@ -60,14 +65,14 @@
             compilerOptions.GenerateExecutable = false;
             compilerOptions.GenerateInMemory = true;
             compilerOptions.IncludeDebugInformation = debug;
+
             // save temp files to permit debugging
             compilerOptions.TempFiles.KeepFiles = debug;
-            // critical step
-            compilerOptions.ReferencedAssemblies.AddRange(GetAssemblyReferences());
 
-            CompilerResults compilerResult;
-            compilerResult = codeDomProvider.CompileAssemblyFromSource(compilerOptions, code);
-            return compilerResult;
+            // critical step
+            compilerOptions.ReferencedAssemblies.AddRange(this.GetAssemblyReferences());
+
+            return codeDomProvider.CompileAssemblyFromSource(compilerOptions, code);
         }
 
         private void RunScript(Assembly assembly, string scriptName, IWorkItem self)
@@ -76,34 +81,37 @@
             var classForScript = assembly.GetType("RESERVED.Script_" + scriptName);
             if (classForScript == null)
             {
-                logger.FailureLoadingScript(scriptName);
+                this.logger.FailureLoadingScript(scriptName);
                 return;
             }
+
             var interfaceForScript = classForScript.GetInterface(typeof(IDotNetScript).Name);
             if (interfaceForScript == null)
             {
-                logger.FailureLoadingScript(scriptName);
+                this.logger.FailureLoadingScript(scriptName);
                 return;
             }
 
             ConstructorInfo constructor = classForScript.GetConstructor(Type.EmptyTypes);
             if (constructor == null || !constructor.IsPublic)
             {
-                logger.FailureLoadingScript(scriptName);
+                this.logger.FailureLoadingScript(scriptName);
                 return;
             }
+
             // we specified that we wanted a constructor that doesn't take parameters, so don't pass parameters
             IDotNetScript scriptObject = constructor.Invoke(null) as IDotNetScript;
             if (scriptObject == null)
             {
-                logger.FailureLoadingScript(scriptName);
+                this.logger.FailureLoadingScript(scriptName);
                 return;
             }
 
             System.Diagnostics.Debug.WriteLine("*** about to execute {0}", scriptName, null);
-            //Lets run our script and display its results
+
+            // Lets run our script and display its results
             object result = scriptObject.RunScript(self, this.store);
-            logger.ResultsFromScriptRun(scriptName, result);
+            this.logger.ResultsFromScriptRun(scriptName, result);
         }
 
         private static void CleanUp(bool debug, CompilerResults compilerResult)
@@ -115,66 +123,68 @@
             }
         }
 
-        bool debug = true;
-        Dictionary<string, string> sourceCode = new Dictionary<string, string>();
-        CompilerResults compilerResult;
+        private bool debug = true;
+
+        private Dictionary<string, string> sourceCode = new Dictionary<string, string>();
+
+        private CompilerResults compilerResult;
 
         public override bool Load(string scriptName, string script)
         {
-            string code = WrapScript(scriptName, script);
-            sourceCode.Add(scriptName, code);
+            string code = this.WrapScript(scriptName, script);
+            this.sourceCode.Add(scriptName, code);
             return true;
         }
 
         public override bool LoadCompleted()
         {
             // build a single assembly and class from multiple scripts
-            compilerResult = CompileCode(sourceCode.Values.ToArray(), debug);
+            this.compilerResult = this.CompileCode(this.sourceCode.Values.ToArray(), this.debug);
 
             // TODO find a way to get where the error is
-            if (compilerResult.Errors.HasErrors)
+            if (this.compilerResult.Errors.HasErrors)
             {
-                foreach (CompilerError err in compilerResult.Errors)
+                foreach (CompilerError err in this.compilerResult.Errors.Cast<CompilerError>())
                 {
-                    logger.ScriptHasError("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
-                }
-            }
-            if (compilerResult.Errors.HasWarnings)
-            {
-                foreach (CompilerError err in compilerResult.Errors)
-                {
-                    logger.ScriptHasWarning("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
+                    this.logger.ScriptHasError("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
                 }
             }
 
-            return !compilerResult.Errors.HasErrors;
+            if (this.compilerResult.Errors.HasWarnings)
+            {
+                foreach (CompilerError err in this.compilerResult.Errors.Cast<CompilerError>())
+                {
+                    this.logger.ScriptHasWarning("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
+                }
+            }
+
+            return !this.compilerResult.Errors.HasErrors;
         }
 
         public override void Run(string scriptName, IWorkItem workItem)
         {
-            if (!compilerResult.Errors.HasErrors)
+            if (!this.compilerResult.Errors.HasErrors)
             {
-                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+                AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomain_AssemblyResolve;
                 try
                 {
-                    RunScript(compilerResult.CompiledAssembly, scriptName, workItem);
+                    this.RunScript(this.compilerResult.CompiledAssembly, scriptName, workItem);
                 }
                 finally
                 {
-                    AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
+                    AppDomain.CurrentDomain.AssemblyResolve -= this.CurrentDomain_AssemblyResolve;
                 }
             }
             else
             {
                 // compile errors slip away in the log, reinstate that something is wrong
-                logger.FailureLoadingScript(scriptName);
-            }//if
+                this.logger.FailureLoadingScript(scriptName);
+            }
 
             //BUG must have a "clean up event" fired at shutdown time
-            //CleanUp(debug, compilerResult);
         }
 
-        Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             Match m = Regex.Match(
                 args.Name,
@@ -193,8 +203,11 @@
                 var dir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
                 var file = Path.Combine(dir, args.Name + ".dll");
                 if (File.Exists(file))
+                {
                     return Assembly.LoadFile(file);
+                }
             }
+
             return null;
         }
     }

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Aggregator.Core.Interfaces;
+
 namespace Aggregator.Core.Facade
 {
-    using Aggregator.Core.Interfaces;
-
     public class ProcessTemplateVersionWrapper : IProcessTemplateVersionWrapper
     {
         public ProcessTemplateVersionWrapper()
