@@ -19,4 +19,4 @@ TFS detects automatically that a file was copied in and will load it in.
 Uninstall
 ================================================
 Remove the `TFSAggregator2.*` file from the plugin location on the Application Tier of your TFS Servers
-   - The plugin folder is usually at this path: `C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins`
+   - The plugin folder is usually at this path: `C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Plugins`
