@@ -29,7 +29,7 @@ namespace RESERVED
 
   public class Script_" + scriptName + @" : Aggregator.Core.Script.IDotNetScript
   {
-    public object RunScript(Aggregator.Core.Interfaces.IWorkItemExposed self, Aggregator.Core.Interfaces.IWorkItemRepositoryExposed store)
+    public object RunScript(Aggregator.Core.Interfaces.IWorkItemExposed self, Aggregator.Core.Interfaces.IWorkItemRepositoryExposed store, Aggregator.Core.Monitoring.ILogEvents logger)
     {
 " + script + @"
       return null;

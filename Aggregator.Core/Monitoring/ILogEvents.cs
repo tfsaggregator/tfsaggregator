@@ -34,7 +34,7 @@ namespace Aggregator.Core.Monitoring
     /// Core Clients will be called on this interface to log events and errors.
     /// </summary>
     /// <remarks>The methods must *not* raise exceptions.</remarks>
-    public interface ILogEvents : ILogger
+    public interface ILogEvents : ITextLogger
     {
         void ConfigurationLoaded(string policyFile);
 
@@ -87,5 +87,9 @@ namespace Aggregator.Core.Monitoring
         void AddingHyperlink(int id, string destination, string comment);
 
         void HyperlinkAlreadyExists(int id, string destination, string comment);
+
+        void Log(string s);
+
+        void Log(string format, params object[] args);
     }
 }

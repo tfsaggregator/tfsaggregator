@@ -13,7 +13,7 @@ namespace Aggregator.Core.Script
 {
     public interface IDotNetScript
     {
-        object RunScript(IWorkItemExposed self, IWorkItemRepositoryExposed store);
+        object RunScript(IWorkItemExposed self, IWorkItemRepositoryExposed store, ILogEvents logger);
     }
 
     /// <summary>
@@ -113,7 +113,7 @@ namespace Aggregator.Core.Script
             System.Diagnostics.Debug.WriteLine("*** about to execute {0}", scriptName, null);
 
             // Lets run our script and display its results
-            object result = scriptObject.RunScript(self, this.store);
+            object result = scriptObject.RunScript(self, this.store, this.logger);
             this.logger.ResultsFromScriptRun(scriptName, result);
         }
 

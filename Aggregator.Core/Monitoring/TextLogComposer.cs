@@ -160,7 +160,7 @@ namespace Aggregator.Core.Monitoring
 
         public void UnreferencedRule(string ruleName)
         {
-            logger.Log(
+            this.logger.Log(
                 LogLevel.Warning,
                 "Rule '{0}' is never used",
                 ruleName);
@@ -168,7 +168,7 @@ namespace Aggregator.Core.Monitoring
 
         public void ConfigurationLoaded(string policyFile)
         {
-            logger.Log(
+            this.logger.Log(
                 LogLevel.Information,
                 "Configuration loaded successfully from '{0}'",
                 policyFile);
@@ -176,7 +176,7 @@ namespace Aggregator.Core.Monitoring
 
         public void StartingProcessing(IRequestContext context, INotification notification)
         {
-            logger.Log(
+            this.logger.Log(
                 LogLevel.Information,
                 "Starting processing on workitem #{0}",
                 notification.WorkItemId);
@@ -184,7 +184,7 @@ namespace Aggregator.Core.Monitoring
 
         public void ProcessingCompleted(ProcessingResult result)
         {
-            logger.Log(
+            this.logger.Log(
                 LogLevel.Information,
                 "Processing completed: {0}",
                 result.StatusMessage);
@@ -192,7 +192,7 @@ namespace Aggregator.Core.Monitoring
 
         public void ApplyingPolicy(string name)
         {
-            logger.Log(
+            this.logger.Log(
                 LogLevel.Verbose,
                 "Policy '{0}' applies",
                 name);
@@ -200,7 +200,7 @@ namespace Aggregator.Core.Monitoring
 
         public void ApplyingRule(string name)
         {
-            logger.Log(
+            this.logger.Log(
                 LogLevel.Verbose,
                 "Evaluating Rule '{0}'",
                 name);
@@ -208,7 +208,7 @@ namespace Aggregator.Core.Monitoring
 
         public void BuildingScriptEngine(string scriptLanguage)
         {
-            logger.Log(
+            this.logger.Log(
                 LogLevel.Verbose,
                 "Building Script Engine for {0}",
                 scriptLanguage);
@@ -216,7 +216,7 @@ namespace Aggregator.Core.Monitoring
 
         public void RunningRule(string name, IWorkItem workItem)
         {
-            logger.Log(
+            this.logger.Log(
                 LogLevel.Verbose,
                 "Applying Rule '{0}' on #{1}",
                 name,
@@ -225,7 +225,7 @@ namespace Aggregator.Core.Monitoring
 
         public void FailureLoadingScript(string scriptName)
         {
-            logger.Log(
+            this.logger.Log(
                 LogLevel.Error,
                 "Failure in parsing '{0}' script",
                 scriptName);
@@ -233,7 +233,7 @@ namespace Aggregator.Core.Monitoring
 
         public void AttemptingToMoveWorkItemToState(IWorkItem workItem, string orginalSourceState, string destState)
         {
-            logger.Log(
+            this.logger.Log(
                 LogLevel.Verbose,
                 "Attempting to move {0} [{1}] from '{2}' to state '{3}'",
                 workItem.Type.Name,
@@ -244,48 +244,64 @@ namespace Aggregator.Core.Monitoring
 
         public void WorkItemIsValidToSave(IWorkItem workItem)
         {
-            logger.Log(LogLevel.Verbose, "WorkItem {0} [{1}] is valid to save", workItem.Type.Name, workItem.Id);
+            this.logger.Log(LogLevel.Verbose, "WorkItem {0} [{1}] is valid to save", workItem.Type.Name, workItem.Id);
         }
 
         public void WorkItemIsInvalidInState(IWorkItem workItem, string destState)
         {
-            logger.Log(LogLevel.Warning, "WorkItem is invalid in '{0}' state. Invalid fields: {1}"
+            this.logger.Log(LogLevel.Warning, "WorkItem is invalid in '{0}' state. Invalid fields: {1}"
                 , destState, workItem.GetInvalidWorkItemFieldsList());
         }
 
         public void LoadingConfiguration(string settingsPath)
         {
-            logger.Log(LogLevel.Diagnostic, "Loading Configuration from '{0}' ", settingsPath);
+            this.logger.Log(LogLevel.Diagnostic, "Loading Configuration from '{0}' ", settingsPath);
         }
 
         public void ConfigurationChanged(string settingsPath, CacheEntryRemovedReason removedReason)
         {
-            logger.Log(LogLevel.Information, "Configuration file '{0}' changed {1}", settingsPath, removedReason);
+            this.logger.Log(LogLevel.Information, "Configuration file '{0}' changed {1}", settingsPath, removedReason);
         }
 
         public void UsingCachedConfiguration(string settingsPath)
         {
-            logger.Log(LogLevel.Diagnostic, "Using cached Configuration for '{0}' ", settingsPath);
+            this.logger.Log(LogLevel.Diagnostic, "Using cached Configuration for '{0}' ", settingsPath);
         }
 
         public void AddingWorkItemLink(int sourceId, WorkItemLinkTypeEnd destLinkType, int destId)
         {
-            logger.Log(LogLevel.Information, "Adding work item link '{1}' from #{0} to #{2}", sourceId, destLinkType, destId);
+            this.logger.Log(LogLevel.Information, "Adding work item link '{1}' from #{0} to #{2}", sourceId, destLinkType, destId);
         }
 
         public void WorkItemLinkAlreadyExists(int sourceId, WorkItemLinkTypeEnd destLinkType, int destId)
         {
-            logger.Log(LogLevel.Warning, "Work item link '{1}' from #{0} to #{2} already exists", sourceId, destLinkType, destId);
+            this.logger.Log(LogLevel.Warning, "Work item link '{1}' from #{0} to #{2} already exists", sourceId, destLinkType, destId);
         }
 
         public void AddingHyperlink(int id, string destination, string comment)
         {
-            logger.Log(LogLevel.Information, "Adding hyperlink '{1}' on work item #{0} (comment: '{2}')", id, destination, comment);
+            this.logger.Log(LogLevel.Information, "Adding hyperlink '{1}' on work item #{0} (comment: '{2}')", id, destination, comment);
         }
 
         public void HyperlinkAlreadyExists(int id, string destination, string comment)
         {
-            logger.Log(LogLevel.Information, "Hyperlink '{1}' on work item #{0} already exists", id, destination);
+            this.logger.Log(LogLevel.Information, "Hyperlink '{1}' on work item #{0} already exists", id, destination);
         }
+
+        public void Log(LogLevel level, string format, params object[] args)
+        {
+            this.logger.Log(level, format, args);
+        }
+
+        public void Log(string s)
+        {
+            this.logger.Log(LogLevel.Diagnostic, "{0}", s);
+        }
+
+        public void Log(string format, params object[] args)
+        {
+            this.logger.Log(LogLevel.Diagnostic, format, args);
+        }
+
     }
 }
