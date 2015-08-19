@@ -25,6 +25,7 @@ namespace RESERVED
   using Aggregator.Core.Extensions;
   using Aggregator.Core.Interfaces;
   using Aggregator.Core.Navigation;
+  using System.Linq;
 
   public class Script_" + scriptName + @" : Aggregator.Core.Script.IDotNetScript
   {
