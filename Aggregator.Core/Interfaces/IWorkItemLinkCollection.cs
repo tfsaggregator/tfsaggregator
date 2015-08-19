@@ -6,7 +6,6 @@ namespace Aggregator.Core.Interfaces
     {
         bool Contains(IWorkItemLink link);
 
-        /// <remarks>Add is only valid on mocks</remarks>
         void Add(IWorkItemLink link);
     }
 }

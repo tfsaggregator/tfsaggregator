@@ -28,7 +28,7 @@ namespace UnitTests.Core
             catch
             {
                 Assert.Fail("Couldn't load embedded resource " + resourceName);
-                return "";
+                return string.Empty;
             }
         }
 

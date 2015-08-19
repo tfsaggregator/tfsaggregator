@@ -45,8 +45,6 @@ namespace UnitTests.Core.Mock
             return newWorkItem;
         }
 
-        /// <summary>
-        /// </summary>
         public ReadOnlyCollection<IWorkItem> LoadedWorkItems
         {
             get { return new ReadOnlyCollection<IWorkItem>(this.loadedWorkItems); }

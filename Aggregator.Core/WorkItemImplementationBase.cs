@@ -41,7 +41,7 @@ namespace Aggregator.Core
         /// <value>The WorkItemLinkCollection</value>
         public abstract IWorkItemLinkCollection WorkItemLinks { get; }
 
-        /// <summary></summary>
+        /// <summary>Checks whether this workitem has a relation of the specified type.</summary>
         /// <exception cref="ArgumentNullException"><paramref name="relation"/> is <see langword="null" />.</exception>
         /// <returns>true if this work item has a link of the specified type t another workitem.</returns>
         /// <param name="relation">The relation from this work item to another (case insensitive)</param>

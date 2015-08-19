@@ -34,6 +34,7 @@ namespace UnitTests.Core
             this.workItem.Fields["Estimated Dev Work"].Value.Returns(1.0D);
             this.workItem.Fields["Estimated Test Work"].Value.Returns(2.0D);
             this.workItem.IsValid().Returns(true);
+
             // triggers save
             this.workItem.IsDirty.Returns(true);
 
@@ -52,8 +53,9 @@ namespace UnitTests.Core
             this.workItem.TypeName.Returns("Task");
             this.workItem["Estimated Dev Work"].Returns(1.0D);
             this.workItem["Estimated Test Work"].Returns(2.0D);
-            this.workItem["Finish Date"].Returns(new DateTime(2010,1,1));
+            this.workItem["Finish Date"].Returns(new DateTime(2010, 1, 1));
             this.workItem.IsValid().Returns(true);
+
             // triggers save
             this.workItem.IsDirty.Returns(true);
 
@@ -71,16 +73,18 @@ namespace UnitTests.Core
             var repository = this.SetupFakeRepository();
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            var processor = new EventProcessor(repository, runtime);
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(1);
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(1);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            this.workItem.Received().Save();
-            Assert.AreEqual(3.0D, this.workItem.Fields["Estimated Work"].Value);
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                this.workItem.Received().Save();
+                Assert.AreEqual(3.0D, this.workItem.Fields["Estimated Work"].Value);
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
         }
 
         [TestMethod]
@@ -91,16 +95,18 @@ namespace UnitTests.Core
             var repository = this.SetupFakeRepository_Short();
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            var processor = new EventProcessor(repository, runtime);
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(1);
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(1);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            this.workItem.Received().Save();
-            Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                this.workItem.Received().Save();
+                Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
         }
 
         [TestMethod]
@@ -111,18 +117,19 @@ namespace UnitTests.Core
             var repository = this.SetupFakeRepository_Short();
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            var processor = new EventProcessor(repository, runtime);
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(1);
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(1);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            this.workItem.Received().Save();
-            Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                this.workItem.Received().Save();
+                Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
         }
-
 
         [TestMethod]
         public void Should_aggregate_to_parent()
@@ -154,7 +161,7 @@ namespace UnitTests.Core
             child["Estimated Test Work"] = 20.0D;
             child["Remaining Dev Work"] = 1.0D;
             child["Remaining Test Work"] = 2.0D;
-            child["Finish Date"] = new DateTime(2015,1,1);
+            child["Finish Date"] = new DateTime(2015, 1, 1);
 
             child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
             parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, repository));

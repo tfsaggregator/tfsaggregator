@@ -20,7 +20,6 @@ namespace UnitTests.Core.Mock
 
         public string ReferenceName { get; set; }
 
-
         public object Value
         {
             get

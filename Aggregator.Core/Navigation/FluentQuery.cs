@@ -8,6 +8,22 @@ namespace Aggregator.Core.Navigation
 {
     public class FluentQuery : IEnumerable<IWorkItemExposed>
     {
+        protected bool Equals(FluentQuery other)
+        {
+            return string.Equals(this.WorkItemType, other.WorkItemType) && this.Levels == other.Levels && string.Equals(this.LinkType, other.LinkType);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = this.WorkItemType?.GetHashCode() ?? 0;
+                hashCode = (hashCode * 397) ^ this.Levels;
+                hashCode = (hashCode * 397) ^ (this.LinkType?.GetHashCode() ?? 0);
+                return hashCode;
+            }
+        }
+
         private readonly IWorkItemExposed host;
 
         public FluentQuery(IWorkItemExposed host)
@@ -35,20 +51,15 @@ namespace Aggregator.Core.Navigation
 
             if (!(obj is FluentQuery))
             {
-                return base.Equals(obj);
+                return object.Equals(this, obj);
             }
 
-            var rhs = obj as FluentQuery;
+            var rhs = (FluentQuery)obj;
 
             return
                 string.Equals(this.WorkItemType, rhs.WorkItemType, StringComparison.OrdinalIgnoreCase)
                 && this.Levels == rhs.Levels
                 && string.Equals(this.LinkType, rhs.LinkType, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
         }
 
         public FluentQuery WhereTypeIs(string workItemType)

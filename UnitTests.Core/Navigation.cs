@@ -56,8 +56,8 @@ namespace UnitTests.Core
         public void FluentNavigation_succeedes()
         {
             IWorkItem startPoint;
-            var repository = MakeRepository(out startPoint);
-            var logger = Substitute.For<ILogEvents>();
+            MakeRepository(out startPoint);
+            Substitute.For<ILogEvents>();
 
             var searchResult = startPoint
                 .WhereTypeIs("Task")
@@ -119,14 +119,15 @@ return searchResult;
             var repository = new WorkItemRepositoryMock();
             repository.Logger = Substitute.For<ILogEvents>();
             var workItem = new WorkItemMock(repository);
-            var workItemType = new WorkItemTypeMock() {
+            var workItemType = new WorkItemTypeMock()
+            {
                 Name = "Task",
                 DocumentContent = TestHelpers.LoadTextFromEmbeddedResource("task.xml")
             };
             workItem.Id = 42;
             workItem.Type = workItemType;
             workItem.TypeName = workItemType.Name;
-            ((FieldMock)workItem.Fields["State"]).OriginalValue = "";
+            ((FieldMock)workItem.Fields["State"]).OriginalValue = string.Empty;
             workItem.Fields["State"].Value = workItem.Fields["State"].OriginalValue;
             ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
             repository.SetWorkItems(new[] { workItem });
@@ -152,8 +153,8 @@ return searchResult;
             workItem.Id = 42;
             workItem.Type = workItemType;
             workItem.TypeName = workItemType.Name;
-            workItem.Fields["State"].Value = "";
-            ((FieldMock)workItem.Fields["State"]).OriginalValue = "";
+            workItem.Fields["State"].Value = string.Empty;
+            ((FieldMock)workItem.Fields["State"]).OriginalValue = string.Empty;
             ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
             repository.SetWorkItems(new[] { workItem });
             string targetState = "DoesNotExists";
@@ -183,7 +184,7 @@ self.TransitionToState(""Done"", ""script test"");
             workItem.Id = 42;
             workItem.Type = workItemType;
             workItem.TypeName = workItemType.Name;
-            ((FieldMock)workItem.Fields["State"]).OriginalValue = "";
+            ((FieldMock)workItem.Fields["State"]).OriginalValue = string.Empty;
             workItem.Fields["State"].Value = workItem.Fields["State"].OriginalValue;
             ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
             repository.SetWorkItems(new[] { workItem });

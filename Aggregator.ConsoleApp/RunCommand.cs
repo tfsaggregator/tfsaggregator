@@ -80,7 +80,7 @@ namespace Aggregator.ConsoleApp
                 }
                 catch (Exception e)
                 {
-                    logger.ProcessEventException(null, e);
+                    logger.ProcessEventException(e);
                     return -1;
                 }
             }

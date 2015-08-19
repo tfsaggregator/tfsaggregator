@@ -9,6 +9,7 @@ namespace UnitTests.Core.Mock
     internal class WorkItemTypeMock : IWorkItemType
     {
         public string Name { get; set; }
+
         public string DocumentContent { get; set; }
 
         public XmlDocument Export(bool includeGlobalListsFlag)

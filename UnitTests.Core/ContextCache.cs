@@ -24,29 +24,28 @@ namespace UnitTests.Core
             string sourcePath = Path.Combine(@"..\..\ConfigurationsForTests", sourceName);
             string destPath = Path.GetTempFileName();
             File.Copy(sourcePath, destPath, true);
-            File.SetLastWriteTimeUtc(destPath, referenceDate);
+            File.SetLastWriteTimeUtc(destPath, this.referenceDate);
             return destPath;
         }
 
         [TestMethod]
         public void ContextCache_cold_succeeds()
         {
-            string path = SetupSettingsFile("NoOp.policies");
+            string path = this.SetupSettingsFile("NoOp.policies");
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
-            var runtime = RuntimeContext.GetContext(()=> path, context, logger);
+            var runtime = RuntimeContext.GetContext(() => path, context, logger);
 
             var level = runtime.Settings.LogLevel;
 
             Assert.AreEqual(LogLevel.Diagnostic, level);
-            //logger.Received().LoadingConfiguration(path);
         }
 
         [TestMethod]
         public void ContextCache_warm_succeeds()
         {
-            string path = SetupSettingsFile("NoOp.policies");
+            string path = this.SetupSettingsFile("NoOp.policies");
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
@@ -63,13 +62,14 @@ namespace UnitTests.Core
             string sourcePath = @"..\..\ConfigurationsForTests\NoOp.policies";
             string destPath = Path.GetTempFileName();
             File.Copy(sourcePath, destPath, true);
-            File.SetLastWriteTimeUtc(destPath, referenceDate);
+            File.SetLastWriteTimeUtc(destPath, this.referenceDate);
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
             var runtime1 = RuntimeContext.GetContext(() => destPath, context, logger);
 
             File.SetLastWriteTimeUtc(destPath, DateTime.UtcNow);
+
             // this delay is ok while Debugging
             // in Run, it *never* works
             Pause();
@@ -86,8 +86,8 @@ namespace UnitTests.Core
             {
                 Application.DoEvents();
                 Task.Factory.StartNew(
-                    () => Thread.Sleep(300)
-                    ).Wait();
+                    () => Thread.Sleep(300))
+                    .Wait();
                 Thread.Sleep(300);
             }
         }

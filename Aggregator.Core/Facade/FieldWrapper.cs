@@ -40,7 +40,10 @@ namespace Aggregator.Core.Facade
 
             set
             {
-                if (value != null && this.tfsField.FieldDefinition.SystemType == typeof(double))
+                if (
+                    value != null
+                    && this.tfsField.Value != null
+                    && this.tfsField.FieldDefinition.SystemType == typeof(double))
                 {
                     // Ugly hack to ensure the double comparison goes safely. TFS internally rounds/truncates the values.
                     CultureInfo c = CultureInfo.InvariantCulture;

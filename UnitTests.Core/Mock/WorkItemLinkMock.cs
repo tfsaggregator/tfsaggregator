@@ -28,7 +28,7 @@ namespace UnitTests.Core.Mock
 
         public IWorkItem Target
         {
-            get { return store.GetWorkItem(this.id); }
+            get { return this.store.GetWorkItem(this.id); }
         }
 
         public override bool Equals(object obj)
@@ -48,7 +48,7 @@ namespace UnitTests.Core.Mock
                 return false;
             }
 
-            return Equals((WorkItemLinkMock)obj);
+            return this.Equals((WorkItemLinkMock)obj);
         }
 
         protected bool Equals(WorkItemLinkMock other)

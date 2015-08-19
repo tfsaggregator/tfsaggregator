@@ -25,7 +25,7 @@ namespace UnitTests.Core
     {
         public DebugEventLogger()
             : base(new DebugTextLogger())
-        { }
+        {
+        }
     }
-
 }

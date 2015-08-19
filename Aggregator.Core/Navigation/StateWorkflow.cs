@@ -120,9 +120,9 @@ namespace Aggregator.Core.Navigation
         /// (Meaning if we are going from a "Not-Started" to a "Done" state,
         /// we usually have to hit a "in progress" state first.
         /// </summary>
-        /// <param name="wiType"></param>
-        /// <param name="fromState"></param>
-        /// <param name="toState"></param>
+        /// <param name="wiType">Work item type</param>
+        /// <param name="fromState">source state</param>
+        /// <param name="toState">target state</param>
         /// <returns></returns>
         private static IEnumerable<string> FindNextState(IWorkItemType wiType, string fromState, string toState)
         {
@@ -167,8 +167,6 @@ namespace Aggregator.Core.Navigation
         /// <summary>
         /// Get the transitions for this <see cref="WorkItemType"/>
         /// </summary>
-        /// <param name="workItemType"></param>
-        /// <returns></returns>
         private static List<StateTransition> GetTransitions(IWorkItemType workItemType)
         {
             List<StateTransition> currentTransitions;

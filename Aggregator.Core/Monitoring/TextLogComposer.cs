@@ -54,7 +54,7 @@ namespace Aggregator.Core.Monitoring
             this.logger.Log(LogLevel.Error, "Unable to open work item '{0}'\nException: {1}", workItem.Id.ToString(), e.Message);
         }
 
-        public void ProcessEventException(TeamFoundationRequestContext requestContext, Exception e)
+        public void ProcessEventException(Exception e)
         {
             if (e.InnerException != null)
             {

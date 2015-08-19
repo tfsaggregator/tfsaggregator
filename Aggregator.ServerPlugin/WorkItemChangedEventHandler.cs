@@ -93,7 +93,7 @@ namespace TFSAggregator.TfsSpecific
             }
             catch (Exception e)
             {
-                logger.ProcessEventException(requestContext, e);
+                logger.ProcessEventException(e);
 
                 // notify failure
                 result.StatusCode = -1;

@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
+using Aggregator.Core;
 using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+
+using UnitTests.Core.Mock;
+
 namespace UnitTests.Core
 {
-    using Aggregator.Core;
-    using Aggregator.Core.Configuration;
-    using Aggregator.Core.Navigation;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using NSubstitute;
-    using System;
-    using UnitTests.Core.Mock;
-
     [TestClass]
     public class RulesAndPolicyTests
     {
@@ -45,22 +39,26 @@ namespace UnitTests.Core
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("RulesAndPolicy.policies", logger);
-            var repository = MakeRepositoryMock();
+            var repository = this.MakeRepositoryMock();
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("Collection1");
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            var processor = new EventProcessor(repository, runtime);
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(2);
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(2);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            Assert.AreEqual(Microsoft.TeamFoundation.Framework.Server.EventNotificationStatus.ActionPermitted, result.NotificationStatus);
-            object expected = 42;
-            logger.Received().ResultsFromScriptRun("Noop1", expected);
-            logger.Received().ResultsFromScriptRun("Noop2", expected);
-            logger.DidNotReceive().ResultsFromScriptRun("Noop3", expected);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(
+                    Microsoft.TeamFoundation.Framework.Server.EventNotificationStatus.ActionPermitted,
+                    result.NotificationStatus);
+                object expected = 42;
+                logger.Received().ResultsFromScriptRun("Noop1", expected);
+                logger.Received().ResultsFromScriptRun("Noop2", expected);
+                logger.DidNotReceive().ResultsFromScriptRun("Noop3", expected);
+            }
         }
 
         [TestMethod]
@@ -68,22 +66,26 @@ namespace UnitTests.Core
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("RulesAndPolicy.policies", logger);
-            var repository = MakeRepositoryMock();
+            var repository = this.MakeRepositoryMock();
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("Collection2");
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            var processor = new EventProcessor(repository, runtime);
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(2);
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(2);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            Assert.AreEqual(Microsoft.TeamFoundation.Framework.Server.EventNotificationStatus.ActionPermitted, result.NotificationStatus);
-            object expected = 42;
-            logger.DidNotReceive().ResultsFromScriptRun("Noop1", expected);
-            logger.Received().ResultsFromScriptRun("Noop2", expected);
-            logger.DidNotReceive().ResultsFromScriptRun("Noop3", expected);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(
+                    Microsoft.TeamFoundation.Framework.Server.EventNotificationStatus.ActionPermitted,
+                    result.NotificationStatus);
+                object expected = 42;
+                logger.DidNotReceive().ResultsFromScriptRun("Noop1", expected);
+                logger.Received().ResultsFromScriptRun("Noop2", expected);
+                logger.DidNotReceive().ResultsFromScriptRun("Noop3", expected);
+            }
         }
 
         [TestMethod]
@@ -100,18 +102,22 @@ namespace UnitTests.Core
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("Collection2");
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            var processor = new EventProcessor(repository, runtime);
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(1);
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(1);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            Assert.AreEqual(Microsoft.TeamFoundation.Framework.Server.EventNotificationStatus.ActionPermitted, result.NotificationStatus);
-            object expected = 42;
-            logger.DidNotReceive().ResultsFromScriptRun("Noop1", expected);
-            logger.DidNotReceive().ResultsFromScriptRun("Noop2", expected);
-            logger.Received().ResultsFromScriptRun("Noop3", expected);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(
+                    Microsoft.TeamFoundation.Framework.Server.EventNotificationStatus.ActionPermitted,
+                    result.NotificationStatus);
+                object expected = 42;
+                logger.DidNotReceive().ResultsFromScriptRun("Noop1", expected);
+                logger.DidNotReceive().ResultsFromScriptRun("Noop2", expected);
+                logger.Received().ResultsFromScriptRun("Noop3", expected);
+            }
         }
     }
 }

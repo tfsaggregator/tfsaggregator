@@ -33,7 +33,7 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             string file = "does_not_exists";
 
-            var settings = TFSAggregatorSettings.LoadFromFile(file, logger);
+            TFSAggregatorSettings.LoadFromFile(file, logger);
         }
 
         [TestMethod]

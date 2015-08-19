@@ -10,7 +10,7 @@ namespace Aggregator.Core.Extensions
         /// <summary>
         /// Used to convert a field to a number.  If anything goes wrong then the default value is returned.
         /// </summary>
-        /// <param name="self"></param>
+        /// <param name="self">The work item to get the field data from</param>
         /// <param name="fieldName">The name of the field to be retrieved</param>
         /// <param name="defaultValue">Value to be returned if something goes wrong.</param>
         /// <returns></returns>

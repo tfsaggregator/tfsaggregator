@@ -27,9 +27,9 @@ namespace UnitTests.Core.Mock
             }
         }
 
-        public string History{ get; set; }
+        public string History { get; set; }
 
-        public int Id{ get; set; }
+        public int Id { get; set; }
 
         public bool IsValid()
         {
@@ -43,7 +43,7 @@ namespace UnitTests.Core.Mock
             // No functionality needed in mock.
         }
 
-        int saveCalled = 0;
+        private int saveCalled = 0;
 
         public bool _SaveCalled
         {
@@ -70,7 +70,7 @@ namespace UnitTests.Core.Mock
         {
             get
             {
-                return Fields[name].Value;
+                return this.Fields[name].Value;
             }
 
             set
@@ -108,19 +108,19 @@ namespace UnitTests.Core.Mock
 
         public void TransitionToState(string state, string comment)
         {
-            //HACK
+            // HACK
             StateWorkFlow.TransitionToState(this, state, comment, this.logger);
         }
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
         {
-            //HACK should use the code in wrapper...
-            var relationship = new WorkItemLinkMock(linkTypeName, destination.Id, store);
+            // HACK: should use the code in wrapper...
+            var relationship = new WorkItemLinkMock(linkTypeName, destination.Id, this.store);
 
             // check it does not exist already
-            if (!workItemLinks.Contains(relationship))
+            if (!this.workItemLinks.Contains(relationship))
             {
-                workItemLinks.Add(relationship);
+                this.workItemLinks.Add(relationship);
                 this.IsDirty = true;
             }
         }

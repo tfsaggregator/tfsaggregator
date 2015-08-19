@@ -112,29 +112,26 @@ return $self.Fields[""z""].Value ";
             workItem.Fields["z"].Value = 42;
             workItem.Fields["x"].Value = 0;
             workItem.Id = 1;
-            
-            repository.SetWorkItems(new []{workItem});
+
+            repository.SetWorkItems(new[] { workItem });
             var logger = Substitute.For<ILogEvents>();
 
-            Assert.IsNotNull((repository.GetWorkItem(1)));
-            
+            Assert.IsNotNull(repository.GetWorkItem(1));
+
             var engine = new PsScriptEngine(repository, logger);
-            //sanity check
+
+            // sanity check
             Assert.AreEqual(42, workItem.Fields["z"].Value);
 
             engine.LoadAndRun("test", script, workItem);
 
-            var expected = new Collection<PSObject>();
-            expected.Add(new PSObject(42));
+            var expected = new Collection<PSObject> { new PSObject(42) };
 
             Assert.AreEqual(33, workItem.Fields["x"].Value);
 
             logger.Received().ResultsFromScriptRun(
-                "test", 
-                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject)))
-            );
-
-            
+                "test",
+                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject))));
         }
 
         [TestMethod]
@@ -151,19 +148,17 @@ return $self.Fields[""z""].Value ";
             repository.SetWorkItems(new[] { workItem });
             var logger = Substitute.For<ILogEvents>();
 
-            Assert.IsNotNull((repository.GetWorkItem(1)));
+            Assert.IsNotNull(repository.GetWorkItem(1));
 
             var engine = new PsScriptEngine(repository, logger);
 
             engine.LoadAndRun("test", script, workItem);
 
-            var expected = new Collection<PSObject>();
-            expected.Add(new PSObject(1));
+            var expected = new Collection<PSObject> { new PSObject(1) };
 
             logger.Received().ResultsFromScriptRun(
                 "test",
-                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject)))
-            );
+                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject))));
         }
 
         [TestMethod]
@@ -176,15 +171,18 @@ return $self.Fields[""z""].Value ";
             var workItem = Substitute.For<IWorkItem>();
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            var processor = new EventProcessor(repository, runtime);
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(1);
-            repository.LoadedWorkItems.Returns(new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>() { workItem }));
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(1);
+                repository.LoadedWorkItems.Returns(
+                    new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>() { workItem }));
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
         }
     }
 }

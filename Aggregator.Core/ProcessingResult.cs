@@ -21,20 +21,12 @@ namespace Aggregator.Core
             this.NotificationStatus = EventNotificationStatus.ActionPermitted;
         }
 
-        /// <summary>
-        /// </summary>
         public int StatusCode { get; set; }
 
-        /// <summary>
-        /// </summary>
         public string StatusMessage { get; set; }
 
-        /// <summary>
-        /// </summary>
         public ExceptionPropertyCollection ExceptionProperties { get; set; }
 
-        /// <summary>
-        /// </summary>
         public EventNotificationStatus NotificationStatus { get; set; }
     }
 }

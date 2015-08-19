@@ -39,15 +39,17 @@ namespace UnitTests.Core
 
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            var processor = new EventProcessor(repository, runtime);
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(2);
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(2);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            Assert.IsTrue(child._SaveCalled);
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.IsTrue(child._SaveCalled);
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
         }
 
         [TestMethod]
@@ -73,16 +75,18 @@ namespace UnitTests.Core
 
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            var processor = new EventProcessor(repository, runtime);
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(2);
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(2);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            Assert.IsFalse(child._SaveCalled);
-            Assert.IsFalse(parent._SaveCalled);
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.IsFalse(child._SaveCalled);
+                Assert.IsFalse(parent._SaveCalled);
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
         }
 
         [TestMethod]
@@ -102,16 +106,18 @@ namespace UnitTests.Core
 
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            var processor = new EventProcessor(repository, runtime);
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(1);
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(1);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            Assert.AreEqual(2, repository.LoadedWorkItems.Count);
-            Assert.IsTrue(parent._SaveCalled);
-            Assert.IsTrue(parent.HasChildren());
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(2, repository.LoadedWorkItems.Count);
+                Assert.IsTrue(parent._SaveCalled);
+                Assert.IsTrue(parent.HasChildren());
+            }
         }
     }
 }
