@@ -45,7 +45,7 @@ namespace Aggregator.Core.Context
                 itemPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string>() { settingsPath }));
 
                 Cache.Set(CacheKey, runtime, itemPolicy);
-            }//if
+            }
 
             return runtime.Clone() as RuntimeContext;
         }
@@ -68,7 +68,13 @@ namespace Aggregator.Core.Context
 
         private readonly List<string> errorList = new List<string>();
 
-        public IEnumerator<string> Errors { get { return this.errorList.GetEnumerator(); } }
+        public IEnumerator<string> Errors
+        {
+            get
+            {
+                return this.errorList.GetEnumerator();
+            }
+        }
 
         public IRequestContext RequestContext { get; private set; }
 
@@ -81,24 +87,28 @@ namespace Aggregator.Core.Context
             get
             {
                 // TODO instead of GetHashCode need a unique per-Collection Id
-                int dictHash = this.scriptEngines.Keys.Aggregate(0,
+                int dictHash = this.scriptEngines.Keys.Aggregate(
+                    0,
                     (running, current) => { return (int)(((long)running + current.GetHashCode()) % 0xffffffff); });
+
                 return this.Settings.Hash + dictHash.ToString("x8");
             }
         }
 
         public ILogEvents Logger { get; private set; }
 
-        private ConcurrentDictionary<IWorkItemRepository, ScriptEngine> scriptEngines = new ConcurrentDictionary<IWorkItemRepository, ScriptEngine>();
+        private readonly ConcurrentDictionary<IWorkItemRepository, ScriptEngine> scriptEngines = new ConcurrentDictionary<IWorkItemRepository, ScriptEngine>();
 
         public ScriptEngine GetEngine(IWorkItemRepository workItemStore)
         {
-            Func<IWorkItemRepository, ScriptEngine> builder = (IWorkItemRepository store) => {
+            Func<IWorkItemRepository, ScriptEngine> builder = (store) =>
+            {
                 var newEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, workItemStore, this.Logger);
                 foreach (var rule in this.Settings.Rules)
                 {
                     newEngine.Load(rule.Name, rule.Script);
                 }
+
                 newEngine.LoadCompleted();
                 return newEngine;
             };

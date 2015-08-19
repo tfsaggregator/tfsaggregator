@@ -125,7 +125,7 @@ namespace Aggregator.Core.Script
 
         private bool debug = true;
 
-        private Dictionary<string, string> sourceCode = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> sourceCode = new Dictionary<string, string>();
 
         private CompilerResults compilerResult;
 
@@ -181,7 +181,7 @@ namespace Aggregator.Core.Script
                 this.logger.FailureLoadingScript(scriptName);
             }
 
-            //BUG must have a "clean up event" fired at shutdown time
+            // BUG: must have a "clean up event" fired at shutdown time
         }
 
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)

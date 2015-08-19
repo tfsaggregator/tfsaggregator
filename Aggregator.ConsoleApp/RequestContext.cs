@@ -15,7 +15,7 @@ namespace Aggregator.ConsoleApp
 {
     public class RequestContext : IRequestContext
     {
-        internal readonly string teamProjectCollectionUrl;
+        private readonly string teamProjectCollectionUrl;
 
         private readonly string teamProjectName;
 
@@ -36,7 +36,7 @@ namespace Aggregator.ConsoleApp
 
         public string GetProjectName(Uri projectUri)
         {
-            return teamProjectName;
+            return this.teamProjectName;
         }
 
         public IProjectPropertyWrapper[] GetProjectProperties(Uri projectUri)
@@ -59,7 +59,6 @@ namespace Aggregator.ConsoleApp
             return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CurrentVersion);
         }
 
-
         public IProcessTemplateVersionWrapper GetCreationProjectProcessVersion(Uri projectUri)
         {
             return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CreationVersion);
@@ -67,8 +66,6 @@ namespace Aggregator.ConsoleApp
 
         private IProcessTemplateVersionWrapper GetProjectProcessVersion(string projectUri, string versionPropertyName)
         {
-            ProcessTemplateVersion unknown = null;
-
             var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(this.teamProjectCollectionUrl));
             var ics = context.GetService<ICommonStructureService4>();
 
@@ -78,7 +75,7 @@ namespace Aggregator.ConsoleApp
             int templateId = 0;
             ProjectProperty[] projectProperties = null;
 
-            ics.GetProjectProperties(projectUri.ToString(), out projectName, out projectState, out templateId, out projectProperties);
+            ics.GetProjectProperties(projectUri, out projectName, out projectState, out templateId, out projectProperties);
 
             string rawVersion =
                 projectProperties.FirstOrDefault(p => p.Name == versionPropertyName).Value;

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Reflection;
 
 using Aggregator.Core;
+using Aggregator.Core.Context;
 using Aggregator.Core.Facade;
+using Aggregator.Core.Monitoring;
 using Aggregator.ServerPlugin;
 
 using Microsoft.TeamFoundation.Client;
@@ -13,9 +15,6 @@ using Microsoft.TeamFoundation.Framework.Client;
 using Microsoft.TeamFoundation.Framework.Common;
 using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.WorkItemTracking.Server;
-
-using Aggregator.Core.Context;
-using Aggregator.Core.Monitoring;
 
 using ILocationService = Microsoft.VisualStudio.Services.Location.Server.ILocationService;
 
@@ -63,7 +62,7 @@ namespace TFSAggregator.TfsSpecific
             }
 
             // HACK: remove cast for ProcessEventException
-            var logger = (ServerEventLogger)runtime.Logger; 
+            var logger = (ServerEventLogger)runtime.Logger;
 
             var result = new ProcessingResult();
             try
@@ -79,14 +78,17 @@ namespace TFSAggregator.TfsSpecific
                         toImpersonate = this.GetIdentityToImpersonate(requestContext, notificationEventArgs as WorkItemChangedEvent);
                     }
 
-                    EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, toImpersonate, runtime);
+                    using (EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, toImpersonate, runtime))
+                    {
+                        var context = runtime.RequestContext;
+                        var notification = new NotificationWrapper(
+                            notificationType,
+                            notificationEventArgs as WorkItemChangedEvent);
 
-                    var context = runtime.RequestContext;
-                    var notification = new NotificationWrapper(notificationType, notificationEventArgs as WorkItemChangedEvent);
-
-                    logger.StartingProcessing(context, notification);
-                    result = eventProcessor.ProcessEvent(context, notification);
-                    logger.ProcessingCompleted(result);
+                        logger.StartingProcessing(context, notification);
+                        result = eventProcessor.ProcessEvent(context, notification);
+                        logger.ProcessingCompleted(result);
+                    }
                 }
             }
             catch (Exception e)

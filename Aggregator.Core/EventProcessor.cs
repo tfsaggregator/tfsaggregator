@@ -16,7 +16,7 @@ namespace Aggregator.Core
     /// This is the core class with complete logic, independent from being a server plug-in.
     /// It is the entry point of the Core assembly to manage a single request/event
     /// </summary>
-    public class EventProcessor
+    public class EventProcessor : IDisposable
     {
         private readonly TFSAggregatorSettings settings;
 
@@ -40,8 +40,6 @@ namespace Aggregator.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="EventProcessor"/> class.
         /// </summary>
-        /// <param name="workItemStore"></param>
-        /// <param name="runtime"></param>
         public EventProcessor(IWorkItemRepository workItemStore, IRuntimeContext runtime)
         {
             this.logger = runtime.Logger;
@@ -122,6 +120,20 @@ namespace Aggregator.Core
                     workItem.PartialOpen();
                     workItem.Save();
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                (this.store as IDisposable)?.Dispose();
             }
         }
     }

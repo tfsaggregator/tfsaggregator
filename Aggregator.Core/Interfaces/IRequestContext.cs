@@ -16,6 +16,5 @@ namespace Aggregator.Core.Interfaces
         IProcessTemplateVersionWrapper GetCurrentProjectProcessVersion(Uri projectUri);
 
         IProcessTemplateVersionWrapper GetCreationProjectProcessVersion(Uri projectUri);
-
     }
 }

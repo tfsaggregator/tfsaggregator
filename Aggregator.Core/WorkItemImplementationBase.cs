@@ -23,13 +23,12 @@ namespace Aggregator.Core
         public static readonly string ChildRelationship = "System.LinkTypes.Hierarchy-Forward";
 
         protected ILogEvents logger;
+
         protected IWorkItemRepository store;
-        protected List<Lazy<IWorkItem>> childWorkItemschildrenWorkItems;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="WorkItemImplementationBase"/> class.
         /// </summary>
-        /// <param name="store"></param>
-        /// <param name="logger"></param>
         public WorkItemImplementationBase(IWorkItemRepository store, ILogEvents logger)
         {
             this.store = store;

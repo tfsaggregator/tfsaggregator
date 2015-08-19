@@ -1,30 +1,41 @@
-﻿using Aggregator.Core.Interfaces;
-using Aggregator.Core.Monitoring;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
-using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+using Aggregator.Core.Navigation;
+
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using Aggregator.Core.Navigation;
-
     public class WorkItemWrapper : WorkItemImplementationBase, IWorkItem
     {
-        private TFS.WorkItem workItem;
+        private readonly WorkItem workItem;
 
-        public WorkItemWrapper(TFS.WorkItem workItem, IWorkItemRepository store, ILogEvents logger)
+        public WorkItemWrapper(WorkItem workItem, IWorkItemRepository store, ILogEvents logger)
             : base(store, logger)
         {
             this.workItem = workItem;
         }
 
-        public TFS.WorkItemType Type { get { return this.workItem.Type; } }
+        public WorkItemType Type
+        {
+            get
+            {
+                return this.workItem.Type;
+            }
+        }
 
-        public string TypeName { get { return this.workItem.Type.Name; } }
+        public string TypeName
+        {
+            get
+            {
+                return this.workItem.Type.Name;
+            }
+        }
 
         public string History
         {
@@ -32,7 +43,9 @@ namespace Aggregator.Core.Facade
             {
                 return this.workItem.History;
             }
-            set {
+
+            set
+            {
                 this.workItem.History = value;
             }
         }
@@ -51,6 +64,7 @@ namespace Aggregator.Core.Facade
             {
                 return this.workItem[name];
             }
+
             set
             {
                 this.workItem[name] = value;
@@ -65,7 +79,10 @@ namespace Aggregator.Core.Facade
             }
         }
 
-        public bool IsValid() { return this.workItem.IsValid(); }
+        public bool IsValid()
+        {
+            return this.workItem.IsValid();
+        }
 
         public ArrayList Validate()
         {
@@ -121,7 +138,7 @@ namespace Aggregator.Core.Facade
         public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
             return WorkItemLazyVisitor
-                .MakeRelativesLazyVisitor(this, query, this.store);
+                .MakeRelativesLazyVisitor(this, query);
         }
 
         public void TransitionToState(string state, string comment)
@@ -134,32 +151,33 @@ namespace Aggregator.Core.Facade
             var destLinkType = this.workItem.Store.WorkItemLinkTypes
                 .FirstOrDefault(t => t.ForwardEnd.Name == linkTypeName)
                 .ForwardEnd;
-            var relationship = new TFS.WorkItemLink(destLinkType, this.Id, destination.Id);
+            var relationship = new WorkItemLink(destLinkType, this.Id, destination.Id);
+
             // check it does not exist already
             if (!this.workItem.WorkItemLinks.Contains(relationship))
             {
-                logger.AddingWorkItemLink(this.Id, destLinkType, destination.Id);
+                this.logger.AddingWorkItemLink(this.Id, destLinkType, destination.Id);
                 this.workItem.WorkItemLinks.Add(relationship);
             }
             else
             {
-                logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
-            }//if
+                this.logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
+            }
         }
 
         public void AddHyperlink(string destination, string comment = "")
         {
-            var link = new TFS.Hyperlink(destination);
+            var link = new Hyperlink(destination);
             link.Comment = comment;
             if (!this.workItem.Links.Contains(link))
             {
-                logger.AddingHyperlink(this.Id, destination, comment);
+                this.logger.AddingHyperlink(this.Id, destination, comment);
                 this.workItem.Links.Add(link);
             }
             else
             {
-                logger.HyperlinkAlreadyExists(this.Id, destination, comment);
-            }//if
+                this.logger.HyperlinkAlreadyExists(this.Id, destination, comment);
+            }
         }
     }
 }

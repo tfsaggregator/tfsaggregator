@@ -19,15 +19,16 @@ namespace Aggregator.Core.Configuration
 
         public static TFSAggregatorSettings LoadFromFile(string settingsPath, ILogEvents logger)
         {
-            DateTime timestamp = System.IO.File.GetLastWriteTimeUtc(settingsPath);
-            return Load(timestamp, (xmlLoadOptions) => XDocument.Load(settingsPath, xmlLoadOptions), logger);
+            DateTime lastWriteTime
+                = System.IO.File.GetLastWriteTimeUtc(settingsPath);
+            return Load(lastWriteTime, (xmlLoadOptions) => XDocument.Load(settingsPath, xmlLoadOptions), logger);
         }
 
         public static TFSAggregatorSettings LoadXml(string content, ILogEvents logger)
         {
             // conventional point in time reference
-            DateTime timestamp = new DateTime(0, DateTimeKind.Utc);
-            return LoadXml(content, timestamp, logger);
+            DateTime staticTime = new DateTime(0, DateTimeKind.Utc);
+            return LoadXml(content, staticTime, logger);
         }
 
         public static TFSAggregatorSettings LoadXml(string content, DateTime timestamp, ILogEvents logger)
@@ -38,16 +39,17 @@ namespace Aggregator.Core.Configuration
         /// <summary>
         /// Parse the specified <see cref="XDocument"/> to build a <see cref="TFSAggregatorSettings"/> instance.
         /// </summary>
+        /// <param name="lastWriteTime">Last teime the document has been changed.</param>
         /// <param name="load">A lambda returning the <see cref="XDocument"/> to parse.</param>
         /// <returns></returns>
-        public static TFSAggregatorSettings Load(DateTime timestamp, Func<LoadOptions, XDocument> load, ILogEvents logger)
+        public static TFSAggregatorSettings Load(DateTime lastWriteTime, Func<LoadOptions, XDocument> load, ILogEvents logger)
         {
             var instance = new TFSAggregatorSettings();
 
             LoadOptions xmlLoadOptions = LoadOptions.PreserveWhitespace | LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
             XDocument doc = load(xmlLoadOptions);
 
-            instance.Hash = ComputeHash(doc, timestamp);
+            instance.Hash = ComputeHash(doc, lastWriteTime);
 
             if (!ValidateDocAgainstSchema(doc, logger))
             {
@@ -119,7 +121,7 @@ namespace Aggregator.Core.Configuration
                 : LogLevel.Normal;
             var authenticationNode = doc.Root.Element("runtime") != null ?
                 doc.Root.Element("runtime").Element("authentication") : null;
-            instance.AutoImpersonate = authenticationNode != null 
+            instance.AutoImpersonate = authenticationNode != null
                 && bool.Parse(authenticationNode.Attribute("autoImpersonate").Value);
             var scriptNode = doc.Root.Element("runtime") != null ?
                 doc.Root.Element("runtime").Element("script") : null;
@@ -189,6 +191,7 @@ namespace Aggregator.Core.Configuration
 
                     ruleInUse[refName] = true;
                 }
+
                 policy.Rules = referredRules;
 
                 policies.Add(policy);
@@ -240,6 +243,5 @@ namespace Aggregator.Core.Configuration
         public IEnumerable<Rule> Rules { get; private set; }
 
         public IEnumerable<Policy> Policies { get; private set; }
-
     }
 }

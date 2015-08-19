@@ -3,16 +3,18 @@
     using System;
     using System.IO;
 
-    static class ExceptionExtensions
+    internal static class ExceptionExtensions
     {
         public static void Dump(this Exception e, TextWriter console)
         {
             console.Write("Error: ");
-            while (e != null)
+
+            Exception toLog = e;
+            while (toLog != null)
             {
                 console.WriteLine(e.Message);
-                e = e.InnerException;
-            }//while
+                toLog = toLog.InnerException;
+            }
         }
     }
 }

@@ -6,9 +6,9 @@
     public class Rule
     {
         public string Name { get; set; }
-        
+
         public RuleScope[] Scope { get; set; }
-        
+
         public string Script { get; set; }
     }
 }

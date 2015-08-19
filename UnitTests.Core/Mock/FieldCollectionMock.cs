@@ -1,21 +1,20 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System.Collections;
+using System.Collections.Generic;
+
+using Aggregator.Core.Interfaces;
 
 namespace UnitTests.Core.Mock
 {
-    using System.Collections;
-    using System.Collections.Generic;
-
-    using Aggregator.Core;
-
     internal class FieldCollectionMock : IFieldCollectionWrapper
     {
-        Dictionary<string, IFieldWrapper> fields = new Dictionary<string, IFieldWrapper>();
-        private WorkItemMock workItemMock;
+        private readonly Dictionary<string, IFieldWrapper> fields = new Dictionary<string, IFieldWrapper>();
+
+        private readonly WorkItemMock workItemMock;
 
         public FieldCollectionMock(WorkItemMock workItemMock)
         {
             this.workItemMock = workItemMock;
-        } 
+        }
 
         public IFieldWrapper this[string name]
         {
@@ -25,11 +24,13 @@ namespace UnitTests.Core.Mock
                 {
                     this.fields.Add(name, new FieldMock(this.workItemMock, name));
                 }
-                return fields[name];
+
+                return this.fields[name];
             }
+
             set
             {
-                fields[name] = value;
+                this.fields[name] = value;
             }
         }
 

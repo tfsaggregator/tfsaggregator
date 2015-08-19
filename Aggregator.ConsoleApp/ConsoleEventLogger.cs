@@ -14,6 +14,7 @@ namespace Aggregator.ConsoleApp
         /// <param name="minimumLogLevel">The minimum log level to show.</param>
         public ConsoleEventLogger(LogLevel minimumLogLevel)
             : base(new ConsoleTextLogger(minimumLogLevel))
-        { }
+        {
+        }
     }
 }

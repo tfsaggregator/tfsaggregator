@@ -21,19 +21,19 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new FieldWrapper(fields[name]);
+                return new FieldWrapper(this.fields[name]);
             }
 
             set
             {
-                //Do nothing - this is here for unit testing purposes.
-                //We don't actually want to add fields in our app code
+                // Do nothing - this is here for unit testing purposes.
+                // We don't actually want to add fields in our app code
             }
         }
 
         public IEnumerator<IFieldWrapper> GetEnumerator()
         {
-            return ((IEnumerable)fields).Cast<Field>().Select(f => (IFieldWrapper)new FieldWrapper(f)).GetEnumerator();
+            return this.fields.Cast<Field>().Select(f => (IFieldWrapper)new FieldWrapper(f)).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

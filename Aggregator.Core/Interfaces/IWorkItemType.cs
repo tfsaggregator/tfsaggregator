@@ -7,6 +7,5 @@ namespace Aggregator.Core.Interfaces
         string Name { get; }
 
         XmlDocument Export(bool includeGlobalListsFlag);
-
     }
 }

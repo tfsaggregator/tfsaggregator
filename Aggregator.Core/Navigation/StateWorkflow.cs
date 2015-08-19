@@ -18,10 +18,10 @@ namespace Aggregator.Core.Navigation
         /// <summary>
         /// Set the state of a Work Item.
         /// </summary>
-        /// <param name="workItem"></param>
+        /// <param name="workItem">Work item to transition state of</param>
         /// <param name="state">Target state</param>
         /// <param name="commentPrefix">Added to historical comment</param>
-        /// <param name="logger"></param>
+        /// <param name="logger">Logger used to output information</param>
         /// <remarks>
         /// TFS has controls setup on State Transitions.
         /// Most templates do not allow you to go directly from a New state to a Done state.
@@ -40,7 +40,6 @@ namespace Aggregator.Core.Navigation
 
             // See if we can go directly to the planned state.
             workItem.Fields["State"].Value = state;
-
 
             if (workItem.Fields["State"].Status != FieldStatus.Valid)
             {
@@ -148,7 +147,9 @@ namespace Aggregator.Core.Navigation
                             {
                                 result.Push(thisNode);
                                 thisNode = map[thisNode];
-                            } while (thisNode != fromState);
+                            }
+                            while (thisNode != fromState);
+
                             while (result.Count > 0)
                             {
                                 yield return result.Pop();
@@ -192,7 +193,7 @@ namespace Aggregator.Core.Navigation
             XmlNode transitions = transitionsList[0];
 
             // Iterate all the transitions
-            foreach (XmlNode transitionXML in transitions)
+            foreach (XmlNode transitionXML in transitions.Cast<XmlNode>())
             {
                 // See if we have this from state already.
                 string fromState = transitionXML.Attributes["from"].Value;

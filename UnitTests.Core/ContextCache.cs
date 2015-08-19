@@ -1,23 +1,25 @@
-﻿using Aggregator.Core.Context;
+﻿using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using NSubstitute;
+
 namespace UnitTests.Core
 {
-    using Aggregator.Core;
-    using Aggregator.Core.Configuration;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using NSubstitute;
-    using System;
-    using System.IO;
-    using System.Runtime.Caching;
-
     [TestClass]
     public class ContextCache
     {
-        DateTime referenceDate = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private readonly DateTime referenceDate = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        string SetupSettingsFile(string sourceName)
+        private string SetupSettingsFile(string sourceName)
         {
             string sourcePath = Path.Combine(@"..\..\ConfigurationsForTests", sourceName);
             string destPath = Path.GetTempFileName();
@@ -82,11 +84,11 @@ namespace UnitTests.Core
         {
             for (int i = 0; i < 2; i++)
             {
-                System.Windows.Forms.Application.DoEvents();
-                System.Threading.Tasks.Task.Factory.StartNew(
-                    () => System.Threading.Thread.Sleep(300)
+                Application.DoEvents();
+                Task.Factory.StartNew(
+                    () => Thread.Sleep(300)
                     ).Wait();
-                System.Threading.Thread.Sleep(300);
+                Thread.Sleep(300);
             }
         }
     }

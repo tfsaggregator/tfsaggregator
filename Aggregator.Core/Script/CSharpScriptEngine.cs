@@ -13,7 +13,13 @@ namespace Aggregator.Core
         {
         }
 
-        protected override int LineOffset { get { return 10; } }
+        protected override int LineOffset
+        {
+            get
+            {
+                return 10;
+            }
+        }
 
         protected override string WrapScript(string scriptName, string script)
         {

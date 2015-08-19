@@ -6,10 +6,10 @@ namespace Aggregator.Core.Navigation
     internal class StateTransition
     {
         // The state we are moving from.
-        public String From { get; set; }
+        public string From { get; set; }
 
         // All the To states for this from
-        public List<String> To { get; set; }
+        public List<string> To { get; set; }
 
         public override string ToString()
         {

@@ -184,10 +184,9 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { TemplateName = "Scrum" }
-                      };
+            {
+                new TemplateScope() { TemplateName = "Scrum" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
@@ -211,16 +210,14 @@
             Assert.IsTrue(result);
         }
 
-        
         [TestMethod]
         public void PolicyTemplateMinVersionMatchesWhenCurrentIsHigher()
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { MinVersion = "3.0" }
-                      };
+            {
+                new TemplateScope() { MinVersion = "3.0" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
@@ -242,8 +239,7 @@
             Policy p = new Policy();
             p.Scope = new[]
                       {
-                          
-                          (PolicyScope) new TemplateScope() { MinVersion = "3.0" }
+                          new TemplateScope() { MinVersion = "3.0" }
                       };
 
             var context = Substitute.For<IRequestContext>();
@@ -265,10 +261,9 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { MinVersion = "5.0" }
-                      };
+            {
+                new TemplateScope() { MinVersion = "5.0" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
@@ -289,10 +284,9 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { MaxVersion = "3.0" }
-                      };
+            {
+                new TemplateScope() { MaxVersion = "3.0" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
@@ -313,10 +307,9 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { MaxVersion = "3.0" }
-                      };
+            {
+                new TemplateScope() { MaxVersion = "3.0" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
@@ -337,10 +330,9 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { MinVersion = "5.0" }
-                      };
+            {
+                new TemplateScope() { MinVersion = "5.0" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
@@ -361,15 +353,14 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope()
-                                        {
-                                            TemplateName = "Scrum",
-                                            MinVersion = "5.0",
-                                            MaxVersion = "5.5"
-                                        }
-                      };
+            {
+                new TemplateScope()
+                {
+                    TemplateName = "Scrum",
+                    MinVersion = "5.0",
+                    MaxVersion = "5.5"
+                }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");

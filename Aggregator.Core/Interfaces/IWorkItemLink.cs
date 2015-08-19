@@ -7,6 +7,5 @@
         int TargetId { get; }
 
         IWorkItem Target { get; }
-
     }
 }

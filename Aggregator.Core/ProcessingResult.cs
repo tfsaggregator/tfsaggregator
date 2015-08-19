@@ -6,7 +6,7 @@ using Microsoft.TeamFoundation.Framework.Server;
 namespace Aggregator.Core
 {
     /// <summary>
-    /// Results and notification returned by <see cref="EventProcessor"/> class. 
+    /// Results and notification returned by <see cref="EventProcessor"/> class.
     /// </summary>
     public class ProcessingResult
     {

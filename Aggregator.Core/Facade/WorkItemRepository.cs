@@ -16,16 +16,19 @@ namespace Aggregator.Core.Facade
     /// Singleton used to access TFS Data.  This keeps us from connecting each and every time we get an update.
     /// Keeps track of all WorkItems pulled in memory that should be saved later.
     /// </summary>
-    public class WorkItemRepository : IWorkItemRepository
+    public class WorkItemRepository : IWorkItemRepository, IDisposable
     {
-        ILogEvents logger;
+        private readonly ILogEvents logger;
+
         private readonly string tfsCollectionUrl;
 
         private readonly IdentityDescriptor toImpersonate;
+
+        private readonly List<IWorkItem> loadedWorkItems = new List<IWorkItem>();
+
         private WorkItemStore workItemStore;
 
         private TfsTeamProjectCollection tfs;
-        List<IWorkItem> loadedWorkItems = new List<IWorkItem>();
 
         public WorkItemRepository(string tfsCollectionUrl, IdentityDescriptor toImpersonate, ILogEvents logger)
         {
@@ -37,7 +40,7 @@ namespace Aggregator.Core.Facade
         private void ConnectToWorkItemStore()
         {
             this.tfs = new TfsTeamProjectCollection(new Uri(this.tfsCollectionUrl), this.toImpersonate);
-            this.workItemStore = (WorkItemStore)tfs.GetService(typeof(WorkItemStore));
+            this.workItemStore = (WorkItemStore)this.tfs.GetService(typeof(WorkItemStore));
         }
 
         public IWorkItem GetWorkItem(int workItemId)
@@ -46,6 +49,7 @@ namespace Aggregator.Core.Facade
             {
                 this.ConnectToWorkItemStore();
             }
+
             IWorkItem justLoaded = new WorkItemWrapper(this.workItemStore.GetWorkItem(workItemId), this, this.logger);
             this.loadedWorkItems.Add(justLoaded);
             return justLoaded;
@@ -53,7 +57,10 @@ namespace Aggregator.Core.Facade
 
         public ReadOnlyCollection<IWorkItem> LoadedWorkItems
         {
-            get { return new ReadOnlyCollection<IWorkItem>(this.loadedWorkItems); }
+            get
+            {
+                return new ReadOnlyCollection<IWorkItem>(this.loadedWorkItems);
+            }
         }
 
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
@@ -63,12 +70,26 @@ namespace Aggregator.Core.Facade
                 this.ConnectToWorkItemStore();
             }
 
-            var targetType = workItemStore.Projects[projectName].WorkItemTypes[workItemTypeName];
+            var targetType = this.workItemStore.Projects[projectName].WorkItemTypes[workItemTypeName];
             var target = new WorkItem(targetType);
 
             IWorkItem justCreated = new WorkItemWrapper(target, this, this.logger);
             this.loadedWorkItems.Add(justCreated);
             return justCreated;
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.tfs?.Dispose();
+            }
         }
     }
 }

@@ -8,7 +8,8 @@ namespace Aggregator.Core.Facade
 
     public class FieldWrapper : IFieldWrapper
     {
-        private Field tfsField;
+        private readonly Field tfsField;
+
         public FieldWrapper(Field field)
         {
             this.tfsField = field;

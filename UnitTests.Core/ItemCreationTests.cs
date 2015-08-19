@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
+using Aggregator.Core;
 using Aggregator.Core.Context;
 using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 
+using Microsoft.TeamFoundation.Framework.Server;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using NSubstitute;
+
+using UnitTests.Core.Mock;
+
 namespace UnitTests.Core
 {
-    using Aggregator.Core;
-    using Aggregator.Core.Configuration;
-    using Aggregator.Core.Navigation;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using NSubstitute;
-    using System;
-    using UnitTests.Core.Mock;
-
     [TestClass]
     public class ItemCreationTests
     {
@@ -51,7 +47,7 @@ namespace UnitTests.Core
 
             Assert.AreEqual(0, result.ExceptionProperties.Count());
             Assert.IsTrue(child._SaveCalled);
-            Assert.AreEqual(Microsoft.TeamFoundation.Framework.Server.EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
         }
 
         [TestMethod]
@@ -86,7 +82,7 @@ namespace UnitTests.Core
             Assert.AreEqual(0, result.ExceptionProperties.Count());
             Assert.IsFalse(child._SaveCalled);
             Assert.IsFalse(parent._SaveCalled);
-            Assert.AreEqual(Microsoft.TeamFoundation.Framework.Server.EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
         }
 
         [TestMethod]

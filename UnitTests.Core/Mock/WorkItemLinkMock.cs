@@ -1,10 +1,9 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using Aggregator.Core;
+using Aggregator.Core.Interfaces;
 
 namespace UnitTests.Core.Mock
 {
-    using Aggregator.Core;
-
-    class WorkItemLinkMock : IWorkItemLink
+    internal class WorkItemLinkMock : IWorkItemLink
     {
         private readonly string relationship;
         private readonly int id;
@@ -34,13 +33,37 @@ namespace UnitTests.Core.Mock
 
         public override bool Equals(object obj)
         {
-            if (!(obj is WorkItemLinkMock))
+            if (ReferenceEquals(null, obj))
+            {
                 return false;
+            }
 
-            var rhs = obj as WorkItemLinkMock;
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
 
-            return this.LinkTypeEndImmutableName == rhs.LinkTypeEndImmutableName
-                && this.TargetId == rhs.TargetId;
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return Equals((WorkItemLinkMock)obj);
+        }
+
+        protected bool Equals(WorkItemLinkMock other)
+        {
+            return string.Equals(this.relationship, other.relationship) && this.id == other.id;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = this.relationship?.GetHashCode() ?? 0;
+                hashCode = (hashCode * 397) ^ this.id;
+                return hashCode;
+            }
         }
     }
 }

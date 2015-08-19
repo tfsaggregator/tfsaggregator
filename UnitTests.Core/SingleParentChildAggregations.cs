@@ -1,21 +1,22 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
+using Aggregator.Core;
 using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
+using Microsoft.TeamFoundation.Framework.Server;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using NSubstitute;
+
+using UnitTests.Core.Mock;
+
 namespace UnitTests.Core
 {
-    using Microsoft.TeamFoundation.Framework.Server;
-    using Aggregator.Core;
-    using UnitTests.Core.Mock;
-    using System.Collections.ObjectModel;
-    using System.Collections.Generic;
-    using Aggregator.Core.Navigation;
-
     [TestClass]
     public class SingleParentChildAggregations
     {
@@ -128,7 +129,6 @@ namespace UnitTests.Core
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("Rollup.policies", logger);
-            
             var repository = new WorkItemRepositoryMock();
 
             var grandParent = new WorkItemMock(repository);
@@ -162,19 +162,21 @@ namespace UnitTests.Core
 
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            var processor = new EventProcessor(repository, runtime);
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(3);
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(3);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            Assert.IsFalse(child._SaveCalled);
-            Assert.IsTrue(parent._SaveCalled);
-            Assert.IsFalse(grandParent._SaveCalled);
-            Assert.AreEqual(3.0D, parent["Total Work Remaining"]);
-            Assert.AreEqual(30.0D, parent["Total Estimate"]);
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.IsFalse(child._SaveCalled);
+                Assert.IsTrue(parent._SaveCalled);
+                Assert.IsFalse(grandParent._SaveCalled);
+                Assert.AreEqual(3.0D, parent["Total Work Remaining"]);
+                Assert.AreEqual(30.0D, parent["Total Estimate"]);
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
         }
     }
 }

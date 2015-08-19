@@ -18,20 +18,24 @@ namespace Aggregator.Core.Navigation
 
         private readonly string linkType;
 
-        private IWorkItemRepository store;
-
-        public static WorkItemLazyVisitor MakeRelativesLazyVisitor(IWorkItem sourceItem, FluentQuery query, IWorkItemRepository store)
+        public static WorkItemLazyVisitor MakeRelativesLazyVisitor(IWorkItem sourceItem, FluentQuery query)
         {
-            return new WorkItemLazyVisitor(sourceItem, query, store);
+            return new WorkItemLazyVisitor(sourceItem, query);
         }
 
-        public WorkItemLazyVisitor(IWorkItem sourceWorkItem, FluentQuery query, IWorkItemRepository store)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorkItemLazyVisitor"/> class.Lazily loads workitem(s) based on query.</summary>
+        /// <exception cref="ArgumentOutOfRangeException">When Query.Levels &lt; 1.</exception>
+        public WorkItemLazyVisitor(IWorkItem sourceWorkItem, FluentQuery query)
         {
             if (query.Levels < 1)
-                throw new ArgumentOutOfRangeException("levels must be 1 or greater");
+            {
+                throw new ArgumentOutOfRangeException(nameof(query.Levels), "levels must be 1 or greater");
+            }
+
             // source info
             this.sourceWorkItem = sourceWorkItem;
-            this.store = store;
+
             // target filter
             this.workItemType = query.WorkItemType;
             this.levels = query.Levels;
@@ -43,8 +47,7 @@ namespace Aggregator.Core.Navigation
             var links = new List<Tuple<int, IWorkItemLink>>(
                 this.sourceWorkItem.WorkItemLinks
                     .Where(link => link.LinkTypeEndImmutableName.SameAs(this.linkType))
-                    .Select(link => Tuple.Create(this.levels - 1, link))
-                    );
+                    .Select(link => Tuple.Create(this.levels - 1, link)));
 
             while (links.Any())
             {
@@ -63,8 +66,7 @@ namespace Aggregator.Core.Navigation
                     links.AddRange(
                         relatedWorkItem.WorkItemLinks
                         .Where(link => link.LinkTypeEndImmutableName.SameAs(this.linkType))
-                        .Select(link => Tuple.Create(current.Item1 - 1, link))
-                        );
+                        .Select(link => Tuple.Create(current.Item1 - 1, link)));
                 }
             }
         }

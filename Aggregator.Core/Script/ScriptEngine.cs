@@ -35,7 +35,7 @@ namespace Aggregator.Core
         public abstract bool LoadCompleted();
 
         /// <summary>
-        /// Runs the  script specified by <paramref name="scriptName">.
+        /// Runs the  script specified by <paramref name="scriptName" />.
         /// </summary>
         /// <param name="scriptName">Name of the script.</param>
         /// <param name="workItem">The work item that must be processed by the script.</param>

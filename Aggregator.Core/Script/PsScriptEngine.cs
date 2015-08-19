@@ -11,16 +11,16 @@ namespace Aggregator.Core
     /// </summary>
     public class PsScriptEngine : ScriptEngine
     {
+        private readonly Dictionary<string, string> scripts = new Dictionary<string, string>();
+
         public PsScriptEngine(IWorkItemRepository store, ILogEvents logger)
             : base(store, logger)
         {
         }
 
-        private readonly Dictionary<string, string> scripts = new Dictionary<string, string>();
-
         public override bool Load(string scriptName, string script)
         {
-            scripts.Add(scriptName, script);
+            this.scripts.Add(scriptName, script);
             return true;
         }
 
@@ -29,9 +29,9 @@ namespace Aggregator.Core
             return true;
         }
 
-        override public void Run(string scriptName, IWorkItem workItem)
+        public override void Run(string scriptName, IWorkItem workItem)
         {
-            string script = scripts[scriptName];
+            string script = this.scripts[scriptName];
 
             var config = RunspaceConfiguration.Create();
             using (var runspace = RunspaceFactory.CreateRunspace(config))

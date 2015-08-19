@@ -1,4 +1,6 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System.Linq;
+
+using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
 namespace Aggregator.Core.Facade
@@ -9,11 +11,12 @@ namespace Aggregator.Core.Facade
 
     using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
-    class WorkItemLinkCollectionWrapper : IWorkItemLinkCollection
+    internal class WorkItemLinkCollectionWrapper : IWorkItemLinkCollection
     {
-        readonly ILogEvents logger;
+        private readonly ILogEvents logger;
 
-        readonly IWorkItemRepository store;
+        private readonly IWorkItemRepository store;
+
         private readonly WorkItemLinkCollection workItemLinkCollection;
 
         public WorkItemLinkCollectionWrapper(WorkItemLinkCollection workItemLinkCollection, IWorkItemRepository store, ILogEvents logger)
@@ -25,7 +28,7 @@ namespace Aggregator.Core.Facade
 
         public IEnumerator<IWorkItemLink> GetEnumerator()
         {
-            foreach (WorkItemLink item in this.workItemLinkCollection)
+            foreach (WorkItemLink item in this.workItemLinkCollection.Cast<WorkItemLink>())
             {
                 yield return new WorkItemLinkWrapper(item, this.store, this.logger);
             }

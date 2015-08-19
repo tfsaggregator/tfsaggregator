@@ -39,7 +39,7 @@ namespace Aggregator.Core.Facade
 
         public IProjectPropertyWrapper[] GetProjectProperties(Uri projectUri)
         {
-            var ics = context.GetService<ICommonStructureService>();
+            var ics = this.context.GetService<ICommonStructureService>();
 
             string projectName;
             string projectState;
@@ -48,7 +48,7 @@ namespace Aggregator.Core.Facade
 
             ics.GetProjectProperties(this.context, projectUri.ToString(), out projectName, out projectState, out projectProperties);
 
-            return projectProperties.Select(p => (IProjectPropertyWrapper) new ProjectPropertyWrapper(){ Name = p.Name, Value = p.Value} ).ToArray();
+            return projectProperties.Select(p => (IProjectPropertyWrapper)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
         }
 
         private ArtifactSpec GetProcessTemplateVersionSpec(string projectUri)

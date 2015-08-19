@@ -1,52 +1,55 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+
+using Aggregator.Core;
+using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
 namespace UnitTests.Core.Mock
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-
-    using Aggregator.Core;
-
     internal class WorkItemRepositoryMock : IWorkItemRepository
     {
         private List<IWorkItem> workItems = new List<IWorkItem>();
 
-        readonly List<IWorkItem> loadedWorkItems = new List<IWorkItem>();
+        private readonly List<IWorkItem> loadedWorkItems = new List<IWorkItem>();
+
+        private int newWorkItemId = -1;
 
         public ILogEvents Logger { get; set; }
 
-        private int newWorkItemId = -1;
-        
         public IWorkItem GetWorkItem(int workItemId)
         {
             IWorkItem justLoaded = this.workItems.SingleOrDefault(wi => wi.Id == workItemId);
-            loadedWorkItems.Add(justLoaded);
+            this.loadedWorkItems.Add(justLoaded);
             return justLoaded;
         }
 
         internal void SetWorkItems(IEnumerable<IWorkItem> items)
         {
             this.workItems = new List<IWorkItem>(items);
+
             // reset the flag!
-            this.workItems.ForEach(wi => (wi as WorkItemMock).IsDirty = false);
+            this.workItems.ForEach(wi => ((WorkItemMock)wi).IsDirty = false);
         }
 
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
         {
             var newWorkItem = new WorkItemMock(this);
-            newWorkItem.Id = newWorkItemId--;
+            newWorkItem.Id = this.newWorkItemId--;
             newWorkItem.TypeName = workItemTypeName;
+
             // don't forget to add to collection
-            loadedWorkItems.Add(newWorkItem);
+            this.loadedWorkItems.Add(newWorkItem);
             return newWorkItem;
         }
 
+        /// <summary>
+        /// </summary>
         public ReadOnlyCollection<IWorkItem> LoadedWorkItems
         {
-            get { return new ReadOnlyCollection<IWorkItem>(loadedWorkItems); }
+            get { return new ReadOnlyCollection<IWorkItem>(this.loadedWorkItems); }
         }
     }
 }

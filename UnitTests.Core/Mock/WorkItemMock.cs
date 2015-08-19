@@ -1,17 +1,16 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+
+using Aggregator.Core;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Navigation;
 
 namespace UnitTests.Core.Mock
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
-    using Aggregator.Core;
-    using Aggregator.Core.Navigation;
-
     internal class WorkItemMock : WorkItemImplementationBase, IWorkItem
     {
-        private FieldCollectionMock fields;
+        private readonly FieldCollectionMock fields;
 
         public WorkItemMock(WorkItemRepositoryMock store)
             : base(store, store.Logger)
@@ -20,10 +19,13 @@ namespace UnitTests.Core.Mock
             this.IsDirty = false;
         }
 
-        public IFieldCollectionWrapper Fields { get
+        public IFieldCollectionWrapper Fields
         {
-            return fields;
-        } }
+            get
+            {
+                return this.fields;
+            }
+        }
 
         public string History{ get; set; }
 
@@ -38,12 +40,27 @@ namespace UnitTests.Core.Mock
 
         public void PartialOpen()
         {
-            // No fucntionality needed in mock.
+            // No functionality needed in mock.
         }
 
         int saveCalled = 0;
-        public bool _SaveCalled { get { return this.saveCalled > 0; } }
-        public int _SaveCount { get { return this.saveCalled; } }
+
+        public bool _SaveCalled
+        {
+            get
+            {
+                return this.saveCalled > 0;
+            }
+        }
+
+        public int _SaveCount
+        {
+            get
+            {
+                return this.saveCalled;
+            }
+        }
+
         public void Save()
         {
             this.saveCalled++;
@@ -55,6 +72,7 @@ namespace UnitTests.Core.Mock
             {
                 return Fields[name].Value;
             }
+
             set
             {
                 this.Fields[name].Value = value;
@@ -63,7 +81,7 @@ namespace UnitTests.Core.Mock
 
         public void TryOpen()
         {
-            // No fucntionality needed in mock.
+            // No functionality needed in mock.
         }
 
         public string TypeName { get; set; }
@@ -73,7 +91,7 @@ namespace UnitTests.Core.Mock
             return new ArrayList();
         }
 
-        WorkItemLinkCollectionMock workItemLinks = new WorkItemLinkCollectionMock();
+        private readonly WorkItemLinkCollectionMock workItemLinks = new WorkItemLinkCollectionMock();
 
         public override IWorkItemLinkCollection WorkItemLinks
         {
@@ -85,7 +103,7 @@ namespace UnitTests.Core.Mock
         public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
             return WorkItemLazyVisitor
-                .MakeRelativesLazyVisitor(this, query, this.store);
+                .MakeRelativesLazyVisitor(this, query);
         }
 
         public void TransitionToState(string state, string comment)
@@ -98,13 +116,13 @@ namespace UnitTests.Core.Mock
         {
             //HACK should use the code in wrapper...
             var relationship = new WorkItemLinkMock(linkTypeName, destination.Id, store);
+
             // check it does not exist already
             if (!workItemLinks.Contains(relationship))
             {
                 workItemLinks.Add(relationship);
                 this.IsDirty = true;
-            }//if
-
+            }
         }
 
         public void AddHyperlink(string destination, string comment = "")

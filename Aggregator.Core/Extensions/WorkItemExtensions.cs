@@ -1,9 +1,10 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System.Linq;
+using System.Text;
 
-namespace Aggregator.Core
+using Aggregator.Core.Interfaces;
+
+namespace Aggregator.Core.Extensions
 {
-    using System.Text;
-
     public static class WorkItemExtensions
     {
         public static string GetInvalidWorkItemFieldsList(this IWorkItem wi)
@@ -15,7 +16,7 @@ namespace Aggregator.Core
             }
             else
             {
-                foreach (string s in wi.Validate())
+                foreach (string s in wi.Validate().Cast<string>())
                 {
                     sb.AppendLine(s);
                 }
