@@ -240,6 +240,8 @@
     </Compile>
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
     <Compile Include="Interfaces\IProcessTemplateVersionWrapper.cs" />
+    <Compile Include="Monitoring\IRuleLogger.cs" />
+    <Compile Include="Monitoring\RuleLogger.cs" />
     <Compile Include="WorkItemImplementationBase.cs" />
     <Compile Include="Configuration\Policy.cs" />
     <Compile Include="Configuration\Rule.cs" />
