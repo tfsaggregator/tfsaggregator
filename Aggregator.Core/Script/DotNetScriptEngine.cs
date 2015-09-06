@@ -37,6 +37,7 @@ namespace Aggregator.Core.Script
 
             refList.Add(Assembly.GetExecutingAssembly().Location);
             refList.Add("System.dll"); // from GAC
+            refList.Add("System.Core.dll");
 
             // CAREFUL HERE and remember to AddReference and set CopyLocal=true in UnitTest project!
             var wiAssembly = AppDomain.CurrentDomain.GetAssemblies()

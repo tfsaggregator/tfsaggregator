@@ -30,6 +30,7 @@ Imports Aggregator.Core.Extensions
 Imports Aggregator.Core.Interfaces
 Imports Aggregator.Core.Navigation
 Imports Aggregator.Core.Monitoring
+Imports System.Linq
 
 Namespace RESERVED
   Public Class Script_" + scriptName + @"

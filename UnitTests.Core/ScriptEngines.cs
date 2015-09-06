@@ -1,24 +1,23 @@
-﻿using Aggregator.Core.Context;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Management.Automation;
+
+using Aggregator.Core;
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
+using Microsoft.TeamFoundation.Framework.Server;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using NSubstitute;
+
+using UnitTests.Core.Mock;
+
 namespace UnitTests.Core
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Management.Automation;
-
-    using Aggregator.Core;
-
-    using Microsoft.TeamFoundation.Framework.Server;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-    using NSubstitute;
-
-    using UnitTests.Core.Mock;
-
     [TestClass]
     public class ScriptEngines
     {
@@ -130,7 +129,7 @@ return $self.Fields[""z""].Value ";
             Assert.AreEqual(33, workItem.Fields["x"].Value);
 
             logger.Received().ResultsFromScriptRun(
-                "test",
+                "test", 
                 Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject))));
         }
 
@@ -217,5 +216,40 @@ logger.Log(""Test"")
             logger.ScriptLogger.Received().Log("Test");
         }
 
+        [TestMethod]
+        [TestCategory("CSharpScript")]
+        public void Can_CSharp_use_Linq()
+        {
+            string script = @"
+int[] array = { 1, 3, 5, 7 };
+return (int)array.Average();
+";
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            repository.GetWorkItem(1).Returns(workItem);
+            var logger = Substitute.For<ILogEvents>();
+            var engine = new CSharpScriptEngine(repository, logger);
+            engine.LoadAndRun("test", script, workItem);
+            object expected = 4;
+            logger.Received().ResultsFromScriptRun("test", expected);
+        }
+
+        [TestMethod]
+        [TestCategory("VBNetScript")]
+        public void Can_VBNet_use_Linq()
+        {
+            string script = @"
+Dim array As Integer() = {1, 3, 5, 7}
+Return Cint(array.Average())
+";
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            repository.GetWorkItem(1).Returns(workItem);
+            var logger = Substitute.For<ILogEvents>();
+            var engine = new VBNetScriptEngine(repository, logger);
+            engine.LoadAndRun("test", script, workItem);
+            object expected = 4;
+            logger.Received().ResultsFromScriptRun("test", expected);
+        }
     }
 }

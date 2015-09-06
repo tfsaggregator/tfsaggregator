@@ -32,6 +32,7 @@ namespace RESERVED
   using Aggregator.Core.Interfaces;
   using Aggregator.Core.Navigation;
   using Aggregator.Core.Monitoring;
+  using System.Linq;
 
   public class Script_" + scriptName + @" : Aggregator.Core.Script.IDotNetScript
   {
