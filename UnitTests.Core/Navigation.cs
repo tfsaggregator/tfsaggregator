@@ -110,7 +110,7 @@ return searchResult;
             workItem.TransitionToState(targetState, "test");
 
             Assert.AreEqual(targetState, workItem.Fields["State"].Value);
-            Assert.IsTrue(workItem._SaveCalled);
+            Assert.IsTrue(workItem.InternalWasSaveCalled);
         }
 
         [TestMethod]
@@ -136,7 +136,7 @@ return searchResult;
             workItem.TransitionToState(targetState, "test");
 
             Assert.AreEqual(targetState, workItem.Fields["State"].Value);
-            Assert.AreEqual(2, workItem._SaveCount);
+            Assert.AreEqual(2, workItem.InternalSaveCount);
         }
 
         [TestMethod]
@@ -163,7 +163,7 @@ return searchResult;
 
             Assert.AreNotEqual(targetState, workItem.Fields["State"].Value);
             Assert.AreEqual(workItem.Fields["State"].OriginalValue, workItem.Fields["State"].Value);
-            Assert.IsFalse(workItem._SaveCalled);
+            Assert.IsFalse(workItem.InternalWasSaveCalled);
         }
 
         [TestMethod]
@@ -193,7 +193,7 @@ self.TransitionToState(""Done"", ""script test"");
             engine.LoadAndRun("test", script, workItem);
 
             Assert.AreEqual("Done", workItem.Fields["State"].Value);
-            Assert.AreEqual(2, workItem._SaveCount);
+            Assert.AreEqual(2, workItem.InternalSaveCount);
         }
     }
 }

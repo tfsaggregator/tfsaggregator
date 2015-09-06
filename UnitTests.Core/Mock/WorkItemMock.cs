@@ -43,27 +43,27 @@ namespace UnitTests.Core.Mock
             // No functionality needed in mock.
         }
 
-        private int saveCalled = 0;
+        private int internalSaveCalled = 0;
 
-        public bool _SaveCalled
+        public bool InternalWasSaveCalled
         {
             get
             {
-                return this.saveCalled > 0;
+                return this.internalSaveCalled > 0;
             }
         }
 
-        public int _SaveCount
+        public int InternalSaveCount
         {
             get
             {
-                return this.saveCalled;
+                return this.internalSaveCalled;
             }
         }
 
         public void Save()
         {
-            this.saveCalled++;
+            this.internalSaveCalled++;
         }
 
         public object this[string name]

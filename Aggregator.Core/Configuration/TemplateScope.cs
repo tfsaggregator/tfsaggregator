@@ -112,14 +112,7 @@ namespace Aggregator.Core.Configuration
                 properties.FirstOrDefault(
                     p => string.Equals(TemplateNameKey, p.Name, StringComparison.OrdinalIgnoreCase));
 
-            if (templateNameProperty != null)
-            {
-                return this.TemplateName.SameAs(templateNameProperty.Value);
-            }
-            else
-            {
-                return false;
-            }
+            return this.TemplateName.SameAs(templateNameProperty?.Value);
         }
     }
 }

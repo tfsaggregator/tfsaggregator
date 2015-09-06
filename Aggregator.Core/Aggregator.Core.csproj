@@ -302,6 +302,7 @@
     <Content Include="TfsAggregator.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Analyzer Include="..\packages\SonarLint.1.2.0\tools\analyzers\C#\SonarLint.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta007\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

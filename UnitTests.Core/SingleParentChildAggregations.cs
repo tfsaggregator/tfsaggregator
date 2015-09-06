@@ -177,9 +177,9 @@ namespace UnitTests.Core
                 var result = processor.ProcessEvent(context, notification);
 
                 Assert.AreEqual(0, result.ExceptionProperties.Count());
-                Assert.IsFalse(child._SaveCalled);
-                Assert.IsTrue(parent._SaveCalled);
-                Assert.IsFalse(grandParent._SaveCalled);
+                Assert.IsFalse(child.InternalWasSaveCalled);
+                Assert.IsTrue(parent.InternalWasSaveCalled);
+                Assert.IsFalse(grandParent.InternalWasSaveCalled);
                 Assert.AreEqual(3.0D, parent["Total Work Remaining"]);
                 Assert.AreEqual(30.0D, parent["Total Estimate"]);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);

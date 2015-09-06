@@ -47,7 +47,7 @@ namespace UnitTests.Core
                 var result = processor.ProcessEvent(context, notification);
 
                 Assert.AreEqual(0, result.ExceptionProperties.Count());
-                Assert.IsTrue(child._SaveCalled);
+                Assert.IsTrue(child.InternalWasSaveCalled);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
             }
         }
@@ -83,8 +83,8 @@ namespace UnitTests.Core
                 var result = processor.ProcessEvent(context, notification);
 
                 Assert.AreEqual(0, result.ExceptionProperties.Count());
-                Assert.IsFalse(child._SaveCalled);
-                Assert.IsFalse(parent._SaveCalled);
+                Assert.IsFalse(child.InternalWasSaveCalled);
+                Assert.IsFalse(parent.InternalWasSaveCalled);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
             }
         }
@@ -115,7 +115,7 @@ namespace UnitTests.Core
 
                 Assert.AreEqual(0, result.ExceptionProperties.Count());
                 Assert.AreEqual(2, repository.LoadedWorkItems.Count);
-                Assert.IsTrue(parent._SaveCalled);
+                Assert.IsTrue(parent.InternalWasSaveCalled);
                 Assert.IsTrue(parent.HasChildren());
             }
         }
