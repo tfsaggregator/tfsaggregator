@@ -36,6 +36,10 @@ namespace Aggregator.Core.Monitoring
     /// <remarks>The methods must *not* raise exceptions.</remarks>
     public interface ILogEvents : ILogger
     {
+        IRuleLogger ScriptLogger { get; set; }
+
+        void ScriptLog(string ruleName, string s);
+
         void ConfigurationLoaded(string policyFile);
 
         void StartingProcessing(IRequestContext context, INotification notification);

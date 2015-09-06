@@ -7,7 +7,6 @@ using System.Xml.Schema;
 using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 
-using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Monitoring
@@ -19,9 +18,12 @@ namespace Aggregator.Core.Monitoring
         public TextLogComposer(ITextLogger logger)
         {
             this.logger = logger;
+            this.ScriptLogger = new RuleLogger(this);
         }
 
         public ITextLogger TextLogger => this.logger;
+
+        public IRuleLogger ScriptLogger { get; set; }
 
         // forward to implementation
         public LogLevel MinimumLogLevel
@@ -70,7 +72,7 @@ namespace Aggregator.Core.Monitoring
             {
                 this.logger.Log(
                     LogLevel.Critical,
-                    "Exception encountered processing notification: {0} \nStack Trace:{1}",
+                    "Exception encountered processing notification: {0} \nStack Trace:{1}", 
                     e.Message,
                     e.StackTrace);
             }
@@ -159,7 +161,7 @@ namespace Aggregator.Core.Monitoring
                         linePosition);
                     break;
                 }
-            }
+        }
         }
 
         public void UnreferencedRule(string ruleName)
@@ -326,6 +328,11 @@ namespace Aggregator.Core.Monitoring
                 "Hyperlink '{1}' on work item #{0} already exists",
                 id,
                 destination);
+        }
+
+        public void ScriptLog(string ruleName, string message)
+        {
+            this.logger.Log(LogLevel.Diagnostic, "{0}: {1}", ruleName, message);
         }
     }
 }

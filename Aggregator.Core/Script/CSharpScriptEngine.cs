@@ -31,10 +31,11 @@ namespace RESERVED
   using Aggregator.Core.Extensions;
   using Aggregator.Core.Interfaces;
   using Aggregator.Core.Navigation;
+  using Aggregator.Core.Monitoring;
 
   public class Script_" + scriptName + @" : Aggregator.Core.Script.IDotNetScript
   {
-    public object RunScript(Aggregator.Core.Interfaces.IWorkItemExposed self, Aggregator.Core.Interfaces.IWorkItemRepositoryExposed store)
+    public object RunScript(Aggregator.Core.Interfaces.IWorkItemExposed self, Aggregator.Core.Interfaces.IWorkItemRepositoryExposed store, Aggregator.Core.Monitoring.IRuleLogger logger)
     {
 " + script + @"
       return null;

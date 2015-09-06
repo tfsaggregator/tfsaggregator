@@ -184,5 +184,38 @@ return $self.Fields[""z""].Value ";
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
             }
         }
+
+        [TestMethod]
+        [TestCategory("CSharpScript")]
+        public void Can_run_a_CSharp_script_with_logging()
+        {
+            string script = @"
+logger.Log(""Test"");
+";
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            var logger = Substitute.For<ILogEvents>();
+            logger.ScriptLogger = Substitute.For<IRuleLogger>();
+            var engine = new CSharpScriptEngine(repository, logger);
+            engine.LoadAndRun("test", script, workItem);
+            logger.ScriptLogger.Received().Log("Test");
+        }
+
+        [TestMethod]
+        [TestCategory("VBNetScript")]
+        public void Can_run_a_VBNet_script_with_logging()
+        {
+            string script = @"
+logger.Log(""Test"")
+";
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            var logger = Substitute.For<ILogEvents>();
+            logger.ScriptLogger = Substitute.For<IRuleLogger>();
+            var engine = new VBNetScriptEngine(repository, logger);
+            engine.LoadAndRun("test", script, workItem);
+            logger.ScriptLogger.Received().Log("Test");
+        }
+
     }
 }
