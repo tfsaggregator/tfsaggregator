@@ -29,12 +29,13 @@ Imports Aggregator.Core
 Imports Aggregator.Core.Extensions
 Imports Aggregator.Core.Interfaces
 Imports Aggregator.Core.Navigation
+Imports Aggregator.Core.Monitoring
 
 Namespace RESERVED
   Public Class Script_" + scriptName + @"
     Implements Aggregator.Core.Script.IDotNetScript
   
-    Public Function RunScript(ByVal self As Aggregator.Core.Interfaces.IWorkItemExposed, ByVal store As Aggregator.Core.Interfaces.IWorkItemRepositoryExposed) As Object Implements Aggregator.Core.Script.IDotNetScript.RunScript
+    Public Function RunScript(ByVal self As Aggregator.Core.Interfaces.IWorkItemExposed, ByVal store As Aggregator.Core.Interfaces.IWorkItemRepositoryExposed, ByVal logger As  Aggregator.Core.Monitoring.IRuleLogger) As Object Implements Aggregator.Core.Script.IDotNetScript.RunScript
 " + script + @"
       Return Nothing
     End Function
