@@ -129,7 +129,7 @@ return $self.Fields[""z""].Value ";
             Assert.AreEqual(33, workItem.Fields["x"].Value);
 
             logger.Received().ResultsFromScriptRun(
-                "test", 
+                "test",
                 Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject))));
         }
 
