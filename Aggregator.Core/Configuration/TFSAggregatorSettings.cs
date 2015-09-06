@@ -80,20 +80,16 @@ namespace Aggregator.Core.Configuration
         private static string ComputeHash(XDocument doc, DateTime timestamp)
         {
             using (var stream = new System.IO.MemoryStream())
+            using (var md5 = new System.Security.Cryptography.MD5CryptoServiceProvider())
+            using (var w = new System.IO.BinaryWriter(stream))
             {
-                using (var md5 = new System.Security.Cryptography.MD5CryptoServiceProvider())
-                {
-                    using (var w = new System.IO.BinaryWriter(stream))
-                    {
-                        w.Write(timestamp.ToBinary());
-                        w.Flush();
-                        doc.Save(stream, SaveOptions.OmitDuplicateNamespaces);
-                        stream.Flush();
-                        var hash = md5.ComputeHash(stream.GetBuffer());
-                        string hex = BitConverter.ToString(hash);
-                        return hex.Replace("-", string.Empty);
-                    }
-                }
+                w.Write(timestamp.ToBinary());
+                w.Flush();
+                doc.Save(stream, SaveOptions.OmitDuplicateNamespaces);
+                stream.Flush();
+                var hash = md5.ComputeHash(stream.GetBuffer());
+                string hex = BitConverter.ToString(hash);
+                return hex.Replace("-", string.Empty);
             }
         }
 

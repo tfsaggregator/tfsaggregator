@@ -16,7 +16,11 @@ using Microsoft.TeamFoundation.Framework.Common;
 using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.WorkItemTracking.Server;
 
+#if TFS2015
 using ILocationService = Microsoft.VisualStudio.Services.Location.Server.ILocationService;
+#elif TFS2013
+using ILocationService = Microsoft.TeamFoundation.Framework.Server.TeamFoundationLocationService;
+#endif
 
 namespace TFSAggregator.TfsSpecific
 {

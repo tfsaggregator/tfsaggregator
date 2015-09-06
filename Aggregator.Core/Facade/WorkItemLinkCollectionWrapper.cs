@@ -1,16 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
 namespace Aggregator.Core.Facade
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
-    using Microsoft.TeamFoundation.WorkItemTracking.Client;
-
     internal class WorkItemLinkCollectionWrapper : IWorkItemLinkCollection
     {
         private readonly ILogEvents logger;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TfsVersion Condition="'TfsVersion' == ''">14.0</TfsVersion>
   </PropertyGroup>
@@ -20,50 +20,70 @@
         <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\WDExpress\12.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
         <VsInstallationDirectory Condition="'$(VsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\WDExpress\12.0\Setup\VS@VS7CommonDir)</VsInstallationDirectory>
 
-        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)\Application Tier\Web Services\bin</ServerAssemblies>
-        <ClientAssembliesv20 Condition="'$(VsInstallationDirectory)'!=''">$(VsInstallationDirectory)\ReferenceAssemblies\v2.0</ClientAssembliesv20>
-        <ClientAssembliesv45 Condition="'$(VsInstallationDirectory)'!=''">$(VsInstallationDirectory)\ReferenceAssemblies\v4.5</ClientAssembliesv45>
+        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)Application Tier\Web Services\bin</ServerAssemblies>
+        <ClientAssembliesv20 Condition="'$(VsInstallationDirectory)'!=''">$(VsInstallationDirectory)IDE\ReferenceAssemblies\v2.0</ClientAssembliesv20>
+        <ClientAssembliesv45 Condition="'$(VsInstallationDirectory)'!=''">$(VsInstallationDirectory)IDE\ReferenceAssemblies\v4.5</ClientAssembliesv45>
 
-        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'==''">..\References\2013</ServerAssemblies>
-        <ClientAssembliesv20 Condition="'$(VsInstallationDirectory)'==''">..\References\2013</ClientAssembliesv20>
-        <ClientAssembliesv45 Condition="'$(VsInstallationDirectory)'==''">..\References\2013</ClientAssembliesv45>
+        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'==''">$(SolutionDir)References\2013</ServerAssemblies>
+        <ClientAssembliesv20 Condition="'$(VsInstallationDirectory)'==''">$(SolutionDir)References\2013</ClientAssembliesv20>
+        <ClientAssembliesv45 Condition="'$(VsInstallationDirectory)'==''">$(SolutionDir)References\2013</ClientAssembliesv45>
       </PropertyGroup>
 
       <ItemGroup>
         <!-- Server Assemblies -->
-        <Reference Include="Microsoft.TeamFoundation.Framework.Server">
+        <Reference Include="Microsoft.TeamFoundation.Framework.Server, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <SpecificVersion>True</SpecificVersion>
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Framework.Server.dll</HintPath>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.Server.Core">
+        <Reference Include="Microsoft.TeamFoundation.Server.Core, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <SpecificVersion>True</SpecificVersion>
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Server.Core.dll</HintPath>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server">
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <SpecificVersion>True</SpecificVersion>
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.dll</HintPath>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer">
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <SpecificVersion>True</SpecificVersion>
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll</HintPath>
         </Reference>
+        
+        <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+          <SpecificVersion>True</SpecificVersion>
+          <HintPath>$(ServerAssemblies)\Newtonsoft.Json.dll</HintPath>
+        </Reference>
+        
 
         <!-- Client Assemblies v2.0 -->
-        <Reference Include="Microsoft.TeamFoundation.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.TeamFoundation.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>$(ClientAssembliesv20)\Microsoft.TeamFoundation.Client.dll</HintPath>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.TeamFoundation.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>$(ClientAssembliesv20)\Microsoft.TeamFoundation.Common.dll</HintPath>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
           <SpecificVersion>False</SpecificVersion>
           <Private>True</Private>
           <HintPath>$(ClientAssembliesv20)\Microsoft.TeamFoundation.WorkItemTracking.Client.dll</HintPath>
         </Reference>
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <SpecificVersion>False</SpecificVersion>
+          <Private>True</Private>
+          <HintPath>$(ClientAssembliesv20)\Microsoft.TeamFoundation.WorkItemTracking.Common.dll</HintPath>
+        </Reference>
+        
 
         <!-- Client Assemblies v4.5 -->
-        <Reference Include="Microsoft.VisualStudio.Services.WebApi, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.VisualStudio.Services.WebApi, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>$(ClientAssembliesv45)\Microsoft.VisualStudio.Services.WebApi.dll</HintPath>
         </Reference>
+        <Reference Include="Microsoft.VisualStudio.Services.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+          <SpecificVersion>False</SpecificVersion>
+          <HintPath>$(ClientAssembliesv45)\Microsoft.VisualStudio.Services.Common.dll</HintPath>
+        </Reference>        
 
       </ItemGroup>
     </When>
@@ -80,19 +100,19 @@
 
       <ItemGroup>
         <!-- Server Assemblies -->
-        <Reference Include="Microsoft.TeamFoundation.Framework.Server">
+        <Reference Include="Microsoft.TeamFoundation.Framework.Server, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Framework.Server.dll</HintPath>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.Server.Core">
+        <Reference Include="Microsoft.TeamFoundation.Server.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Server.Core.dll</HintPath>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server">
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.dll</HintPath>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer">
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer.dll</HintPath>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices">
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll</HintPath>
         </Reference>
         
@@ -280,6 +300,28 @@
     </When>
 
     <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.TeamFoundation.Framework.Server"/>
+        <Reference Include="Microsoft.TeamFoundation.Server.Core"/>
+          <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server"/>
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer"/>
+        <Reference Include="Newtonsoft.Json"/>
+        <Reference Include="Microsoft.TeamFoundation.Client"/>
+        <Reference Include="Microsoft.TeamFoundation.Common"/>
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client"/>
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Common"/>
+        <Reference Include="Microsoft.VisualStudio.Services.WebApi"/>
+        <Reference Include="Microsoft.VisualStudio.Services.Common"/>
+      </ItemGroup>
     </Otherwise>
   </Choose>
+
+  <Import Project="..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\build\Microsoft.TeamFoundationServer.ExtendedClient.targets" Condition="('$(TfsVersion)' == '14.0') and Exists('..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\build\Microsoft.TeamFoundationServer.ExtendedClient.targets')" />
+
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="'$(TfsVersion)' == '14.0'">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\build\Microsoft.TeamFoundationServer.ExtendedClient.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\build\Microsoft.TeamFoundationServer.ExtendedClient.targets'))" />
+  </Target>
 </Project>

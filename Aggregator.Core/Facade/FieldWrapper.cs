@@ -1,11 +1,11 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System.Globalization;
+
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
+using Aggregator.Core.Interfaces;
 
 namespace Aggregator.Core.Facade
 {
-    using System.Globalization;
-
-    using Microsoft.TeamFoundation.WorkItemTracking.Client;
-
     public class FieldWrapper : IFieldWrapper
     {
         private readonly Field tfsField;

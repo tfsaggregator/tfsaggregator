@@ -1,10 +1,10 @@
 ﻿using Aggregator.Core.Interfaces;
 
+using Microsoft.TeamFoundation.Framework.Server;
+using Microsoft.TeamFoundation.WorkItemTracking.Server;
+
 namespace Aggregator.Core.Facade
 {
-    using Microsoft.TeamFoundation.Framework.Server;
-    using Microsoft.TeamFoundation.WorkItemTracking.Server;
-
     public class NotificationWrapper : INotification
     {
         private readonly NotificationType notification;
