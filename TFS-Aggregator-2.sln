@@ -33,14 +33,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E0E7919C-5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "references", "references", "{6D32EAB0-0194-408F-91EB-B2E2E0125C3E}"
 	ProjectSection(SolutionItems) = preProject
-		References\Microsoft.TeamFoundation.Client.dll = References\Microsoft.TeamFoundation.Client.dll
-		References\Microsoft.TeamFoundation.Common.dll = References\Microsoft.TeamFoundation.Common.dll
-		References\Microsoft.TeamFoundation.Framework.Server.dll = References\Microsoft.TeamFoundation.Framework.Server.dll
-		References\Microsoft.TeamFoundation.WorkItemTracking.Client.dll = References\Microsoft.TeamFoundation.WorkItemTracking.Client.dll
-		References\Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll = References\Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll
-		References\Microsoft.TeamFoundation.WorkItemTracking.Server.dll = References\Microsoft.TeamFoundation.WorkItemTracking.Server.dll
-		References\Microsoft.VisualStudio.Services.WebApi.dll = References\Microsoft.VisualStudio.Services.WebApi.dll
-		References\PLACEHOLDER.txt = References\PLACEHOLDER.txt
 		References\TfsReferences.target = References\TfsReferences.target
 	EndProjectSection
 EndProject
@@ -58,38 +50,69 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SimpleRollup", "SimpleRollu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4EA36F79-382E-479C-9717-26F2292D1D72}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		TFS-Aggregator-2.ruleset = TFS-Aggregator-2.ruleset
 		TFS-Aggregator-2.sln.DotSettings = TFS-Aggregator-2.sln.DotSettings
 		TFS-Aggregator-2.sln.GhostDoc.xml = TFS-Aggregator-2.sln.GhostDoc.xml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2013", "2013", "{79BBE553-2E3E-4D63-9369-4BDC30523FF1}"
+	ProjectSection(SolutionItems) = preProject
+		References\2013\PLACEHOLDER.txt = References\2013\PLACEHOLDER.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2015", "2015", "{14D62C28-52D1-4267-A40A-80D31A5135CA}"
+	ProjectSection(SolutionItems) = preProject
+		References\2015\PLACEHOLDER.txt = References\2015\PLACEHOLDER.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Debug-2013|Any CPU = Debug-2013|Any CPU
+		Debug-2015|Any CPU = Debug-2015|Any CPU
+		Release-2013|Any CPU = Release-2013|Any CPU
+		Release-2015|Any CPU = Release-2015|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release|Any CPU.Build.0 = Release|Any CPU
-		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{200CF240-476E-4429-A8FC-66001806A2DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{200CF240-476E-4429-A8FC-66001806A2DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug-2013|Any CPU.ActiveCfg = Debug-2013|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug-2013|Any CPU.Build.0 = Debug-2013|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug-2015|Any CPU.ActiveCfg = Debug-2015|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug-2015|Any CPU.Build.0 = Debug-2015|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release-2013|Any CPU.ActiveCfg = Release-2013|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release-2013|Any CPU.Build.0 = Release-2013|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release-2015|Any CPU.ActiveCfg = Release-2015|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release-2015|Any CPU.Build.0 = Release-2015|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug-2013|Any CPU.ActiveCfg = Debug-2013|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug-2013|Any CPU.Build.0 = Debug-2013|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug-2015|Any CPU.ActiveCfg = Debug-2015|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug-2015|Any CPU.Build.0 = Debug-2015|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release-2013|Any CPU.ActiveCfg = Release-2013|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release-2013|Any CPU.Build.0 = Release-2013|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release-2015|Any CPU.ActiveCfg = Release-2015|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release-2015|Any CPU.Build.0 = Release-2015|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug-2013|Any CPU.ActiveCfg = Debug-2013|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug-2013|Any CPU.Build.0 = Debug-2013|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug-2015|Any CPU.ActiveCfg = Debug-2015|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug-2015|Any CPU.Build.0 = Debug-2015|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release-2013|Any CPU.ActiveCfg = Release-2013|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release-2013|Any CPU.Build.0 = Release-2013|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release-2015|Any CPU.ActiveCfg = Release-2015|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release-2015|Any CPU.Build.0 = Release-2015|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug-2013|Any CPU.ActiveCfg = Debug-2013|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug-2013|Any CPU.Build.0 = Debug-2013|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug-2015|Any CPU.ActiveCfg = Debug-2015|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug-2015|Any CPU.Build.0 = Debug-2015|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Release-2013|Any CPU.ActiveCfg = Release-2013|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Release-2013|Any CPU.Build.0 = Release-2013|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Release-2015|Any CPU.ActiveCfg = Release-2015|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Release-2015|Any CPU.Build.0 = Release-2015|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{17EF831E-EB65-431C-B398-4FED5CA44F98} = {B1913F70-5A32-4EAE-BDD2-0C46295656A6}
+		{79BBE553-2E3E-4D63-9369-4BDC30523FF1} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
+		{14D62C28-52D1-4267-A40A-80D31A5135CA} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
 	EndGlobalSection
 EndGlobal

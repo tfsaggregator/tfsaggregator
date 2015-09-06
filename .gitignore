@@ -177,3 +177,6 @@ FakesAssemblies/
 References/*.dll
 *.GhostDoc.xml
 *.wit
+
+#Visual Studio Hoting process and cache
+.vs/
