@@ -15,24 +15,24 @@ namespace Aggregator.Core
         /// <summary>
         /// Parent relation in LinkTypeEndImmutableName format.
         /// </summary>
-        public static readonly string ParentRelationship = "System.LinkTypes.Hierarchy-Reverse";
+        public const string ParentRelationship = "System.LinkTypes.Hierarchy-Reverse";
 
         /// <summary>
         /// Child relation in LinkTypeEndImmutableName format.
         /// </summary>
-        public static readonly string ChildRelationship = "System.LinkTypes.Hierarchy-Forward";
+        public const string ChildRelationship = "System.LinkTypes.Hierarchy-Forward";
 
-        protected ILogEvents logger;
+        protected ILogEvents Logger { get; }
 
-        protected IWorkItemRepository store;
+        protected IWorkItemRepository Store { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemImplementationBase"/> class.
         /// </summary>
         public WorkItemImplementationBase(IWorkItemRepository store, ILogEvents logger)
         {
-            this.store = store;
-            this.logger = logger;
+            this.Store = store;
+            this.Logger = logger;
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Aggregator.Core
 
                 if (parentWorkItemId.HasValue)
                 {
-                    return this.store.GetWorkItem(parentWorkItemId.Value);
+                    return this.Store.GetWorkItem(parentWorkItemId.Value);
                 }
 
                 return null;
@@ -100,7 +100,7 @@ namespace Aggregator.Core
                 var childWorkItems =
                     from IWorkItemLink workItemLink in this.WorkItemLinks
                     where workItemLink.LinkTypeEndImmutableName == ChildRelationship
-                    select this.store.GetWorkItem(workItemLink.TargetId);
+                    select this.Store.GetWorkItem(workItemLink.TargetId);
 
                 foreach (var item in childWorkItems)
                 {

@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 
-using Microsoft.TeamFoundation.WorkItemTracking.Client;
-
 using Aggregator.Core.Interfaces;
+
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
 {
@@ -46,9 +46,9 @@ namespace Aggregator.Core.Facade
                     && this.tfsField.FieldDefinition.SystemType == typeof(double))
                 {
                     // Ugly hack to ensure the double comparison goes safely. TFS internally rounds/truncates the values.
-                    CultureInfo c = CultureInfo.InvariantCulture;
-                    double original = double.Parse(((double)this.tfsField.Value).ToString(c), c);
-                    double proposed = double.Parse(((double)value).ToString(c), c);
+                    CultureInfo invariant = CultureInfo.InvariantCulture;
+                    decimal original = decimal.Parse(((double)this.tfsField.Value).ToString(invariant), invariant);
+                    decimal proposed = decimal.Parse(((double)value).ToString(invariant), invariant);
 
                     // Ignore when the same value is assigned.
                     if (original == proposed)

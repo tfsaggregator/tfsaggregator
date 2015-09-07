@@ -107,7 +107,7 @@ namespace Aggregator.Core.Facade
             }
             catch (Exception e)
             {
-                this.logger.WorkItemWrapperTryOpenException(this, e);
+                this.Logger.WorkItemWrapperTryOpenException(this, e);
             }
         }
 
@@ -123,7 +123,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new WorkItemLinkCollectionWrapper(this.workItem.WorkItemLinks, this.store, this.logger);
+                return new WorkItemLinkCollectionWrapper(this.workItem.WorkItemLinks, this.Store, this.Logger);
             }
         }
 
@@ -143,7 +143,7 @@ namespace Aggregator.Core.Facade
 
         public void TransitionToState(string state, string comment)
         {
-            StateWorkFlow.TransitionToState(this, state, comment, this.logger);
+            StateWorkFlow.TransitionToState(this, state, comment, this.Logger);
         }
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
@@ -156,12 +156,12 @@ namespace Aggregator.Core.Facade
             // check it does not exist already
             if (!this.workItem.WorkItemLinks.Contains(relationship))
             {
-                this.logger.AddingWorkItemLink(this.Id, destLinkType, destination.Id);
+                this.Logger.AddingWorkItemLink(this.Id, destLinkType, destination.Id);
                 this.workItem.WorkItemLinks.Add(relationship);
             }
             else
             {
-                this.logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
+                this.Logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
             }
         }
 
@@ -171,12 +171,12 @@ namespace Aggregator.Core.Facade
             link.Comment = comment;
             if (!this.workItem.Links.Contains(link))
             {
-                this.logger.AddingHyperlink(this.Id, destination, comment);
+                this.Logger.AddingHyperlink(this.Id, destination, comment);
                 this.workItem.Links.Add(link);
             }
             else
             {
-                this.logger.HyperlinkAlreadyExists(this.Id, destination, comment);
+                this.Logger.HyperlinkAlreadyExists(this.Id, destination, comment);
             }
         }
     }

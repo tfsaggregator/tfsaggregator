@@ -44,13 +44,13 @@ namespace Aggregator.Core.Configuration
         /// <summary>
         /// Checks whether this policy matches the request.
         /// </summary>
-        /// <param name="requestContext">The requestcontext of the TFS event</param>
-        /// <param name="notification">The notification holding the WorkItemChangedEvent.</param>
+        /// <param name="currentRequestContext">The requestcontext of the TFS event</param>
+        /// <param name="currentNotification">The notification holding the WorkItemChangedEvent.</param>
         /// <returns>true if the policy matches all supplied checks.</returns>
-        public override bool Matches(IRequestContext requestContext, INotification notification)
+        public override bool Matches(IRequestContext currentRequestContext, INotification currentNotification)
         {
-            this.context = requestContext;
-            this.notification = notification;
+            this.context = currentRequestContext;
+            this.notification = currentNotification;
 
             return this.MatchesName()
                    && this.MatchesId()

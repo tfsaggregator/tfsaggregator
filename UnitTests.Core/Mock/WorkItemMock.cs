@@ -109,13 +109,13 @@ namespace UnitTests.Core.Mock
         public void TransitionToState(string state, string comment)
         {
             // HACK
-            StateWorkFlow.TransitionToState(this, state, comment, this.logger);
+            StateWorkFlow.TransitionToState(this, state, comment, this.Logger);
         }
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
         {
             // HACK: should use the code in wrapper...
-            var relationship = new WorkItemLinkMock(linkTypeName, destination.Id, this.store);
+            var relationship = new WorkItemLinkMock(linkTypeName, destination.Id, this.Store);
 
             // check it does not exist already
             if (!this.workItemLinks.Contains(relationship))

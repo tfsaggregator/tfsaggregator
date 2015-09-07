@@ -72,7 +72,7 @@ namespace Aggregator.Core.Monitoring
             {
                 this.logger.Log(
                     LogLevel.Critical,
-                    "Exception encountered processing notification: {0} \nStack Trace:{1}", 
+                    "Exception encountered processing notification: {0} \nStack Trace:{1}",
                     e.Message,
                     e.StackTrace);
             }

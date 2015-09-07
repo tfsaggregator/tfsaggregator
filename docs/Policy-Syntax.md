@@ -18,11 +18,12 @@ This is the basic beginning to an XML file. Do not change it.
 **AggregatorConfiguration**: The main node for all the configuration options. (Single)
 
 ```
-    <runtime>
+    <runtime debug="False">
 ```
 
 **runtime**: Configure generic behavior. (Once, Optional)
-
+ - **debug**: turns on debugging options (Optional, default: False)
+ 
 ```
         <logging level="Diagnostic"/>
 ```
