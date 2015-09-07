@@ -22,8 +22,8 @@ namespace Aggregator.Core.Script
     public abstract class DotNetScriptEngine<TCodeDomProvider> : ScriptEngine
         where TCodeDomProvider : CodeDomProvider, new()
     {
-        protected DotNetScriptEngine(IWorkItemRepository store, ILogEvents logger)
-            : base(store, logger)
+        protected DotNetScriptEngine(IWorkItemRepository store, ILogEvents logger, bool debug)
+            : base(store, logger, debug)
         {
         }
 
@@ -57,7 +57,7 @@ namespace Aggregator.Core.Script
             return refList.ToArray();
         }
 
-        private CompilerResults CompileCode(string[] code, bool debug = false)
+        private void CompileCode(string[] code)
         {
             var codeDomProvider = new TCodeDomProvider();
 
@@ -65,15 +65,15 @@ namespace Aggregator.Core.Script
             var compilerOptions = new CompilerParameters();
             compilerOptions.GenerateExecutable = false;
             compilerOptions.GenerateInMemory = true;
-            compilerOptions.IncludeDebugInformation = debug;
+            compilerOptions.IncludeDebugInformation = this.Debug;
 
             // save temp files to permit debugging
-            compilerOptions.TempFiles.KeepFiles = debug;
+            compilerOptions.TempFiles.KeepFiles = this.Debug;
 
             // critical step
             compilerOptions.ReferencedAssemblies.AddRange(this.GetAssemblyReferences());
 
-            return codeDomProvider.CompileAssemblyFromSource(compilerOptions, code);
+            this.compilerResult = codeDomProvider.CompileAssemblyFromSource(compilerOptions, code);
         }
 
         private void RunScript(Assembly assembly, string scriptName, IWorkItem self)
@@ -82,21 +82,21 @@ namespace Aggregator.Core.Script
             var classForScript = assembly.GetType("RESERVED.Script_" + scriptName);
             if (classForScript == null)
             {
-                this.logger.FailureLoadingScript(scriptName);
+                this.Logger.FailureLoadingScript(scriptName);
                 return;
             }
 
             var interfaceForScript = classForScript.GetInterface(typeof(IDotNetScript).Name);
             if (interfaceForScript == null)
             {
-                this.logger.FailureLoadingScript(scriptName);
+                this.Logger.FailureLoadingScript(scriptName);
                 return;
             }
 
             ConstructorInfo constructor = classForScript.GetConstructor(Type.EmptyTypes);
             if (constructor == null || !constructor.IsPublic)
             {
-                this.logger.FailureLoadingScript(scriptName);
+                this.Logger.FailureLoadingScript(scriptName);
                 return;
             }
 
@@ -104,28 +104,26 @@ namespace Aggregator.Core.Script
             IDotNetScript scriptObject = constructor.Invoke(null) as IDotNetScript;
             if (scriptObject == null)
             {
-                this.logger.FailureLoadingScript(scriptName);
+                this.Logger.FailureLoadingScript(scriptName);
                 return;
             }
 
             System.Diagnostics.Debug.WriteLine("*** about to execute {0}", scriptName, null);
-            this.logger.ScriptLogger.RuleName = scriptName;
+            this.Logger.ScriptLogger.RuleName = scriptName;
 
             // Lets run our script and display its results
-            object result = scriptObject.RunScript(self, this.store, this.logger.ScriptLogger);
-            this.logger.ResultsFromScriptRun(scriptName, result);
+            object result = scriptObject.RunScript(self, this.Store, this.Logger.ScriptLogger);
+            this.Logger.ResultsFromScriptRun(scriptName, result);
         }
 
-        private static void CleanUp(bool debug, CompilerResults compilerResult)
+        private void CleanUp()
         {
-            if (debug)
+            if (this.Debug)
             {
-                compilerResult.TempFiles.KeepFiles = false;
-                compilerResult.TempFiles.Delete();
+                this.compilerResult.TempFiles.KeepFiles = false;
+                this.compilerResult.TempFiles.Delete();
             }
         }
-
-        private bool debug = true;
 
         private readonly Dictionary<string, string> sourceCode = new Dictionary<string, string>();
 
@@ -140,53 +138,61 @@ namespace Aggregator.Core.Script
 
         public override bool LoadCompleted()
         {
-            // build a single assembly and class from multiple scripts
-            this.compilerResult = this.CompileCode(this.sourceCode.Values.ToArray(), this.debug);
-
-            // TODO find a way to get where the error is
-            if (this.compilerResult.Errors.HasErrors)
+            try
             {
-                foreach (CompilerError err in this.compilerResult.Errors.Cast<CompilerError>())
-                {
-                    this.logger.ScriptHasError("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
-                }
-            }
+                // build a single assembly and class from multiple scripts
+                this.CompileCode(this.sourceCode.Values.ToArray());
 
-            if (this.compilerResult.Errors.HasWarnings)
+                // TODO find a way to get where the error is
+                if (this.compilerResult.Errors.HasErrors)
+                {
+                    foreach (CompilerError err in this.compilerResult.Errors.Cast<CompilerError>())
+                    {
+                        this.Logger.ScriptHasError("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
+                    }
+                }
+
+                if (this.compilerResult.Errors.HasWarnings)
+                {
+                    foreach (CompilerError err in this.compilerResult.Errors.Cast<CompilerError>())
+                    {
+                        this.Logger.ScriptHasWarning("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
+                    }
+                }
+
+                return !this.compilerResult.Errors.HasErrors;
+            }
+            finally
             {
-                foreach (CompilerError err in this.compilerResult.Errors.Cast<CompilerError>())
-                {
-                    this.logger.ScriptHasWarning("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
-                }
+                this.CleanUp();
             }
-
-            return !this.compilerResult.Errors.HasErrors;
         }
 
         public override void Run(string scriptName, IWorkItem workItem)
         {
             if (!this.compilerResult.Errors.HasErrors)
             {
-                AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomain_AssemblyResolve;
+                ResolveEventHandler resolveAssemblies = (s, e) => ResolveAssembly(e);
                 try
                 {
+                    AppDomain.CurrentDomain.AssemblyResolve += resolveAssemblies;
                     this.RunScript(this.compilerResult.CompiledAssembly, scriptName, workItem);
                 }
                 finally
                 {
-                    AppDomain.CurrentDomain.AssemblyResolve -= this.CurrentDomain_AssemblyResolve;
+                    AppDomain.CurrentDomain.AssemblyResolve -= resolveAssemblies;
                 }
             }
             else
             {
                 // compile errors slip away in the log, reinstate that something is wrong
-                this.logger.FailureLoadingScript(scriptName);
+                this.Logger.FailureLoadingScript(scriptName);
             }
 
             // BUG: must have a "clean up event" fired at shutdown time
         }
 
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        private static Assembly ResolveAssembly(ResolveEventArgs args)
         {
             Match m = Regex.Match(
                 args.Name,

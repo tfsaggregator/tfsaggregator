@@ -103,7 +103,7 @@ namespace Aggregator.Core.Context
         {
             Func<IWorkItemRepository, ScriptEngine> builder = (store) =>
             {
-                var newEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, workItemStore, this.Logger);
+                var newEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, workItemStore, this.Logger, this.Settings.Debug);
                 foreach (var rule in this.Settings.Rules)
                 {
                     newEngine.Load(rule.Name, rule.Script);

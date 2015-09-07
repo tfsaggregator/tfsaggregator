@@ -8,8 +8,8 @@ namespace Aggregator.Core
 
     public class CSharpScriptEngine : DotNetScriptEngine<CSharpCodeProvider>
     {
-        public CSharpScriptEngine(IWorkItemRepository store, ILogEvents logger)
-            : base(store, logger)
+        public CSharpScriptEngine(IWorkItemRepository store, ILogEvents logger, bool debug)
+            : base(store, logger, debug)
         {
         }
 

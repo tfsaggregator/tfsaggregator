@@ -28,6 +28,7 @@ namespace Aggregator.Core.Navigation
         /// TFS Aggregator will cycle the target work item through what ever states it needs to to find the **shortest route** to the target state.
         /// (For most templates that is also the route that makes the most sense from a business perspective too.)
         /// </remarks>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("SonarQube", "S3240:The simplest possible condition syntax should be used", Justification = "?: construct is harder to read in this case.")]
         public static void TransitionToState(IWorkItem workItem, string state, string commentPrefix, ILogEvents logger)
         {
             // Set the sourceWorkItem's state so that it is clear that it has been moved.

@@ -70,10 +70,10 @@ namespace UnitTests.Core
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem.policies", logger);
-            var repository = this.SetupFakeRepository();
+            var alternateRepository = this.SetupFakeRepository();
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            using (var processor = new EventProcessor(repository, runtime))
+            using (var processor = new EventProcessor(alternateRepository, runtime))
             {
                 var notification = Substitute.For<INotification>();
                 notification.WorkItemId.Returns(1);
@@ -92,10 +92,10 @@ namespace UnitTests.Core
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem-Short.policies", logger);
-            var repository = this.SetupFakeRepository_Short();
+            var alternateRepository = this.SetupFakeRepository_Short();
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            using (var processor = new EventProcessor(repository, runtime))
+            using (var processor = new EventProcessor(alternateRepository, runtime))
             {
                 var notification = Substitute.For<INotification>();
                 notification.WorkItemId.Returns(1);
@@ -114,10 +114,10 @@ namespace UnitTests.Core
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItemVB.policies", logger);
-            var repository = this.SetupFakeRepository_Short();
+            var alternateRepository = this.SetupFakeRepository_Short();
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            using (var processor = new EventProcessor(repository, runtime))
+            using (var processor = new EventProcessor(alternateRepository, runtime))
             {
                 var notification = Substitute.For<INotification>();
                 notification.WorkItemId.Returns(1);
@@ -136,40 +136,40 @@ namespace UnitTests.Core
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("Rollup.policies", logger);
-            var repository = new WorkItemRepositoryMock();
+            var alternateRepository = new WorkItemRepositoryMock();
 
-            var grandParent = new WorkItemMock(repository);
+            var grandParent = new WorkItemMock(alternateRepository);
             grandParent.Id = 1;
             grandParent.TypeName = "Feature";
             grandParent["Dev Estimate"] = 0.0D;
             grandParent["Test Estimate"] = 0.0D;
 
-            var parent = new WorkItemMock(repository);
+            var parent = new WorkItemMock(alternateRepository);
             parent.Id = 2;
             parent.TypeName = "Use Case";
-            parent.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 1, repository));
-            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 2, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 1, alternateRepository));
+            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 2, alternateRepository));
             parent["Total Work Remaining"] = 3.0D;
             parent["Total Estimate"] = 4.0D;
 
-            var child = new WorkItemMock(repository);
+            var child = new WorkItemMock(alternateRepository);
             child.Id = 3;
             child.TypeName = "Task";
-            child.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 2, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 3, repository));
+            child.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 2, alternateRepository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 3, alternateRepository));
             child["Estimated Dev Work"] = 10.0D;
             child["Estimated Test Work"] = 20.0D;
             child["Remaining Dev Work"] = 1.0D;
             child["Remaining Test Work"] = 2.0D;
             child["Finish Date"] = new DateTime(2015, 1, 1);
 
-            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, repository));
-            repository.SetWorkItems(new[] { grandParent, parent, child });
+            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, alternateRepository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, alternateRepository));
+            alternateRepository.SetWorkItems(new[] { grandParent, parent, child });
 
             var context = Substitute.For<IRequestContext>();
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            using (var processor = new EventProcessor(repository, runtime))
+            using (var processor = new EventProcessor(alternateRepository, runtime))
             {
                 var notification = Substitute.For<INotification>();
                 notification.WorkItemId.Returns(3);

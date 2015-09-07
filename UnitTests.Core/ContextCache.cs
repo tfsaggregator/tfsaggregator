@@ -21,7 +21,7 @@ namespace UnitTests.Core
 
         private string SetupSettingsFile(string sourceName)
         {
-            string sourcePath = Path.Combine(@"..\..\..\ConfigurationsForTests", sourceName);
+            string sourcePath = Path.Combine(@"..\..\ConfigurationsForTests", sourceName);
             string destPath = Path.GetTempFileName();
             File.Copy(sourcePath, destPath, true);
             File.SetLastWriteTimeUtc(destPath, this.referenceDate);

@@ -20,12 +20,4 @@ namespace UnitTests.Core
             System.Diagnostics.Debug.WriteLine(message, levelAsString);
         }
     }
-
-    internal class DebugEventLogger : TextLogComposer
-    {
-        public DebugEventLogger()
-            : base(new DebugTextLogger())
-        {
-        }
-    }
 }

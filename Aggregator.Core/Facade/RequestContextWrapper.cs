@@ -105,14 +105,9 @@ namespace Aggregator.Core.Facade
                 }
             }
 
-            if (result == unknown)
-            {
-                return new ProcessTemplateVersionWrapper() { TypeId = Guid.Empty, Major = 0, Minor = 0 };
-            }
-            else
-            {
-                return new ProcessTemplateVersionWrapper() { TypeId = result.TypeId, Major = result.Major, Minor = result.Minor };
-            }
+            return result == unknown
+                ? new ProcessTemplateVersionWrapper() { TypeId = Guid.Empty, Major = 0, Minor = 0 }
+                : new ProcessTemplateVersionWrapper() { TypeId = result.TypeId, Major = result.Major, Minor = result.Minor };
         }
     }
 }

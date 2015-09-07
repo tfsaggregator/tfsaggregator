@@ -17,6 +17,7 @@ namespace Aggregator.Core.Facade
             this.fields = fieldCollection;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("SonarQube", "S3237:\"value\" parameters should be used", Justification = "Available for mock testing only")]
         public IFieldWrapper this[string name]
         {
             get

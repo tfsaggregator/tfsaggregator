@@ -115,12 +115,21 @@ namespace Aggregator.Core.Configuration
             instance.LogLevel = loggingNode != null ?
                 (LogLevel)Enum.Parse(typeof(LogLevel), loggingNode.Attribute("level").Value)
                 : LogLevel.Normal;
+
+            var runtimeNode = doc.Root.Element("runtime") ?? null;
+            var debugvalue = runtimeNode?.Attribute("debug")?.Value;
+            instance.Debug = debugvalue != null ?
+                bool.Parse(debugvalue)
+                : false;
+
             var authenticationNode = doc.Root.Element("runtime") != null ?
                 doc.Root.Element("runtime").Element("authentication") : null;
             instance.AutoImpersonate = authenticationNode != null
                 && bool.Parse(authenticationNode.Attribute("autoImpersonate").Value);
+
             var scriptNode = doc.Root.Element("runtime") != null ?
                 doc.Root.Element("runtime").Element("script") : null;
+
             instance.ScriptLanguage = scriptNode?.Attribute("language").Value ?? "C#";
         }
 
@@ -171,6 +180,12 @@ namespace Aggregator.Core.Configuration
                             var projects = new List<string>();
                             projects.AddRange((element.Attribute("projects") ?? nullAttribute).Value.Split(ListSeparators));
                             scope.Add(new ProjectScope() { ProjectNames = projects });
+                            break;
+                        }
+
+                        default:
+                        {
+                            // Ignore other rules for now.
                             break;
                         }
                     }
@@ -239,5 +254,7 @@ namespace Aggregator.Core.Configuration
         public IEnumerable<Rule> Rules { get; private set; }
 
         public IEnumerable<Policy> Policies { get; private set; }
+
+        public bool Debug { get; set; }
     }
 }
