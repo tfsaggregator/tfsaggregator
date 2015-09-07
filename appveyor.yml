@@ -17,12 +17,15 @@ environment:
   referenceFolder: References
 install:
   # get referenced DLL files from container
-  - ps: $flavors = '2013','2015'
   - ps: $containerList = "$env:TEMP\references.xml"
-  - ps: foreach ($flavor in $flavors) {
-  - ps:   Invoke-RestMethod -Uri "$env:containerURL$flavor`?restype=container&comp=list" -OutFile $containerList
-  - ps:   $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
-  - ps:   foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL/$file" -OutFile "$env:referenceFolder\$flavor\$file" } }
+  - ps: $flavor = '2013'
+  - ps: Invoke-RestMethod -Uri "$env:containerURL$flavor`?restype=container&comp=list" -OutFile $containerList
+  - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
+  - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL/$file" -OutFile "$env:referenceFolder\$flavor\$file" }
+  - ps: $flavor = '2015'
+  - ps: Invoke-RestMethod -Uri "$env:containerURL$flavor`?restype=container&comp=list" -OutFile $containerList
+  - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
+  - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL/$file" -OutFile "$env:referenceFolder\$flavor\$file" }
 assembly_info:
   patch: true
   file: AssemblyVersion.cs
