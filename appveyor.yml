@@ -32,9 +32,11 @@ assembly_info:
   assembly_version: "2.0.{build}"
   assembly_file_version: "2.0.{build}"
   assembly_informational_version: "{version}"
+# Uncomment the following to use old C# compiler
+# before_build:
+#  - if %CONFIGURATION%==Debug-2013 set PATH=C:\Program Files (x86)\MSBuild\12.0\Bin;%PATH%
+#  - if %CONFIGURATION%==Release-2013 set PATH=C:\Program Files (x86)\MSBuild\12.0\Bin;%PATH%
 before_build:
-  - if %CONFIGURATION%==Debug-2013 set PATH=C:\Program Files (x86)\MSBuild\12.0\Bin;%PATH%
-  - if %CONFIGURATION%==Release-2013 set PATH=C:\Program Files (x86)\MSBuild\12.0\Bin;%PATH%
   - nuget restore
 build:
   project: TFS-Aggregator-2.sln
