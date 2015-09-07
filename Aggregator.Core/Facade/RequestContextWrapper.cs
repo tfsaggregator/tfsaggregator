@@ -32,7 +32,7 @@ namespace Aggregator.Core.Facade
             this.context = context;
         }
 
-        public string CollectionName => this.context.ServiceHost.Name;
+        public string CollectionName { get { return this.context.ServiceHost.Name; } }
 
         public string GetProjectName(Uri teamProjectUri)
         {
