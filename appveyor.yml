@@ -4,7 +4,16 @@ branches:
     - master
     - develop
 skip_tags: true
-configuration: Debug
+
+platform:
+  - Any CPU
+
+configuration:
+  - Debug-2015
+  - Debug-2013
+  - Release-2015
+  - Release-2013
+
 environment:
   containerURL:
     secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3XOLD5ID2nweLVV5CitmsDsC6PVlxsbfDFgmolBxKHg4=
@@ -27,12 +36,8 @@ build:
   project: TFS-Aggregator-2.sln
   # MSBuild verbosity level: quiet|minimal|normal|detailed
   verbosity: minimal
-  configuration:
-  - Debug-2015
-  - Debug-2013
-  - Release-2015
-  - Release-2013
-  platform: Any CPU
+
+
 after_build:
   - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ServerPlugin\bin\%CONFIGURATION%\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
   - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ConsoleApp\bin\%CONFIGURATION%\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
