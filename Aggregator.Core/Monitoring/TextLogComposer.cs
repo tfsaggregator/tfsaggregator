@@ -21,7 +21,7 @@ namespace Aggregator.Core.Monitoring
             this.ScriptLogger = new RuleLogger(this);
         }
 
-        public ITextLogger TextLogger { get { return logger; } }
+        public ITextLogger TextLogger => this.logger;
 
         public IRuleLogger ScriptLogger { get; set; }
 
