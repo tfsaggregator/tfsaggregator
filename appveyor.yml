@@ -22,8 +22,7 @@ install:
   - ps: foreach ($flavor in $flavors) {
   - ps:   Invoke-RestMethod -Uri "$env:containerURL$flavor`?restype=container&comp=list" -OutFile $containerList
   - ps:   $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
-  - ps:   foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL/$file" -OutFile "$env:referenceFolder\$flavor\$file" }
-  - ps: }
+  - ps:   foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL/$file" -OutFile "$env:referenceFolder\$flavor\$file" } }
 assembly_info:
   patch: true
   file: AssemblyVersion.cs
