@@ -27,10 +27,10 @@ Example Uses
 Setup & install
 ================================================
 
-The [Install](https://github.com/tfsaggregator/tfsaggregator/releases/download/2.0.22-master/tfsaggregator-2.0.22-master.zip) file contains the full details to correctly setup Aggregator. The general process is:
+The latest [Install](https://github.com/tfsaggregator/tfsaggregator/tree/8ae990810f580c161247a6f6f4720d9b72d98288) file contains the full details to correctly setup Aggregator. The general process is:
 
  1. Download and extract the binaries from the latest release
- 2. Open up `TFSAggregator2.ServerPlugin.policies` and change the example settings to your actual settings.
+ 2. Create `TFSAggregator2.ServerPlugin.policies` (or rename one of the existing samples to get started) and change the example settings to your actual settings.
  3. Test your policy using the command line tool.
  4. Copy `TFSAggregator2.*.dll` and `TFSAggregator2.ServerPlugin.policies` to the plugin location on the Application Tier of your TFS Servers
 
