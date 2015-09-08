@@ -50,5 +50,13 @@ If you used TFS Aggregator in the past, [here](docs/Upgrade-from-v1.md) are the 
 Build and customize
 ================================================
 We used Visual Studio Community Edition 2013 Update 4 to develop this version.
-It requires a number of TFS assemblies that cannot be redistributed. You can find the complete list [here](references/PLACEHOLDER.txt).
+It requires a number of TFS assemblies that cannot be redistributed. 
+
+You can find the complete list:
+
+ - 2013: [here](../References/2013/PLACEHOLDER.txt).
+ - 2015: [here](../References/2015/PLACEHOLDER.txt).
+
+if you have TFS 2015 or TFS 2013 installed on your development machine, the assemblies for that version will be loaded automatically from the installation folder.
+
 More information and useful details on the internal design is [here](docs/Internals.md)
