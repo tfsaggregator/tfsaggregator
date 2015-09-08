@@ -29,4 +29,9 @@ The Core is decoupled from the logging sub-system: interesting events are pushed
 
 # Build
 We used Visual Studio Community Edition 2013 Update 4 and Visual Studio Community Edition 2015 to develop this version.
-It requires a number of TFS assemblies that cannot be redistributed. You can find the complete list [here](../references/PLACEHOLDER.txt).
+It requires a number of TFS assemblies that cannot be redistributed. You can find the complete list 
+
+ - 2013: [here](../references/2013/PLACEHOLDER.txt).
+ - 2015: [here](../references/2013/PLACEHOLDER.txt).
+
+if you have TFS 2015 or TFS 2013 installed on your development machine, the assemblies for that version will be loaded automatically from the installation folder.
