@@ -3,53 +3,35 @@
     using System;
     using System.Diagnostics;
 
-    using Aggregator.Core;
-    using Aggregator.Core.Monitoring;
+    using Core;
+    using Core.Monitoring;
 
     internal class ConsoleTextLogger : ITextLogger
     {
-        private LogLevel minLevel;
-        private Stopwatch clock = new Stopwatch();
+        private readonly Stopwatch clock = new Stopwatch();
 
-        internal ConsoleTextLogger(LogLevel level)
+        private LogLevel minimumLogLevel;
+
+        internal ConsoleTextLogger(LogLevel minimumLogLevel)
         {
-            this.minLevel = level;
+            this.minimumLogLevel = minimumLogLevel;
             this.clock.Restart();
         }
 
-        static ConsoleColor MapColor(LogLevel level)
+        public LogLevel MinimumLogLevel
         {
-            switch (level)
-            {
-                case LogLevel.Critical:
-                    return ConsoleColor.Red;
-                case LogLevel.Error:
-                    return ConsoleColor.Red;
-                case LogLevel.Warning:
-                    return ConsoleColor.Yellow;
-                case LogLevel.Information:
-                    return ConsoleColor.Gray;
-                case LogLevel.Verbose:
-                    return ConsoleColor.Cyan;
-                case LogLevel.Diagnostic:
-                    return ConsoleColor.Cyan;
-                default:
-                    return ConsoleColor.Gray;
-            }//switch
-        }
-
-        public LogLevel Level
-        {
-            get { return minLevel; }
-            set { minLevel = value; }
+            get { return this.minimumLogLevel; }
+            set { this.minimumLogLevel = value; }
         }
 
         public void Log(LogLevel level, string format, params object[] args)
         {
-            if (level > this.minLevel)
+            if (level > this.minimumLogLevel)
+            {
                 return;
+            }
 
-            clock.Stop();
+            this.clock.Stop();
             try
             {
                 string message = args != null ? string.Format(format, args: args) : format;
@@ -59,18 +41,43 @@
 
                 const int LogLevelMaximumStringLength = 11; // Len(Information)
                 string levelAsString = level.ToString();
-                Console.Write("[{0}]{1} {2:00}.{3:000} "
-                    , levelAsString, string.Empty.PadLeft(LogLevelMaximumStringLength - levelAsString.Length)
-                    , clock.ElapsedMilliseconds / 1000, clock.ElapsedMilliseconds % 1000);
+
+                Console.Write(
+                    "[{0}]{1} {2:00}.{3:000} ",
+                    levelAsString,
+                    string.Empty.PadLeft(LogLevelMaximumStringLength - levelAsString.Length),
+                    this.clock.ElapsedMilliseconds / 1000,
+                    this.clock.ElapsedMilliseconds % 1000);
+
                 Console.WriteLine(message);
 
                 Console.ForegroundColor = save;
             }
             finally
             {
-                clock.Start();
-            }//try
+                this.clock.Start();
+            }
         }
 
+        internal static ConsoleColor MapColor(LogLevel level)
+        {
+            switch (level)
+            {
+                case LogLevel.Error:
+                case LogLevel.Critical:
+                    return ConsoleColor.Red;
+
+                case LogLevel.Warning:
+                    return ConsoleColor.Yellow;
+
+                case LogLevel.Verbose:
+                case LogLevel.Diagnostic:
+                    return ConsoleColor.Cyan;
+
+                case LogLevel.Information:
+                default:
+                    return ConsoleColor.Gray;
+            }
+        }
     }
 }

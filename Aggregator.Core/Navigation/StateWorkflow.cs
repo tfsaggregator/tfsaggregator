@@ -1,30 +1,35 @@
-﻿namespace Aggregator.Core.Navigation
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
+
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
+namespace Aggregator.Core.Navigation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Xml;
-
-    using Microsoft.TeamFoundation.WorkItemTracking.Client;
-
-    static public class StateWorkflow
+    public static class StateWorkFlow
     {
         // caches info on work item states
-        static private readonly Dictionary<IWorkItemType, List<StateTransition>> _allTransistions = new Dictionary<IWorkItemType, List<StateTransition>>();
+        private static readonly Dictionary<IWorkItemType, List<StateTransition>> AllTransitions = new Dictionary<IWorkItemType, List<StateTransition>>();
 
         /// <summary>
         /// Set the state of a Work Item.
         /// </summary>
-        /// <param name="workItem"></param>
+        /// <param name="workItem">Work item to transition state of</param>
         /// <param name="state">Target state</param>
         /// <param name="commentPrefix">Added to historical comment</param>
+        /// <param name="logger">Logger used to output information</param>
         /// <remarks>
         /// TFS has controls setup on State Transitions.
         /// Most templates do not allow you to go directly from a New state to a Done state.
         /// TFS Aggregator will cycle the target work item through what ever states it needs to to find the **shortest route** to the target state.
         /// (For most templates that is also the route that makes the most sense from a business perspective too.)
         /// </remarks>
-        static public void TransitionToState(IWorkItem workItem, string state, string commentPrefix, ILogEvents logger)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("SonarQube", "S3240:The simplest possible condition syntax should be used", Justification = "?: construct is harder to read in this case.")]
+        public static void TransitionToState(IWorkItem workItem, string state, string commentPrefix, ILogEvents logger)
         {
             // Set the sourceWorkItem's state so that it is clear that it has been moved.
             string originalState = (string)workItem.Fields["State"].Value;
@@ -37,7 +42,6 @@
             // See if we can go directly to the planned state.
             workItem.Fields["State"].Value = state;
 
-
             if (workItem.Fields["State"].Status != FieldStatus.Valid)
             {
                 // Revert back to the original value and start searching for a way to our "MovedState"
@@ -48,14 +52,30 @@
                 {
                     string comment;
                     if (curState == state)
-                        comment = commentPrefix + Environment.NewLine + "  State changed to " + state;
+                    {
+                        comment = string.Format(
+                            "{0}{1}  State changed to {2}",
+                            commentPrefix,
+                            Environment.NewLine,
+                            state);
+                    }
                     else
-                        comment = commentPrefix + Environment.NewLine + "  State changed to " + curState + " as part of move toward a state of " + state;
+                    {
+                        comment = string.Format(
+                            "{0}{1}  State changed to {2} as part of move toward a state of {3}",
+                            commentPrefix,
+                            Environment.NewLine,
+                            curState,
+                            state);
+                    }
 
                     bool success = ChangeWorkItemState(workItem, originalState, curState, comment, logger);
-                    // If we could not do the incremental state change then we are done.  We will have to go back to the orginal...
+
+                    // If we could not do the incremental state change then we are done.  We will have to go back to the original...
                     if (!success)
+                    {
                         break;
+                    }
                 }
             }
             else
@@ -63,11 +83,10 @@
                 // Just save it off if we can.
                 string comment = commentPrefix + "\n   State changed to " + state;
                 ChangeWorkItemState(workItem, originalState, state, comment, logger);
-
             }
         }
 
-        static private bool ChangeWorkItemState(IWorkItem workItem, string orginalSourceState, string destState, String comment, ILogEvents logger)
+        private static bool ChangeWorkItemState(IWorkItem workItem, string orginalSourceState, string destState, string comment, ILogEvents logger)
         {
             // Try to save the new state.  If that fails then we also go back to the original state.
             try
@@ -102,11 +121,11 @@
         /// (Meaning if we are going from a "Not-Started" to a "Done" state,
         /// we usually have to hit a "in progress" state first.
         /// </summary>
-        /// <param name="wiType"></param>
-        /// <param name="fromState"></param>
-        /// <param name="toState"></param>
+        /// <param name="wiType">Work item type</param>
+        /// <param name="fromState">source state</param>
+        /// <param name="toState">target state</param>
         /// <returns></returns>
-        static private IEnumerable<string> FindNextState(IWorkItemType wiType, string fromState, string toState)
+        private static IEnumerable<string> FindNextState(IWorkItemType wiType, string fromState, string toState)
         {
             var map = new Dictionary<string, string>();
             var edges = GetTransitions(wiType).ToDictionary(i => i.From, i => i.To);
@@ -129,31 +148,36 @@
                             {
                                 result.Push(thisNode);
                                 thisNode = map[thisNode];
-                            } while (thisNode != fromState);
+                            }
+                            while (thisNode != fromState);
+
                             while (result.Count > 0)
+                            {
                                 yield return result.Pop();
+                            }
+
                             yield break;
                         }
+
                         q.Enqueue(s);
                     }
                 }
             }
-            // no path exists
         }
 
         /// <summary>
         /// Get the transitions for this <see cref="WorkItemType"/>
         /// </summary>
-        /// <param name="workItemType"></param>
-        /// <returns></returns>
-        static private List<StateTransition> GetTransitions(IWorkItemType workItemType)
+        private static List<StateTransition> GetTransitions(IWorkItemType workItemType)
         {
             List<StateTransition> currentTransitions;
 
             // See if this WorkItemType has already had it's transitions figured out.
-            _allTransistions.TryGetValue(workItemType, out currentTransitions);
+            AllTransitions.TryGetValue(workItemType, out currentTransitions);
             if (currentTransitions != null)
+            {
                 return currentTransitions;
+            }
 
             // Get this worktype type as xml
             XmlDocument workItemTypeXml = workItemType.Export(false);
@@ -168,7 +192,7 @@
             XmlNode transitions = transitionsList[0];
 
             // Iterate all the transitions
-            foreach (XmlNode transitionXML in transitions)
+            foreach (XmlNode transitionXML in transitions.Cast<XmlNode>())
             {
                 // See if we have this from state already.
                 string fromState = transitionXML.Attributes["from"].Value;
@@ -177,9 +201,10 @@
                 {
                     transition.To.Add(transitionXML.Attributes["to"].Value);
                 }
-                // If we could not find this state already then add it.
                 else
                 {
+                    // If we could not find this state already then add it.
+
                     // save off the transition (from first so we can look up state progression.
                     newTransistions.Add(new StateTransition
                     {
@@ -190,7 +215,7 @@
             }
 
             // Save off this transition so we don't do it again if it is needed.
-            _allTransistions.Add(workItemType, newTransistions);
+            AllTransitions.Add(workItemType, newTransistions);
 
             return newTransistions;
         }

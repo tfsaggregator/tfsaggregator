@@ -1,56 +1,40 @@
-﻿using TFS = Microsoft.TeamFoundation.WorkItemTracking.Client;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+using Aggregator.Core.Navigation;
+
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
-    using Aggregator.Core.Navigation;
-
-    public class WorkItemWrapper : IWorkItem
+    public class WorkItemWrapper : WorkItemImplementationBase, IWorkItem
     {
-        ILogEvents logger;
-        private TFS.WorkItem workItem;
-        private IWorkItemRepository store;
+        private readonly WorkItem workItem;
 
-        public WorkItemWrapper(TFS.WorkItem workItem, IWorkItemRepository store, ILogEvents logger)
+        public WorkItemWrapper(WorkItem workItem, IWorkItemRepository store, ILogEvents logger)
+            : base(store, logger)
         {
-            this.logger = logger;
             this.workItem = workItem;
-            this.store = store;
         }
 
-        public TFS.WorkItemType Type { get { return this.workItem.Type; } }
-
-        public string TypeName { get { return this.workItem.Type.Name; } }
-
-        public bool HasParent()
+        public WorkItemType Type
         {
-            return this.HasRelation(WorkItemLazyReference.ParentRelationship);
-        }
-
-        public bool HasChildren()
-        {
-            return this.HasRelation(WorkItemLazyReference.ChildRelationship);
-        }
-
-        public bool HasRelation(string relation)
-        {
-            if (string.IsNullOrWhiteSpace(relation))
+            get
             {
-                throw new ArgumentNullException("relation");
+                return this.workItem.Type;
             }
+        }
 
-            foreach (var link in this.WorkItemLinks)
+        public string TypeName
+        {
+            get
             {
-                if (string.Equals(relation, link.LinkTypeEndImmutableName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
+                return this.workItem.Type.Name;
             }
-
-            return false;
         }
 
         public string History
@@ -59,7 +43,9 @@ namespace Aggregator.Core.Facade
             {
                 return this.workItem.History;
             }
-            set {
+
+            set
+            {
                 this.workItem.History = value;
             }
         }
@@ -78,6 +64,7 @@ namespace Aggregator.Core.Facade
             {
                 return this.workItem[name];
             }
+
             set
             {
                 this.workItem[name] = value;
@@ -92,7 +79,10 @@ namespace Aggregator.Core.Facade
             }
         }
 
-        public bool IsValid() { return this.workItem.IsValid(); }
+        public bool IsValid()
+        {
+            return this.workItem.IsValid();
+        }
 
         public ArrayList Validate()
         {
@@ -117,7 +107,7 @@ namespace Aggregator.Core.Facade
             }
             catch (Exception e)
             {
-                this.logger.WorkItemWrapperTryOpenException(this, e);
+                this.Logger.WorkItemWrapperTryOpenException(this, e);
             }
         }
 
@@ -129,47 +119,11 @@ namespace Aggregator.Core.Facade
             }
         }
 
-        public IWorkItemLinkCollection WorkItemLinks
+        public override IWorkItemLinkCollection WorkItemLinks
         {
             get
             {
-                return new WorkItemLinkCollectionWrapper(this.workItem.WorkItemLinks, this.store, this.logger);
-            }
-        }
-
-        /// <summary>
-        /// Used to convert a field to a number.  If anything goes wrong then the default value is returned.
-        /// </summary>
-        /// <param name="workItem"></param>
-        /// <param name="fieldName">The name of the field to be retrieved</param>
-        /// <param name="defaultValue">Value to be returned if something goes wrong.</param>
-        /// <returns></returns>
-        public TType GetField<TType>(string fieldName, TType defaultValue)
-        {
-            try
-            {
-                TType convertedValue = (TType)this.workItem[fieldName];
-                return convertedValue;
-            }
-            catch (Exception)
-            {
-                return defaultValue;
-            }
-        }
-
-        public IWorkItemExposed Parent
-        {
-            get
-            {
-                return WorkItemLazyReference.MakeParentLazyReference(this, this.store);
-            }
-        }
-
-        public IEnumerable<IWorkItemExposed> Children
-        {
-            get
-            {
-                return WorkItemLazyReference.MakeChildrenLazyReferences(this, this.store);
+                return new WorkItemLinkCollectionWrapper(this.workItem.WorkItemLinks, this.Store, this.Logger);
             }
         }
 
@@ -184,12 +138,46 @@ namespace Aggregator.Core.Facade
         public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
             return WorkItemLazyVisitor
-                .MakeRelativesLazyVisitor(this, query, this.store);
+                .MakeRelativesLazyVisitor(this, query);
         }
 
         public void TransitionToState(string state, string comment)
         {
-            StateWorkflow.TransitionToState(this, state, comment, this.logger);
+            StateWorkFlow.TransitionToState(this, state, comment, this.Logger);
+        }
+
+        public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            var destLinkType = this.workItem.Store.WorkItemLinkTypes
+                .FirstOrDefault(t => t.ForwardEnd.Name == linkTypeName)
+                .ForwardEnd;
+            var relationship = new WorkItemLink(destLinkType, this.Id, destination.Id);
+
+            // check it does not exist already
+            if (!this.workItem.WorkItemLinks.Contains(relationship))
+            {
+                this.Logger.AddingWorkItemLink(this.Id, destLinkType, destination.Id);
+                this.workItem.WorkItemLinks.Add(relationship);
+            }
+            else
+            {
+                this.Logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
+            }
+        }
+
+        public void AddHyperlink(string destination, string comment = "")
+        {
+            var link = new Hyperlink(destination);
+            link.Comment = comment;
+            if (!this.workItem.Links.Contains(link))
+            {
+                this.Logger.AddingHyperlink(this.Id, destination, comment);
+                this.workItem.Links.Add(link);
+            }
+            else
+            {
+                this.Logger.HyperlinkAlreadyExists(this.Id, destination, comment);
+            }
         }
     }
 }

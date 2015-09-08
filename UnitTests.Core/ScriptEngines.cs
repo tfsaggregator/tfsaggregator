@@ -1,20 +1,25 @@
-﻿namespace UnitTests.Core
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Management.Automation;
+
+using Aggregator.Core;
+using Aggregator.Core.Context;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+using Microsoft.TeamFoundation.Framework.Server;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using NSubstitute;
+
+using UnitTests.Core.Mock;
+
+using Debugger = System.Diagnostics.Debugger;
+
+namespace UnitTests.Core
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Management.Automation;
-
-    using Aggregator.Core;
-
-    using Microsoft.TeamFoundation.Framework.Server;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-    using NSubstitute;
-
-    using UnitTests.Core.Mock;
-
     [TestClass]
     public class ScriptEngines
     {
@@ -37,7 +42,7 @@ return self.Fields[""z""].Value;
             zField.Value.Returns(42);
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine(repository, logger);
+            var engine = new CSharpScriptEngine(repository, logger, Debugger.IsAttached);
             engine.LoadAndRun("test", script, workItem);
 
             Assert.AreEqual(33, xField.Value);
@@ -60,7 +65,7 @@ return self[""z""];
             workItem["z"].Returns(42);
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine(repository, logger);
+            var engine = new CSharpScriptEngine(repository, logger, Debugger.IsAttached);
             engine.LoadAndRun("test", script, workItem);
 
             Assert.AreEqual(33, workItem["x"]);
@@ -84,7 +89,7 @@ return self(""z"")
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
             logger.WhenForAnyArgs(c => Debug.WriteLine(c));
-            var engine = new VBNetScriptEngine(repository, logger);
+            var engine = new VBNetScriptEngine(repository, logger, Debugger.IsAttached);
 
             engine.LoadAndRun("test", script, workItem);
 
@@ -108,29 +113,26 @@ return $self.Fields[""z""].Value ";
             workItem.Fields["z"].Value = 42;
             workItem.Fields["x"].Value = 0;
             workItem.Id = 1;
-            
-            repository.SetWorkItems(new []{workItem});
+
+            repository.SetWorkItems(new[] { workItem });
             var logger = Substitute.For<ILogEvents>();
 
-            Assert.IsNotNull((repository.GetWorkItem(1)));
-            
-            var engine = new PsScriptEngine(repository, logger);
-            //sanity check
+            Assert.IsNotNull(repository.GetWorkItem(1));
+
+            var engine = new PsScriptEngine(repository, logger, Debugger.IsAttached);
+
+            // sanity check
             Assert.AreEqual(42, workItem.Fields["z"].Value);
 
             engine.LoadAndRun("test", script, workItem);
 
-            var expected = new Collection<PSObject>();
-            expected.Add(new PSObject(42));
+            var expected = new Collection<PSObject> { new PSObject(42) };
 
             Assert.AreEqual(33, workItem.Fields["x"].Value);
 
             logger.Received().ResultsFromScriptRun(
-                "test", 
-                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject)))
-            );
-
-            
+                "test",
+                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject))));
         }
 
         [TestMethod]
@@ -147,19 +149,17 @@ return $self.Fields[""z""].Value ";
             repository.SetWorkItems(new[] { workItem });
             var logger = Substitute.For<ILogEvents>();
 
-            Assert.IsNotNull((repository.GetWorkItem(1)));
+            Assert.IsNotNull(repository.GetWorkItem(1));
 
-            var engine = new PsScriptEngine(repository, logger);
+            var engine = new PsScriptEngine(repository, logger, Debugger.IsAttached);
 
             engine.LoadAndRun("test", script, workItem);
 
-            var expected = new Collection<PSObject>();
-            expected.Add(new PSObject(1));
+            var expected = new Collection<PSObject> { new PSObject(1) };
 
             logger.Received().ResultsFromScriptRun(
                 "test",
-                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject)))
-            );
+                Arg.Is<Collection<PSObject>>(x => x.Select(o => o.BaseObject).SequenceEqual(expected.Select(o => o.BaseObject))));
         }
 
         [TestMethod]
@@ -170,16 +170,88 @@ return $self.Fields[""z""].Value ";
             var settings = TestHelpers.LoadConfigFromResourceFile("NoOp.policies", logger);
             var repository = Substitute.For<IWorkItemRepository>();
             var workItem = Substitute.For<IWorkItem>();
-            var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(1);
-            repository.LoadedWorkItems.Returns(new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>() { workItem }));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            using (var processor = new EventProcessor(repository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(1);
+                repository.LoadedWorkItems.Returns(
+                    new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>() { workItem }));
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("CSharpScript")]
+        public void Can_run_a_CSharp_script_with_logging()
+        {
+            string script = @"
+logger.Log(""Test"");
+";
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            var logger = Substitute.For<ILogEvents>();
+            logger.ScriptLogger = Substitute.For<IRuleLogger>();
+            var engine = new CSharpScriptEngine(repository, logger, Debugger.IsAttached);
+            engine.LoadAndRun("test", script, workItem);
+            logger.ScriptLogger.Received().Log("Test");
+        }
+
+        [TestMethod]
+        [TestCategory("VBNetScript")]
+        public void Can_run_a_VBNet_script_with_logging()
+        {
+            string script = @"
+logger.Log(""Test"")
+";
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            var logger = Substitute.For<ILogEvents>();
+            logger.ScriptLogger = Substitute.For<IRuleLogger>();
+            var engine = new VBNetScriptEngine(repository, logger, Debugger.IsAttached);
+            engine.LoadAndRun("test", script, workItem);
+            logger.ScriptLogger.Received().Log("Test");
+        }
+
+        [TestMethod]
+        [TestCategory("CSharpScript")]
+        public void Can_CSharp_use_Linq()
+        {
+            string script = @"
+int[] array = { 1, 3, 5, 7 };
+return (int)array.Average();
+";
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            repository.GetWorkItem(1).Returns(workItem);
+            var logger = Substitute.For<ILogEvents>();
+            var engine = new CSharpScriptEngine(repository, logger, Debugger.IsAttached);
+            engine.LoadAndRun("test", script, workItem);
+            object expected = 4;
+            logger.Received().ResultsFromScriptRun("test", expected);
+        }
+
+        [TestMethod]
+        [TestCategory("VBNetScript")]
+        public void Can_VBNet_use_Linq()
+        {
+            string script = @"
+Dim array As Integer() = {1, 3, 5, 7}
+Return Cint(array.Average())
+";
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            repository.GetWorkItem(1).Returns(workItem);
+            var logger = Substitute.For<ILogEvents>();
+            var engine = new VBNetScriptEngine(repository, logger, Debugger.IsAttached);
+            engine.LoadAndRun("test", script, workItem);
+            object expected = 4;
+            logger.Received().ResultsFromScriptRun("test", expected);
         }
     }
 }

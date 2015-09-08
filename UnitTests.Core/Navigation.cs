@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Aggregator.Core.Extensions;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
 namespace UnitTests.Core
 {
     using Aggregator.Core;
@@ -15,7 +19,7 @@ namespace UnitTests.Core
     [TestClass]
     public class Navigation
     {
-        private static IWorkItemRepository MakeRepository(out IWorkItem startPoint)
+        private static WorkItemRepositoryMock MakeRepository(out IWorkItem startPoint)
         {
             var repository = new WorkItemRepositoryMock();
 
@@ -34,13 +38,13 @@ namespace UnitTests.Core
             secondChild.Id = 4;
             secondChild.TypeName = "Task";
 
-            firstChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, parent.Id, repository));
-            secondChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, parent.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, grandParent.Id, repository));
+            firstChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
+            secondChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, repository));
 
-            grandParent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ChildRelationship, parent.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ChildRelationship, firstChild.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ChildRelationship, secondChild.Id, repository));
+            grandParent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, parent.Id, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, firstChild.Id, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, secondChild.Id, repository));
 
             repository.SetWorkItems(new[] { grandParent, parent, firstChild, secondChild });
 
@@ -52,8 +56,8 @@ namespace UnitTests.Core
         public void FluentNavigation_succeedes()
         {
             IWorkItem startPoint;
-            var repository = MakeRepository(out startPoint);
-            var logger = Substitute.For<ILogEvents>();
+            MakeRepository(out startPoint);
+            Substitute.For<ILogEvents>();
 
             var searchResult = startPoint
                 .WhereTypeIs("Task")
@@ -79,8 +83,9 @@ return searchResult;
             IWorkItem startPoint;
             var repository = MakeRepository(out startPoint);
             var logger = Substitute.For<ILogEvents>();
+            repository.Logger = logger;
 
-            var engine = new CSharpScriptEngine(repository, logger);
+            var engine = new CSharpScriptEngine(repository, logger, false);
             engine.LoadAndRun("test", script, startPoint);
 
             var expected = new FluentQuery(startPoint);
@@ -105,7 +110,7 @@ return searchResult;
             workItem.TransitionToState(targetState, "test");
 
             Assert.AreEqual(targetState, workItem.Fields["State"].Value);
-            Assert.IsTrue(workItem._SaveCalled);
+            Assert.IsTrue(workItem.InternalWasSaveCalled);
         }
 
         [TestMethod]
@@ -114,14 +119,15 @@ return searchResult;
             var repository = new WorkItemRepositoryMock();
             repository.Logger = Substitute.For<ILogEvents>();
             var workItem = new WorkItemMock(repository);
-            var workItemType = new WorkItemTypeMock() {
+            var workItemType = new WorkItemTypeMock()
+            {
                 Name = "Task",
                 DocumentContent = TestHelpers.LoadTextFromEmbeddedResource("task.xml")
             };
             workItem.Id = 42;
             workItem.Type = workItemType;
             workItem.TypeName = workItemType.Name;
-            ((FieldMock)workItem.Fields["State"]).OriginalValue = "";
+            ((FieldMock)workItem.Fields["State"]).OriginalValue = string.Empty;
             workItem.Fields["State"].Value = workItem.Fields["State"].OriginalValue;
             ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
             repository.SetWorkItems(new[] { workItem });
@@ -130,7 +136,7 @@ return searchResult;
             workItem.TransitionToState(targetState, "test");
 
             Assert.AreEqual(targetState, workItem.Fields["State"].Value);
-            Assert.AreEqual(2, workItem._SaveCount);
+            Assert.AreEqual(2, workItem.InternalSaveCount);
         }
 
         [TestMethod]
@@ -147,8 +153,8 @@ return searchResult;
             workItem.Id = 42;
             workItem.Type = workItemType;
             workItem.TypeName = workItemType.Name;
-            workItem.Fields["State"].Value = "";
-            ((FieldMock)workItem.Fields["State"]).OriginalValue = "";
+            workItem.Fields["State"].Value = string.Empty;
+            ((FieldMock)workItem.Fields["State"]).OriginalValue = string.Empty;
             ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
             repository.SetWorkItems(new[] { workItem });
             string targetState = "DoesNotExists";
@@ -157,7 +163,7 @@ return searchResult;
 
             Assert.AreNotEqual(targetState, workItem.Fields["State"].Value);
             Assert.AreEqual(workItem.Fields["State"].OriginalValue, workItem.Fields["State"].Value);
-            Assert.IsFalse(workItem._SaveCalled);
+            Assert.IsFalse(workItem.InternalWasSaveCalled);
         }
 
         [TestMethod]
@@ -178,16 +184,16 @@ self.TransitionToState(""Done"", ""script test"");
             workItem.Id = 42;
             workItem.Type = workItemType;
             workItem.TypeName = workItemType.Name;
-            ((FieldMock)workItem.Fields["State"]).OriginalValue = "";
+            ((FieldMock)workItem.Fields["State"]).OriginalValue = string.Empty;
             workItem.Fields["State"].Value = workItem.Fields["State"].OriginalValue;
             ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
             repository.SetWorkItems(new[] { workItem });
 
-            var engine = new CSharpScriptEngine(repository, logger);
+            var engine = new CSharpScriptEngine(repository, logger, false);
             engine.LoadAndRun("test", script, workItem);
 
             Assert.AreEqual("Done", workItem.Fields["State"].Value);
-            Assert.AreEqual(2, workItem._SaveCount);
+            Assert.AreEqual(2, workItem.InternalSaveCount);
         }
     }
 }

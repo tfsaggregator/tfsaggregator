@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Import Project="../references/TfsReferences.target" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -18,24 +17,52 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-2015|AnyCPU' ">
+    <TfsVersion>14.0</TfsVersion>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug-2015</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-2015|AnyCPU' ">
+    <TfsVersion>14.0</TfsVersion>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release-2015</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-2013|AnyCPU' ">
+    <TfsVersion>12.0</TfsVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug-2013</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-2013|AnyCPU' ">
+    <TfsVersion>12.0</TfsVersion>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release-2013</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="..\references\TfsReferences.target" />
   <ItemGroup>
     <Reference Include="NSubstitute, Version=1.8.1.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -46,6 +73,11 @@
       <Private>True</Private>
       <HintPath>..\packages\System.Management.Automation_PowerShell_3.0.6.3.9600.17400\lib\net40\System.Management.Automation.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
@@ -64,12 +96,16 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="ContextCache.cs" />
+    <Compile Include="DebugEventLogger.cs" />
+    <Compile Include="DebugEventLogger1.cs" />
+    <Compile Include="RulesAndPolicyTests.cs" />
+    <Compile Include="ItemCreationTests.cs" />
     <Compile Include="Mock\WorkItemLinkCollectionMock.cs" />
     <Compile Include="Mock\WorkItemTypeMock.cs" />
     <Compile Include="Navigation.cs" />
     <Compile Include="PolicyScope.cs" />
     <Compile Include="ScriptEngines.cs" />
-    <Compile Include="Basics.cs" />
     <Compile Include="Mock\FieldCollectionMock.cs" />
     <Compile Include="Mock\FieldMock.cs" />
     <Compile Include="Mock\WorkItemMock.cs" />
@@ -87,7 +123,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConfigurationsForTests\allInOne.policies" />
+    <None Include="app.config" />
+    <None Include="ConfigurationsForTests\allInOne.policies" />
     <EmbeddedResource Include="ConfigurationsForTests\SumFieldsOnSingleWorkItem.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -98,13 +135,24 @@
     <EmbeddedResource Include="ConfigurationsForTests\SimpleRollup.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ConfigurationsForTests\NewObjects.policies">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigurationsForTests\RulesAndPolicy.policies">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="UnitTests.Core.ruleset" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ConfigurationsForTests\syntax.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ConfigurationsForTests\task.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\SonarLint.1.2.0\tools\analyzers\C#\SonarLint.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta007\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

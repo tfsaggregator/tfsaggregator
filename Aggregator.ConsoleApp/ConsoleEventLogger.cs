@@ -1,18 +1,20 @@
-﻿namespace Aggregator.ConsoleApp
+﻿using Aggregator.Core;
+using Aggregator.Core.Monitoring;
+
+namespace Aggregator.ConsoleApp
 {
-    using Aggregator.Core;
-    using Aggregator.Core.Monitoring;
-
-    class ConsoleEventLogger : TextLogComposer
+    /// <summary>
+    /// Logs all events to the console.
+    /// </summary>
+    internal class ConsoleEventLogger : TextLogComposer
     {
-        public ConsoleEventLogger(LogLevel level)
-            : base(new ConsoleTextLogger(level))
-        { }
-
-        public LogLevel Level
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConsoleEventLogger"/> class.
+        /// </summary>
+        /// <param name="minimumLogLevel">The minimum log level to show.</param>
+        public ConsoleEventLogger(LogLevel minimumLogLevel)
+            : base(new ConsoleTextLogger(minimumLogLevel))
         {
-            get { return base.TextLogger.Level; }
-            set { base.TextLogger.Level = value; }
         }
     }
 }

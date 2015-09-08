@@ -1,12 +1,14 @@
-﻿namespace UnitTests.Core.Mock
+﻿using Aggregator.Core.Interfaces;
+
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
+namespace UnitTests.Core.Mock
 {
-    using Aggregator.Core;
-
-    using Microsoft.TeamFoundation.WorkItemTracking.Client;
-
-    class FieldMock : IFieldWrapper
+    internal class FieldMock : IFieldWrapper
     {
-        private WorkItemMock workItemMock;
+        private readonly WorkItemMock workItemMock;
+
+        private object value;
 
         public FieldMock(WorkItemMock workItemMock, string name)
         {
@@ -18,11 +20,18 @@
 
         public string ReferenceName { get; set; }
 
-        private object _value;
         public object Value
         {
-            get { return _value; }
-            set { _value = value; this.workItemMock.IsDirty = true; }
+            get
+            {
+                return this.value;
+            }
+
+            set
+            {
+                this.value = value;
+                this.workItemMock.IsDirty = true;
+            }
         }
 
         public FieldStatus Status { get; set; }

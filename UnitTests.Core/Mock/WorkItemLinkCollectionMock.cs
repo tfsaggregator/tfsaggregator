@@ -1,27 +1,32 @@
-﻿namespace UnitTests.Core.Mock
+﻿using System.Collections;
+using System.Collections.Generic;
+
+using Aggregator.Core.Interfaces;
+
+namespace UnitTests.Core.Mock
 {
-    using System.Collections;
-    using System.Collections.Generic;
-
-    using Aggregator.Core;
-
-    class WorkItemLinkCollectionMock : IWorkItemLinkCollection
+    internal class WorkItemLinkCollectionMock : IWorkItemLinkCollection
     {
-        List<IWorkItemLink> links = new List<IWorkItemLink>();
+        private readonly List<IWorkItemLink> links = new List<IWorkItemLink>();
+
+        public bool Contains(IWorkItemLink link)
+        {
+            return this.links.Contains(link);
+        }
 
         public void Add(IWorkItemLink link)
         {
-            links.Add(link);
+            this.links.Add(link);
         }
 
         public IEnumerator<IWorkItemLink> GetEnumerator()
         {
-            return links.GetEnumerator();
+            return this.links.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return links.GetEnumerator();
+            return this.links.GetEnumerator();
         }
     }
 }

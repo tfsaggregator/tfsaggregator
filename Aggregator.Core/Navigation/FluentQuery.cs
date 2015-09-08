@@ -1,11 +1,31 @@
-﻿namespace Aggregator.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
+using Aggregator.Core.Interfaces;
+
+namespace Aggregator.Core.Navigation
+{
     public class FluentQuery : IEnumerable<IWorkItemExposed>
     {
-        IWorkItemExposed host;
+        protected bool Equals(FluentQuery other)
+        {
+            return string.Equals(this.WorkItemType, other.WorkItemType) && this.Levels == other.Levels && string.Equals(this.LinkType, other.LinkType);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = this.WorkItemType?.GetHashCode() ?? 0;
+                hashCode = (hashCode * 397) ^ this.Levels;
+                hashCode = (hashCode * 397) ^ (this.LinkType?.GetHashCode() ?? 0);
+                return hashCode;
+            }
+        }
+
+        private readonly IWorkItemExposed host;
+
         public FluentQuery(IWorkItemExposed host)
         {
             this.host = host;
@@ -17,28 +37,29 @@
         }
 
         public string WorkItemType { get; set; }
+
         public int Levels { get; set; }
+
         public string LinkType { get; set; }
 
         public override bool Equals(object obj)
         {
             if (obj == this)
+            {
                 return true;
+            }
 
             if (!(obj is FluentQuery))
-                return base.Equals(obj);
+            {
+                return object.Equals(this, obj);
+            }
 
-            var rhs = obj as FluentQuery;
+            var rhs = (FluentQuery)obj;
 
             return
-                string.Compare(this.WorkItemType, rhs.WorkItemType, true) == 0
+                string.Equals(this.WorkItemType, rhs.WorkItemType, StringComparison.OrdinalIgnoreCase)
                 && this.Levels == rhs.Levels
-                && string.Compare(this.LinkType, rhs.LinkType, true) == 0;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
+                && string.Equals(this.LinkType, rhs.LinkType, StringComparison.OrdinalIgnoreCase);
         }
 
         public FluentQuery WhereTypeIs(string workItemType)

@@ -1,7 +1,10 @@
-﻿namespace Aggregator.Core
-{
-    using System.Text;
+﻿using System.Linq;
+using System.Text;
 
+using Aggregator.Core.Interfaces;
+
+namespace Aggregator.Core.Extensions
+{
     public static class WorkItemExtensions
     {
         public static string GetInvalidWorkItemFieldsList(this IWorkItem wi)
@@ -13,26 +16,13 @@
             }
             else
             {
-                foreach (string s in wi.Validate())
+                foreach (string s in wi.Validate().Cast<string>())
+                {
                     sb.AppendLine(s);
+                }
             }
+
             return sb.ToString();
-        }
-
-        // fluent API for GetRelatives
-        public static FluentQuery WhereTypeIs(this IWorkItem wi, string workItemType)
-        {
-            return new FluentQuery(wi).WhereTypeIs(workItemType);
-        }
-
-        public static FluentQuery AtMost(this IWorkItem wi, int levels)
-        {
-            return new FluentQuery(wi).AtMost(levels);
-        }
-
-        public static FluentQuery FollowingLinks(this IWorkItem wi, string linkType)
-        {
-            return new FluentQuery(wi).FollowingLinks(linkType);
         }
     }
 }

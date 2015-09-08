@@ -1,25 +1,21 @@
-﻿namespace Aggregator.ConsoleApp
+﻿using System;
+
+using Aggregator.Core;
+using Aggregator.Core.Context;
+using Aggregator.Core.Monitoring;
+
+using ManyConsole;
+
+namespace Aggregator.ConsoleApp
 {
-    using System;
-
-    using Aggregator.Core;
-    using Aggregator.Core.Configuration;
-
-    using ManyConsole;
-
     /// <summary>
     /// Implements the <i>run</i> command.
     /// </summary>
     /// See ManyConsole framework for more information.
-    class RunCommand : ConsoleCommand
+    internal class RunCommand : ConsoleCommand
     {
-        internal bool ShowHelp { get; set; }
-        internal string PolicyFile { get; set; }
-        internal string TeamProjectCollectionUrl { get; set; }
-        internal string TeamProjectName { get; set; }
-        internal int WorkItemId { get; set; }
-
         /// <summary>
+        /// Initializes a new instance of the <see cref="RunCommand"/> class.
         /// Informs the ManyConsole framework of the command line arguments required by the  <i>run</i> command.
         /// </summary>
         public RunCommand()
@@ -38,6 +34,16 @@
               value => this.WorkItemId = int.Parse(value));
         }
 
+        internal bool ShowHelp { get; set; }
+
+        internal string PolicyFile { get; set; }
+
+        internal string TeamProjectCollectionUrl { get; set; }
+
+        internal string TeamProjectName { get; set; }
+
+        internal int WorkItemId { get; set; }
+
         /// <summary>
         /// Called by the ManyConsole framework to execute the  <i>run</i> command.
         /// </summary>
@@ -46,33 +52,38 @@
         public override int Run(string[] remainingArguments)
         {
             // need a logger to show errors in config file (Catch 22)
-            var logger = new ConsoleEventLogger(LogLevel.Error);
-            var settings = TFSAggregatorSettings.LoadFromFile(this.PolicyFile, logger);
-            if (settings == null)
+            var logger = new ConsoleEventLogger(LogLevel.Warning);
+
+            var runtime = RuntimeContext.GetContext(
+                () => this.PolicyFile,
+                new RequestContext(this.TeamProjectCollectionUrl, this.TeamProjectName),
+                logger);
+
+            if (runtime.HasErrors)
             {
                 return 99;
             }
-            logger.Level = settings.LogLevel;
+
             logger.ConfigurationLoaded(this.PolicyFile);
-            EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, null, logger, settings); //we only need one for the whole app
-
-            var result = new ProcessingResult();
-            try
+            using (EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, null, runtime))
             {
-                var context = new RequestContextConsoleApp(this.TeamProjectCollectionUrl, this.TeamProjectName);
-                var notification = new NotificationConsoleApp(this.WorkItemId, this.TeamProjectName);
+                try
+                {
+                    var context = runtime.RequestContext;
+                    var notification = new Notification(this.WorkItemId, this.TeamProjectName);
 
-                logger.StartingProcessing(context, notification);
-                result = eventProcessor.ProcessEvent(context, notification);
-                logger.ProcessingCompleted(result);
+                    logger.StartingProcessing(context, notification);
+                    ProcessingResult result = eventProcessor.ProcessEvent(context, notification);
+                    logger.ProcessingCompleted(result);
 
-                return result.StatusCode;
+                    return result.StatusCode;
+                }
+                catch (Exception e)
+                {
+                    logger.ProcessEventException(e);
+                    return -1;
+                }
             }
-            catch (Exception e)
-            {
-                logger.ProcessEventException(null, e);
-                return -1;
-            }//try
         }
     }
 }

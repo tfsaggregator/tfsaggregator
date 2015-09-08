@@ -1,52 +1,65 @@
-﻿namespace Aggregator.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Aggregator.Core.Configuration;
+using Aggregator.Core.Context;
+using Aggregator.Core.Facade;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+using IdentityDescriptor = Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor;
+
+namespace Aggregator.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using Aggregator.Core.Configuration;
-    using Aggregator.Core.Facade;
-
-    using Microsoft.TeamFoundation.Framework.Client;
-
     /// <summary>
     /// This is the core class with complete logic, independent from being a server plug-in.
-    /// It is the entry point of the Core assembly.
+    /// It is the entry point of the Core assembly to manage a single request/event
     /// </summary>
-    public class EventProcessor
+    public class EventProcessor : IDisposable
     {
-        TFSAggregatorSettings settings;
-        ILogEvents logger;
-        IWorkItemRepository store;
-        ScriptEngine engine;
+        private readonly TFSAggregatorSettings settings;
 
-        public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, ILogEvents logger, TFSAggregatorSettings settings)
-            : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, logger), logger, settings)
+        private readonly ILogEvents logger;
+
+        private readonly IWorkItemRepository store;
+
+        private readonly ScriptEngine engine;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventProcessor"/> class.
+        /// </summary>
+        /// <param name="tfsCollectionUrl">The TFS Project Colection Uri</param>
+        /// <param name="toImpersonate">The IdentityDescriptor to Impoersonate</param>
+        /// <param name="runtime">The runtime context</param>
+        public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, IRuntimeContext runtime)
+            : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, runtime.Logger), runtime)
         {
         }
 
-        public EventProcessor(IWorkItemRepository workItemStore, ILogEvents logger, TFSAggregatorSettings settings)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventProcessor"/> class.
+        /// </summary>
+        public EventProcessor(IWorkItemRepository workItemStore, IRuntimeContext runtime)
         {
-            this.logger = logger;
+            this.logger = runtime.Logger;
             this.store = workItemStore;
-            // TODO caching
-            this.settings = settings;
-            this.engine = this.MakeEngine(settings.ScriptLanguage, this.store, this.logger);
-            foreach (var rule in settings.Rules)
-            {
-                this.engine.Load(rule.Name, rule.Script);
-            }
-            this.engine.LoadCompleted();
+            this.settings = runtime.Settings;
+
+            this.engine = runtime.GetEngine(workItemStore);
         }
 
         /// <summary>
         /// This is the one where all the magic happens.
         /// </summary>
+        /// <returns>The outcome of the policy Execution as per ISubscriber's contract</returns>
+        /// <param name="requestContext">TFS Request Context</param>
+        /// <param name="notification">The <paramref name="notification"/> containing the WorkItemChangedEvent</param>
         public ProcessingResult ProcessEvent(IRequestContext requestContext, INotification notification)
         {
             var result = new ProcessingResult();
 
-            IEnumerable<Policy> policies = this.FilterPolicies(this.settings.Policies, requestContext, notification);
+            Policy[] policies = this.FilterPolicies(this.settings.Policies, requestContext, notification).ToArray();
 
             if (policies.Any())
             {
@@ -54,7 +67,7 @@
 
                 foreach (var policy in policies)
                 {
-                    logger.ApplyingPolicy(policy.Name);
+                    this.logger.ApplyingPolicy(policy.Name);
                     this.ApplyRules(workItem, policy.Rules);
                 }
 
@@ -67,6 +80,7 @@
                 result.StatusCode = 1;
                 result.StatusMessage = "No operation";
             }
+
             return result;
         }
 
@@ -100,41 +114,26 @@
             {
                 bool isValid = workItem.IsValid();
                 this.logger.Saving(workItem, isValid);
+
                 if (isValid)
                 {
                     workItem.PartialOpen();
                     workItem.Save();
                 }
-            }//for
+            }
         }
 
-        private ScriptEngine MakeEngine(string scriptLanguage, IWorkItemRepository workItemRepository, ILogEvents logEvents)
+        public void Dispose()
         {
-            this.logger.BuildingScriptEngine(scriptLanguage);
-            Type t = this.GetScriptEngineType(scriptLanguage);
-            var ctor = t.GetConstructor(new Type[] { typeof(IWorkItemRepository), typeof(ILogEvents) });
-            ScriptEngine engine = ctor.Invoke(new object[] { this.store, this.logger }) as ScriptEngine;
-            return engine;
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        private Type GetScriptEngineType(string scriptLanguage)
+        protected void Dispose(bool disposing)
         {
-            switch (scriptLanguage.ToUpperInvariant())
+            if (disposing)
             {
-                case "CS":
-                case "CSHARP":
-                case "C#":
-                    return typeof(CSharpScriptEngine);
-                case "VB":
-                case "VB.NET":
-                case "VBNET":
-                    return typeof(VBNetScriptEngine);
-                case "PS":
-                case "POWERSHELL":
-                    return typeof(PsScriptEngine);
-                default:
-                    // TODO Log unsupported or wrong code
-                    return typeof(CSharpScriptEngine);
+                (this.store as IDisposable)?.Dispose();
             }
         }
     }

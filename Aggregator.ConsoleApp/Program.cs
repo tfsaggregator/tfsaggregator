@@ -7,9 +7,9 @@
 
     using ManyConsole;
 
-    class Program
+    internal static class Program
     {
-        static int Main(string[] args)
+        internal static int Main(string[] args)
         {
             Console.Write(GetHeader());
 
@@ -17,6 +17,7 @@
             {
                 // locate any commands in the assembly (or use an IoC container, or whatever source)
                 var commands = ConsoleCommandDispatcher.FindCommandsInSameAssemblyAs(typeof(Program));
+
                 // then run them.
                 int rc = ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out);
                 if (rc == 0)
@@ -25,23 +26,18 @@
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Succeeded.");
                     Console.ForegroundColor = save;
-                }//if
+                }
+
                 return rc;
             }
             catch (Exception e)
             {
                 e.Dump(Console.Out);
                 return 99;
-            }//try
+            }
         }
 
-        static private T GetCustomAttribute<T>()
-            where T : Attribute
-        {
-            return Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(T), false).FirstOrDefault() as T;
-        }
-
-        static internal string GetHeader()
+        internal static string GetHeader()
         {
             var title = GetCustomAttribute<AssemblyTitleAttribute>();
             var descr = GetCustomAttribute<AssemblyDescriptionAttribute>();
@@ -59,6 +55,12 @@
             sb.AppendLine(copy.Copyright);
 
             return sb.ToString();
+        }
+
+        private static T GetCustomAttribute<T>()
+            where T : Attribute
+        {
+            return Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(T), false).FirstOrDefault() as T;
         }
     }
 }

@@ -20,7 +20,7 @@
         public void PolicyScopeMatchesProjectNameFromContextWithSingleProject()
         {
             Policy p = new Policy();
-            p.Scope = new []{ (PolicyScope) new ProjectScope(){ ProjectNames = new[]{"TestOne"} } };
+            p.Scope = new[] { new ProjectScope() { ProjectNames = new[] { "TestOne" } } };
 
             var context = Substitute.For<IRequestContext>();
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
@@ -37,7 +37,7 @@
         public void PolicyScopeDoesNotMatchProjectNameFromContext()
         {
             Policy p = new Policy();
-            p.Scope = new[] { (PolicyScope)new ProjectScope() { ProjectNames = new[] { "TestOne" } } };
+            p.Scope = new[] { new ProjectScope() { ProjectNames = new[] { "TestOne" } } };
 
             var context = Substitute.For<IRequestContext>();
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestTwo");
@@ -54,7 +54,7 @@
         public void PolicyScopeMatchesProjectNameFromContextWithMultipleProjects()
         {
             Policy p = new Policy();
-            p.Scope = new[] { (PolicyScope)new ProjectScope() { ProjectNames = new[] { "TestOne", "TestTwo" } } };
+            p.Scope = new[] { new ProjectScope() { ProjectNames = new[] { "TestOne", "TestTwo" } } };
 
             var context = Substitute.For<IRequestContext>();
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
@@ -71,7 +71,7 @@
         public void PolicyScopeMatchesWildcardProjectFromContext()
         {
             Policy p = new Policy();
-            p.Scope = new[] { (PolicyScope)new ProjectScope() { ProjectNames = new[] { "*" } } };
+            p.Scope = new[] { new ProjectScope() { ProjectNames = new[] { "*" } } };
 
             var context = Substitute.For<IRequestContext>();
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
@@ -88,7 +88,7 @@
         public void PolicyScopeMatchesWildcardCollectionFromContext()
         {
             Policy p = new Policy();
-            p.Scope = new[] { (PolicyScope)new CollectionScope() { CollectionNames = new[] { "*" } } };
+            p.Scope = new[] { new CollectionScope() { CollectionNames = new[] { "*" } } };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
@@ -105,7 +105,7 @@
         public void PolicyScopeMatchesCollectionNameFromContextWithSingleCollection()
         {
             Policy p = new Policy();
-            p.Scope = new[] { (PolicyScope)new CollectionScope() { CollectionNames = new[] { "DefaultCollection" } } };
+            p.Scope = new[] { new CollectionScope() { CollectionNames = new[] { "DefaultCollection" } } };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
@@ -122,7 +122,7 @@
         public void PolicyScopeMatchesCollectionNameFromContextWithMultipleCollection()
         {
             Policy p = new Policy();
-            p.Scope = new[] { (PolicyScope)new CollectionScope() { CollectionNames = new[] { "DefaultCollection", "OtherCollection" } } };
+            p.Scope = new[] { new CollectionScope() { CollectionNames = new[] { "DefaultCollection", "OtherCollection" } } };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
@@ -139,10 +139,10 @@
         public void PolicyCombiningProjectAndCollectionScopeMatches()
         {
             Policy p = new Policy();
-            p.Scope = new[]
+            p.Scope = new PolicyScope[]
                       {
-                          (PolicyScope) new CollectionScope() { CollectionNames = new[] { "DefaultCollection", "OtherCollection" } },
-                          (PolicyScope) new ProjectScope() { ProjectNames = new[] { "TestOne" } }
+                          new CollectionScope() { CollectionNames = new[] { "DefaultCollection", "OtherCollection" } },
+                          new ProjectScope() { ProjectNames = new[] { "TestOne" } }
                       };
 
             var context = Substitute.For<IRequestContext>();
@@ -161,10 +161,10 @@
         public void PolicyMismatchingProjectAndCollectionScopeDoesNotMatches()
         {
             Policy p = new Policy();
-            p.Scope = new[]
+            p.Scope = new PolicyScope[]
                       {
-                          (PolicyScope) new CollectionScope() { CollectionNames = new[] { "DefaultCollection", "OtherCollection" } },
-                          (PolicyScope) new ProjectScope() { ProjectNames = new[] { "TestTwo" } }
+                          new CollectionScope() { CollectionNames = new[] { "DefaultCollection", "OtherCollection" } },
+                          new ProjectScope() { ProjectNames = new[] { "TestTwo" } }
                       };
 
             var context = Substitute.For<IRequestContext>();
@@ -184,10 +184,9 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { TemplateName = "Scrum" }
-                      };
+            {
+                new TemplateScope() { TemplateName = "Scrum" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
@@ -216,16 +215,15 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { MinVersion = "3.0" }
-                      };
+            {
+                new TemplateScope() { MinVersion = "3.0" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 3, 5));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 3, 5));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -241,15 +239,14 @@
             Policy p = new Policy();
             p.Scope = new[]
                       {
-                          
-                          (PolicyScope) new TemplateScope() { MinVersion = "3.0" }
+                          new TemplateScope() { MinVersion = "3.0" }
                       };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 3, 0));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 3, 0));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -264,16 +261,15 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { MinVersion = "5.0" }
-                      };
+            {
+                new TemplateScope() { MinVersion = "5.0" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 3, 0));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 3, 0));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -288,16 +284,15 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { MaxVersion = "3.0" }
-                      };
+            {
+                new TemplateScope() { MaxVersion = "3.0" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 2, 9));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 2, 9));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -312,16 +307,15 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { MaxVersion = "3.0" }
-                      };
+            {
+                new TemplateScope() { MaxVersion = "3.0" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 3, 0));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 3, 0));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -336,16 +330,15 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope() { MinVersion = "5.0" }
-                      };
+            {
+                new TemplateScope() { MinVersion = "5.0" }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 3, 0));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 3, 0));
 
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
@@ -360,21 +353,20 @@
         {
             Policy p = new Policy();
             p.Scope = new[]
-                      {
-                          
-                          (PolicyScope) new TemplateScope()
-                                        {
-                                            TemplateName = "Scrum",
-                                            MinVersion = "5.0",
-                                            MaxVersion = "5.5"
-                                        }
-                      };
+            {
+                new TemplateScope()
+                {
+                    TemplateName = "Scrum",
+                    MinVersion = "5.0",
+                    MaxVersion = "5.5"
+                }
+            };
 
             var context = Substitute.For<IRequestContext>();
             context.CollectionName.Returns("DefaultCollection");
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetCurrentProjectProcessVersion(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
-                .Returns(new ProcessTemplateVersion(Guid.Empty, 5, 3));
+                .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 5, 3));
             context.GetProjectProperties(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
                 .Returns(
                     new IProjectPropertyWrapper[]
@@ -393,6 +385,5 @@
 
             Assert.IsTrue(result);
         }
-
     }
 }

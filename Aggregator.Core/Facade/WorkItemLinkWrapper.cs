@@ -1,12 +1,15 @@
-﻿namespace Aggregator.Core.Facade
-{
-    using Microsoft.TeamFoundation.WorkItemTracking.Client;
+﻿using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
 
-    class WorkItemLinkWrapper : IWorkItemLink
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
+namespace Aggregator.Core.Facade
+{
+    internal class WorkItemLinkWrapper : IWorkItemLink
     {
-        ILogEvents logger;
-        private WorkItemLink link;
-        private IWorkItemRepository store;
+        private readonly ILogEvents logger;
+        private readonly WorkItemLink link;
+        private readonly IWorkItemRepository store;
 
         public WorkItemLinkWrapper(WorkItemLink link, IWorkItemRepository store, ILogEvents logger)
         {
@@ -33,7 +36,18 @@
 
         public IWorkItem Target
         {
-            get { return this.store.GetWorkItem(this.TargetId); }
+            get
+            {
+                return this.store.GetWorkItem(this.TargetId);
+            }
+        }
+
+        internal WorkItemLink WorkItemLink
+        {
+            get
+            {
+                return this.link;
+            }
         }
     }
 }

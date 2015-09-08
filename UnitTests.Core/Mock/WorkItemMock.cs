@@ -1,36 +1,35 @@
-﻿namespace UnitTests.Core.Mock
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+
+using Aggregator.Core;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Navigation;
+
+namespace UnitTests.Core.Mock
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
-    using Aggregator.Core;
-    using Aggregator.Core.Navigation;
-
-    internal class WorkItemMock : IWorkItem
+    internal class WorkItemMock : WorkItemImplementationBase, IWorkItem
     {
-        private FieldCollectionMock fields;
-        private WorkItemRepositoryMock store;
+        private readonly FieldCollectionMock fields;
 
         public WorkItemMock(WorkItemRepositoryMock store)
+            : base(store, store.Logger)
         {
-            this.store = store;
             this.fields = new FieldCollectionMock(this);
+            this.IsDirty = false;
         }
 
-        public IFieldCollectionWrapper Fields { get
+        public IFieldCollectionWrapper Fields
         {
-            return fields;
-        } }
-
-        public TType GetField<TType>(string fieldName, TType defaultValue)
-        {
-            throw new NotImplementedException();
+            get
+            {
+                return this.fields;
+            }
         }
 
-        public string History{ get; set; }
+        public string History { get; set; }
 
-        public int Id{ get; set; }
+        public int Id { get; set; }
 
         public bool IsValid()
         {
@@ -41,23 +40,39 @@
 
         public void PartialOpen()
         {
-            
+            // No functionality needed in mock.
         }
 
-        int saveCalled = 0;
-        public bool _SaveCalled { get { return this.saveCalled > 0; } }
-        public int _SaveCount { get { return this.saveCalled; } }
+        private int internalSaveCalled = 0;
+
+        public bool InternalWasSaveCalled
+        {
+            get
+            {
+                return this.internalSaveCalled > 0;
+            }
+        }
+
+        public int InternalSaveCount
+        {
+            get
+            {
+                return this.internalSaveCalled;
+            }
+        }
+
         public void Save()
         {
-            this.saveCalled++;
+            this.internalSaveCalled++;
         }
 
         public object this[string name]
         {
             get
             {
-                return Fields[name].Value;
+                return this.Fields[name].Value;
             }
+
             set
             {
                 this.Fields[name].Value = value;
@@ -66,65 +81,21 @@
 
         public void TryOpen()
         {
-            
+            // No functionality needed in mock.
         }
 
         public string TypeName { get; set; }
-
-        public bool HasParent()
-        {
-            return this.HasRelation("Parent");
-        }
-
-        public bool HasChildren()
-        {
-            return this.HasRelation("Child");
-        }
-
-        public bool HasRelation(string relation)
-        {
-            if (string.IsNullOrWhiteSpace(relation))
-            {
-                throw new ArgumentNullException("relation");
-            }
-
-            foreach (var link in this.WorkItemLinks)
-            {
-                if (string.Equals(relation, link.LinkTypeEndImmutableName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
 
         public ArrayList Validate()
         {
             return new ArrayList();
         }
 
-        WorkItemLinkCollectionMock workItemLinks = new WorkItemLinkCollectionMock();
+        private readonly WorkItemLinkCollectionMock workItemLinks = new WorkItemLinkCollectionMock();
 
-        public IWorkItemLinkCollection WorkItemLinks
+        public override IWorkItemLinkCollection WorkItemLinks
         {
             get { return this.workItemLinks; }
-        }
-
-        public IWorkItemExposed Parent
-        {
-            get
-            {
-                return WorkItemLazyReference.MakeParentLazyReference(this, this.store);
-            }
-        }
-
-        public IEnumerable<IWorkItemExposed> Children
-        {
-            get
-            {
-                return WorkItemLazyReference.MakeChildrenLazyReferences(this, this.store);
-            }
         }
 
         public IWorkItemType Type { get; set; }
@@ -132,12 +103,31 @@
         public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
             return WorkItemLazyVisitor
-                .MakeRelativesLazyVisitor(this, query, this.store);
+                .MakeRelativesLazyVisitor(this, query);
         }
 
         public void TransitionToState(string state, string comment)
         {
-            StateWorkflow.TransitionToState(this, state, comment, this.store.Logger);
+            // HACK
+            StateWorkFlow.TransitionToState(this, state, comment, this.Logger);
+        }
+
+        public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            // HACK: should use the code in wrapper...
+            var relationship = new WorkItemLinkMock(linkTypeName, destination.Id, this.Store);
+
+            // check it does not exist already
+            if (!this.workItemLinks.Contains(relationship))
+            {
+                this.workItemLinks.Add(relationship);
+                this.IsDirty = true;
+            }
+        }
+
+        public void AddHyperlink(string destination, string comment = "")
+        {
+            throw new NotImplementedException();
         }
     }
 }

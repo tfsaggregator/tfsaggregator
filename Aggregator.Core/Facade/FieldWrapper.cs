@@ -1,12 +1,15 @@
-﻿namespace Aggregator.Core.Facade
+﻿using System.Globalization;
+
+using Aggregator.Core.Interfaces;
+
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
+namespace Aggregator.Core.Facade
 {
-    using System.Globalization;
-
-    using Microsoft.TeamFoundation.WorkItemTracking.Client;
-
     public class FieldWrapper : IFieldWrapper
     {
-        private Field tfsField;
+        private readonly Field tfsField;
+
         public FieldWrapper(Field field)
         {
             this.tfsField = field;
@@ -16,7 +19,7 @@
         {
             get
             {
-                return tfsField.Name;
+                return this.tfsField.Name;
             }
         }
 
@@ -24,7 +27,7 @@
         {
             get
             {
-                return tfsField.ReferenceName;
+                return this.tfsField.ReferenceName;
             }
         }
 
@@ -32,35 +35,40 @@
         {
             get
             {
-                return tfsField.Value;
+                return this.tfsField.Value;
             }
+
             set
             {
-                if (value != null && tfsField.FieldDefinition.SystemType == typeof(double))
+                if (
+                    value != null
+                    && this.tfsField.Value != null
+                    && this.tfsField.FieldDefinition.SystemType == typeof(double))
                 {
-                    // Ugly hack to ensure the double comparison goed safely. TFS internally rounds/truncates the values.
-                    CultureInfo c = CultureInfo.InvariantCulture;
-                    double original = double.Parse(((double)tfsField.Value).ToString(c), c);
-                    double proposed = double.Parse(((double)value).ToString(c), c);
+                    // Ugly hack to ensure the double comparison goes safely. TFS internally rounds/truncates the values.
+                    CultureInfo invariant = CultureInfo.InvariantCulture;
+                    decimal original = decimal.Parse(((double)this.tfsField.Value).ToString(invariant), invariant);
+                    decimal proposed = decimal.Parse(((double)value).ToString(invariant), invariant);
 
-                    // Irnore when the same value is assigned.
+                    // Ignore when the same value is assigned.
                     if (original == proposed)
                     {
                         return;
                     }
                 }
-                tfsField.Value = value;
+
+                this.tfsField.Value = value;
             }
         }
 
         public FieldStatus Status
         {
-            get { return tfsField.Status; }
+            get { return this.tfsField.Status; }
         }
 
         public object OriginalValue
         {
-            get { return tfsField.OriginalValue; }
+            get { return this.tfsField.OriginalValue; }
         }
     }
 }

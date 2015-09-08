@@ -1,17 +1,22 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+
+using Aggregator.Core;
+using Aggregator.Core.Context;
+using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+using Microsoft.TeamFoundation.Framework.Server;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using NSubstitute;
+
+using UnitTests.Core.Mock;
 
 namespace UnitTests.Core
 {
-    using Microsoft.TeamFoundation.Framework.Server;
-    using Aggregator.Core;
-    using UnitTests.Core.Mock;
-    using System.Collections.ObjectModel;
-    using System.Collections.Generic;
-    using Aggregator.Core.Navigation;
-
     [TestClass]
     public class SingleParentChildAggregations
     {
@@ -29,6 +34,7 @@ namespace UnitTests.Core
             this.workItem.Fields["Estimated Dev Work"].Value.Returns(1.0D);
             this.workItem.Fields["Estimated Test Work"].Value.Returns(2.0D);
             this.workItem.IsValid().Returns(true);
+
             // triggers save
             this.workItem.IsDirty.Returns(true);
 
@@ -47,8 +53,9 @@ namespace UnitTests.Core
             this.workItem.TypeName.Returns("Task");
             this.workItem["Estimated Dev Work"].Returns(1.0D);
             this.workItem["Estimated Test Work"].Returns(2.0D);
-            this.workItem["Finish Date"].Returns(new DateTime(2010,1,1));
+            this.workItem["Finish Date"].Returns(new DateTime(2010, 1, 1));
             this.workItem.IsValid().Returns(true);
+
             // triggers save
             this.workItem.IsDirty.Returns(true);
 
@@ -63,18 +70,21 @@ namespace UnitTests.Core
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem.policies", logger);
-            var repository = this.SetupFakeRepository();
-            var processor = new EventProcessor(repository, logger, settings);
+            var alternateRepository = this.SetupFakeRepository();
             var context = Substitute.For<IRequestContext>();
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(1);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            using (var processor = new EventProcessor(alternateRepository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(1);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            this.workItem.Received().Save();
-            Assert.AreEqual(3.0D, this.workItem.Fields["Estimated Work"].Value);
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                this.workItem.Received().Save();
+                Assert.AreEqual(3.0D, this.workItem.Fields["Estimated Work"].Value);
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
         }
 
         [TestMethod]
@@ -82,18 +92,21 @@ namespace UnitTests.Core
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem-Short.policies", logger);
-            var repository = this.SetupFakeRepository_Short();
-            var processor = new EventProcessor(repository, logger, settings);
+            var alternateRepository = this.SetupFakeRepository_Short();
             var context = Substitute.For<IRequestContext>();
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(1);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            using (var processor = new EventProcessor(alternateRepository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(1);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            this.workItem.Received().Save();
-            Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                this.workItem.Received().Save();
+                Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
         }
 
         [TestMethod]
@@ -101,72 +114,76 @@ namespace UnitTests.Core
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItemVB.policies", logger);
-            var repository = this.SetupFakeRepository_Short();
-            var processor = new EventProcessor(repository, logger, settings);
+            var alternateRepository = this.SetupFakeRepository_Short();
             var context = Substitute.For<IRequestContext>();
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(1);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            using (var processor = new EventProcessor(alternateRepository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(1);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            this.workItem.Received().Save();
-            Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                this.workItem.Received().Save();
+                Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
         }
-
 
         [TestMethod]
         public void Should_aggregate_to_parent()
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("Rollup.policies", logger);
-            
-            var repository = new WorkItemRepositoryMock();
+            var alternateRepository = new WorkItemRepositoryMock();
 
-            var grandParent = new WorkItemMock(repository);
+            var grandParent = new WorkItemMock(alternateRepository);
             grandParent.Id = 1;
             grandParent.TypeName = "Feature";
             grandParent["Dev Estimate"] = 0.0D;
             grandParent["Test Estimate"] = 0.0D;
 
-            var parent = new WorkItemMock(repository);
+            var parent = new WorkItemMock(alternateRepository);
             parent.Id = 2;
             parent.TypeName = "Use Case";
-            parent.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 1, repository));
-            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 2, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 1, alternateRepository));
+            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 2, alternateRepository));
             parent["Total Work Remaining"] = 3.0D;
             parent["Total Estimate"] = 4.0D;
 
-            var child = new WorkItemMock(repository);
+            var child = new WorkItemMock(alternateRepository);
             child.Id = 3;
             child.TypeName = "Task";
-            child.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 2, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 3, repository));
+            child.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 2, alternateRepository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 3, alternateRepository));
             child["Estimated Dev Work"] = 10.0D;
             child["Estimated Test Work"] = 20.0D;
             child["Remaining Dev Work"] = 1.0D;
             child["Remaining Test Work"] = 2.0D;
-            child["Finish Date"] = new DateTime(2015,1,1);
+            child["Finish Date"] = new DateTime(2015, 1, 1);
 
-            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, parent.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemLazyReference.ParentRelationship, grandParent.Id, repository));
-            repository.SetWorkItems(new[] { grandParent, parent, child });
+            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, alternateRepository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, alternateRepository));
+            alternateRepository.SetWorkItems(new[] { grandParent, parent, child });
 
-            var processor = new EventProcessor(repository, logger, settings);
             var context = Substitute.For<IRequestContext>();
-            var notification = Substitute.For<INotification>();
-            notification.WorkItemId.Returns(3);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
+            using (var processor = new EventProcessor(alternateRepository, runtime))
+            {
+                var notification = Substitute.For<INotification>();
+                notification.WorkItemId.Returns(3);
 
-            var result = processor.ProcessEvent(context, notification);
+                var result = processor.ProcessEvent(context, notification);
 
-            Assert.AreEqual(0, result.ExceptionProperties.Count());
-            Assert.IsTrue(child._SaveCalled);
-            Assert.IsTrue(parent._SaveCalled);
-            Assert.IsFalse(grandParent._SaveCalled);
-            Assert.AreEqual(3.0D, parent["Total Work Remaining"]);
-            Assert.AreEqual(30.0D, parent["Total Estimate"]);
-            Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.IsFalse(child.InternalWasSaveCalled);
+                Assert.IsTrue(parent.InternalWasSaveCalled);
+                Assert.IsFalse(grandParent.InternalWasSaveCalled);
+                Assert.AreEqual(3.0D, parent["Total Work Remaining"]);
+                Assert.AreEqual(30.0D, parent["Total Estimate"]);
+                Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Aggregator.Core
+﻿namespace Aggregator.Core.Extensions
 {
     public static class StringExtensions
     {

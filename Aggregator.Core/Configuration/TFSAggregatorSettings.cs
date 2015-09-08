@@ -1,4 +1,6 @@
-﻿namespace Aggregator.Core.Configuration
+﻿using Aggregator.Core.Monitoring;
+
+namespace Aggregator.Core.Configuration
 {
     using System;
     using System.Collections.Generic;
@@ -13,73 +15,56 @@
     /// </summary>
     public class TFSAggregatorSettings
     {
-        static readonly char[] ListSeparators = new char[] { ',', ';' };
-
-        public IEnumerable<Rule> Rules { get; set; }
-        public IEnumerable<Policy> Policies { get; set; }
+        private static readonly char[] ListSeparators = new char[] { ',', ';' };
 
         public static TFSAggregatorSettings LoadFromFile(string settingsPath, ILogEvents logger)
         {
-            return Load(logger, (xmlLoadOptions) => XDocument.Load(settingsPath, xmlLoadOptions));
+            DateTime lastWriteTime
+                = System.IO.File.GetLastWriteTimeUtc(settingsPath);
+            return Load(lastWriteTime, (xmlLoadOptions) => XDocument.Load(settingsPath, xmlLoadOptions), logger);
         }
 
         public static TFSAggregatorSettings LoadXml(string content, ILogEvents logger)
         {
-            return Load(logger, (xmlLoadOptions) => XDocument.Parse(content, xmlLoadOptions));
+            // conventional point in time reference
+            DateTime staticTime = new DateTime(0, DateTimeKind.Utc);
+            return LoadXml(content, staticTime, logger);
+        }
+
+        public static TFSAggregatorSettings LoadXml(string content, DateTime timestamp, ILogEvents logger)
+        {
+            return Load(timestamp, (xmlLoadOptions) => XDocument.Parse(content, xmlLoadOptions), logger);
         }
 
         /// <summary>
         /// Parse the specified <see cref="XDocument"/> to build a <see cref="TFSAggregatorSettings"/> instance.
         /// </summary>
+        /// <param name="lastWriteTime">Last teime the document has been changed.</param>
         /// <param name="load">A lambda returning the <see cref="XDocument"/> to parse.</param>
         /// <returns></returns>
-        public static TFSAggregatorSettings Load(ILogEvents logger, Func<LoadOptions, XDocument> load)
+        public static TFSAggregatorSettings Load(DateTime lastWriteTime, Func<LoadOptions, XDocument> load, ILogEvents logger)
         {
             var instance = new TFSAggregatorSettings();
 
             LoadOptions xmlLoadOptions = LoadOptions.PreserveWhitespace | LoadOptions.SetBaseUri | LoadOptions.SetLineInfo;
             XDocument doc = load(xmlLoadOptions);
 
-            XmlSchemaSet schemas = new XmlSchemaSet();
-            var thisAssembly = Assembly.GetAssembly(typeof(TFSAggregatorSettings));
-            var stream = thisAssembly.GetManifestResourceStream("Aggregator.Core.Configuration.AggregatorConfiguration.xsd");
-            schemas.Add("", XmlReader.Create(stream));
-            bool errors = false;
-            doc.Validate(schemas, (o, e) =>
+            instance.Hash = ComputeHash(doc, lastWriteTime);
+
+            if (!ValidateDocAgainstSchema(doc, logger))
             {
-                logger.InvalidConfiguration(e.Severity, e.Message, e.Exception.LineNumber, e.Exception.LinePosition);
-                errors = true;
-            }, true);
-            if (errors)
                 // HACK we must handle this scenario with clean exit
                 return null;
+            }
 
-            // XML Schema has done lot of checking and set defaults, no need to recheck here
-            var loggingNode = doc.Root.Element("runtime") != null ? 
-                doc.Root.Element("runtime").Element("logging") : null;
-            instance.LogLevel = loggingNode != null ?
-                (LogLevel)Enum.Parse(typeof(LogLevel), loggingNode.Attribute("level").Value)
-                : LogLevel.Normal;
-            var authenticationNode = doc.Root.Element("runtime") != null ?
-                doc.Root.Element("runtime").Element("authentication") : null;
-            instance.AutoImpersonate = authenticationNode != null ?
-                bool.Parse(authenticationNode.Attribute("autoImpersonate").Value)
-                : false;
-            var scriptNode = doc.Root.Element("runtime") != null ?
-                doc.Root.Element("runtime").Element("script") : null;
-            instance.ScriptLanguage = scriptNode != null ?
-                scriptNode.Attribute("language").Value
-                : "C#";
+            // XML Schema has done lot of checking and set defaults, no need to recheck later, just manage missing pieces
+            ParseRuntimeSection(instance, doc);
 
-            Dictionary<string, Rule> rules = ParseRules(instance, doc);
+            Dictionary<string, Rule> rules = ParseRulesSection(instance, doc);
 
-            var ruleInUse = new Dictionary<string, bool>();
-            foreach (string ruleName in rules.Keys)
-            {
-                ruleInUse.Add(ruleName, false);
-            }//for
+            var ruleInUse = rules.Keys.ToDictionary(ruleName => ruleName, ruleName => false);
 
-            List<Policy> policies = ParsePolicies(doc, rules, ruleInUse);
+            List<Policy> policies = ParsePoliciesSection(doc, rules, ruleInUse);
 
             instance.Policies = policies;
 
@@ -87,12 +72,68 @@
             foreach (var unusedRule in ruleInUse.Where(kv => kv.Value == false))
             {
                 logger.UnreferencedRule(unusedRule.Key);
-            }//for
+            }
 
             return instance;
         }
 
-        private static List<Policy> ParsePolicies(XDocument doc, Dictionary<string, Rule> rules, Dictionary<string, bool> ruleInUse)
+        private static string ComputeHash(XDocument doc, DateTime timestamp)
+        {
+            using (var stream = new System.IO.MemoryStream())
+            using (var md5 = new System.Security.Cryptography.MD5CryptoServiceProvider())
+            using (var w = new System.IO.BinaryWriter(stream))
+            {
+                w.Write(timestamp.ToBinary());
+                w.Flush();
+                doc.Save(stream, SaveOptions.OmitDuplicateNamespaces);
+                stream.Flush();
+                var hash = md5.ComputeHash(stream.GetBuffer());
+                string hex = BitConverter.ToString(hash);
+                return hex.Replace("-", string.Empty);
+            }
+        }
+
+        private static bool ValidateDocAgainstSchema(XDocument doc, ILogEvents logger)
+        {
+            XmlSchemaSet schemas = new XmlSchemaSet();
+            var thisAssembly = Assembly.GetAssembly(typeof(TFSAggregatorSettings));
+            var stream = thisAssembly.GetManifestResourceStream("Aggregator.Core.Configuration.AggregatorConfiguration.xsd");
+            schemas.Add(string.Empty, XmlReader.Create(stream));
+            bool valid = true;
+            doc.Validate(schemas, (o, e) =>
+            {
+                logger.InvalidConfiguration(e.Severity, e.Message, e.Exception.LineNumber, e.Exception.LinePosition);
+                valid = false;
+            }, true);
+            return valid;
+        }
+
+        private static void ParseRuntimeSection(TFSAggregatorSettings instance, XDocument doc)
+        {
+            var loggingNode = doc.Root.Element("runtime") != null ?
+                doc.Root.Element("runtime").Element("logging") : null;
+            instance.LogLevel = loggingNode != null ?
+                (LogLevel)Enum.Parse(typeof(LogLevel), loggingNode.Attribute("level").Value)
+                : LogLevel.Normal;
+
+            var runtimeNode = doc.Root.Element("runtime") ?? null;
+            var debugvalue = runtimeNode?.Attribute("debug")?.Value;
+            instance.Debug = debugvalue != null ?
+                bool.Parse(debugvalue)
+                : false;
+
+            var authenticationNode = doc.Root.Element("runtime") != null ?
+                doc.Root.Element("runtime").Element("authentication") : null;
+            instance.AutoImpersonate = authenticationNode != null
+                && bool.Parse(authenticationNode.Attribute("autoImpersonate").Value);
+
+            var scriptNode = doc.Root.Element("runtime") != null ?
+                doc.Root.Element("runtime").Element("script") : null;
+
+            instance.ScriptLanguage = scriptNode?.Attribute("language").Value ?? "C#";
+        }
+
+        private static List<Policy> ParsePoliciesSection(XDocument doc, Dictionary<string, Rule> rules, Dictionary<string, bool> ruleInUse)
         {
             var policies = new List<Policy>();
             foreach (var policyElem in doc.Root.Elements("policy"))
@@ -110,37 +151,45 @@
                     switch (element.Name.LocalName)
                     {
                         case "collectionScope":
-                            {
-                                var collections = new List<string>();
-                                collections.AddRange((element.Attribute("collections") ?? nullAttribute).Value.Split(ListSeparators));
-                                scope.Add(new CollectionScope() { CollectionNames = collections });
-                                break;
-                            }//case
-                        case "templateScope":
-                            {
-                                string templateName = (element.Attribute("name") ?? nullAttribute).Value;
-                                string templateId = (element.Attribute("typeId") ?? nullAttribute).Value;
-                                string minVersion = (element.Attribute("minVersion") ?? nullAttribute).Value;
-                                string maxVersion = (element.Attribute("maxVersion") ?? nullAttribute).Value;
+                        {
+                            var collections = new List<string>();
+                            collections.AddRange((element.Attribute("collections") ?? nullAttribute).Value.Split(ListSeparators));
+                            scope.Add(new CollectionScope() { CollectionNames = collections });
+                            break;
+                        }
 
-                                scope.Add(new TemplateScope()
-                                {
-                                    TemplateName = templateName,
-                                    TemplateTypeId = templateId,
-                                    MinVersion = minVersion,
-                                    MaxVersion = maxVersion
-                                });
-                                break;
-                            }//case
-                        case "projectScope":
+                        case "templateScope":
+                        {
+                            string templateName = (element.Attribute("name") ?? nullAttribute).Value;
+                            string templateId = (element.Attribute("typeId") ?? nullAttribute).Value;
+                            string minVersion = (element.Attribute("minVersion") ?? nullAttribute).Value;
+                            string maxVersion = (element.Attribute("maxVersion") ?? nullAttribute).Value;
+
+                            scope.Add(new TemplateScope()
                             {
-                                var projects = new List<string>();
-                                projects.AddRange((element.Attribute("projects") ?? nullAttribute).Value.Split(ListSeparators));
-                                scope.Add(new ProjectScope() { ProjectNames = projects });
-                                break;
-                            }//case
-                    }//switch
-                }//for
+                                TemplateName = templateName,
+                                TemplateTypeId = templateId,
+                                MinVersion = minVersion,
+                                MaxVersion = maxVersion
+                            });
+                            break;
+                        }
+
+                        case "projectScope":
+                        {
+                            var projects = new List<string>();
+                            projects.AddRange((element.Attribute("projects") ?? nullAttribute).Value.Split(ListSeparators));
+                            scope.Add(new ProjectScope() { ProjectNames = projects });
+                            break;
+                        }
+
+                        default:
+                        {
+                            // Ignore other rules for now.
+                            break;
+                        }
+                    }
+                }
 
                 policy.Scope = scope;
 
@@ -153,15 +202,16 @@
 
                     ruleInUse[refName] = true;
                 }
+
                 policy.Rules = referredRules;
 
                 policies.Add(policy);
-            }//for policy
+            }
 
             return policies;
         }
 
-        private static Dictionary<string, Rule> ParseRules(TFSAggregatorSettings instance, XDocument doc)
+        private static Dictionary<string, Rule> ParseRulesSection(TFSAggregatorSettings instance, XDocument doc)
         {
             var rules = new Dictionary<string, Rule>();
             foreach (var ruleElem in doc.Root.Elements("rule"))
@@ -187,13 +237,24 @@
                 rule.Script = ruleElem.Value;
 
                 rules.Add(rule.Name, rule);
-            }//for rule
+            }
+
             instance.Rules = rules.Values.ToList();
             return rules;
         }
 
-        public LogLevel LogLevel { get; set; }
-        public string ScriptLanguage { get; set; }
-        public bool AutoImpersonate { get; set; }
+        public LogLevel LogLevel { get; private set; }
+
+        public string ScriptLanguage { get; private set; }
+
+        public bool AutoImpersonate { get; private set; }
+
+        public string Hash { get; private set; }
+
+        public IEnumerable<Rule> Rules { get; private set; }
+
+        public IEnumerable<Policy> Policies { get; private set; }
+
+        public bool Debug { get; set; }
     }
 }

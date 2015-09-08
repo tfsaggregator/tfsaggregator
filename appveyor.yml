@@ -4,36 +4,51 @@ branches:
     - master
     - develop
 skip_tags: true
-configuration: Debug
+os:
+  - Visual Studio 2015
+configuration:
+  - Debug-2013
+  - Release-2013
+  - Debug-2015
+  - Release-2015
 environment:
   containerURL:
-    secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3XOLD5ID2nweLVV5CitmsDsC6PVlxsbfDFgmolBxKHg4=
+    secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3x3eawhSGYVzFy4Pap0dOGw==
   referenceFolder: References
 install:
   # get referenced DLL files from container
   - ps: $containerList = "$env:TEMP\references.xml"
-  - ps: Invoke-RestMethod -Uri "$env:containerURL`?restype=container&comp=list" -OutFile $containerList
+  - ps: $flavor = '2013'
+  - ps: Invoke-RestMethod -Uri "$env:containerURL$flavor`?restype=container&comp=list" -OutFile $containerList
   - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
-  - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL/$file" -OutFile "$env:referenceFolder\$file" }
+  - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL$flavor/$file" -OutFile "$env:referenceFolder\$flavor\$file" }
+  - ps: $flavor = '2015'
+  - ps: Invoke-RestMethod -Uri "$env:containerURL$flavor`?restype=container&comp=list" -OutFile $containerList
+  - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
+  - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL$flavor/$file" -OutFile "$env:referenceFolder\$flavor\$file" }
 assembly_info:
   patch: true
   file: AssemblyVersion.cs
   assembly_version: "2.0.{build}"
   assembly_file_version: "2.0.{build}"
   assembly_informational_version: "{version}"
+# Uncomment the following to use old C# compiler
+# before_build:
+#  - if %CONFIGURATION%==Debug-2013 set PATH=C:\Program Files (x86)\MSBuild\12.0\Bin;%PATH%
+#  - if %CONFIGURATION%==Release-2013 set PATH=C:\Program Files (x86)\MSBuild\12.0\Bin;%PATH%
 before_build:
-  nuget restore
+  - nuget restore
 build:
   project: TFS-Aggregator-2.sln
   # MSBuild verbosity level: quiet|minimal|normal|detailed
   verbosity: minimal
 after_build:
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ServerPlugin\bin\%CONFIGURATION%\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ConsoleApp\bin\%CONFIGURATION%\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\*.md -r
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\LICENSE*.txt
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ServerPlugin\bin\%CONFIGURATION%\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ConsoleApp\bin\%CONFIGURATION%\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\*.md -r
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\LICENSE*.txt
   # pick samples
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%.zip" %APPVEYOR_BUILD_FOLDER%\*.policies -r
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\*.policies -r
 test:
   assemblies:
     - UnitTests.Core.dll

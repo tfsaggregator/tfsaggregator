@@ -1,5 +1,9 @@
-﻿namespace UnitTests.Core
+﻿using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
+
+namespace UnitTests.Core
 {
+    using System;
     using System.IO;
     using System.Reflection;
 
@@ -14,15 +18,17 @@
         {
             try
             {
-                var thisAssembly = Assembly.GetAssembly(typeof(Basics));
+                var thisAssembly = Assembly.GetAssembly(typeof(TestHelpers));
                 var stream = thisAssembly.GetManifestResourceStream("UnitTests.Core.ConfigurationsForTests." + resourceName);
-                var textStream = new StreamReader(stream);
-                return textStream.ReadToEnd();
+                using (var textStream = new StreamReader(stream))
+                {
+                    return textStream.ReadToEnd();
+                }
             }
             catch
             {
                 Assert.Fail("Couldn't load embedded resource " + resourceName);
-                return "";
+                return string.Empty;
             }
         }
 

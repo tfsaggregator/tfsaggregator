@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Import Project="../references/TfsReferences.target" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug-2015</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -12,28 +11,57 @@
     <AssemblyName>TFSAggregator2.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-2015|AnyCPU' ">
+    <TfsVersion>14.0</TfsVersion>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug-2015\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-2015|AnyCPU' ">
+    <TfsVersion>14.0</TfsVersion>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release-2015</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-2013|AnyCPU' ">
+    <TfsVersion>12.0</TfsVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug-2013</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-2013|AnyCPU' ">
+    <TfsVersion>12.0</TfsVersion>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release-2013</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>TfsAggregator.ico</ApplicationIcon>
   </PropertyGroup>
+  <Import Project="../references/TfsReferences.target" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -41,21 +69,35 @@
       <Private>True</Private>
       <HintPath>..\packages\System.Management.Automation_PowerShell_3.0.6.3.9600.17400\lib\net40\System.Management.Automation.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Configuration\CollectionScope.cs" />
+    <Compile Include="Configuration\HasFieldsScope.cs" />
+    <Compile Include="Configuration\ProjectScope.cs" />
+    <Compile Include="Configuration\TemplateScope.cs" />
+    <Compile Include="Configuration\WorkItemTypeScope.cs" />
+    <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
+    <Compile Include="Interfaces\IProcessTemplateVersionWrapper.cs" />
+    <Compile Include="Monitoring\IRuleLogger.cs" />
+    <Compile Include="Monitoring\RuleLogger.cs" />
+    <Compile Include="WorkItemImplementationBase.cs" />
     <Compile Include="Configuration\Policy.cs" />
     <Compile Include="Configuration\Rule.cs" />
     <Compile Include="Configuration\PolicyScope.cs" />
     <Compile Include="Configuration\RuleScope.cs" />
+    <Compile Include="Context\IRuntimeContext.cs" />
     <Compile Include="EventProcessor.cs" />
+    <Compile Include="Extensions\IWorkItemExposedExtensions.cs" />
     <Compile Include="Extensions\WorkItemExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Facade\FieldCollectionWrapper.cs" />
@@ -76,11 +118,11 @@
     <Compile Include="Interfaces\IWorkItemLinkCollection.cs" />
     <Compile Include="Navigation\StateTransition.cs" />
     <Compile Include="Navigation\StateWorkflow.cs" />
+    <Compile Include="Context\RuntimeContext.cs" />
     <Compile Include="Script\VBNetScriptEngine.cs" />
     <Compile Include="Script\CSharpScriptEngine.cs" />
     <Compile Include="Script\DotNetScriptEngine.cs" />
     <Compile Include="Script\ScriptEngine.cs" />
-    <Compile Include="Navigation\WorkItemLazyReference.cs" />
     <Compile Include="Interfaces\IFieldCollectionWrapper.cs" />
     <Compile Include="Interfaces\IFieldWrapper.cs" />
     <Compile Include="Interfaces\INotification.cs" />
@@ -103,6 +145,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="TfsAggregator.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\SonarLint.1.2.0\tools\analyzers\C#\SonarLint.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta007\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,4 +1,6 @@
-﻿namespace UnitTests.Core
+﻿using Aggregator.Core.Monitoring;
+
+namespace UnitTests.Core
 {
     using System.IO;
     using System.Xml.Schema;
@@ -14,13 +16,24 @@
     public class SettingsTests
     {
         [TestMethod]
+        public void Can_load_a_fake_xml_configuration()
+        {
+            var logger = Substitute.For<ILogEvents>();
+
+            var settings = TestHelpers.LoadConfigFromResourceFile("NoOp.policies", logger);
+            var level = settings.LogLevel;
+
+            Assert.AreEqual(LogLevel.Diagnostic, level);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(FileNotFoundException))]
         public void Raise_error_for_non_existing_file()
         {
             var logger = Substitute.For<ILogEvents>();
             string file = "does_not_exists";
 
-            var settings = TFSAggregatorSettings.LoadFromFile(file, logger);
+            TFSAggregatorSettings.LoadFromFile(file, logger);
         }
 
         [TestMethod]

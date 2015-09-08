@@ -10,7 +10,7 @@ Setup & install
 New-EventLog -LogName "Application" -Source "TFSAggregator"
     ```
  5. Copy `TFSAggregator2.ServerPlugin.dll`, `TFSAggregator2.Core.dll` and `TFSAggregator2.ServerPlugin.policies` to the plugin location on the Application Tier of your TFS Servers
-     - The plugin folder is usually at this path: `C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins`
+     - The plugin folder is usually at this path: `C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Plugins`
      - You must copy the exact same files on all the TFS Application Tier
 
 TFS detects automatically that a file was copied in and will load it in.
@@ -19,4 +19,4 @@ TFS detects automatically that a file was copied in and will load it in.
 Uninstall
 ================================================
 Remove the `TFSAggregator2.*` file from the plugin location on the Application Tier of your TFS Servers
-   - The plugin folder is usually at this path: `C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins`
+   - The plugin folder is usually at this path: `C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Plugins`

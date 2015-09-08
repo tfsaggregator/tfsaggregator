@@ -1,4 +1,6 @@
-﻿namespace UnitTests.Core.Mock
+﻿using Aggregator.Core.Interfaces;
+
+namespace UnitTests.Core.Mock
 {
     using System.Xml;
 
@@ -7,6 +9,7 @@
     internal class WorkItemTypeMock : IWorkItemType
     {
         public string Name { get; set; }
+
         public string DocumentContent { get; set; }
 
         public XmlDocument Export(bool includeGlobalListsFlag)
