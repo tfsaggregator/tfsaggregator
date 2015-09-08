@@ -1,6 +1,6 @@
 # Languages
 
-## C\#
+## `C#`
 You can use only types from `System.dll` or `Microsoft.TeamFoundation.WorkItemTracking.Client`. Any other reference will result in compile errors. 
 
 # Object Model
