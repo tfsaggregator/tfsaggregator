@@ -2,7 +2,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/github/tfsaggregator/tfsaggregator?svg=true)](https://ci.appveyor.com/project/giuliov/tfsaggregator)
 [![Join the chat at https://gitter.im/tfsaggregator/tfsaggregator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tfsaggregator/tfsaggregator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This server side plugin for TFS 2015 enables dynamic calculation of field values in TFS.
+This server side plugin for TFS 2013 and 2015 enables dynamic calculation of field values in TFS.
 (For example: Dev work + Test Work = Total Work).
 
 ## What's new in v2
@@ -59,8 +59,8 @@ It requires a number of TFS assemblies that cannot be redistributed.
 
 You can find the complete list:
 
- - 2013: [here](../References/2013/PLACEHOLDER.txt).
- - 2015: [here](../References/2015/PLACEHOLDER.txt).
+ - 2013: [here](./References/2013/PLACEHOLDER.txt).
+ - 2015: [here](./References/2015/PLACEHOLDER.txt).
 
 if you have TFS 2015 or TFS 2013 installed on your development machine, the assemblies for that version will be loaded automatically from the installation folder.
 
