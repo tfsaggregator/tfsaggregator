@@ -46,6 +46,10 @@ namespace Aggregator.Core.Context
 
                 Cache.Set(CacheKey, runtime, itemPolicy);
             }
+            else
+            {
+                runtime.RequestContext = requestContext;
+            }
 
             return runtime.Clone() as RuntimeContext;
         }
