@@ -2,7 +2,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/github/tfsaggregator/tfsaggregator?svg=true)](https://ci.appveyor.com/project/giuliov/tfsaggregator)
 [![Join the chat at https://gitter.im/tfsaggregator/tfsaggregator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tfsaggregator/tfsaggregator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This server side plugin for TFS 2015 enables dynamic calculation of field values in TFS.
+This server side plugin for TFS 2013 and 2015 enables dynamic calculation of field values in TFS.
 (For example: Dev work + Test Work = Total Work).
 
 ## What's new in v2
@@ -27,10 +27,10 @@ Example Uses
 Setup & install
 ================================================
 
-The [Install](https://github.com/tfsaggregator/tfsaggregator/releases/download/2.0.22-master/tfsaggregator-2.0.22-master.zip) file contains the full details to correctly setup Aggregator. The general process is:
+The latest [Install](https://github.com/tfsaggregator/tfsaggregator/tree/8ae990810f580c161247a6f6f4720d9b72d98288) file contains the full details to correctly setup Aggregator. The general process is:
 
  1. Download and extract the binaries from the latest release
- 2. Open up `TFSAggregator2.ServerPlugin.policies` and change the example settings to your actual settings.
+ 2. Create `TFSAggregator2.ServerPlugin.policies` (or rename one of the existing samples to get started) and change the example settings to your actual settings.
  3. Test your policy using the command line tool.
  4. Copy `TFSAggregator2.*.dll` and `TFSAggregator2.ServerPlugin.policies` to the plugin location on the Application Tier of your TFS Servers
 
@@ -46,9 +46,22 @@ Migrating from v1
 ================================================
 If you used TFS Aggregator in the past, [here](docs/Upgrade-from-v1.md) are the instructions on switching from older versions.
 
+If you're looking for the latest version of V1 (including a lare number of fixes and security updates), you can still find it [here](https://github.com/tfsaggregator/tfsaggregator/tree/8ae990810f580c161247a6f6f4720d9b72d98288). 
+
+**Note**: we won't provide any further support on this old version. Bt if you have a large investment in the old-style rules, it may provide you a better, stabler version until you're ready to move to V2. 
+
+**Note**: You can run both V1 and V2 side-by-side on the same TFS system, you will have to be extra careful not to create infinite loops though.
 
 Build and customize
 ================================================
 We used Visual Studio Community Edition 2013 Update 4 to develop this version.
-It requires a number of TFS assemblies that cannot be redistributed. You can find the complete list [here](references/PLACEHOLDER.txt).
+It requires a number of TFS assemblies that cannot be redistributed. 
+
+You can find the complete list:
+
+ - 2013: [here](./References/2013/PLACEHOLDER.txt).
+ - 2015: [here](./References/2015/PLACEHOLDER.txt).
+
+if you have TFS 2015 or TFS 2013 installed on your development machine, the assemblies for that version will be loaded automatically from the installation folder.
+
 More information and useful details on the internal design is [here](docs/Internals.md)
