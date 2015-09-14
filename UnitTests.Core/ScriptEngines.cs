@@ -178,6 +178,8 @@ return $self.Fields[""z""].Value ";
                 notification.WorkItemId.Returns(1);
                 repository.LoadedWorkItems.Returns(
                     new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>() { workItem }));
+                repository.CreatedWorkItems.Returns(
+                    new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>()));
 
                 var result = processor.ProcessEvent(context, notification);
 

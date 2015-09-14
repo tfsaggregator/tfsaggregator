@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
@@ -24,7 +26,8 @@ namespace Aggregator.Core.Facade
 
         private readonly IdentityDescriptor toImpersonate;
 
-        private readonly List<IWorkItem> loadedWorkItems = new List<IWorkItem>();
+        private readonly Dictionary<int, IWorkItem> loadedWorkItems = new Dictionary<int, IWorkItem>();
+        private readonly List<IWorkItem> createdWorkItems = new List<IWorkItem>();
 
         private WorkItemStore workItemStore;
 
@@ -50,16 +53,29 @@ namespace Aggregator.Core.Facade
                 this.ConnectToWorkItemStore();
             }
 
-            IWorkItem justLoaded = new WorkItemWrapper(this.workItemStore.GetWorkItem(workItemId), this, this.logger);
-            this.loadedWorkItems.Add(justLoaded);
-            return justLoaded;
+            IWorkItem result;
+            if (!this.loadedWorkItems.TryGetValue(workItemId, out result))
+            {
+                result = new WorkItemWrapper(this.workItemStore.GetWorkItem(workItemId), this, this.logger);
+                this.loadedWorkItems.Add(workItemId, result);
+            }
+
+            return result;
         }
 
         public ReadOnlyCollection<IWorkItem> LoadedWorkItems
         {
             get
             {
-                return new ReadOnlyCollection<IWorkItem>(this.loadedWorkItems);
+                return new ReadOnlyCollection<IWorkItem>(this.loadedWorkItems.Values.ToList());
+            }
+        }
+
+        public ReadOnlyCollection<IWorkItem> CreatedWorkItems
+        {
+            get
+            {
+                return new ReadOnlyCollection<IWorkItem>(this.createdWorkItems);
             }
         }
 
@@ -74,7 +90,7 @@ namespace Aggregator.Core.Facade
             var target = new WorkItem(targetType);
 
             IWorkItem justCreated = new WorkItemWrapper(target, this, this.logger);
-            this.loadedWorkItems.Add(justCreated);
+            this.createdWorkItems.Add(justCreated);
             return justCreated;
         }
 

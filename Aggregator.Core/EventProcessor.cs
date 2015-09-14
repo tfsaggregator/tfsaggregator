@@ -109,8 +109,22 @@ namespace Aggregator.Core
 
         private void SaveChangedWorkItems()
         {
+            // Save new work items to the target work items.
+            foreach (IWorkItem workItem in this.store.CreatedWorkItems.Where(w => w.IsDirty))
+            {
+                this.ValidateAndSaveWorkItem(workItem);
+            }
+
             // Save any changes to the target work items.
             foreach (IWorkItem workItem in this.store.LoadedWorkItems.Where(w => w.IsDirty))
+            {
+                this.ValidateAndSaveWorkItem(workItem);
+            }
+        }
+
+        private void ValidateAndSaveWorkItem(IWorkItem workItem)
+        {
+            if (workItem.IsDirty)
             {
                 bool isValid = workItem.IsValid();
                 this.logger.Saving(workItem, isValid);
