@@ -40,6 +40,7 @@ namespace UnitTests.Core
 
             this.repository.GetWorkItem(1).Returns(this.workItem);
             this.repository.LoadedWorkItems.Returns(new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>() { this.workItem }));
+            this.repository.CreatedWorkItems.Returns(new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>()));
 
             return this.repository;
         }
@@ -61,7 +62,7 @@ namespace UnitTests.Core
 
             this.repository.GetWorkItem(1).Returns(this.workItem);
             this.repository.LoadedWorkItems.Returns(new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>() { this.workItem }));
-
+            this.repository.CreatedWorkItems.Returns(new ReadOnlyCollection<IWorkItem>(new List<IWorkItem>()));
             return this.repository;
         }
 

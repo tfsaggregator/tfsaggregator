@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Aggregator.Core.Interfaces
 {
@@ -18,5 +19,7 @@ namespace Aggregator.Core.Interfaces
     public interface IWorkItemRepository : IWorkItemRepositoryExposed
     {
         ReadOnlyCollection<IWorkItem> LoadedWorkItems { get; }
+
+        ReadOnlyCollection<IWorkItem> CreatedWorkItems { get; }
     }
 }

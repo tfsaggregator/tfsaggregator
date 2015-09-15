@@ -114,7 +114,8 @@ namespace UnitTests.Core
                 var result = processor.ProcessEvent(context, notification);
 
                 Assert.AreEqual(0, result.ExceptionProperties.Count());
-                Assert.AreEqual(2, repository.LoadedWorkItems.Count);
+                Assert.AreEqual(1, repository.LoadedWorkItems.Count);
+                Assert.AreEqual(1, repository.CreatedWorkItems.Count);
                 Assert.IsTrue(parent.InternalWasSaveCalled);
                 Assert.IsTrue(parent.HasChildren());
             }

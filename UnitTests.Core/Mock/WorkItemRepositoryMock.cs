@@ -15,7 +15,7 @@ namespace UnitTests.Core.Mock
 
         private readonly List<IWorkItem> loadedWorkItems = new List<IWorkItem>();
 
-        private int newWorkItemId = -1;
+        private readonly List<IWorkItem> createdWorkItems = new List<IWorkItem>();
 
         public ILogEvents Logger { get; set; }
 
@@ -37,17 +37,22 @@ namespace UnitTests.Core.Mock
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
         {
             var newWorkItem = new WorkItemMock(this);
-            newWorkItem.Id = this.newWorkItemId--;
+            newWorkItem.Id = 0;
             newWorkItem.TypeName = workItemTypeName;
 
             // don't forget to add to collection
-            this.loadedWorkItems.Add(newWorkItem);
+            this.createdWorkItems.Add(newWorkItem);
             return newWorkItem;
         }
 
         public ReadOnlyCollection<IWorkItem> LoadedWorkItems
         {
             get { return new ReadOnlyCollection<IWorkItem>(this.loadedWorkItems); }
+        }
+
+        public ReadOnlyCollection<IWorkItem> CreatedWorkItems
+        {
+            get { return new ReadOnlyCollection<IWorkItem>(this.createdWorkItems); }
         }
     }
 }
