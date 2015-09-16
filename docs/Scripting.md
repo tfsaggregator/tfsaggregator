@@ -1,7 +1,10 @@
 # Languages
 
 ## `C#`
-You can use only types from `System.dll` or `Microsoft.TeamFoundation.WorkItemTracking.Client`. Any other reference will result in compile errors. 
+You can use only types from `System.dll` or `Microsoft.TeamFoundation.WorkItemTracking.Client`.
+Any other reference will result in compile errors. 
+
+
 
 # Object Model
 
@@ -12,7 +15,8 @@ Aggregator exposes two pre-defined variables:
 
 ## self
 
-Represents the work item that triggered the rule. You can access the [Fields](https://msdn.microsoft.com/en-us/library/microsoft.teamfoundation.workitemtracking.client.field.aspx) using either syntax:
+Represents the work item that triggered the rule.
+You can access the [Fields](https://msdn.microsoft.com/en-us/library/microsoft.teamfoundation.workitemtracking.client.field.aspx) using either syntax:
 ```
 self.Field["field_name"]
 ```
@@ -56,6 +60,12 @@ You must specify the project and the type. The new work item Fields have default
 it is not committed to the database until all the rules have fired and Aggregator returns control to TFS.
 
 
+## logger
+
+Allows to add a trace message to the log output via the `Log` method.
+It works like `Console.WriteLine`, accepting a format string followed by optional arguments.
+
+
 ## Parent
 Helper property to navigate a work item's parent in the Parent-Child hierarchy.
 
@@ -93,6 +103,8 @@ You can get work items related using the utility methods to build a query.
  - `AtMost` depth of search, i.e. maximum number of links to follow
  - `FollowingLinks` filters on link type
 
+It is particoularly useful for traversing many links.
+
 ### Example
 
 ```
@@ -104,3 +116,9 @@ foreach (var test in tests)
    }
 }
 ```
+
+## Linq
+
+You can use Linq queries on the collections:
+ - `Children`
+ - `Fields`

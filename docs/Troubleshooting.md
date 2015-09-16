@@ -5,13 +5,13 @@ Well, this is a check list of things to double check.
 
 ## Checklist
 
- -  You are using it on a TFS 2013 server (and you have the right version for the right server).
- -  Any aggregations between work items have a Parent-Child Link.
- -  You have updated a work item that needs aggregation. (The TFS Aggregation only works once a work item that has aggregation rules on it is updated. This may change in a future version.)
- -  You copied the DLLs and the Policies file to the plugins location on all TFS Application Tier Servers (Usually at: <Drive>`:\Program Files\Microsoft Team Foundation Server {Version}\Application Tier\Web Services\bin\Plugins`)
+ -  You are using it on a TFS 2013 or 2015 server (and you have the right version for the right server).
+ -  You have updated a work item that triggers a rule. (The TFS Aggregation only works once a work item that has aggregation rules on it is updated. This may change in a future version.)
+ -  If the rule navigates between work items, work items have a proper Link (e.g. Parent-Child).
+ -  You copied the DLLs and the Policies file to the plugins location on all TFS Application Tier Servers (Usually at: <Drive>`:\Program Files\Microsoft Team Foundation Server ` _version_`\Application Tier\Web Services\bin\Plugins`)
  -  You have valid names for source and destination fields in `TFSAggregator2.ServerPlugin.policies`.
  -  When you saved the file you saved it as utf-8 encoding (in Notepad++ it is called “utf-8 without BOM”) (This should not be an issue, but it does not hurt to check).
- -  You have given permission to the user running the plugin, i.e. add the "TFS Service Account" to the "Project Collection Administrators" TFS Group.
+ -  You have given permission to the user running the plugin, e.g. add the "TFS Service Account" to the **Project Collection Administrators** TFS Group.
  -  When using the Impersonation option, make sure the user executing the plugin (generally the TFS Service account) has the "Make requests on behalf of others" [permission at the server level](https://msdn.microsoft.com/en-us/library/ms252587.aspx)
 
 
@@ -20,7 +20,7 @@ Also if you are having issues we recommend debugging your Policies file using `T
 
 ## Enable Logging
 
-You can also enable Logging if you are using a TFS 2013 or later version. There are two parts to enable logging.
+You can also enable Logging. There are two parts to enable logging.
 
 The first is that you have to set a `level` attribute to the `logging` element in your `TFSAggregator2.ServerPlugin.policies` file.
 Use a value like `Verbose` or `Diagnostic`.
@@ -44,6 +44,8 @@ We would recommend adding the following filter to DebugView so that you only see
 ```
 
 Download DebugView at <http://technet.microsoft.com/en-us/sysinternals/bb896647>.
+
+Note that you can use the [`logger` object](Scripting.md) to trace values from within the rules.
 
 
 ## Support

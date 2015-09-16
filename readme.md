@@ -54,7 +54,7 @@ If you're looking for the latest version of V1 (including a lare number of fixes
 
 Build and customize
 ================================================
-We used Visual Studio Community Edition 2013 Update 4 to develop this version.
+We used Visual Studio Community Edition 2015 to develop this version.
 It requires a number of TFS assemblies that cannot be redistributed. 
 
 You can find the complete list:
