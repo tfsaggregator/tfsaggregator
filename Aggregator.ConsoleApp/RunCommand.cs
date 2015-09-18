@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Aggregator.Core;
 using Aggregator.Core.Context;
@@ -69,12 +70,25 @@ namespace Aggregator.ConsoleApp
             {
                 try
                 {
-                    var context = runtime.RequestContext;
-                    var notification = new Notification(this.WorkItemId, this.TeamProjectName);
+                    var workItemIds = new Queue<int>();
+                    workItemIds.Enqueue(this.WorkItemId);
 
-                    logger.StartingProcessing(context, notification);
-                    ProcessingResult result = eventProcessor.ProcessEvent(context, notification);
-                    logger.ProcessingCompleted(result);
+                    ProcessingResult result = null;
+                    while (workItemIds.Count > 0)
+                    {
+                        var context = runtime.RequestContext;
+                        int id = workItemIds.Dequeue();
+                        var notification = new Notification(id, this.TeamProjectName);
+
+                        logger.StartingProcessing(context, notification);
+                        result = eventProcessor.ProcessEvent(context, notification);
+                        logger.ProcessingCompleted(result);
+
+                        foreach (var savedId in eventProcessor.SavedWorkItems)
+                        {
+                            workItemIds.Enqueue(savedId);
+                        }
+                    }
 
                     return result.StatusCode;
                 }

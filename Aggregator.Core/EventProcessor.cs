@@ -110,8 +110,20 @@ namespace Aggregator.Core
             }
         }
 
+        private readonly List<int> savedWorkItemIds = new List<int>();
+
+        public IEnumerable<int> SavedWorkItems
+        {
+            get
+            {
+                return this.savedWorkItemIds.AsEnumerable();
+            }
+        }
+
         private void SaveChangedWorkItems()
         {
+            this.savedWorkItemIds.Clear();
+
             // Save new work items to the target work items.
             foreach (IWorkItem workItem in this.store.CreatedWorkItems.Where(w => w.IsDirty))
             {
@@ -138,6 +150,9 @@ namespace Aggregator.Core
                 {
                     workItem.PartialOpen();
                     workItem.Save();
+
+                    // track
+                    this.savedWorkItemIds.Add(workItem.Id);
                 }
             }
         }
