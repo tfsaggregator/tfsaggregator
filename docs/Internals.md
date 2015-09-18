@@ -71,3 +71,15 @@ Building requires a number of TFS assemblies that cannot be redistributed. You c
 if you have TFS 2015 or TFS 2013 installed on your development machine, the assemblies for that version will be loaded automatically from the installation folder.
 
 We use [AppVeyor](http://www.appveyor.com/) for Continuous Integration, so the `appveyor.yml` file is our CI build script.
+
+
+
+# Debugging
+
+For the best development experience, use a TFS 2013 or 2015 Virtual Machine with Visual Studio 2015 installed
+and work directly on the machine.
+
+You can then set the output folder for the project to
+`C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins\`
+
+You can also debug by attaching to the `w3wp.exe` on the server and setting breakpoints as you would normally.
