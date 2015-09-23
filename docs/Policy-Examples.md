@@ -24,3 +24,9 @@ In the Microsoft Visual Studio Scrum template that is always a Bug or Product Ba
 
 > **Note on States**: TFS has controls setup on State Transitions.
 > Most templates do not allow you to go directly from a New state to a Done state.
+
+
+
+# More Examples
+
+Additional examples can be found in the [`UnitTests.Core\ConfigurationsForTests`](..\UnitTests.Core\ConfigurationsForTests) folder.
