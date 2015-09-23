@@ -1,4 +1,6 @@
-﻿using Aggregator.Core.Monitoring;
+﻿using System;
+
+using Aggregator.Core.Monitoring;
 
 namespace UnitTests.Core
 {
@@ -119,6 +121,61 @@ namespace UnitTests.Core
 
             Assert.IsNotNull(settings);
             logger.Received().UnreferencedRule("r1");
+        }
+
+        [TestMethod]
+        public void LoadDefaultRateLimitsWhenTagIsPresentButEmpty()
+        {
+            var logger = Substitute.For<ILogEvents>();
+
+            string config = @"
+<AggregatorConfiguration>
+    <runtime>
+        <rateLimiting />
+    </runtime>
+</AggregatorConfiguration>";
+
+            var settings = TFSAggregatorSettings.LoadXml(config, logger);
+
+            Assert.IsNotNull(settings);
+
+            Assert.IsNotNull(settings.RateLimit);
+            Assert.AreEqual(settings.RateLimit?.Interval, TimeSpan.FromSeconds(1));
+            Assert.AreEqual(settings.RateLimit?.Changes, 5);
+        }
+
+        [TestMethod]
+        public void LoadsGivenrateLimitsWhenChangesAttributesIsPresent()
+        {
+            var logger = Substitute.For<ILogEvents>();
+
+            string config = @"
+<AggregatorConfiguration>
+    <runtime>
+        <rateLimiting changes=""100"" />
+    </runtime>
+</AggregatorConfiguration>";
+
+            var settings = TFSAggregatorSettings.LoadXml(config, logger);
+
+            Assert.AreEqual(settings.RateLimit?.Changes, 100);
+        }
+
+        [TestMethod]
+        public void LoadsGivenrateLimitsWhenInteralAttributeIsPresent()
+        {
+            var logger = Substitute.For<ILogEvents>();
+
+            string config = @"
+<AggregatorConfiguration>
+    <runtime>
+        <rateLimiting interval=""01:00:00.0"" />
+    </runtime>
+</AggregatorConfiguration>";
+
+            var settings = TFSAggregatorSettings.LoadXml(config, logger);
+
+            Assert.AreEqual(settings.RateLimit?.Interval, TimeSpan.FromHours(1));
         }
     }
 }

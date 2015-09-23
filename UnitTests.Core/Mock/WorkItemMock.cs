@@ -100,6 +100,11 @@ namespace UnitTests.Core.Mock
 
         public IWorkItemType Type { get; set; }
 
+        public bool ShouldLimit(RateLimiter limiter)
+        {
+            return false;
+        }
+
         public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
             return WorkItemLazyVisitor

@@ -62,5 +62,7 @@ namespace Aggregator.Core.Interfaces
         ArrayList Validate();
 
         IWorkItemType Type { get; }
+
+        bool ShouldLimit(RateLimiter limiter);
     }
 }

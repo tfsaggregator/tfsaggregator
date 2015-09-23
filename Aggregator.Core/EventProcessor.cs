@@ -26,6 +26,8 @@ namespace Aggregator.Core
 
         private readonly ScriptEngine engine;
 
+        private readonly RateLimiter limiter;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EventProcessor"/> class.
         /// </summary>
@@ -45,6 +47,7 @@ namespace Aggregator.Core
             this.logger = runtime.Logger;
             this.store = workItemStore;
             this.settings = runtime.Settings;
+            this.limiter = runtime.RateLimiter;
 
             this.engine = runtime.GetEngine(workItemStore);
         }
@@ -127,9 +130,11 @@ namespace Aggregator.Core
             if (workItem.IsDirty)
             {
                 bool isValid = workItem.IsValid();
-                this.logger.Saving(workItem, isValid);
+                bool shouldLimit = workItem.ShouldLimit(this.limiter);
 
-                if (isValid)
+                this.logger.Saving(workItem, isValid, shouldLimit);
+
+                if (isValid && !shouldLimit)
                 {
                     workItem.PartialOpen();
                     workItem.Save();

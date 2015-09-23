@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 using Aggregator.Core.Navigation;
@@ -27,6 +28,11 @@ namespace Aggregator.Core.Facade
             {
                 return this.workItem.Type;
             }
+        }
+
+        public bool ShouldLimit(RateLimiter limiter)
+        {
+            return limiter?.ShouldLimit(this.workItem) ?? false;
         }
 
         public string TypeName
