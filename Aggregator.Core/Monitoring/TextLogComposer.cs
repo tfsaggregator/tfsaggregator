@@ -41,14 +41,14 @@ namespace Aggregator.Core.Monitoring
 
         public void ResultsFromScriptRun(string scriptName, Collection<PSObject> results)
         {
-            this.logger.Log(LogLevel.Verbose, "--- Output for script '{0}' follows", scriptName);
+            this.logger.Log(LogLevel.Diagnostic, "--- Output for script '{0}' follows", scriptName);
 
             foreach (var item in results)
             {
                 this.logger.Log(LogLevel.Normal, item.ToString());
             }
 
-            this.logger.Log(LogLevel.Verbose, "--- Output complete.");
+            this.logger.Log(LogLevel.Diagnostic, "--- Output complete.");
         }
 
         public void WorkItemWrapperTryOpenException(IWorkItem workItem, Exception e)
@@ -81,7 +81,7 @@ namespace Aggregator.Core.Monitoring
         public void ResultsFromScriptRun(string scriptName, object result)
         {
             this.logger.Log(
-                LogLevel.Verbose,
+                LogLevel.Diagnostic,
                 "Output from script '{0}': [{1}]",
                 scriptName,
                 result);
