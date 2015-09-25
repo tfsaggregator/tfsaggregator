@@ -40,6 +40,7 @@ namespace Aggregator.Core
 
                 runspace.SessionStateProxy.SetVariable("self", workItem);
                 runspace.SessionStateProxy.SetVariable("store", this.Store);
+                runspace.SessionStateProxy.SetVariable("logger", this.Logger);
 
                 Pipeline pipeline = runspace.CreatePipeline();
                 pipeline.Commands.AddScript(script);
