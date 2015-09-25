@@ -13,13 +13,14 @@
         {
             Console.Write(GetHeader());
 
+            int rc = 42; // generic failure
             try
             {
                 // locate any commands in the assembly (or use an IoC container, or whatever source)
                 var commands = ConsoleCommandDispatcher.FindCommandsInSameAssemblyAs(typeof(Program));
 
                 // then run them.
-                int rc = ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out);
+                rc = ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out);
                 if (rc == 0)
                 {
                     ConsoleColor save = Console.ForegroundColor;
@@ -27,14 +28,14 @@
                     Console.WriteLine("Succeeded.");
                     Console.ForegroundColor = save;
                 }
-
-                return rc;
             }
             catch (Exception e)
             {
                 e.Dump(Console.Out);
-                return 99;
+                rc = 99;
             }
+
+            return rc;
         }
 
         internal static string GetHeader()

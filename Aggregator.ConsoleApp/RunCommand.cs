@@ -62,7 +62,7 @@ namespace Aggregator.ConsoleApp
 
             if (runtime.HasErrors)
             {
-                return 99;
+                return 3;
             }
 
             logger.ConfigurationLoaded(this.PolicyFile);
@@ -95,7 +95,7 @@ namespace Aggregator.ConsoleApp
                 catch (Exception e)
                 {
                     logger.ProcessEventException(e);
-                    return -1;
+                    return 1;
                 }
             }
         }
