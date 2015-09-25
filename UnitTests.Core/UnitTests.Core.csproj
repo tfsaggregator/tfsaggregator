@@ -141,6 +141,9 @@
     <EmbeddedResource Include="ConfigurationsForTests\RulesAndPolicy.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ManualTests\CascadeAndTrigger.policies">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="UnitTests.Core.ruleset" />
   </ItemGroup>
