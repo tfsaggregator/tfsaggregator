@@ -37,6 +37,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "references", "references", 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B1913F70-5A32-4EAE-BDD2-0C46295656A6}"
+	ProjectSection(SolutionItems) = preProject
+		samples\TFSAggregator2.ServerPlugin.policies = samples\TFSAggregator2.ServerPlugin.policies
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.ConsoleApp", "Aggregator.ConsoleApp\Aggregator.ConsoleApp.csproj", "{200CF240-476E-4429-A8FC-66001806A2DE}"
 EndProject
