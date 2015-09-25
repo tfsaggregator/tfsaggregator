@@ -61,6 +61,9 @@ namespace Aggregator.ConsoleApp
         /// <returns>0 for success, error code otherwise</returns>
         public override int Run(string[] remainingArguments)
         {
+            // cache requires absolute path
+            this.PolicyFile = System.IO.Path.GetFullPath(this.PolicyFile);
+
             // need a logger to show errors in config file (Catch 22)
             var logger = new ConsoleEventLogger(LogLevel.Warning);
 
