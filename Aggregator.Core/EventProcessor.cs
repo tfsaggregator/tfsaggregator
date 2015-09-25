@@ -80,6 +80,7 @@ namespace Aggregator.Core
             }
             else
             {
+                this.logger.NoPolicesApply();
                 result.StatusCode = 1;
                 result.StatusMessage = "No operation";
             }

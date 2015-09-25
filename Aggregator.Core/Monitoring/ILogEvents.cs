@@ -91,5 +91,7 @@ namespace Aggregator.Core.Monitoring
         void AddingHyperlink(int id, string destination, string comment);
 
         void HyperlinkAlreadyExists(int id, string destination, string comment);
+
+        void NoPolicesApply();
     }
 }

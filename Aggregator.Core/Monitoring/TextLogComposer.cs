@@ -343,5 +343,10 @@ namespace Aggregator.Core.Monitoring
         {
             this.logger.Log(LogLevel.Diagnostic, "{0}: {1}", ruleName, message);
         }
+
+        public void NoPolicesApply()
+        {
+            this.logger.Log(LogLevel.Verbose, "No polices apply");
+        }
     }
 }
