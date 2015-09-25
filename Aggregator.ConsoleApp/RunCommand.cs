@@ -33,6 +33,13 @@ namespace Aggregator.ConsoleApp
               value => this.TeamProjectName = value);
             this.HasRequiredOption("n|id|workItem=", "Work Item Id",
               value => this.WorkItemId = int.Parse(value));
+            this.HasOption("l|logLevel=", "Logging level (critical, error, warning, information, normal, verbose, diagnostic)",
+              value =>
+              {
+                  // use a string but parse so we know it is correct
+                  Enum.Parse(typeof(LogLevel), value, true);
+                  this.LogLevelName = value;
+              });
         }
 
         internal bool ShowHelp { get; set; }
@@ -44,6 +51,8 @@ namespace Aggregator.ConsoleApp
         internal string TeamProjectName { get; set; }
 
         internal int WorkItemId { get; set; }
+
+        internal string LogLevelName { get; set; }
 
         /// <summary>
         /// Called by the ManyConsole framework to execute the  <i>run</i> command.
@@ -59,6 +68,13 @@ namespace Aggregator.ConsoleApp
                 () => this.PolicyFile,
                 new RequestContext(this.TeamProjectCollectionUrl, this.TeamProjectName),
                 logger);
+
+            if (!string.IsNullOrWhiteSpace(this.LogLevelName))
+            {
+                // command line wins
+                LogLevel logLevel = (LogLevel)Enum.Parse(typeof(LogLevel), this.LogLevelName, true);
+                runtime.Logger.MinimumLogLevel = logLevel;
+            }
 
             if (runtime.HasErrors)
             {
