@@ -31,7 +31,7 @@ namespace Aggregator.ConsoleApp
               value => this.TeamProjectCollectionUrl = value);
             this.HasRequiredOption("p|teamProjectName=", "TFS Team Project",
               value => this.TeamProjectName = value);
-            this.HasRequiredOption("n|id|workItem=", "Work Item Id",
+            this.HasRequiredOption("n|id|workItemId=", "Work Item Id",
               value => this.WorkItemId = int.Parse(value));
             this.HasOption("l|logLevel=", "Logging level (critical, error, warning, information, normal, verbose, diagnostic)",
               value =>
