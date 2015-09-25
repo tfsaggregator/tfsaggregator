@@ -49,6 +49,7 @@ namespace Aggregator.Core.Configuration
         /// <returns>true if the policy matches all supplied checks.</returns>
         public override bool Matches(IRequestContext currentRequestContext, INotification currentNotification)
         {
+            // TODO this may fail with concurrent threads!
             this.context = currentRequestContext;
             this.notification = currentNotification;
 

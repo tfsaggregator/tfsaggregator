@@ -10,6 +10,7 @@ using Microsoft.TeamFoundation.Framework.Common;
 using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.Server;
 using Microsoft.TeamFoundation.Server.Core;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.ConsoleApp
 {
@@ -29,8 +30,11 @@ namespace Aggregator.ConsoleApp
         {
             get
             {
-                var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(this.teamProjectCollectionUrl));
-                return context.Name;
+                var url = new Uri(this.teamProjectCollectionUrl);
+
+                // HACK need the Collection **name** not the Url
+                var name = url.LocalPath.Replace("/tfs/", string.Empty);
+                return name;
             }
         }
 
@@ -78,7 +82,7 @@ namespace Aggregator.ConsoleApp
             ics.GetProjectProperties(projectUri, out projectName, out projectState, out templateId, out projectProperties);
 
             string rawVersion =
-                projectProperties.FirstOrDefault(p => p.Name == versionPropertyName).Value;
+                projectProperties.FirstOrDefault(p => p.Name == versionPropertyName)?.Value;
 
             if (rawVersion == null)
             {

@@ -97,7 +97,7 @@ namespace Aggregator.ConsoleApp
                     {
                         var context = runtime.RequestContext;
                         int id = workItemIds.Dequeue();
-                        var notification = new Notification(id, this.TeamProjectName);
+                        var notification = new Notification(id, this.TeamProjectCollectionUrl, this.TeamProjectName);
 
                         logger.StartingProcessing(context, notification);
                         result = eventProcessor.ProcessEvent(context, notification);

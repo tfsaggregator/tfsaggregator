@@ -171,6 +171,7 @@ namespace Aggregator.Core.Configuration
 
                         case "templateScope":
                         {
+                            // TODO check for proper attribute combo (cannot be done in XSD)
                             string templateName = (element.Attribute("name") ?? nullAttribute).Value;
                             string templateId = (element.Attribute("typeId") ?? nullAttribute).Value;
                             string minVersion = (element.Attribute("minVersion") ?? nullAttribute).Value;
