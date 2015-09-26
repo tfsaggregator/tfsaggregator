@@ -339,9 +339,9 @@ namespace Aggregator.Core.Monitoring
                 destination);
         }
 
-        public void ScriptLog(string ruleName, string message)
+        public void ScriptLog(LogLevel level, string ruleName, string message)
         {
-            this.logger.Log(LogLevel.Diagnostic, "{0}: {1}", ruleName, message);
+            this.logger.Log(level, "{0}: {1}", ruleName, message);
         }
 
         public void NoPolicesApply()

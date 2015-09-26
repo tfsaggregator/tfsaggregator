@@ -50,7 +50,7 @@
          The logger variable allows to add a trace message to the log output via the `Log` method.
         -->
         <![CDATA[
-        logger.Log("Hello, World from {0}!", self.Id);
+        logger.Log("Hello, World from {1} #{0}!", self.Id, self.TypeName);
         ]]>
     </rule>
     

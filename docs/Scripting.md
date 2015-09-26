@@ -53,7 +53,7 @@ var myWorkitem = store.GetWorkItem(42);
 Add a new WorkItem to current Collection.
 
 ```
-var newWorkItem = MakeNewWorkItem("MyProject", "Bug");
+var newWorkItem = store.MakeNewWorkItem("MyProject", "Bug");
 ```
 
 You must specify the project and the type. The new work item Fields have default values;
@@ -64,6 +64,13 @@ it is not committed to the database until all the rules have fired and Aggregato
 
 Allows to add a trace message to the log output via the `Log` method.
 It works like `Console.WriteLine`, accepting a format string followed by optional arguments.
+If you do not specify the importance, the message will be logged at `Verbose` level.
+
+### Example
+
+```
+logger.Log("Hello, World from {1} #{0}!", self.Id, self.TypeName);
+```
 
 
 ## Parent
@@ -103,7 +110,7 @@ You can get work items related using the utility methods to build a query.
  - `AtMost` depth of search, i.e. maximum number of links to follow
  - `FollowingLinks` filters on link type
 
-It is particoularly useful for traversing many links.
+It is particularly useful for traversing many links.
 
 ### Example
 
@@ -119,6 +126,13 @@ foreach (var test in tests)
 
 ## Linq
 
-You can use Linq queries on the collections:
+You can use Linq queries on these collections:
  - `Children`
  - `Fields`
+
+### Example
+
+Roll-up code
+```
+var totalEffort = self.Parent.Children.Where(child => child.TypeName == "Task").Sum(child => child.GetField("TaskEffort", 0));
+```

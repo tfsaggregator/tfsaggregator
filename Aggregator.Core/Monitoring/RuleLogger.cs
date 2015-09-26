@@ -8,6 +8,8 @@ namespace Aggregator.Core.Monitoring
 {
     public class RuleLogger : IRuleLogger
     {
+        private const LogLevel DefaultRuleLogLevel = LogLevel.Verbose;
+
         private readonly ILogEvents logger;
 
         public RuleLogger(ILogEvents logger)
@@ -17,34 +19,31 @@ namespace Aggregator.Core.Monitoring
 
         public string RuleName { get; set; }
 
-        // forward to implementation
-        public LogLevel MinimumLogLevel
-        {
-            get
-            {
-                return this.logger.MinimumLogLevel;
-            }
-
-            set
-            {
-                this.logger.MinimumLogLevel = value;
-            }
-        }
-
         public void Log(string format, params object[] args)
         {
-            var s = string.Format(format, args);
-            this.Log(s);
+            var message = string.Format(format, args);
+            this.CoreLog(DefaultRuleLogLevel, message);
         }
 
-        public void Log(string s)
+        public void Log(string message)
         {
-            this.logger.ScriptLog(this.RuleName, s);
+            this.CoreLog(DefaultRuleLogLevel, message);
         }
 
         public void Log(LogLevel level, string format, params object[] args)
         {
-            this.Log(format, args);
+            var message = string.Format(format, args);
+            this.CoreLog(level, message);
+        }
+
+        public void Log(LogLevel level, string message)
+        {
+            this.CoreLog(level, message);
+        }
+
+        protected void CoreLog(LogLevel level, string message)
+        {
+            this.logger.ScriptLog(level, this.RuleName, message);
         }
     }
 }
