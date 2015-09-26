@@ -31,9 +31,8 @@ namespace Aggregator.ConsoleApp
             get
             {
                 var url = new Uri(this.teamProjectCollectionUrl);
-
-                // HACK need the Collection **name** not the Url
-                var name = url.LocalPath.Replace("/tfs/", string.Empty);
+                var collection = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(url);
+                var name = collection.CatalogNode.Resource.DisplayName;
                 return name;
             }
         }
