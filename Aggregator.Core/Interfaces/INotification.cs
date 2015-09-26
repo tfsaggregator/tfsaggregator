@@ -14,5 +14,10 @@
         {
             get;
         }
+
+        string ChangerTeamFoundationId
+        {
+            get;
+        }
     }
 }

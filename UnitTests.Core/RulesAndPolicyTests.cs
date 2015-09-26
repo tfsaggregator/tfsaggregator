@@ -41,9 +41,11 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("RulesAndPolicy.policies", logger);
             var repository = this.MakeRepositoryMock();
             var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection1");
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            using (var processor = new EventProcessor(repository, runtime))
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
                 notification.WorkItemId.Returns(2);
@@ -68,9 +70,11 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("RulesAndPolicy.policies", logger);
             var repository = this.MakeRepositoryMock();
             var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection2");
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            using (var processor = new EventProcessor(repository, runtime))
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
                 notification.WorkItemId.Returns(2);
@@ -100,9 +104,11 @@ namespace UnitTests.Core
             workItem["Title"] = "My bug";
             repository.SetWorkItems(new[] { workItem });
             var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection2");
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            using (var processor = new EventProcessor(repository, runtime))
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
                 notification.WorkItemId.Returns(1);

@@ -67,10 +67,13 @@ namespace Aggregator.ConsoleApp
             // need a logger to show errors in config file (Catch 22)
             var logger = new ConsoleEventLogger(LogLevel.Warning);
 
+            var context = new RequestContext(this.TeamProjectCollectionUrl, this.TeamProjectName);
             var runtime = RuntimeContext.GetContext(
                 () => this.PolicyFile,
-                new RequestContext(this.TeamProjectCollectionUrl, this.TeamProjectName),
-                logger);
+                context,
+                logger,
+                (string _collectionUri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor _toImpersonate, ILogEvents _logger) =>
+                    new Core.Facade.WorkItemRepository(_collectionUri, _toImpersonate, _logger));
 
             if (!string.IsNullOrWhiteSpace(this.LogLevelName))
             {
@@ -85,7 +88,7 @@ namespace Aggregator.ConsoleApp
             }
 
             logger.ConfigurationLoaded(this.PolicyFile);
-            using (EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, null, runtime))
+            using (EventProcessor eventProcessor = new EventProcessor(runtime))
             {
                 try
                 {
@@ -95,9 +98,8 @@ namespace Aggregator.ConsoleApp
                     ProcessingResult result = null;
                     while (workItemIds.Count > 0)
                     {
-                        var context = runtime.RequestContext;
-                        int id = workItemIds.Dequeue();
-                        var notification = new Notification(id, this.TeamProjectCollectionUrl, this.TeamProjectName);
+                        context.CurrentWorkItemId = workItemIds.Dequeue();
+                        var notification = context.Notification;
 
                         logger.StartingProcessing(context, notification);
                         result = eventProcessor.ProcessEvent(context, notification);

@@ -41,5 +41,14 @@ namespace Aggregator.ConsoleApp
         /// The name of the project that holds the work item.
         /// </summary>
         public string ProjectUri { get; }
+
+        public string ChangerTeamFoundationId
+        {
+            get
+            {
+                // we do not implement impersonation... at the moment
+                return string.Empty;
+            }
+        }
     }
 }

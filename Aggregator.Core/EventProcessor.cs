@@ -31,25 +31,14 @@ namespace Aggregator.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="EventProcessor"/> class.
         /// </summary>
-        /// <param name="tfsCollectionUrl">The TFS Project Colection Uri</param>
-        /// <param name="toImpersonate">The IdentityDescriptor to Impoersonate</param>
-        /// <param name="runtime">The runtime context</param>
-        public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, IRuntimeContext runtime)
-            : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, runtime.Logger), runtime)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EventProcessor"/> class.
-        /// </summary>
-        public EventProcessor(IWorkItemRepository workItemStore, IRuntimeContext runtime)
+        public EventProcessor(IRuntimeContext runtime)
         {
             this.logger = runtime.Logger;
-            this.store = workItemStore;
             this.settings = runtime.Settings;
             this.limiter = runtime.RateLimiter;
 
-            this.engine = runtime.GetEngine(workItemStore);
+            this.store = runtime.GetWorkItemRepository();
+            this.engine = runtime.GetEngine();
         }
 
         /// <summary>
