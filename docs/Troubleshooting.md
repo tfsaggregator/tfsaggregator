@@ -18,7 +18,7 @@ Well, this is a check list of things to double check.
 Also if you are having issues we recommend debugging your Policies file using `TFSAggregator2.ConsoleApp.exe` and trying that out.
 
 
-## Use Console App
+## Use Console Console Application
 
 The `TFSAggregator2.ConsoleApp.exe` command line tool is extremely useful to test and validate your policy files before applying to TFS.
 
@@ -27,6 +27,8 @@ The `TFSAggregator2.ConsoleApp.exe` command line tool is extremely useful to tes
 ```
 TFSAggregator2.ConsoleApp.exe run --logLevel=diagnostic --policyFile=samples\TFSAggregator2.ServerPlugin.policies --teamProjectCollectionUrl=http://localhost:8080/tfs/DefaultCollection --teamProjectName=TfsAggregatorTest1 --workItemId=42
 ```
+
+See (Console Application)[Console-App.md] for more details.
 
 
 ## Enable Logging

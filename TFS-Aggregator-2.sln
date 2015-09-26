@@ -16,10 +16,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B94443D9
 		install.ps1 = install.ps1
 		TfsAggregator.ico = TfsAggregator.ico
 		tfsaggregator.svg = tfsaggregator.svg
+		uninstall.ps1 = uninstall.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E0E7919C-5F01-45CC-A758-C3AF34F32F16}"
 	ProjectSection(SolutionItems) = preProject
+		docs\Console-App.md = docs\Console-App.md
 		docs\Install.md = docs\Install.md
 		docs\Internals.md = docs\Internals.md
 		LICENSE-2.0.txt = LICENSE-2.0.txt
