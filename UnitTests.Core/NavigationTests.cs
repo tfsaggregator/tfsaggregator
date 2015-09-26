@@ -17,7 +17,7 @@ namespace UnitTests.Core
     using UnitTests.Core.Mock;
 
     [TestClass]
-    public class Navigation
+    public class NavigationTests
     {
         private static WorkItemRepositoryMock MakeRepository(out IWorkItem startPoint)
         {

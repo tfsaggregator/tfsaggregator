@@ -21,7 +21,7 @@ using Debugger = System.Diagnostics.Debugger;
 namespace UnitTests.Core
 {
     [TestClass]
-    public class ScriptEngines
+    public class ScriptEnginesTests
     {
         [TestMethod]
         [TestCategory("CSharpScript")]

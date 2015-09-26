@@ -18,7 +18,7 @@ using UnitTests.Core.Mock;
 namespace UnitTests.Core
 {
     [TestClass]
-    public class SingleParentChildAggregations
+    public class SingleParentChildAggregationsTests
     {
         private IWorkItemRepository repository;
         private IWorkItem workItem;

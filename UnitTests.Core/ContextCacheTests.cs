@@ -15,7 +15,7 @@ using NSubstitute;
 namespace UnitTests.Core
 {
     [TestClass]
-    public class ContextCache
+    public class ContextCacheTests
     {
         private readonly DateTime referenceDate = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
