@@ -38,7 +38,7 @@ namespace Aggregator.Core.Monitoring
     {
         IRuleLogger ScriptLogger { get; set; }
 
-        void ScriptLog(string ruleName, string s);
+        void ScriptLog(LogLevel level, string ruleName, string message);
 
         void ConfigurationLoaded(string policyFile);
 
@@ -91,5 +91,7 @@ namespace Aggregator.Core.Monitoring
         void AddingHyperlink(int id, string destination, string comment);
 
         void HyperlinkAlreadyExists(int id, string destination, string comment);
+
+        void NoPolicesApply();
     }
 }

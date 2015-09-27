@@ -77,7 +77,9 @@ Valid values are:
  - **name**: The name of this aggregation rule. (Mandatory)
  - **appliesTo**: The name of the work item type that this aggregation will target. (Optional)
  - **hasFields**: The work item must have the listed fields for the rule to apply. (List, Optional)
- - **_content_**: the script executed with the . The `self` (`$self` in PowerShell) variable contains the work item that triggered the plugin. (Mandatory)
+ - **_content_**: the script to execute when the rule triggers. (Mandatory)
+   The `self` (`$self` in PowerShell) variable contains the work item that triggered the plugin.
+   The `self` (`$self` in PowerShell) variable contains the work item that triggered the plugin.
 
 We recommended using [CDATA](http://www.w3.org/TR/REC-xml/#sec-cdata-sect) to wrap script code.
 See [Scripting](Scripting.md) for additional details.
@@ -96,7 +98,7 @@ All scopes must match for the policy to apply (logical _and_).
         <collectionScope collections="*" />
 ```
 
-**collectionScope**: Scope the policy to a list of collections. (Optional, Repeatable)
+**collectionScope**: Scope the policy to a list of collections. (Optional)
 
  - **collections**: The TFS Collection to which the policy applies. (List, Mandatory)
 
@@ -112,11 +114,13 @@ All scopes must match for the policy to apply (logical _and_).
   - **minVersion**: Minimum version for Process Template. (Optional)
   - **maxVersion**: Minimum version for Process Template. (Optional)
 
+  Download the Process Template and look for the `metadata/version` node in `ProcessTemplate.xml` file to see matching values.
+
 ```
         <projectScope projects="Project1,Project2" />
 ```
 
-**projectScope**: Scope the policy to listed Team Projects. (Optional, Repeatable)
+**projectScope**: Scope the policy to listed Team Projects. (Optional)
 
  - **projects**: List of Team Project names. (List, Mandatory)
 
@@ -126,6 +130,6 @@ All scopes must match for the policy to apply (logical _and_).
 
 **ruleRef**: Reference to a previously declared rule. (Repeatable)
 
- - **name**: Nome of existing Rule. (Required)
+ - **name**: Name of existing Rule. (Required)
 
 Rules apply in order.
