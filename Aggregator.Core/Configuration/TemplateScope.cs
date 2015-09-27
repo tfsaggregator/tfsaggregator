@@ -37,6 +37,14 @@ namespace Aggregator.Core.Configuration
         /// </summary>
         public string TemplateTypeId { get; set; }
 
+        public override string DisplayName
+        {
+            get
+            {
+                return string.Format("ProcessTemplate({0}/{1})", this.TemplateName, this.TemplateTypeId);
+            }
+        }
+
         /// <summary>
         /// Checks whether this policy matches the request.
         /// </summary>

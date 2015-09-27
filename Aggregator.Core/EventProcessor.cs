@@ -79,7 +79,12 @@ namespace Aggregator.Core
 
         private IEnumerable<Policy> FilterPolicies(IEnumerable<Policy> policies, IRequestContext requestContext, INotification notification)
         {
-            return policies.Where(policy => policy.Scope.All(s => s.Matches(requestContext, notification)));
+            return policies.Where(policy => policy.Scope.All(scope =>
+            {
+                var success = scope.Matches(requestContext, notification);
+                this.logger.PolicyScopeMatchResult(scope, success);
+                return success;
+            }));
         }
 
         private void ApplyRules(IWorkItem workItem, IEnumerable<Rule> rules)
@@ -93,7 +98,12 @@ namespace Aggregator.Core
 
         private void ApplyRule(Rule rule, IWorkItem workItem)
         {
-            if (rule.Scope.All(s => s.Matches(workItem)))
+            if (rule.Scope.All(scope =>
+            {
+                var success = scope.Matches(workItem);
+                this.logger.RuleScopeMatchResult(scope, success);
+                return success;
+            }))
             {
                 this.logger.RunningRule(rule.Name, workItem);
                 this.engine.Run(rule.Name, workItem);

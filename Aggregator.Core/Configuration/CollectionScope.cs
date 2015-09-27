@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Aggregator.Core.Extensions;
@@ -16,6 +17,14 @@ namespace Aggregator.Core.Configuration
         /// The list of collection names that should execute this policy
         /// </summary>
         public IEnumerable<string> CollectionNames { get; set; }
+
+        public override string DisplayName
+        {
+            get
+            {
+                return string.Format("Collections({0})", string.Join(", ", this.CollectionNames));
+            }
+        }
 
         public override bool Matches(IRequestContext requestContext, INotification notification)
         {

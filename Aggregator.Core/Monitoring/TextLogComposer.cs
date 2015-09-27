@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Runtime.Caching;
 using System.Xml.Schema;
-
+using Aggregator.Core.Configuration;
 using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 
@@ -347,6 +347,20 @@ namespace Aggregator.Core.Monitoring
         public void NoPolicesApply()
         {
             this.logger.Log(LogLevel.Verbose, "No polices apply");
+        }
+
+        public void PolicyScopeMatchResult(PolicyScope scope, bool success)
+        {
+            this.logger.Log(LogLevel.Diagnostic, "Policy scope {0} {1}",
+                scope.DisplayName,
+                success ? "matches" : "does not match");
+        }
+
+        public void RuleScopeMatchResult(RuleScope scope, bool success)
+        {
+            this.logger.Log(LogLevel.Diagnostic, "Rule scope {0} {1}",
+                scope.DisplayName,
+                success ? "matches" : "does not match");
         }
     }
 }

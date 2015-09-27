@@ -3,10 +3,16 @@
 namespace Aggregator.Core.Configuration
 {
     /// <summary>
-    /// Represents a Scope clause of <see cref="TFSAggregatorSettings"/>.
+    /// Represents a Scope clause at Policy level of <see cref="TFSAggregatorSettings"/>.
     /// </summary>
     public abstract class PolicyScope
     {
+        /// <summary>
+        /// Descriptive string that shortly describe the policy scope.
+        /// Used in logging.
+        /// </summary>
+        public abstract string DisplayName { get; }
+
         /// <summary>
         /// Each <see cref="PolicyScope"/> must implement this method to decide whether the policy should activate
         /// for the given requestcontext.
