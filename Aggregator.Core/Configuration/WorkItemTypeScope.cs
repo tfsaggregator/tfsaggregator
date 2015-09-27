@@ -20,7 +20,6 @@ namespace Aggregator.Core.Configuration
 
         public override bool Matches(IWorkItem item)
         {
-
             return this.ApplicableTypes.Any(type => type.SameAs(item.TypeName));
         }
     }
