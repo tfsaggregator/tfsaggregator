@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 
+using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 
 namespace Aggregator.Core.Configuration
@@ -11,7 +12,8 @@ namespace Aggregator.Core.Configuration
 
         public override bool Matches(IWorkItem item)
         {
-            return this.ApplicableTypes.Contains(item.TypeName, StringComparer.OrdinalIgnoreCase);
+
+            return this.ApplicableTypes.Any(type => type.SameAs(item.TypeName));
         }
     }
 }

@@ -61,7 +61,10 @@ namespace Aggregator.Core
                 var changedDate = (DateTime)wi.Revisions[i].Fields[CoreField.ChangedDate].Value;
                 if (watermark - changedDate.ToUniversalTime() < this.interval)
                 {
-                    inSpan++;
+                    if (++inSpan > this.changes)
+                    {
+                        return true;
+                    }
                 }
                 else
                 {
@@ -69,7 +72,7 @@ namespace Aggregator.Core
                 }
             }
 
-            return inSpan > this.changes;
+            return false;
         }
     }
 }

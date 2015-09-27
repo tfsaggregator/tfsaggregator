@@ -1,4 +1,6 @@
-﻿namespace Aggregator.Core.Extensions
+﻿using System;
+
+namespace Aggregator.Core.Extensions
 {
     public static class StringExtensions
     {
@@ -10,7 +12,7 @@
         /// <returns></returns>
         public static bool SameAs(this string lhs, string rhs)
         {
-            return lhs == "*" || rhs == "*" || string.Compare(lhs, rhs, true) == 0;
+            return lhs == "*" || rhs == "*" || string.Equals(lhs, rhs, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

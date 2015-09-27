@@ -23,7 +23,16 @@ This is the basic beginning to an XML file. Do not change it.
 
 **runtime**: Configure generic behavior. (Once, Optional)
  - **debug**: turns on debugging options (Optional, default: False)
- 
+
+```
+        <rateLimiting interval="00:00:10.00" changes="10" />
+```
+**logging**: Define logging behavior. (Once, Optional)
+ - **interval**: Timepsan to validate. (Optional, default: 00:00:01.00) 
+ - **changes**: Maximum number of changes in interval. (Optional, default: 5 )
+
+Use RateLimiting.policy to test your configuration on a server. 
+
 ```
         <logging level="Diagnostic"/>
 ```
