@@ -22,37 +22,22 @@ namespace Aggregator.Core.Facade
     {
         private readonly ILogEvents logger;
 
-        private readonly string tfsCollectionUrl;
-
-        private readonly IdentityDescriptor toImpersonate;
-
         private readonly Dictionary<int, IWorkItem> loadedWorkItems = new Dictionary<int, IWorkItem>();
         private readonly List<IWorkItem> createdWorkItems = new List<IWorkItem>();
 
-        private WorkItemStore workItemStore;
+        private readonly WorkItemStore workItemStore;
 
-        private TfsTeamProjectCollection tfs;
+        private readonly TfsTeamProjectCollection tfs;
 
-        public WorkItemRepository(string tfsCollectionUrl, IdentityDescriptor toImpersonate, ILogEvents logger)
+        public WorkItemRepository(Uri tfsCollectionUri, IdentityDescriptor toImpersonate, ILogEvents logger)
         {
             this.logger = logger;
-            this.tfsCollectionUrl = tfsCollectionUrl;
-            this.toImpersonate = toImpersonate;
-        }
-
-        private void ConnectToWorkItemStore()
-        {
-            this.tfs = new TfsTeamProjectCollection(new Uri(this.tfsCollectionUrl), this.toImpersonate);
+            this.tfs = new TfsTeamProjectCollection(tfsCollectionUri, toImpersonate);
             this.workItemStore = (WorkItemStore)this.tfs.GetService(typeof(WorkItemStore));
         }
 
         public IWorkItem GetWorkItem(int workItemId)
         {
-            if (this.workItemStore == null)
-            {
-                this.ConnectToWorkItemStore();
-            }
-
             IWorkItem result;
             if (!this.loadedWorkItems.TryGetValue(workItemId, out result))
             {
@@ -81,11 +66,6 @@ namespace Aggregator.Core.Facade
 
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
         {
-            if (this.workItemStore == null)
-            {
-                this.ConnectToWorkItemStore();
-            }
-
             var targetType = this.workItemStore.Projects[projectName].WorkItemTypes[workItemTypeName];
             var target = new WorkItem(targetType);
 

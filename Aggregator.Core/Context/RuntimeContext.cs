@@ -35,7 +35,7 @@ namespace Aggregator.Core.Context
             Func<string> settingsPathGetter,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<string, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
+            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
         {
             var runtime = (RuntimeContext)Cache.Get(CacheKey);
             if (runtime == null)
@@ -64,7 +64,7 @@ namespace Aggregator.Core.Context
             TFSAggregatorSettings settings,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<string, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
+            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
         {
             var runtime = new RuntimeContext();
 
@@ -138,7 +138,7 @@ namespace Aggregator.Core.Context
         }
 
         // isolate type constructor to facilitate Unit testing
-        private Func<string, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder;
+        private Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder;
 
         public IWorkItemRepository GetWorkItemRepository()
         {
@@ -149,8 +149,10 @@ namespace Aggregator.Core.Context
             {
                 toImpersonate = this.RequestContext.GetIdentityToImpersonate();
             }
+                var newRepo = this.repoBuilder(uri, toImpersonate, this.Logger);
+                this.Logger.WorkItemRepositoryBuilt(uri, toImpersonate);
+                return newRepo;
 
-            return this.repoBuilder(collectionUri.AbsoluteUri, toImpersonate, this.Logger);
         }
 
         public object Clone()
