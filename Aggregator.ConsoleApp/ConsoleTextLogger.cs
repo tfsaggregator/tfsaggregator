@@ -71,12 +71,14 @@
                     return ConsoleColor.Yellow;
 
                 case LogLevel.Verbose:
-                case LogLevel.Diagnostic:
                     return ConsoleColor.Cyan;
+
+                case LogLevel.Diagnostic:
+                    return ConsoleColor.DarkCyan;
 
                 case LogLevel.Information:
                 default:
-                    return ConsoleColor.Gray;
+                    return ConsoleColor.White;
             }
         }
     }

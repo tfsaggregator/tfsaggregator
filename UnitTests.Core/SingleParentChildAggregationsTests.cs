@@ -18,7 +18,7 @@ using UnitTests.Core.Mock;
 namespace UnitTests.Core
 {
     [TestClass]
-    public class SingleParentChildAggregations
+    public class SingleParentChildAggregationsTests
     {
         private IWorkItemRepository repository;
         private IWorkItem workItem;
@@ -73,8 +73,10 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem.policies", logger);
             var alternateRepository = this.SetupFakeRepository();
             var context = Substitute.For<IRequestContext>();
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            using (var processor = new EventProcessor(alternateRepository, runtime))
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository);
+            using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
                 notification.WorkItemId.Returns(1);
@@ -95,8 +97,10 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem-Short.policies", logger);
             var alternateRepository = this.SetupFakeRepository_Short();
             var context = Substitute.For<IRequestContext>();
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            using (var processor = new EventProcessor(alternateRepository, runtime))
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository);
+            using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
                 notification.WorkItemId.Returns(1);
@@ -117,8 +121,10 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItemVB.policies", logger);
             var alternateRepository = this.SetupFakeRepository_Short();
             var context = Substitute.For<IRequestContext>();
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            using (var processor = new EventProcessor(alternateRepository, runtime))
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository);
+            using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
                 notification.WorkItemId.Returns(1);
@@ -169,8 +175,10 @@ namespace UnitTests.Core
             alternateRepository.SetWorkItems(new[] { grandParent, parent, child });
 
             var context = Substitute.For<IRequestContext>();
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger);
-            using (var processor = new EventProcessor(alternateRepository, runtime))
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository);
+            using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
                 notification.WorkItemId.Returns(3);

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Runtime.Caching;
 using System.Xml.Schema;
-
+using Aggregator.Core.Configuration;
 using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
@@ -93,5 +93,9 @@ namespace Aggregator.Core.Monitoring
         void HyperlinkAlreadyExists(int id, string destination, string comment);
 
         void NoPolicesApply();
+
+        void PolicyScopeMatchResult(PolicyScope scope, bool success);
+
+        void RuleScopeMatchResult(RuleScope scope, bool success);
     }
 }

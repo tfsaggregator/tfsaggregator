@@ -31,14 +31,18 @@ namespace Aggregator.Core.Context
         /// Return a proper context
         /// </summary>
         /// <returns></returns>
-        public static RuntimeContext GetContext(Func<string> settingsPathGetter, IRequestContext requestContext, ILogEvents logger)
+        public static RuntimeContext GetContext(
+            Func<string> settingsPathGetter,
+            IRequestContext requestContext,
+            ILogEvents logger,
+            Func<string, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
         {
             var runtime = (RuntimeContext)Cache.Get(CacheKey);
             if (runtime == null)
             {
                 string settingsPath = settingsPathGetter();
                 var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
-                runtime = MakeRuntimeContext(settingsPath, settings, requestContext, logger);
+                runtime = MakeRuntimeContext(settingsPath, settings, requestContext, logger, repoBuilder);
 
                 var itemPolicy = new CacheItemPolicy();
                 itemPolicy.Priority = CacheItemPriority.NotRemovable;
@@ -48,13 +52,19 @@ namespace Aggregator.Core.Context
             }
             else
             {
+                // as it changes at each invocation, must be set again here
                 runtime.RequestContext = requestContext;
             }
 
             return runtime.Clone() as RuntimeContext;
         }
 
-        public static RuntimeContext MakeRuntimeContext(string settingsPath, TFSAggregatorSettings settings, IRequestContext requestContext, ILogEvents logger)
+        public static RuntimeContext MakeRuntimeContext(
+            string settingsPath,
+            TFSAggregatorSettings settings,
+            IRequestContext requestContext,
+            ILogEvents logger,
+            Func<string, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
         {
             var runtime = new RuntimeContext();
 
@@ -64,6 +74,7 @@ namespace Aggregator.Core.Context
             runtime.Settings = settings;
             runtime.RateLimiter = new RateLimiter(runtime);
             logger.MinimumLogLevel = runtime.Settings.LogLevel;
+            runtime.repoBuilder = repoBuilder;
 
             runtime.HasErrors = false;
             return runtime;
@@ -106,8 +117,10 @@ namespace Aggregator.Core.Context
 
         private readonly ConcurrentDictionary<IWorkItemRepository, ScriptEngine> scriptEngines = new ConcurrentDictionary<IWorkItemRepository, ScriptEngine>();
 
-        public ScriptEngine GetEngine(IWorkItemRepository workItemStore)
+        public ScriptEngine GetEngine()
         {
+            IWorkItemRepository workItemStore = this.GetWorkItemRepository();
+
             Func<IWorkItemRepository, ScriptEngine> builder = (store) =>
             {
                 var newEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, workItemStore, this.Logger, this.Settings.Debug);
@@ -122,6 +135,22 @@ namespace Aggregator.Core.Context
 
             ScriptEngine engine = this.scriptEngines.GetOrAdd(workItemStore, builder);
             return engine;
+        }
+
+        // isolate type constructor to facilitate Unit testing
+        private Func<string, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder;
+
+        public IWorkItemRepository GetWorkItemRepository()
+        {
+            var collectionUri = this.RequestContext.GetProjectCollectionUri();
+
+            Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor toImpersonate = null;
+            if (this.Settings.AutoImpersonate)
+            {
+                toImpersonate = this.RequestContext.GetIdentityToImpersonate();
+            }
+
+            return this.repoBuilder(collectionUri.AbsoluteUri, toImpersonate, this.Logger);
         }
 
         public object Clone()

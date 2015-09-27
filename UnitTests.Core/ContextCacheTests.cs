@@ -15,7 +15,7 @@ using NSubstitute;
 namespace UnitTests.Core
 {
     [TestClass]
-    public class ContextCache
+    public class ContextCacheTests
     {
         private readonly DateTime referenceDate = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -35,7 +35,7 @@ namespace UnitTests.Core
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
-            var runtime = RuntimeContext.GetContext(() => path, context, logger);
+            var runtime = RuntimeContext.GetContext(() => path, context, logger, null);
 
             var level = runtime.Settings.LogLevel;
 
@@ -49,8 +49,8 @@ namespace UnitTests.Core
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
-            var runtime1 = RuntimeContext.GetContext(() => path, context, logger);
-            var runtime2 = RuntimeContext.GetContext(() => path, context, logger);
+            var runtime1 = RuntimeContext.GetContext(() => path, context, logger, null);
+            var runtime2 = RuntimeContext.GetContext(() => path, context, logger, null);
 
             Assert.AreEqual(runtime1.Hash, runtime2.Hash);
         }
@@ -66,7 +66,7 @@ namespace UnitTests.Core
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
-            var runtime1 = RuntimeContext.GetContext(() => destPath, context, logger);
+            var runtime1 = RuntimeContext.GetContext(() => destPath, context, logger, null);
 
             File.SetLastWriteTimeUtc(destPath, DateTime.UtcNow);
 
@@ -74,7 +74,7 @@ namespace UnitTests.Core
             // in Run, it *never* works
             Pause();
 
-            var runtime2 = RuntimeContext.GetContext(() => destPath, context, logger);
+            var runtime2 = RuntimeContext.GetContext(() => destPath, context, logger, null);
 
             Assert.AreNotEqual(runtime1.Hash, runtime2.Hash);
         }

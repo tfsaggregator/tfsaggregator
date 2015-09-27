@@ -11,6 +11,14 @@ namespace Aggregator.Core.Configuration
     {
         public IEnumerable<string> ProjectNames { get; set; }
 
+        public override string DisplayName
+        {
+            get
+            {
+                return string.Format("Projects({0})", string.Join(", ", this.ProjectNames));
+            }
+        }
+
         public override bool Matches(IRequestContext requestContext, INotification notification)
         {
             string projectName = requestContext.GetProjectName(new Uri(notification.ProjectUri));

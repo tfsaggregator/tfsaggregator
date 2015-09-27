@@ -29,8 +29,16 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                // HACK
+                // HACK but moving Notification code to RequestContext may cure...
                 return string.Format("vstfs:///Classification/TeamProject/{0}", this.eventArgs.ProjectNodeId);
+            }
+        }
+
+        public string ChangerTeamFoundationId
+        {
+            get
+            {
+                return this.eventArgs.ChangerTeamFoundationId;
             }
         }
     }

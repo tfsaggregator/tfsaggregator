@@ -9,6 +9,14 @@ namespace Aggregator.Core.Configuration
     {
         public string[] FieldNames { private get; set; }
 
+        public override string DisplayName
+        {
+            get
+            {
+                return string.Format("Fields({0})", string.Join(", ", this.FieldNames));
+            }
+        }
+
         public override bool Matches(IWorkItem item)
         {
             var trigger = this.FieldNames;

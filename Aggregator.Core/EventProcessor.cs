@@ -31,25 +31,14 @@ namespace Aggregator.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="EventProcessor"/> class.
         /// </summary>
-        /// <param name="tfsCollectionUrl">The TFS Project Colection Uri</param>
-        /// <param name="toImpersonate">The IdentityDescriptor to Impoersonate</param>
-        /// <param name="runtime">The runtime context</param>
-        public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, IRuntimeContext runtime)
-            : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, runtime.Logger), runtime)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EventProcessor"/> class.
-        /// </summary>
-        public EventProcessor(IWorkItemRepository workItemStore, IRuntimeContext runtime)
+        public EventProcessor(IRuntimeContext runtime)
         {
             this.logger = runtime.Logger;
-            this.store = workItemStore;
             this.settings = runtime.Settings;
             this.limiter = runtime.RateLimiter;
 
-            this.engine = runtime.GetEngine(workItemStore);
+            this.store = runtime.GetWorkItemRepository();
+            this.engine = runtime.GetEngine();
         }
 
         /// <summary>
@@ -90,7 +79,12 @@ namespace Aggregator.Core
 
         private IEnumerable<Policy> FilterPolicies(IEnumerable<Policy> policies, IRequestContext requestContext, INotification notification)
         {
-            return policies.Where(policy => policy.Scope.All(s => s.Matches(requestContext, notification)));
+            return policies.Where(policy => policy.Scope.All(scope =>
+            {
+                var success = scope.Matches(requestContext, notification);
+                this.logger.PolicyScopeMatchResult(scope, success);
+                return success;
+            }));
         }
 
         private void ApplyRules(IWorkItem workItem, IEnumerable<Rule> rules)
@@ -104,7 +98,12 @@ namespace Aggregator.Core
 
         private void ApplyRule(Rule rule, IWorkItem workItem)
         {
-            if (rule.Scope.All(s => s.Matches(workItem)))
+            if (rule.Scope.All(scope =>
+            {
+                var success = scope.Matches(workItem);
+                this.logger.RuleScopeMatchResult(scope, success);
+                return success;
+            }))
             {
                 this.logger.RunningRule(rule.Name, workItem);
                 this.engine.Run(rule.Name, workItem);

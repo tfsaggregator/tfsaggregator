@@ -6,6 +6,7 @@ using Aggregator.Core.Facade;
 using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.Framework.Client;
 using Microsoft.TeamFoundation.Framework.Common;
 using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.Server;
@@ -26,6 +27,11 @@ namespace Aggregator.ConsoleApp
             this.teamProjectName = teamProjectName;
         }
 
+        public Uri GetProjectCollectionUri()
+        {
+            return new Uri(this.teamProjectCollectionUrl);
+        }
+
         public string CollectionName
         {
             get
@@ -36,6 +42,16 @@ namespace Aggregator.ConsoleApp
                 return name;
             }
         }
+
+        public INotification Notification
+        {
+            get
+            {
+                return new Notification(this.CurrentWorkItemId, this.teamProjectCollectionUrl, this.teamProjectName);
+            }
+        }
+
+        public int CurrentWorkItemId { get; set; }
 
         public string GetProjectName(Uri projectUri)
         {
@@ -92,6 +108,12 @@ namespace Aggregator.ConsoleApp
                 var result = TeamFoundationSerializationUtility.Deserialize<ProcessTemplateVersion>(rawVersion);
                 return new ProcessTemplateVersionWrapper() { TypeId = result.TypeId, Major = result.Major, Minor = result.Minor };
             }
+        }
+
+        public IdentityDescriptor GetIdentityToImpersonate()
+        {
+            // makes no sense impersonation in command line tool... for now
+            return null;
         }
     }
 }

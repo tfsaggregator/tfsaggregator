@@ -7,6 +7,8 @@ namespace Aggregator.Core.Interfaces
     /// </summary>
     public interface IRequestContext
     {
+        Uri GetProjectCollectionUri();
+
         string CollectionName { get; }
 
         string GetProjectName(Uri teamProjectUri);
@@ -16,5 +18,9 @@ namespace Aggregator.Core.Interfaces
         IProcessTemplateVersionWrapper GetCurrentProjectProcessVersion(Uri projectUri);
 
         IProcessTemplateVersionWrapper GetCreationProjectProcessVersion(Uri projectUri);
+
+        Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor GetIdentityToImpersonate();
+
+        INotification Notification { get; }
     }
 }

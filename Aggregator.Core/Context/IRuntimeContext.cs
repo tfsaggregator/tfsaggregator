@@ -21,7 +21,9 @@ namespace Aggregator.Core.Context
 
         ILogEvents Logger { get; }
 
-        ScriptEngine GetEngine(IWorkItemRepository workItemStore);
+        IWorkItemRepository GetWorkItemRepository();
+
+        ScriptEngine GetEngine();
 
         RateLimiter RateLimiter { get; }
     }
