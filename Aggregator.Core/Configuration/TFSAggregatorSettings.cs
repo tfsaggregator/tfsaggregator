@@ -111,24 +111,35 @@ namespace Aggregator.Core.Configuration
         private static void ParseRuntimeSection(TFSAggregatorSettings instance, XDocument doc)
         {
             var loggingNode = doc.Root.Element("runtime") != null ?
-                doc.Root.Element("runtime").Element("logging") : null;
+                doc.Root.Element("runtime")?.Element("logging") : null;
             instance.LogLevel = loggingNode != null ?
                 (LogLevel)Enum.Parse(typeof(LogLevel), loggingNode.Attribute("level").Value)
                 : LogLevel.Normal;
 
+            var rateLimitElement = doc.Root.Element("runtime")?.Element("rateLimiting");
+            if (rateLimitElement != null)
+            {
+                var rateLimit = new RateLimit();
+                rateLimit.Changes = int.Parse(rateLimitElement.Attribute("changes").Value);
+                rateLimit.Interval = TimeSpan.Parse(rateLimitElement.Attribute("interval").Value);
+                instance.RateLimit = rateLimit;
+            }
+            else
+            {
+                instance.RateLimit = null;
+            }
+
             var runtimeNode = doc.Root.Element("runtime") ?? null;
             var debugvalue = runtimeNode?.Attribute("debug")?.Value;
-            instance.Debug = debugvalue != null ?
-                bool.Parse(debugvalue)
-                : false;
+            instance.Debug = debugvalue != null && bool.Parse(debugvalue);
 
             var authenticationNode = doc.Root.Element("runtime") != null ?
-                doc.Root.Element("runtime").Element("authentication") : null;
+                doc.Root.Element("runtime")?.Element("authentication") : null;
             instance.AutoImpersonate = authenticationNode != null
                 && bool.Parse(authenticationNode.Attribute("autoImpersonate").Value);
 
             var scriptNode = doc.Root.Element("runtime") != null ?
-                doc.Root.Element("runtime").Element("script") : null;
+                doc.Root.Element("runtime")?.Element("script") : null;
 
             instance.ScriptLanguage = scriptNode?.Attribute("language").Value ?? "C#";
         }
@@ -256,5 +267,7 @@ namespace Aggregator.Core.Configuration
         public IEnumerable<Policy> Policies { get; private set; }
 
         public bool Debug { get; set; }
+
+        public RateLimit RateLimit { get; set; }
     }
 }

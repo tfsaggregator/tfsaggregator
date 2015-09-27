@@ -56,7 +56,7 @@ namespace Aggregator.Core.Monitoring
 
         void ScriptHasWarning(string scriptName, int line, int column, string errorCode, string errorText);
 
-        void Saving(IWorkItem workItem, bool isValid);
+        void Saving(IWorkItem workItem, bool isValid, bool shouldLimit);
 
         void InvalidConfiguration(XmlSeverityType severity, string message, int lineNumber, int linePosition);
 

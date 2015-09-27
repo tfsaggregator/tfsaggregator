@@ -84,12 +84,14 @@
     <Compile Include="Configuration\CollectionScope.cs" />
     <Compile Include="Configuration\HasFieldsScope.cs" />
     <Compile Include="Configuration\ProjectScope.cs" />
+    <Compile Include="Configuration\RateLimit.cs" />
     <Compile Include="Configuration\TemplateScope.cs" />
     <Compile Include="Configuration\WorkItemTypeScope.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
     <Compile Include="Interfaces\IProcessTemplateVersionWrapper.cs" />
     <Compile Include="Monitoring\IRuleLogger.cs" />
     <Compile Include="Monitoring\RuleLogger.cs" />
+    <Compile Include="RateLimiter.cs" />
     <Compile Include="WorkItemImplementationBase.cs" />
     <Compile Include="Configuration\Policy.cs" />
     <Compile Include="Configuration\Rule.cs" />

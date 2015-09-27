@@ -62,6 +62,7 @@ namespace Aggregator.Core.Context
             runtime.RequestContext = requestContext;
             runtime.SettingsPath = settingsPath;
             runtime.Settings = settings;
+            runtime.RateLimiter = new RateLimiter(runtime);
             logger.MinimumLogLevel = runtime.Settings.LogLevel;
 
             runtime.HasErrors = false;
@@ -79,6 +80,8 @@ namespace Aggregator.Core.Context
                 return this.errorList.GetEnumerator();
             }
         }
+
+        public RateLimiter RateLimiter { get; private set; }
 
         public IRequestContext RequestContext { get; private set; }
 

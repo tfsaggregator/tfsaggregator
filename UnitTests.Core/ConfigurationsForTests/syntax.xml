@@ -2,9 +2,10 @@
 <AggregatorConfiguration>
 
     <runtime>
-        <logging level="Diagnostic"/>
+        <rateLimiting interval="00:00:10.00" changes="5" /> <!-- optional tag -->
+        <logging level="Diagnostic"/> <!-- optional tag -->
         <script language="C#" />
-        <authentication autoImpersonate="true" />
+        <authentication autoImpersonate="true" /> <!-- optional tag -->
     </runtime>
 
     <rule name="Type1"

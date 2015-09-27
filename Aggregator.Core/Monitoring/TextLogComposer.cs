@@ -107,7 +107,7 @@ namespace Aggregator.Core.Monitoring
                 errorText);
         }
 
-        public void Saving(IWorkItem workItem, bool isValid)
+        public void Saving(IWorkItem workItem, bool isValid, bool shouldLimit)
         {
             this.logger.Log(
                 LogLevel.Verbose,
@@ -122,6 +122,15 @@ namespace Aggregator.Core.Monitoring
                     LogLevel.Verbose,
                     "Invalid fields: {0}",
                     workItem.GetInvalidWorkItemFieldsList());
+            }
+
+            if (shouldLimit)
+            {
+                this.logger.Log(
+                    LogLevel.Warning,
+                    "{0} [{1}] NOT SAVED. Rate limiter in effect.",
+                    workItem.TypeName,
+                    workItem.Id);
             }
         }
 

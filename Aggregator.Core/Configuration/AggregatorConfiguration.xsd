@@ -6,6 +6,12 @@
         <xs:element minOccurs="0" maxOccurs="1" name="runtime">
           <xs:complexType>
             <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="1" name="rateLimiting">
+                <xs:complexType>
+                  <xs:attribute name="interval" use="optional" default="00:00:01.0" type="xs:time" />
+                  <xs:attribute name="changes" use ="optional" default="5" type="xs:int" />
+                </xs:complexType>
+              </xs:element>
               <xs:element minOccurs="0" maxOccurs="1" name="logging">
                 <xs:complexType>
                   <xs:attribute name="level" use="optional" default="Normal" >
@@ -51,7 +57,7 @@
             <xs:attribute name="debug" type="xs:boolean" use="optional" default="false" />
           </xs:complexType>
         </xs:element>
-        <xs:element minOccurs="1" maxOccurs="unbounded" name="rule">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="rule">
           <xs:complexType>
             <xs:simpleContent>
               <xs:extension base="xs:string">
@@ -66,7 +72,7 @@
             <xs:field xpath="name"/>
           </xs:unique>
         </xs:element>
-        <xs:element minOccurs="1" maxOccurs="unbounded" name="policy">
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="policy">
           <xs:complexType>
             <xs:sequence>
               <xs:element minOccurs="0" maxOccurs="1" name="collectionScope">
