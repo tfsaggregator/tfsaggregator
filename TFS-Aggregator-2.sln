@@ -22,8 +22,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E0E7919C-5F01-45CC-A758-C3AF34F32F16}"
 	ProjectSection(SolutionItems) = preProject
 		docs\Console-App.md = docs\Console-App.md
+		docs\Developer-Info.md = docs\Developer-Info.md
 		docs\Install.md = docs\Install.md
-		docs\Internals.md = docs\Internals.md
 		LICENSE-2.0.txt = LICENSE-2.0.txt
 		docs\Policy-Examples.md = docs\Policy-Examples.md
 		docs\Policy-Syntax.md = docs\Policy-Syntax.md
