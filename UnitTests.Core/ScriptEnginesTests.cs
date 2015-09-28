@@ -42,8 +42,8 @@ return self.Fields[""z""].Value;
             zField.Value.Returns(42);
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine(repository, logger, Debugger.IsAttached);
-            engine.LoadAndRun("test", script, workItem);
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            engine.LoadAndRun("test", script, workItem, repository);
 
             Assert.AreEqual(33, xField.Value);
             object expected = 42;
@@ -65,8 +65,8 @@ return self[""z""];
             workItem["z"].Returns(42);
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine(repository, logger, Debugger.IsAttached);
-            engine.LoadAndRun("test", script, workItem);
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            engine.LoadAndRun("test", script, workItem, repository);
 
             Assert.AreEqual(33, workItem["x"]);
             object expected = 42;
@@ -89,9 +89,9 @@ return self(""z"")
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
             logger.WhenForAnyArgs(c => Debug.WriteLine(c));
-            var engine = new VBNetScriptEngine(repository, logger, Debugger.IsAttached);
+            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached);
 
-            engine.LoadAndRun("test", script, workItem);
+            engine.LoadAndRun("test", script, workItem, repository);
 
             Assert.AreEqual(33, workItem["x"]);
             object expected = 42;
@@ -119,12 +119,12 @@ return $self.Fields[""z""].Value ";
 
             Assert.IsNotNull(repository.GetWorkItem(1));
 
-            var engine = new PsScriptEngine(repository, logger, Debugger.IsAttached);
+            var engine = new PsScriptEngine(logger, Debugger.IsAttached);
 
             // sanity check
             Assert.AreEqual(42, workItem.Fields["z"].Value);
 
-            engine.LoadAndRun("test", script, workItem);
+            engine.LoadAndRun("test", script, workItem, repository);
 
             var expected = new Collection<PSObject> { new PSObject(42) };
 
@@ -151,9 +151,9 @@ return $self.Fields[""z""].Value ";
 
             Assert.IsNotNull(repository.GetWorkItem(1));
 
-            var engine = new PsScriptEngine(repository, logger, Debugger.IsAttached);
+            var engine = new PsScriptEngine(logger, Debugger.IsAttached);
 
-            engine.LoadAndRun("test", script, workItem);
+            engine.LoadAndRun("test", script, workItem, repository);
 
             var expected = new Collection<PSObject> { new PSObject(1) };
 
@@ -201,8 +201,8 @@ logger.Log(""Test"");
             var workItem = Substitute.For<IWorkItem>();
             var logger = Substitute.For<ILogEvents>();
             logger.ScriptLogger = Substitute.For<IRuleLogger>();
-            var engine = new CSharpScriptEngine(repository, logger, Debugger.IsAttached);
-            engine.LoadAndRun("test", script, workItem);
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            engine.LoadAndRun("test", script, workItem, repository);
             logger.ScriptLogger.Received().Log("Test");
         }
 
@@ -217,8 +217,8 @@ logger.Log(""Test"")
             var workItem = Substitute.For<IWorkItem>();
             var logger = Substitute.For<ILogEvents>();
             logger.ScriptLogger = Substitute.For<IRuleLogger>();
-            var engine = new VBNetScriptEngine(repository, logger, Debugger.IsAttached);
-            engine.LoadAndRun("test", script, workItem);
+            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached);
+            engine.LoadAndRun("test", script, workItem, repository);
             logger.ScriptLogger.Received().Log("Test");
         }
 
@@ -234,8 +234,8 @@ return (int)array.Average();
             var workItem = Substitute.For<IWorkItem>();
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine(repository, logger, Debugger.IsAttached);
-            engine.LoadAndRun("test", script, workItem);
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            engine.LoadAndRun("test", script, workItem, repository);
             object expected = 4;
             logger.Received().ResultsFromScriptRun("test", expected);
         }
@@ -246,14 +246,14 @@ return (int)array.Average();
         {
             string script = @"
 Dim array As Integer() = {1, 3, 5, 7}
-Return Cint(array.Average())
+Return CInt(array.Average())
 ";
             var repository = Substitute.For<IWorkItemRepository>();
             var workItem = Substitute.For<IWorkItem>();
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new VBNetScriptEngine(repository, logger, Debugger.IsAttached);
-            engine.LoadAndRun("test", script, workItem);
+            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached);
+            engine.LoadAndRun("test", script, workItem, repository);
             object expected = 4;
             logger.Received().ResultsFromScriptRun("test", expected);
         }

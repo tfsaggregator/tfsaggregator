@@ -85,8 +85,8 @@ return searchResult;
             var logger = Substitute.For<ILogEvents>();
             repository.Logger = logger;
 
-            var engine = new CSharpScriptEngine(repository, logger, false);
-            engine.LoadAndRun("test", script, startPoint);
+            var engine = new CSharpScriptEngine(logger, false);
+            engine.LoadAndRun("test", script, startPoint, repository);
 
             var expected = new FluentQuery(startPoint);
             expected.WorkItemType = "Task";
@@ -189,8 +189,8 @@ self.TransitionToState(""Done"", ""script test"");
             ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
             repository.SetWorkItems(new[] { workItem });
 
-            var engine = new CSharpScriptEngine(repository, logger, false);
-            engine.LoadAndRun("test", script, workItem);
+            var engine = new CSharpScriptEngine(logger, false);
+            engine.LoadAndRun("test", script, workItem, repository);
 
             Assert.AreEqual("Done", workItem.Fields["State"].Value);
             Assert.AreEqual(2, workItem.InternalSaveCount);

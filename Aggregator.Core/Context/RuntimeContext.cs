@@ -104,37 +104,29 @@ namespace Aggregator.Core.Context
         {
             get
             {
-                // TODO instead of GetHashCode need a unique per-Collection Id
-                int dictHash = this.scriptEngines.Keys.Aggregate(
-                    0,
-                    (running, current) => { return (int)(((long)running + current.GetHashCode()) % 0xffffffff); });
-
-                return this.Settings.Hash + dictHash.ToString("x8");
+                return this.Settings.Hash;
             }
         }
 
         public ILogEvents Logger { get; private set; }
 
-        private readonly ConcurrentDictionary<IWorkItemRepository, ScriptEngine> scriptEngines = new ConcurrentDictionary<IWorkItemRepository, ScriptEngine>();
+        private ScriptEngine cachedEngine = null;
 
         public ScriptEngine GetEngine()
         {
-            IWorkItemRepository workItemStore = this.GetWorkItemRepository();
-
-            Func<IWorkItemRepository, ScriptEngine> builder = (store) =>
+            if (this.cachedEngine == null)
             {
-                var newEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, workItemStore, this.Logger, this.Settings.Debug);
+                System.Diagnostics.Debug.WriteLine("Cache empty for thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
+                this.cachedEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug);
                 foreach (var rule in this.Settings.Rules)
                 {
-                    newEngine.Load(rule.Name, rule.Script);
+                    this.cachedEngine.Load(rule.Name, rule.Script);
                 }
 
-                newEngine.LoadCompleted();
-                return newEngine;
-            };
+                this.cachedEngine.LoadCompleted();
+            }
 
-            ScriptEngine engine = this.scriptEngines.GetOrAdd(workItemStore, builder);
-            return engine;
+            return this.cachedEngine;
         }
 
         // isolate type constructor to facilitate Unit testing
@@ -142,17 +134,17 @@ namespace Aggregator.Core.Context
 
         public IWorkItemRepository GetWorkItemRepository()
         {
-            var collectionUri = this.RequestContext.GetProjectCollectionUri();
+            var uri = this.RequestContext.GetProjectCollectionUri();
 
             Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor toImpersonate = null;
             if (this.Settings.AutoImpersonate)
             {
                 toImpersonate = this.RequestContext.GetIdentityToImpersonate();
             }
-                var newRepo = this.repoBuilder(uri, toImpersonate, this.Logger);
-                this.Logger.WorkItemRepositoryBuilt(uri, toImpersonate);
-                return newRepo;
 
+            var newRepo = this.repoBuilder(uri, toImpersonate, this.Logger);
+            this.Logger.WorkItemRepositoryBuilt(uri, toImpersonate);
+            return newRepo;
         }
 
         public object Clone()

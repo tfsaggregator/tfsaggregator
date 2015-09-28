@@ -22,8 +22,8 @@ namespace Aggregator.Core.Script
     public abstract class DotNetScriptEngine<TCodeDomProvider> : ScriptEngine
         where TCodeDomProvider : CodeDomProvider, new()
     {
-        protected DotNetScriptEngine(IWorkItemRepository store, ILogEvents logger, bool debug)
-            : base(store, logger, debug)
+        protected DotNetScriptEngine(ILogEvents logger, bool debug)
+            : base(logger, debug)
         {
         }
 
@@ -76,7 +76,7 @@ namespace Aggregator.Core.Script
             this.compilerResult = codeDomProvider.CompileAssemblyFromSource(compilerOptions, code);
         }
 
-        private void RunScript(Assembly assembly, string scriptName, IWorkItem self)
+        private void RunScript(Assembly assembly, string scriptName, IWorkItem self, IWorkItemRepository store)
         {
             // HACK name must match C# and VB.NET implementations
             var classForScript = assembly.GetType("RESERVED.Script_" + scriptName);
@@ -112,7 +112,7 @@ namespace Aggregator.Core.Script
             this.Logger.ScriptLogger.RuleName = scriptName;
 
             // Lets run our script and display its results
-            object result = scriptObject.RunScript(self, this.Store, this.Logger.ScriptLogger);
+            object result = scriptObject.RunScript(self, store, this.Logger.ScriptLogger);
             this.Logger.ResultsFromScriptRun(scriptName, result);
         }
 
@@ -168,7 +168,7 @@ namespace Aggregator.Core.Script
             }
         }
 
-        public override void Run(string scriptName, IWorkItem workItem)
+        public override void Run(string scriptName, IWorkItem workItem, IWorkItemRepository store)
         {
             if (!this.compilerResult.Errors.HasErrors)
             {
@@ -176,7 +176,7 @@ namespace Aggregator.Core.Script
                 try
                 {
                     AppDomain.CurrentDomain.AssemblyResolve += resolveAssemblies;
-                    this.RunScript(this.compilerResult.CompiledAssembly, scriptName, workItem);
+                    this.RunScript(this.compilerResult.CompiledAssembly, scriptName, workItem, store);
                 }
                 finally
                 {

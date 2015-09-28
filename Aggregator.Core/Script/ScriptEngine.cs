@@ -12,14 +12,11 @@ namespace Aggregator.Core
     {
         protected ILogEvents Logger { get; }
 
-        protected IWorkItemRepository Store { get; }
-
         protected bool Debug { get; }
 
-        public ScriptEngine(IWorkItemRepository store, ILogEvents logger, bool debug)
+        public ScriptEngine(ILogEvents logger, bool debug)
         {
             this.Logger = logger;
-            this.Store = store;
             this.Debug = debug;
         }
 
@@ -43,14 +40,14 @@ namespace Aggregator.Core
         /// </summary>
         /// <param name="scriptName">Name of the script.</param>
         /// <param name="workItem">The work item that must be processed by the script.</param>
-        public abstract void Run(string scriptName, IWorkItem workItem);
+        public abstract void Run(string scriptName, IWorkItem workItem, IWorkItemRepository store);
 
-        internal static ScriptEngine MakeEngine(string scriptLanguage, IWorkItemRepository workItemRepository, ILogEvents logger, bool debug)
+        internal static ScriptEngine MakeEngine(string scriptLanguage, ILogEvents logger, bool debug)
         {
             logger.BuildingScriptEngine(scriptLanguage);
             Type t = GetScriptEngineType(scriptLanguage);
-            var ctor = t.GetConstructor(new Type[] { typeof(IWorkItemRepository), typeof(ILogEvents), typeof(bool) });
-            ScriptEngine engine = ctor.Invoke(new object[] { workItemRepository, logger, debug }) as ScriptEngine;
+            var ctor = t.GetConstructor(new Type[] { typeof(ILogEvents), typeof(bool) });
+            ScriptEngine engine = ctor.Invoke(new object[] { logger, debug }) as ScriptEngine;
             return engine;
         }
 

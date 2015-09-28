@@ -8,8 +8,8 @@ namespace Aggregator.Core
 
     public class VBNetScriptEngine : DotNetScriptEngine<VBCodeProvider>
     {
-        public VBNetScriptEngine(IWorkItemRepository store, ILogEvents logger, bool debug)
-            : base(store, logger, debug)
+        public VBNetScriptEngine(ILogEvents logger, bool debug)
+            : base(logger, debug)
         {
         }
 
