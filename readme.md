@@ -27,7 +27,7 @@ Example Uses
 Setup & install
 ================================================
 
-The latest [Install](https://github.com/tfsaggregator/tfsaggregator/tree/8ae990810f580c161247a6f6f4720d9b72d98288) file contains the full details to correctly setup Aggregator. The general process is:
+The latest [Install](https://github.com/tfsaggregator/tfsaggregator/releases) file contains the full details to correctly setup Aggregator. The general process is:
 
  1. Download and extract the binaries from the latest release
  2. Create `TFSAggregator2.ServerPlugin.policies` (or rename one of the existing samples to get started) and change the example settings to your actual settings.
