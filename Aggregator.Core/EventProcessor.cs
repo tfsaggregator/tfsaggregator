@@ -106,7 +106,7 @@ namespace Aggregator.Core
             }))
             {
                 this.logger.RunningRule(rule.Name, workItem);
-                this.engine.Run(rule.Name, workItem);
+                this.engine.Run(rule.Name, workItem, this.store);
             }
         }
 

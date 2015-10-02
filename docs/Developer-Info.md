@@ -1,8 +1,9 @@
-This page explains some internal design of TFS Aggregator v2.
+This page explains the design and internal organization of TFS Aggregator v2's code.
+If you want to rebuild, customize, submit changes this is the place to start.
 
 
 
-# Components
+# Major Components
 
 The `Aggregator.Core` assembly contains the logic to process a Work Item and run the aggregate scripts.
 It is normally used by `Aggregator.ServerPlugin` which intercept the TFS server side events and forward them to Aggregator.Core.
@@ -10,7 +11,7 @@ It is normally used by `Aggregator.ServerPlugin` which intercept the TFS server 
 
 
 
-# Source Code
+# Source Code Organization
 
 The project is available on [GitHub](https://github.com/tfsaggregator/tfsaggregator).
 We use a simple master/develop/pull-request branching scheme.
@@ -40,8 +41,8 @@ See [Scripting](Scripting.md) for an introduction.
 ## Scripting
 
 Aggregator.Core/Script contains the build and execute logic for all scripting engines.
-For C# and VB, the script code is compiled once and the produced assembly is reused until the pluging restarts.
-The `DotNetScriptEngine` base class containes all the logic while `CSharpScriptEngine` and `VBNetScriptEngine` define how to sew the script's code snippets toghether.
+For C# and VB, the script code is compiled once and the produced assembly is reused until the plug-in restarts.
+The `DotNetScriptEngine` base class contains all the logic while `CSharpScriptEngine` and `VBNetScriptEngine` define how to sew the script's code snippets toghether.
 Powershell support is experimental.
 
 
@@ -74,6 +75,7 @@ We use [AppVeyor](http://www.appveyor.com/) for Continuous Integration, so the `
 
 
 
+
 # Debugging
 
 For the best development experience, use a TFS 2013 or 2015 Virtual Machine with Visual Studio 2015 installed
@@ -81,5 +83,28 @@ and work directly on the machine.
 
 You can then set the output folder for the project to
 `C:\Program Files\Microsoft Team Foundation Server 12.0\Application Tier\Web Services\bin\Plugins\`
+or use the `deploy.cmd` file in _Aggregator.ServerPlugin_ project to refresh Aggregator's assembly on a target test system. Here is a sample
 
-You can also debug by attaching to the `w3wp.exe` on the server and setting breakpoints as you would normally.
+```
+@echo off
+set CONFIGURATION=%1
+set TARGETDIR=%2
+set PLUGIN_FOLDER=C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Plugins
+
+echo Deploy '%CONFIGURATION%' from '%TARGETDIR%' to '%PLUGIN_FOLDER%'
+
+copy /Y "%TARGETDIR%\TFSAggregator2.Core.dll" "%PLUGIN_FOLDER%"
+copy /Y "%TARGETDIR%\TFSAggregator2.Core.pdb" "%PLUGIN_FOLDER%"
+copy /Y "%TARGETDIR%\TFSAggregator2.ServerPlugin.dll" "%PLUGIN_FOLDER%"
+copy /Y "%TARGETDIR%\TFSAggregator2.ServerPlugin.pdb" "%PLUGIN_FOLDER%"
+
+IF NOT EXIST "%PLUGIN_FOLDER%\TFSAggregator2.ServerPlugin.policies" (
+    copy "samples\TFSAggregator2.ServerPlugin.policies" "%PLUGIN_FOLDER%"
+)
+
+echo Deploy complete.
+```
+
+Do not commit changes to this file!
+
+To debug attach to the `w3wp.exe` on the server and set breakpoints as you would normally.

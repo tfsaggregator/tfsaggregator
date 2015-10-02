@@ -13,8 +13,8 @@ namespace Aggregator.Core
     {
         private readonly Dictionary<string, string> scripts = new Dictionary<string, string>();
 
-        public PsScriptEngine(IWorkItemRepository store, ILogEvents logger, bool debug)
-            : base(store, logger, debug)
+        public PsScriptEngine(ILogEvents logger, bool debug)
+            : base(logger, debug)
         {
         }
 
@@ -29,7 +29,7 @@ namespace Aggregator.Core
             return true;
         }
 
-        public override void Run(string scriptName, IWorkItem workItem)
+        public override void Run(string scriptName, IWorkItem workItem, IWorkItemRepository store)
         {
             string script = this.scripts[scriptName];
 
@@ -39,7 +39,7 @@ namespace Aggregator.Core
                 runspace.Open();
 
                 runspace.SessionStateProxy.SetVariable("self", workItem);
-                runspace.SessionStateProxy.SetVariable("store", this.Store);
+                runspace.SessionStateProxy.SetVariable("store", store);
                 runspace.SessionStateProxy.SetVariable("logger", this.Logger.ScriptLogger);
 
                 Pipeline pipeline = runspace.CreatePipeline();

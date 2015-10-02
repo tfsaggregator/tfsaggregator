@@ -38,11 +38,11 @@ namespace UnitTests.Core
             return TFSAggregatorSettings.LoadXml(configXml, logger);
         }
 
-        public static void LoadAndRun(this ScriptEngine engine, string scriptName, string script, IWorkItem workItem)
+        public static void LoadAndRun(this ScriptEngine engine, string scriptName, string script, IWorkItem workItem, IWorkItemRepository store)
         {
             engine.Load(scriptName, script);
             engine.LoadCompleted();
-            engine.Run(scriptName, workItem);
+            engine.Run(scriptName, workItem, store);
         }
     }
 }

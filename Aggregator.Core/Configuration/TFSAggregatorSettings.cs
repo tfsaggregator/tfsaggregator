@@ -39,7 +39,7 @@ namespace Aggregator.Core.Configuration
         /// <summary>
         /// Parse the specified <see cref="XDocument"/> to build a <see cref="TFSAggregatorSettings"/> instance.
         /// </summary>
-        /// <param name="lastWriteTime">Last teime the document has been changed.</param>
+        /// <param name="lastWriteTime">Last time the document has been changed.</param>
         /// <param name="load">A lambda returning the <see cref="XDocument"/> to parse.</param>
         /// <returns></returns>
         public static TFSAggregatorSettings Load(DateTime lastWriteTime, Func<LoadOptions, XDocument> load, ILogEvents logger)

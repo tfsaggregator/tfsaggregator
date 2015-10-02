@@ -5,7 +5,7 @@ using System.Runtime.Caching;
 using System.Xml.Schema;
 using Aggregator.Core.Configuration;
 using Aggregator.Core.Interfaces;
-
+using Microsoft.TeamFoundation.Framework.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Monitoring
@@ -97,5 +97,7 @@ namespace Aggregator.Core.Monitoring
         void PolicyScopeMatchResult(PolicyScope scope, bool success);
 
         void RuleScopeMatchResult(RuleScope scope, bool success);
+
+        void WorkItemRepositoryBuilt(Uri uri, IdentityDescriptor toImpersonate);
     }
 }
