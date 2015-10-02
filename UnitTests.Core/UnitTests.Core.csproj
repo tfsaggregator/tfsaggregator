@@ -147,7 +147,6 @@
     <EmbeddedResource Include="ConfigurationsForTests\RateLimiting.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ConfigurationsForTests\NoOp.policies" />
     <None Include="packages.config" />
     <None Include="UnitTests.Core.ruleset" />
   </ItemGroup>
