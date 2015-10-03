@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Aggregator.Core;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Navigation;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace UnitTests.Core.Mock
 {
@@ -99,6 +100,30 @@ namespace UnitTests.Core.Mock
         }
 
         public IWorkItemType Type { get; set; }
+
+        public DateTime RevisedDate
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public int Revision
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public RevisionCollection Revisions
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         public bool ShouldLimit(RateLimiter limiter)
         {

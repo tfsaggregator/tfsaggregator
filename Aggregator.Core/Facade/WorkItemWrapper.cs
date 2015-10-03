@@ -141,6 +141,30 @@ namespace Aggregator.Core.Facade
             }
         }
 
+        public DateTime RevisedDate
+        {
+            get
+            {
+                return this.workItem.RevisedDate;
+            }
+        }
+
+        public int Revision
+        {
+            get
+            {
+                return this.workItem.Revision;
+            }
+        }
+
+        public RevisionCollection Revisions
+        {
+            get
+            {
+                return this.workItem.Revisions;
+            }
+        }
+
         public IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query)
         {
             return WorkItemLazyVisitor

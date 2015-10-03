@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+
+  <rule name="History_InfiniteLoop1" appliesTo="Task">
+    <![CDATA[
+    // self.Fields["History"].Value = "Hello";
+    self.History = "Hello";
+    ]]>
+  </rule>
+
+  <rule name="History_InfiniteLoop2" appliesTo="Task">
+    <![CDATA[
+    string current = (string) self.Fields["History"].Value;
+    if (!current.StartsWith("---"))
+    {
+      logger.Log("Current History value is '{0}'", current);
+      self.History = "---Hello";
+    }
+    ]]>
+  </rule>
+
+  <rule name="History_Dump" appliesTo="Task">
+    <![CDATA[
+    logger.Log("There are {0} revisions", self.Revisions.Count);
+    foreach (Revision r in self.Revisions)
+    {
+        Field f = r.Fields["History"];
+        logger.Log("At revision {0} History value is '{1}'", r.Index, f.Value);
+    }
+    ]]>
+  </rule>
+
+  <rule name="History_NoLoop" appliesTo="Task">
+    <![CDATA[
+    const string HistoryMarker = "===";
+    
+    int lastRevisionNo = self.Revisions.Count;
+    Revision lastRevision = self.Revisions[ lastRevisionNo - 1 ];
+    Field history = lastRevision.Fields["History"];
+    string lastValue = (string) history.Value;
+    
+    logger.Log("At revision {0} History value is '{1}'", lastRevisionNo, lastValue);
+    
+    if (!lastValue.StartsWith(HistoryMarker))
+    {
+      self.History = HistoryMarker + "Hello";
+      logger.Log("Marker added");
+    }
+    ]]>
+  </rule>
+
+  <policy name="DefaultPolicy">
+    <collectionScope collections="*" />
+    <!--<ruleRef name="History_InfiniteLoop1" />-->
+    <!--<ruleRef name="History_InfiniteLoop2" />-->
+    <!--<ruleRef name="History_Dump" />-->
+    <ruleRef name="History_NoLoop" />
+  </policy>
+
+</AggregatorConfiguration>
