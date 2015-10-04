@@ -257,5 +257,45 @@ Return CInt(array.Average())
             object expected = 4;
             logger.Received().ResultsFromScriptRun("test", expected);
         }
+
+        [TestMethod]
+        [TestCategory("CSharpScript")]
+        public void Catch_CSharp_rule_compile_error()
+        {
+            string good_script = @"
+logger.Log(""Test"");
+";
+            string bad_script = @"
+loger.Log(""Test"");
+";
+            var logger = Substitute.For<ILogEvents>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+
+            engine.Load("good", good_script);
+            engine.Load("bad", bad_script);
+            engine.LoadCompleted();
+
+            logger.Received().ScriptHasError("bad", 2, 1, "CS0103", "The name 'loger' does not exist in the current context");
+        }
+
+        [TestMethod]
+        [TestCategory("VBNetScript")]
+        public void Catch_VBNet_rule_compile_error()
+        {
+            string good_script = @"
+logger.Log(""Test"")
+";
+            string bad_script = @"
+loger.Log(""Test"")
+";
+            var logger = Substitute.For<ILogEvents>();
+            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached);
+
+            engine.Load("good", good_script);
+            engine.Load("bad", bad_script);
+            engine.LoadCompleted();
+
+            logger.Received().ScriptHasError("bad", 2, 0, "BC30451", "'loger' is not declared. It may be inaccessible due to its protection level.");
+        }
     }
 }

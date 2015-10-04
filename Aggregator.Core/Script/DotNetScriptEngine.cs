@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,12 +23,21 @@ namespace Aggregator.Core.Script
     public abstract class DotNetScriptEngine<TCodeDomProvider> : ScriptEngine
         where TCodeDomProvider : CodeDomProvider, new()
     {
+        [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed.")]
+        protected readonly string Namespace = "RESERVED";
+
+        [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed.")]
+        protected readonly string ClassPrefix = "Script_";
+
         protected DotNetScriptEngine(ILogEvents logger, bool debug)
             : base(logger, debug)
         {
         }
 
-        protected abstract int LineOffset { get; }
+        /// <summary>
+        /// This property counts the number of generated lines _before_ actual user script code.
+        /// </summary>
+        protected abstract int LinesOfCodeBeforeScript { get; }
 
         protected abstract string WrapScript(string scriptName, string script);
 
@@ -57,23 +67,63 @@ namespace Aggregator.Core.Script
             return refList.ToArray();
         }
 
+        private bool SyntaxChecking(string scriptName, string code)
+        {
+            bool pass = true;
+
+            using (var codeDomProvider = new TCodeDomProvider())
+            {
+                // Setup our options
+                var compilerOptions = new CompilerParameters();
+                compilerOptions.GenerateExecutable = false;
+                compilerOptions.GenerateInMemory = true;
+                compilerOptions.IncludeDebugInformation = true;
+
+                // critical step
+                compilerOptions.ReferencedAssemblies.AddRange(this.GetAssemblyReferences());
+
+                var syntaxResult = codeDomProvider.CompileAssemblyFromSource(compilerOptions, code);
+
+                if (syntaxResult.Errors.HasErrors || syntaxResult.Errors.HasWarnings)
+                {
+                    foreach (CompilerError err in syntaxResult.Errors.Cast<CompilerError>())
+                    {
+                        // compiler counts as lines: usings, namespace, class declaration, etc.
+                        int scriptLine = err.Line - this.LinesOfCodeBeforeScript;
+                        if (err.IsWarning)
+                        {
+                            this.Logger.ScriptHasWarning(scriptName, scriptLine, err.Column, err.ErrorNumber, err.ErrorText);
+                        }
+                        else
+                        {
+                            this.Logger.ScriptHasError(scriptName, scriptLine, err.Column, err.ErrorNumber, err.ErrorText);
+                            pass = false;
+                        }
+                    }
+                }
+            }
+
+            return pass;
+        }
+
         private void CompileCode(string[] code)
         {
-            var codeDomProvider = new TCodeDomProvider();
+            using (var codeDomProvider = new TCodeDomProvider())
+            {
+                // Setup our options
+                var compilerOptions = new CompilerParameters();
+                compilerOptions.GenerateExecutable = false;
+                compilerOptions.GenerateInMemory = true;
+                compilerOptions.IncludeDebugInformation = this.Debug;
 
-            // Setup our options
-            var compilerOptions = new CompilerParameters();
-            compilerOptions.GenerateExecutable = false;
-            compilerOptions.GenerateInMemory = true;
-            compilerOptions.IncludeDebugInformation = this.Debug;
+                // save temp files to permit debugging
+                compilerOptions.TempFiles.KeepFiles = this.Debug;
 
-            // save temp files to permit debugging
-            compilerOptions.TempFiles.KeepFiles = this.Debug;
+                // critical step
+                compilerOptions.ReferencedAssemblies.AddRange(this.GetAssemblyReferences());
 
-            // critical step
-            compilerOptions.ReferencedAssemblies.AddRange(this.GetAssemblyReferences());
-
-            this.compilerResult = codeDomProvider.CompileAssemblyFromSource(compilerOptions, code);
+                this.compilerResult = codeDomProvider.CompileAssemblyFromSource(compilerOptions, code);
+            }
         }
 
         private void RunScript(Assembly assembly, string scriptName, IWorkItem self, IWorkItemRepository store)
@@ -132,8 +182,14 @@ namespace Aggregator.Core.Script
         public override bool Load(string scriptName, string script)
         {
             string code = this.WrapScript(scriptName, script);
-            this.sourceCode.Add(scriptName, code);
-            return true;
+
+            bool passed = this.SyntaxChecking(scriptName, code);
+            if (passed)
+            {
+                this.sourceCode.Add(scriptName, code);
+            }
+
+            return passed;
         }
 
         public override bool LoadCompleted()
@@ -142,23 +198,6 @@ namespace Aggregator.Core.Script
             {
                 // build a single assembly and class from multiple scripts
                 this.CompileCode(this.sourceCode.Values.ToArray());
-
-                // TODO find a way to get where the error is
-                if (this.compilerResult.Errors.HasErrors)
-                {
-                    foreach (CompilerError err in this.compilerResult.Errors.Cast<CompilerError>())
-                    {
-                        this.Logger.ScriptHasError("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
-                    }
-                }
-
-                if (this.compilerResult.Errors.HasWarnings)
-                {
-                    foreach (CompilerError err in this.compilerResult.Errors.Cast<CompilerError>())
-                    {
-                        this.Logger.ScriptHasWarning("***", err.Line - this.LineOffset, err.Column, err.ErrorNumber, err.ErrorText);
-                    }
-                }
 
                 return !this.compilerResult.Errors.HasErrors;
             }
