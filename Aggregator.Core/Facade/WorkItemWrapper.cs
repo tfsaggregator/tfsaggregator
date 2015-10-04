@@ -157,11 +157,13 @@ namespace Aggregator.Core.Facade
             }
         }
 
-        public RevisionCollection Revisions
+        public IRevision LastRevision
         {
             get
             {
-                return this.workItem.Revisions;
+                // works even on a new workitem with no revisions...
+                return new RevisionWrapper(
+                    this.workItem.Revisions[this.workItem.Revisions.Count - 1]);
             }
         }
 

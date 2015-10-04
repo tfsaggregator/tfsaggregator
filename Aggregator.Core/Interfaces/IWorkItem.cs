@@ -20,7 +20,7 @@ namespace Aggregator.Core.Interfaces
 
         int Revision { get; }
 
-        RevisionCollection Revisions { get; }
+        IRevision LastRevision { get; }
 
         bool IsValid();
 

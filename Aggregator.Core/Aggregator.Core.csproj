@@ -88,7 +88,9 @@
     <Compile Include="Configuration\TemplateScope.cs" />
     <Compile Include="Configuration\WorkItemTypeScope.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
+    <Compile Include="Facade\RevisionWrapper.cs" />
     <Compile Include="Interfaces\IProcessTemplateVersionWrapper.cs" />
+    <Compile Include="Interfaces\IRevision.cs" />
     <Compile Include="Monitoring\IRuleLogger.cs" />
     <Compile Include="Monitoring\RuleLogger.cs" />
     <Compile Include="RateLimiter.cs" />

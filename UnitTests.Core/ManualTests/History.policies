@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <AggregatorConfiguration>
 
+  <!-- This rule will cause an infinite loop -->
   <rule name="History_InfiniteLoop1" appliesTo="Task">
     <![CDATA[
     // self.Fields["History"].Value = "Hello";
@@ -8,6 +9,7 @@
     ]]>
   </rule>
 
+  <!-- This rule will cause an infinite loop -->
   <rule name="History_InfiniteLoop2" appliesTo="Task">
     <![CDATA[
     string current = (string) self.Fields["History"].Value;
@@ -19,27 +21,16 @@
     ]]>
   </rule>
 
-  <rule name="History_Dump" appliesTo="Task">
-    <![CDATA[
-    logger.Log("There are {0} revisions", self.Revisions.Count);
-    foreach (Revision r in self.Revisions)
-    {
-        Field f = r.Fields["History"];
-        logger.Log("At revision {0} History value is '{1}'", r.Index, f.Value);
-    }
-    ]]>
-  </rule>
-
+  <!-- This rule properly implements a check to avoid an infinite loop -->
   <rule name="History_NoLoop" appliesTo="Task">
     <![CDATA[
     const string HistoryMarker = "===";
     
-    int lastRevisionNo = self.Revisions.Count;
-    Revision lastRevision = self.Revisions[ lastRevisionNo - 1 ];
-    Field history = lastRevision.Fields["History"];
+    var lastRevision = self.LastRevision;
+    var history = lastRevision.Fields["History"];
     string lastValue = (string) history.Value;
     
-    logger.Log("At revision {0} History value is '{1}'", lastRevisionNo, lastValue);
+    logger.Log("At revision {0} History value is '{1}'", lastRevision.Index, lastValue);
     
     if (!lastValue.StartsWith(HistoryMarker))
     {

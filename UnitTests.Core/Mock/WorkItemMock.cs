@@ -117,7 +117,7 @@ namespace UnitTests.Core.Mock
             }
         }
 
-        public RevisionCollection Revisions
+        public IRevision LastRevision
         {
             get
             {
