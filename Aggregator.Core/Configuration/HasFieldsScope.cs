@@ -17,14 +17,19 @@ namespace Aggregator.Core.Configuration
             }
         }
 
-        public override bool Matches(IWorkItem item)
+        public override ScopeMatchResult Matches(IWorkItem item)
         {
+            var res = new ScopeMatchResult();
+
             var trigger = this.FieldNames;
 
             var fields = item.Fields.ToArray();
             var available = fields.Select(f => f.Name).Concat(fields.Select(f => f.ReferenceName));
 
-            return trigger.All(t => available.Contains(t, StringComparer.OrdinalIgnoreCase));
+            res.AddRange(available);
+            res.Success = trigger.All(t => available.Contains(t, StringComparer.OrdinalIgnoreCase));
+
+            return res;
         }
     }
 }

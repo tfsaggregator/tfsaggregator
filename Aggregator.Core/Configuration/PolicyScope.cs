@@ -1,4 +1,5 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System.Collections.Generic;
+using Aggregator.Core.Interfaces;
 
 namespace Aggregator.Core.Configuration
 {
@@ -20,6 +21,6 @@ namespace Aggregator.Core.Configuration
         /// <param name="requestContext">The requestcontext of the TFS event</param>
         /// <param name="notification">The notification holding the WorkItemChangedEvent.</param>
         /// <returns>True if the policy should trigger on this request.</returns>
-        public abstract bool Matches(IRequestContext requestContext, INotification notification);
+        public abstract ScopeMatchResult Matches(IRequestContext requestContext, INotification notification);
     }
 }

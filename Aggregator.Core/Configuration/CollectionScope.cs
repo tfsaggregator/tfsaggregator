@@ -26,9 +26,12 @@ namespace Aggregator.Core.Configuration
             }
         }
 
-        public override bool Matches(IRequestContext requestContext, INotification notification)
+        public override ScopeMatchResult Matches(IRequestContext requestContext, INotification notification)
         {
-            return this.CollectionNames.Any(c => requestContext.CollectionName.SameAs(c));
+            var res = new ScopeMatchResult();
+            res.Add(requestContext.CollectionName);
+            res.Success = this.CollectionNames.Any(c => requestContext.CollectionName.SameAs(c));
+            return res;
         }
     }
 }

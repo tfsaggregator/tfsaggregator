@@ -15,7 +15,7 @@ namespace Aggregator.Core.Context
     /// </summary>
     public class RuntimeContext : IRuntimeContext
     {
-        private const string CacheKey = "runtime";
+        private const string CacheKey = "runtime:";
         private static readonly MemoryCache Cache = new MemoryCache("TFSAggregator2");
 
         /// <summary>
@@ -37,10 +37,13 @@ namespace Aggregator.Core.Context
             ILogEvents logger,
             Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
         {
-            var runtime = (RuntimeContext)Cache.Get(CacheKey);
+            string settingsPath = settingsPathGetter();
+            string cacheKey = CacheKey + settingsPath;
+            var runtime = (RuntimeContext)Cache.Get(cacheKey);
             if (runtime == null)
             {
-                string settingsPath = settingsPathGetter();
+                logger.LoadingConfiguration(settingsPath);
+
                 var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
                 runtime = MakeRuntimeContext(settingsPath, settings, requestContext, logger, repoBuilder);
 
@@ -48,10 +51,14 @@ namespace Aggregator.Core.Context
                 itemPolicy.Priority = CacheItemPriority.NotRemovable;
                 itemPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string>() { settingsPath }));
 
-                Cache.Set(CacheKey, runtime, itemPolicy);
+                Cache.Set(cacheKey, runtime, itemPolicy);
+
+                logger.ConfigurationLoaded(settingsPath);
             }
             else
             {
+                logger.UsingCachedConfiguration(settingsPath);
+
                 // as it changes at each invocation, must be set again here
                 runtime.RequestContext = requestContext;
             }

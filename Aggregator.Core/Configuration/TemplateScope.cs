@@ -51,12 +51,30 @@ namespace Aggregator.Core.Configuration
         /// <param name="currentRequestContext">The requestcontext of the TFS event</param>
         /// <param name="currentNotification">The notification holding the WorkItemChangedEvent.</param>
         /// <returns>true if the policy matches all supplied checks.</returns>
-        public override bool Matches(IRequestContext currentRequestContext, INotification currentNotification)
+        public override ScopeMatchResult Matches(IRequestContext currentRequestContext, INotification currentNotification)
         {
-            return this.MatchesName(currentRequestContext, currentNotification)
+            var res = new ScopeMatchResult();
+
+            // TODO refactor this code
+            var currentversion = currentRequestContext.GetCurrentProjectProcessVersion(new Uri(currentNotification.ProjectUri));
+            IProjectPropertyWrapper[] properties = currentRequestContext.GetProjectProperties(new Uri(currentNotification.ProjectUri));
+            var templateNameProperty =
+                properties.FirstOrDefault(
+                    p => string.Equals(TemplateNameKey, p.Name, StringComparison.OrdinalIgnoreCase));
+            string processTemplateDescription = string.Format(
+                "{0} v{1}.{2} [{3}]",
+                templateNameProperty?.Value,
+                currentversion.Major,
+                currentversion.Minor,
+                currentversion.TypeId);
+
+            res.Add(processTemplateDescription);
+
+            res.Success = this.MatchesName(currentRequestContext, currentNotification)
                    && this.MatchesId(currentRequestContext, currentNotification)
                    && this.MatchesMinVersion(currentRequestContext, currentNotification)
                    && this.MatchesMaxVersion(currentRequestContext, currentNotification);
+            return res;
         }
 
         private bool MatchesMaxVersion(IRequestContext currentRequestContext, INotification currentNotification)

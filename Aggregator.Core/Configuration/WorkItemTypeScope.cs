@@ -18,9 +18,12 @@ namespace Aggregator.Core.Configuration
             }
         }
 
-        public override bool Matches(IWorkItem item)
+        public override ScopeMatchResult Matches(IWorkItem item)
         {
-            return this.ApplicableTypes.Any(type => type.SameAs(item.TypeName));
+            var res = new ScopeMatchResult();
+            res.Add(item.TypeName);
+            res.Success = this.ApplicableTypes.Any(type => type.SameAs(item.TypeName));
+            return res;
         }
     }
 }

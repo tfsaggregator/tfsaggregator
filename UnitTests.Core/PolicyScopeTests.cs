@@ -28,7 +28,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -45,7 +45,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsFalse(result);
         }
@@ -62,7 +62,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -79,7 +79,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -96,7 +96,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -113,7 +113,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -130,7 +130,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -152,7 +152,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -174,7 +174,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsFalse(result);
         }
@@ -205,7 +205,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -228,7 +228,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -251,7 +251,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -274,7 +274,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsFalse(result);
         }
@@ -297,7 +297,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -320,7 +320,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }
@@ -343,7 +343,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsFalse(result);
         }
@@ -381,7 +381,7 @@
             var notification = Substitute.For<INotification>();
             notification.ProjectUri.Returns("http://localhost:8080/tfs/defaultcollection/TestOne");
 
-            bool result = p.Scope.All(s => s.Matches(context, notification));
+            bool result = p.Scope.All(s => s.Matches(context, notification).Success);
 
             Assert.IsTrue(result);
         }

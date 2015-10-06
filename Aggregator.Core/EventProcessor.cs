@@ -81,9 +81,9 @@ namespace Aggregator.Core
         {
             return policies.Where(policy => policy.Scope.All(scope =>
             {
-                var success = scope.Matches(requestContext, notification);
-                this.logger.PolicyScopeMatchResult(scope, success);
-                return success;
+                var result = scope.Matches(requestContext, notification);
+                this.logger.PolicyScopeMatchResult(scope, result);
+                return result.Success;
             }));
         }
 
@@ -100,9 +100,9 @@ namespace Aggregator.Core
         {
             if (rule.Scope.All(scope =>
             {
-                var success = scope.Matches(workItem);
-                this.logger.RuleScopeMatchResult(scope, success);
-                return success;
+                var result = scope.Matches(workItem);
+                this.logger.RuleScopeMatchResult(scope, result);
+                return result.Success;
             }))
             {
                 this.logger.RunningRule(rule.Name, workItem);

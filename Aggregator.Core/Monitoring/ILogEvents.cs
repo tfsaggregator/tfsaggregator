@@ -94,9 +94,9 @@ namespace Aggregator.Core.Monitoring
 
         void NoPolicesApply();
 
-        void PolicyScopeMatchResult(PolicyScope scope, bool success);
+        void PolicyScopeMatchResult(PolicyScope scope, ScopeMatchResult result);
 
-        void RuleScopeMatchResult(RuleScope scope, bool success);
+        void RuleScopeMatchResult(RuleScope scope, ScopeMatchResult result);
 
         void WorkItemRepositoryBuilt(Uri uri, IdentityDescriptor toImpersonate);
     }

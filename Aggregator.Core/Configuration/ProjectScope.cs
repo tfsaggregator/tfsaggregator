@@ -19,10 +19,13 @@ namespace Aggregator.Core.Configuration
             }
         }
 
-        public override bool Matches(IRequestContext requestContext, INotification notification)
+        public override ScopeMatchResult Matches(IRequestContext requestContext, INotification notification)
         {
+            var res = new ScopeMatchResult();
             string projectName = requestContext.GetProjectName(new Uri(notification.ProjectUri));
-            return this.ProjectNames.Any(c => projectName.SameAs(c));
+            res.Add(projectName);
+            res.Success = this.ProjectNames.Any(c => projectName.SameAs(c));
+            return res;
         }
     }
 }

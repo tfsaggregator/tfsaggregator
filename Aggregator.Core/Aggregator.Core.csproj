@@ -85,6 +85,7 @@
     <Compile Include="Configuration\HasFieldsScope.cs" />
     <Compile Include="Configuration\ProjectScope.cs" />
     <Compile Include="Configuration\RateLimit.cs" />
+    <Compile Include="Configuration\ScopeMatchResult.cs" />
     <Compile Include="Configuration\TemplateScope.cs" />
     <Compile Include="Configuration\WorkItemTypeScope.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Runtime.Caching;
@@ -349,18 +350,20 @@ namespace Aggregator.Core.Monitoring
             this.logger.Log(LogLevel.Verbose, "No polices apply");
         }
 
-        public void PolicyScopeMatchResult(PolicyScope scope, bool success)
+        public void PolicyScopeMatchResult(PolicyScope scope, ScopeMatchResult result)
         {
-            this.logger.Log(LogLevel.Diagnostic, "Policy scope {0} {1}",
+            this.logger.Log(LogLevel.Diagnostic, "Policy scope {0} {1} {2}",
                 scope.DisplayName,
-                success ? "matches" : "does not match");
+                result.Success ? "matches" : "does not match",
+                result.Arguments);
         }
 
-        public void RuleScopeMatchResult(RuleScope scope, bool success)
+        public void RuleScopeMatchResult(RuleScope scope, ScopeMatchResult result)
         {
-            this.logger.Log(LogLevel.Diagnostic, "Rule scope {0} {1}",
+            this.logger.Log(LogLevel.Diagnostic, "Rule scope {0} {1} {2}",
                 scope.DisplayName,
-                success ? "matches" : "does not match");
+                result.Success ? "matches" : "does not match",
+                result.Arguments);
         }
 
         public void WorkItemRepositoryBuilt(Uri uri, IdentityDescriptor toImpersonate)
