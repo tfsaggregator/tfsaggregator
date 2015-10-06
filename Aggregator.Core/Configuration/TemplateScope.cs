@@ -55,12 +55,10 @@ namespace Aggregator.Core.Configuration
         {
             var res = new ScopeMatchResult();
 
-            // TODO refactor this code
-            var currentversion = currentRequestContext.GetCurrentProjectProcessVersion(new Uri(currentNotification.ProjectUri));
-            IProjectPropertyWrapper[] properties = currentRequestContext.GetProjectProperties(new Uri(currentNotification.ProjectUri));
-            var templateNameProperty =
-                properties.FirstOrDefault(
-                    p => string.Equals(TemplateNameKey, p.Name, StringComparison.OrdinalIgnoreCase));
+            var info = GetTemplateInfo(currentRequestContext, currentNotification);
+            IProcessTemplateVersionWrapper currentversion = info.Item1;
+            IProjectPropertyWrapper templateNameProperty = info.Item2;
+
             string processTemplateDescription = string.Format(
                 "{0} v{1}.{2} [{3}]",
                 templateNameProperty?.Value,
@@ -70,36 +68,42 @@ namespace Aggregator.Core.Configuration
 
             res.Add(processTemplateDescription);
 
-            res.Success = this.MatchesName(currentRequestContext, currentNotification)
-                   && this.MatchesId(currentRequestContext, currentNotification)
-                   && this.MatchesMinVersion(currentRequestContext, currentNotification)
-                   && this.MatchesMaxVersion(currentRequestContext, currentNotification);
+            res.Success = this.MatchesName(templateNameProperty)
+                   && this.MatchesId(currentversion)
+                   && this.MatchesMinVersion(currentversion)
+                   && this.MatchesMaxVersion(currentversion);
             return res;
         }
 
-        private bool MatchesMaxVersion(IRequestContext currentRequestContext, INotification currentNotification)
+        private static Tuple<IProcessTemplateVersionWrapper,IProjectPropertyWrapper> GetTemplateInfo(IRequestContext currentRequestContext, INotification currentNotification)
+        {
+            var currentversion = currentRequestContext.GetCurrentProjectProcessVersion(new Uri(currentNotification.ProjectUri));
+            IProjectPropertyWrapper[] properties = currentRequestContext.GetProjectProperties(new Uri(currentNotification.ProjectUri));
+            var templateNameProperty = properties.FirstOrDefault(
+                    p => string.Equals(TemplateNameKey, p.Name, StringComparison.OrdinalIgnoreCase));
+            return Tuple.Create(currentversion, templateNameProperty);
+        }
+
+        private bool MatchesMaxVersion(IProcessTemplateVersionWrapper currentversion)
         {
             if (string.IsNullOrWhiteSpace(this.MaxVersion))
             {
                 return true;
             }
 
-            var currentversion = currentRequestContext.GetCurrentProjectProcessVersion(new Uri(currentNotification.ProjectUri));
-
-            var current = Version.Parse(string.Format(CultureInfo.InvariantCulture, "{0}.{1}", currentversion.Major, currentversion.Minor));
+            var current = Version.Parse(
+                string.Format(CultureInfo.InvariantCulture, "{0}.{1}", currentversion.Major, currentversion.Minor));
             var max = Version.Parse(this.MaxVersion);
 
             return current <= max;
         }
 
-        private bool MatchesMinVersion(IRequestContext currentRequestContext, INotification currentNotification)
+        private bool MatchesMinVersion(IProcessTemplateVersionWrapper currentversion)
         {
             if (string.IsNullOrWhiteSpace(this.MinVersion))
             {
                 return true;
             }
-
-            var currentversion = currentRequestContext.GetCurrentProjectProcessVersion(new Uri(currentNotification.ProjectUri));
 
             var current = Version.Parse(
                 string.Format(CultureInfo.InvariantCulture, "{0}.{1}", currentversion.Major, currentversion.Minor));
@@ -108,28 +112,22 @@ namespace Aggregator.Core.Configuration
             return current >= min;
         }
 
-        private bool MatchesId(IRequestContext currentRequestContext, INotification currentNotification)
+        private bool MatchesId(IProcessTemplateVersionWrapper currentversion)
         {
             if (string.IsNullOrWhiteSpace(this.TemplateTypeId))
             {
                 return true;
             }
 
-            var currentversion = currentRequestContext.GetCurrentProjectProcessVersion(new Uri(currentNotification.ProjectUri));
             return currentversion.TypeId.Equals(new Guid(this.TemplateTypeId));
         }
 
-        private bool MatchesName(IRequestContext currentRequestContext, INotification currentNotification)
+        private bool MatchesName(IProjectPropertyWrapper templateNameProperty)
         {
             if (string.IsNullOrWhiteSpace(this.TemplateName))
             {
                 return true;
             }
-
-            IProjectPropertyWrapper[] properties = currentRequestContext.GetProjectProperties(new Uri(currentNotification.ProjectUri));
-            var templateNameProperty =
-                properties.FirstOrDefault(
-                    p => string.Equals(TemplateNameKey, p.Name, StringComparison.OrdinalIgnoreCase));
 
             return this.TemplateName.SameAs(templateNameProperty?.Value);
         }
