@@ -56,7 +56,6 @@ namespace UnitTests.Core
         }
 
         [TestMethod]
-        [Ignore]
         public void ContextCache_file_changed_succeeds()
         {
             string sourcePath = @"..\..\ConfigurationsForTests\NoOp.policies";
@@ -68,11 +67,9 @@ namespace UnitTests.Core
             var context = Substitute.For<IRequestContext>();
             var runtime1 = RuntimeContext.GetContext(() => destPath, context, logger, null);
 
-            File.SetLastWriteTimeUtc(destPath, DateTime.UtcNow);
+            File.Copy(sourcePath, destPath, true);
 
-            // this delay is ok while Debugging
-            // in Run, it *never* works
-            Pause();
+            Pause(); // this delay is necessary for the file change to be sensed
 
             var runtime2 = RuntimeContext.GetContext(() => destPath, context, logger, null);
 

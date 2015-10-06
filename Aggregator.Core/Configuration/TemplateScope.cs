@@ -75,7 +75,7 @@ namespace Aggregator.Core.Configuration
             return res;
         }
 
-        private static Tuple<IProcessTemplateVersionWrapper,IProjectPropertyWrapper> GetTemplateInfo(IRequestContext currentRequestContext, INotification currentNotification)
+        private static Tuple<IProcessTemplateVersionWrapper, IProjectPropertyWrapper> GetTemplateInfo(IRequestContext currentRequestContext, INotification currentNotification)
         {
             var currentversion = currentRequestContext.GetCurrentProjectProcessVersion(new Uri(currentNotification.ProjectUri));
             IProjectPropertyWrapper[] properties = currentRequestContext.GetProjectProperties(new Uri(currentNotification.ProjectUri));
