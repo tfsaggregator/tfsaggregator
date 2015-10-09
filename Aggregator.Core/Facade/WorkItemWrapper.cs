@@ -68,12 +68,12 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return this.workItem[name];
+                return this.Fields[name].Value;
             }
 
             set
             {
-                this.workItem[name] = value;
+                this.Fields[name].Value = value;
             }
         }
 

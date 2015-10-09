@@ -45,7 +45,6 @@ namespace Aggregator.Core.Facade
                     && this.tfsField.Value != null
                     && this.tfsField.FieldDefinition.SystemType == typeof(double))
                 {
-                    // Ugly hack to ensure the double comparison goes safely. TFS internally rounds/truncates the values.
                     CultureInfo invariant = CultureInfo.InvariantCulture;
                     decimal original = decimal.Parse(((double)this.tfsField.Value).ToString(invariant), invariant);
                     decimal proposed = decimal.Parse(((double)value).ToString(invariant), invariant);
