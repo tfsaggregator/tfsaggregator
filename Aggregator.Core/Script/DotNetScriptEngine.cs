@@ -128,8 +128,7 @@ namespace Aggregator.Core.Script
 
         private void RunScript(Assembly assembly, string scriptName, IWorkItem self, IWorkItemRepository store)
         {
-            // HACK name must match C# and VB.NET implementations
-            var classForScript = assembly.GetType("RESERVED.Script_" + scriptName);
+            var classForScript = assembly.GetType(this.Namespace + "." + this.ClassPrefix + scriptName);
             if (classForScript == null)
             {
                 this.Logger.FailureLoadingScript(scriptName);
