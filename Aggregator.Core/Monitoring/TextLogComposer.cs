@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Runtime.Caching;
 using System.Xml.Schema;
-
+using Aggregator.Core.Configuration;
 using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
-
+using Microsoft.TeamFoundation.Framework.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Monitoring
@@ -41,14 +42,14 @@ namespace Aggregator.Core.Monitoring
 
         public void ResultsFromScriptRun(string scriptName, Collection<PSObject> results)
         {
-            this.logger.Log(LogLevel.Verbose, "--- Output for script '{0}' follows", scriptName);
+            this.logger.Log(LogLevel.Diagnostic, "--- Output for script '{0}' follows", scriptName);
 
             foreach (var item in results)
             {
                 this.logger.Log(LogLevel.Normal, item.ToString());
             }
 
-            this.logger.Log(LogLevel.Verbose, "--- Output complete.");
+            this.logger.Log(LogLevel.Diagnostic, "--- Output complete.");
         }
 
         public void WorkItemWrapperTryOpenException(IWorkItem workItem, Exception e)
@@ -81,7 +82,7 @@ namespace Aggregator.Core.Monitoring
         public void ResultsFromScriptRun(string scriptName, object result)
         {
             this.logger.Log(
-                LogLevel.Verbose,
+                LogLevel.Diagnostic,
                 "Output from script '{0}': [{1}]",
                 scriptName,
                 result);
@@ -339,9 +340,42 @@ namespace Aggregator.Core.Monitoring
                 destination);
         }
 
-        public void ScriptLog(string ruleName, string message)
+        public void ScriptLog(LogLevel level, string ruleName, string message)
         {
-            this.logger.Log(LogLevel.Diagnostic, "{0}: {1}", ruleName, message);
+            this.logger.Log(level, "{0}: {1}", ruleName, message);
+        }
+
+        public void NoPolicesApply()
+        {
+            this.logger.Log(LogLevel.Verbose, "No polices apply");
+        }
+
+        public void PolicyScopeMatchResult(PolicyScope scope, ScopeMatchResult result)
+        {
+            this.logger.Log(LogLevel.Diagnostic, "Policy scope {0} {1} {2}",
+                scope.DisplayName,
+                result.Success ? "matches" : "does not match",
+                result.Arguments);
+        }
+
+        public void RuleScopeMatchResult(RuleScope scope, ScopeMatchResult result)
+        {
+            this.logger.Log(LogLevel.Diagnostic, "Rule scope {0} {1} {2}",
+                scope.DisplayName,
+                result.Success ? "matches" : "does not match",
+                result.Arguments);
+        }
+
+        public void WorkItemRepositoryBuilt(Uri uri, IdentityDescriptor toImpersonate)
+        {
+            if (toImpersonate != null)
+            {
+                this.logger.Log(LogLevel.Verbose, "Built a new Work Item Repository for {0} as {1}", uri, toImpersonate);
+            }
+            else
+            {
+                this.logger.Log(LogLevel.Diagnostic, "Built a new Work Item Repository for {0}", uri);
+            }
         }
     }
 }

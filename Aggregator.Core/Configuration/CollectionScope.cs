@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Aggregator.Core.Extensions;
@@ -17,9 +18,20 @@ namespace Aggregator.Core.Configuration
         /// </summary>
         public IEnumerable<string> CollectionNames { get; set; }
 
-        public override bool Matches(IRequestContext requestContext, INotification notification)
+        public override string DisplayName
         {
-            return this.CollectionNames.Any(c => requestContext.CollectionName.SameAs(c));
+            get
+            {
+                return string.Format("Collections({0})", string.Join(", ", this.CollectionNames));
+            }
+        }
+
+        public override ScopeMatchResult Matches(IRequestContext requestContext, INotification notification)
+        {
+            var res = new ScopeMatchResult();
+            res.Add(requestContext.CollectionName);
+            res.Success = this.CollectionNames.Any(c => requestContext.CollectionName.SameAs(c));
+            return res;
         }
     }
 }

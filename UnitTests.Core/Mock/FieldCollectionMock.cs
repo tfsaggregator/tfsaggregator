@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
+using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 
 namespace UnitTests.Core.Mock
 {
-    internal class FieldCollectionMock : IFieldCollectionWrapper
+    internal class FieldCollectionMock : IFieldCollection
     {
-        private readonly Dictionary<string, IFieldWrapper> fields = new Dictionary<string, IFieldWrapper>();
+        private readonly Dictionary<string, IField> fields = new Dictionary<string, IField>();
 
         private readonly WorkItemMock workItemMock;
 
@@ -16,13 +17,14 @@ namespace UnitTests.Core.Mock
             this.workItemMock = workItemMock;
         }
 
-        public IFieldWrapper this[string name]
+        public IField this[string name]
         {
             get
             {
                 if (!this.fields.ContainsKey(name))
                 {
-                    this.fields.Add(name, new FieldMock(this.workItemMock, name));
+                    IField field = new FieldMock(this.workItemMock, name);
+                    this.fields.Add(name, new DoubleFixFieldDecorator(field));
                 }
 
                 return this.fields[name];
@@ -34,7 +36,7 @@ namespace UnitTests.Core.Mock
             }
         }
 
-        public IEnumerator<IFieldWrapper> GetEnumerator()
+        public IEnumerator<IField> GetEnumerator()
         {
             return this.fields.Values.GetEnumerator();
         }

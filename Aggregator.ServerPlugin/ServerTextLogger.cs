@@ -56,14 +56,19 @@ namespace Aggregator.ServerPlugin
                     levelAsString, string.Empty.PadLeft(LogLevelMaximumStringLength - levelAsString.Length),
                     message);
 
-                Trace.WriteLine(formattedMessage);
+                Debug.WriteLine(formattedMessage);
 
-                if (level >= LogLevel.Warning)
+                EventLogEntryType eventLevel = ConvertToEventLogEntryType(level);
+
+                Microsoft.TeamFoundation.Framework.Server.TeamFoundationApplicationCore.Log(
+                    message, 0, eventLevel);
+
+                if (level <= LogLevel.Warning)
                 {
                     EventLog.WriteEntry(
                         "TFSAggregator",
                         message,
-                        ConvertToEventLogEntryType(level));
+                        eventLevel);
                 }
             }
             finally

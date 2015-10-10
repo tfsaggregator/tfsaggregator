@@ -8,23 +8,22 @@ namespace Aggregator.Core
 
     public class CSharpScriptEngine : DotNetScriptEngine<CSharpCodeProvider>
     {
-        public CSharpScriptEngine(IWorkItemRepository store, ILogEvents logger, bool debug)
-            : base(store, logger, debug)
+        public CSharpScriptEngine(ILogEvents logger, bool debug)
+            : base(logger, debug)
         {
         }
 
-        protected override int LineOffset
+        protected override int LinesOfCodeBeforeScript
         {
             get
             {
-                return 10;
+                return 14;
             }
         }
 
         protected override string WrapScript(string scriptName, string script)
         {
-            return @"
-namespace RESERVED
+            return "namespace " + this.Namespace + @"
 {
   using Microsoft.TeamFoundation.WorkItemTracking.Client;
   using Aggregator.Core;
@@ -34,7 +33,7 @@ namespace RESERVED
   using Aggregator.Core.Monitoring;
   using System.Linq;
 
-  public class Script_" + scriptName + @" : Aggregator.Core.Script.IDotNetScript
+  public class " + this.ClassPrefix + scriptName + @" : Aggregator.Core.Script.IDotNetScript
   {
     public object RunScript(Aggregator.Core.Interfaces.IWorkItemExposed self, Aggregator.Core.Interfaces.IWorkItemRepositoryExposed store, Aggregator.Core.Monitoring.IRuleLogger logger)
     {

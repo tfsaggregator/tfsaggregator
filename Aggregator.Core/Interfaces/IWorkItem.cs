@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using Aggregator.Core.Navigation;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Interfaces
 {
@@ -10,9 +12,15 @@ namespace Aggregator.Core.Interfaces
     /// </summary>
     public interface IWorkItemExposed
     {
-        IFieldCollectionWrapper Fields { get; }
+        IFieldCollection Fields { get; }
 
         string History { get; set; }
+
+        DateTime RevisedDate { get; }
+
+        int Revision { get; }
+
+        IRevision LastRevision { get; }
 
         bool IsValid();
 

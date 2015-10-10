@@ -1,14 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
+using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
 {
-    public class FieldCollectionWrapper : IFieldCollectionWrapper
+    public class FieldCollectionWrapper : IFieldCollection
     {
         private readonly FieldCollection fields;
 
@@ -18,28 +21,35 @@ namespace Aggregator.Core.Facade
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("SonarQube", "S3237:\"value\" parameters should be used", Justification = "Available for mock testing only")]
-        public IFieldWrapper this[string name]
+        public IField this[string name]
         {
             get
             {
-                return new FieldWrapper(this.fields[name]);
+                return this.ApplyDoubleFix(this.fields[name]);
             }
 
+            [EditorBrowsable(EditorBrowsableState.Never)]
             set
             {
-                // Do nothing - this is here for unit testing purposes.
-                // We don't actually want to add fields in our app code
+                throw new InvalidOperationException("Only used for mocking from unit tests");
             }
         }
 
-        public IEnumerator<IFieldWrapper> GetEnumerator()
+        public IEnumerator<IField> GetEnumerator()
         {
-            return this.fields.Cast<Field>().Select(f => (IFieldWrapper)new FieldWrapper(f)).GetEnumerator();
+            return this.fields.Cast<Field>().Select(this.ApplyDoubleFix).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        private IField ApplyDoubleFix(Field field)
+        {
+            IField wrappedField = new FieldWrapper(field);
+            IField fixedField = new DoubleFixFieldDecorator(wrappedField);
+            return fixedField;
         }
     }
 }

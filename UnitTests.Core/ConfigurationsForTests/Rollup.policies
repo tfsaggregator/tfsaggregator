@@ -9,15 +9,15 @@
     <rule name="Rollup"
           appliesTo="Task">
             <![CDATA[
-		if (self.HasParent())
-		{
-            self.Parent["Total Work Remaining"] = (double)self["Remaining Dev Work"] + (double)self["Remaining Test Work"];
-            self.Parent["Total Estimate"] = (double)self["Estimated Dev Work"] + (double)self["Estimated Test Work"];
+        if (self.HasParent())
+        {
+            self.Parent["Total Work Remaining"] = (double)(self["Remaining Dev Work"]??0d) + (double)(self["Remaining Test Work"]??0d);
+            self.Parent["Total Estimate"] = (double)(self["Estimated Dev Work"]??0d) + (double)(self["Estimated Test Work"]??0d);
             // Sum up all estimates to the sprint
             if ((System.DateTime)self["Finish Date"] > System.DateTime.Now) {
                 // Log("Updating grand parent");
-                self.Parent.Parent["Dev Estimate"] = self["Estimated Dev Work"];
-                self.Parent.Parent["Test Estimate"] = self["Estimated Test Work"];
+                self.Parent.Parent["Dev Estimate"] = self["Estimated Dev Work"]??0d;
+                self.Parent.Parent["Test Estimate"] = self["Estimated Test Work"]??0d;
             }
         }
     ]]>

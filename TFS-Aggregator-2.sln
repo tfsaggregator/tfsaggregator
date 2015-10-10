@@ -16,12 +16,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B94443D9
 		install.ps1 = install.ps1
 		TfsAggregator.ico = TfsAggregator.ico
 		tfsaggregator.svg = tfsaggregator.svg
+		uninstall.ps1 = uninstall.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E0E7919C-5F01-45CC-A758-C3AF34F32F16}"
 	ProjectSection(SolutionItems) = preProject
+		docs\Console-App.md = docs\Console-App.md
+		docs\Developer-Info.md = docs\Developer-Info.md
 		docs\Install.md = docs\Install.md
-		docs\Internals.md = docs\Internals.md
 		LICENSE-2.0.txt = LICENSE-2.0.txt
 		docs\Policy-Examples.md = docs\Policy-Examples.md
 		docs\Policy-Syntax.md = docs\Policy-Syntax.md
@@ -37,6 +39,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "references", "references", 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B1913F70-5A32-4EAE-BDD2-0C46295656A6}"
+	ProjectSection(SolutionItems) = preProject
+		samples\TFSAggregator2.ServerPlugin.policies = samples\TFSAggregator2.ServerPlugin.policies
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.ConsoleApp", "Aggregator.ConsoleApp\Aggregator.ConsoleApp.csproj", "{200CF240-476E-4429-A8FC-66001806A2DE}"
 EndProject
@@ -66,46 +71,82 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2015", "2015", "{14D62C28-5
 		References\2015\PLACEHOLDER.txt = References\2015\PLACEHOLDER.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Manual Tests", "Manual Tests", "{F3D416A1-D97C-44C7-856B-99E12DBB1D94}"
+	ProjectSection(SolutionItems) = preProject
+		ManualTests\allInOne.policies = ManualTests\allInOne.policies
+		ManualTests\CascadeAndTrigger.policies = ManualTests\CascadeAndTrigger.policies
+		ManualTests\History.policies = ManualTests\History.policies
+		ManualTests\SimpleRollup.policies = ManualTests\SimpleRollup.policies
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManualTests", "ManualTests\ManualTests.csproj", "{9435D73C-6B29-463F-9B79-CD78E75FBA11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug-2013|Any CPU = Debug-2013|Any CPU
 		Debug-2015|Any CPU = Debug-2015|Any CPU
+		Release|Any CPU = Release|Any CPU
 		Release-2013|Any CPU = Release-2013|Any CPU
 		Release-2015|Any CPU = Release-2015|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug|Any CPU.ActiveCfg = Debug-2015|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug|Any CPU.Build.0 = Debug-2015|Any CPU
 		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug-2013|Any CPU.ActiveCfg = Debug-2013|Any CPU
 		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug-2013|Any CPU.Build.0 = Debug-2013|Any CPU
 		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug-2015|Any CPU.ActiveCfg = Debug-2015|Any CPU
 		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Debug-2015|Any CPU.Build.0 = Debug-2015|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release|Any CPU.ActiveCfg = Release-2015|Any CPU
+		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release|Any CPU.Build.0 = Release-2015|Any CPU
 		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release-2013|Any CPU.ActiveCfg = Release-2013|Any CPU
 		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release-2013|Any CPU.Build.0 = Release-2013|Any CPU
 		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release-2015|Any CPU.ActiveCfg = Release-2015|Any CPU
 		{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}.Release-2015|Any CPU.Build.0 = Release-2015|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug|Any CPU.ActiveCfg = Debug-2015|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug|Any CPU.Build.0 = Debug-2015|Any CPU
 		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug-2013|Any CPU.ActiveCfg = Debug-2013|Any CPU
 		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug-2013|Any CPU.Build.0 = Debug-2013|Any CPU
 		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug-2015|Any CPU.ActiveCfg = Debug-2015|Any CPU
 		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Debug-2015|Any CPU.Build.0 = Debug-2015|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release|Any CPU.ActiveCfg = Release-2015|Any CPU
+		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release|Any CPU.Build.0 = Release-2015|Any CPU
 		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release-2013|Any CPU.ActiveCfg = Release-2013|Any CPU
 		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release-2013|Any CPU.Build.0 = Release-2013|Any CPU
 		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release-2015|Any CPU.ActiveCfg = Release-2015|Any CPU
 		{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}.Release-2015|Any CPU.Build.0 = Release-2015|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug|Any CPU.ActiveCfg = Debug-2015|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug|Any CPU.Build.0 = Debug-2015|Any CPU
 		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug-2013|Any CPU.ActiveCfg = Debug-2013|Any CPU
 		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug-2013|Any CPU.Build.0 = Debug-2013|Any CPU
 		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug-2015|Any CPU.ActiveCfg = Debug-2015|Any CPU
 		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Debug-2015|Any CPU.Build.0 = Debug-2015|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release|Any CPU.ActiveCfg = Release-2015|Any CPU
+		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release|Any CPU.Build.0 = Release-2015|Any CPU
 		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release-2013|Any CPU.ActiveCfg = Release-2013|Any CPU
 		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release-2013|Any CPU.Build.0 = Release-2013|Any CPU
 		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release-2015|Any CPU.ActiveCfg = Release-2015|Any CPU
 		{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}.Release-2015|Any CPU.Build.0 = Release-2015|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug|Any CPU.ActiveCfg = Debug-2015|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug|Any CPU.Build.0 = Debug-2015|Any CPU
 		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug-2013|Any CPU.ActiveCfg = Debug-2013|Any CPU
 		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug-2013|Any CPU.Build.0 = Debug-2013|Any CPU
 		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug-2015|Any CPU.ActiveCfg = Debug-2015|Any CPU
 		{200CF240-476E-4429-A8FC-66001806A2DE}.Debug-2015|Any CPU.Build.0 = Debug-2015|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Release|Any CPU.ActiveCfg = Release-2015|Any CPU
+		{200CF240-476E-4429-A8FC-66001806A2DE}.Release|Any CPU.Build.0 = Release-2015|Any CPU
 		{200CF240-476E-4429-A8FC-66001806A2DE}.Release-2013|Any CPU.ActiveCfg = Release-2013|Any CPU
 		{200CF240-476E-4429-A8FC-66001806A2DE}.Release-2013|Any CPU.Build.0 = Release-2013|Any CPU
 		{200CF240-476E-4429-A8FC-66001806A2DE}.Release-2015|Any CPU.ActiveCfg = Release-2015|Any CPU
 		{200CF240-476E-4429-A8FC-66001806A2DE}.Release-2015|Any CPU.Build.0 = Release-2015|Any CPU
+		{9435D73C-6B29-463F-9B79-CD78E75FBA11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9435D73C-6B29-463F-9B79-CD78E75FBA11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9435D73C-6B29-463F-9B79-CD78E75FBA11}.Debug-2013|Any CPU.ActiveCfg = Debug|Any CPU
+		{9435D73C-6B29-463F-9B79-CD78E75FBA11}.Debug-2015|Any CPU.ActiveCfg = Debug|Any CPU
+		{9435D73C-6B29-463F-9B79-CD78E75FBA11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9435D73C-6B29-463F-9B79-CD78E75FBA11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9435D73C-6B29-463F-9B79-CD78E75FBA11}.Release-2013|Any CPU.ActiveCfg = Release|Any CPU
+		{9435D73C-6B29-463F-9B79-CD78E75FBA11}.Release-2015|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

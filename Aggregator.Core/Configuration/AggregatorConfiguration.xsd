@@ -82,10 +82,10 @@
               </xs:element>
               <xs:element minOccurs="0" maxOccurs="1" name="templateScope">
                 <xs:complexType>
-                  <xs:attribute name="name" type="xs:string" use="required" />
-                  <xs:attribute name="typeId" type="xs:string" use="required" />
-                  <xs:attribute name="minVersion" type="xs:decimal" use="required" />
-                  <xs:attribute name="maxVersion" type="xs:decimal" use="required" />
+                  <xs:attribute name="name" type="xs:string" use="optional" />
+                  <xs:attribute name="typeId" type="xs:string" use="optional" />
+                  <xs:attribute name="minVersion" type="xs:decimal" use="optional" />
+                  <xs:attribute name="maxVersion" type="xs:decimal" use="optional" />
                 </xs:complexType>
               </xs:element>
               <xs:element minOccurs="0" maxOccurs="1" name="projectScope">

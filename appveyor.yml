@@ -49,6 +49,8 @@ after_build:
   - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\LICENSE*.txt
   # pick samples
   - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\*.policies -r
+  # setup scripts from project root
+  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\*.ps1
 test:
   assemblies:
     - UnitTests.Core.dll

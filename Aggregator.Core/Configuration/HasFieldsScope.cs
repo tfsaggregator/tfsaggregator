@@ -9,14 +9,27 @@ namespace Aggregator.Core.Configuration
     {
         public string[] FieldNames { private get; set; }
 
-        public override bool Matches(IWorkItem item)
+        public override string DisplayName
         {
+            get
+            {
+                return string.Format("Fields({0})", string.Join(", ", this.FieldNames));
+            }
+        }
+
+        public override ScopeMatchResult Matches(IWorkItem item)
+        {
+            var res = new ScopeMatchResult();
+
             var trigger = this.FieldNames;
 
             var fields = item.Fields.ToArray();
             var available = fields.Select(f => f.Name).Concat(fields.Select(f => f.ReferenceName));
 
-            return trigger.All(t => available.Contains(t, StringComparer.OrdinalIgnoreCase));
+            res.AddRange(available);
+            res.Success = trigger.All(t => available.Contains(t, StringComparer.OrdinalIgnoreCase));
+
+            return res;
         }
     }
 }

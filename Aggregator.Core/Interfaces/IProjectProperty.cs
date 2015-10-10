@@ -1,6 +1,6 @@
 ﻿namespace Aggregator.Core.Interfaces
 {
-    public interface IProjectPropertyWrapper
+    public interface IProjectProperty
     {
         string Name { get; set; }
 

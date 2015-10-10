@@ -15,7 +15,7 @@ namespace Aggregator.Core.Context
     /// </summary>
     public class RuntimeContext : IRuntimeContext
     {
-        private const string CacheKey = "runtime";
+        private const string CacheKey = "runtime:";
         private static readonly MemoryCache Cache = new MemoryCache("TFSAggregator2");
 
         /// <summary>
@@ -31,30 +31,47 @@ namespace Aggregator.Core.Context
         /// Return a proper context
         /// </summary>
         /// <returns></returns>
-        public static RuntimeContext GetContext(Func<string> settingsPathGetter, IRequestContext requestContext, ILogEvents logger)
+        public static RuntimeContext GetContext(
+            Func<string> settingsPathGetter,
+            IRequestContext requestContext,
+            ILogEvents logger,
+            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
         {
-            var runtime = (RuntimeContext)Cache.Get(CacheKey);
+            string settingsPath = settingsPathGetter();
+            string cacheKey = CacheKey + settingsPath;
+            var runtime = (RuntimeContext)Cache.Get(cacheKey);
             if (runtime == null)
             {
-                string settingsPath = settingsPathGetter();
+                logger.LoadingConfiguration(settingsPath);
+
                 var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
-                runtime = MakeRuntimeContext(settingsPath, settings, requestContext, logger);
+                runtime = MakeRuntimeContext(settingsPath, settings, requestContext, logger, repoBuilder);
 
                 var itemPolicy = new CacheItemPolicy();
                 itemPolicy.Priority = CacheItemPriority.NotRemovable;
                 itemPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string>() { settingsPath }));
 
-                Cache.Set(CacheKey, runtime, itemPolicy);
+                Cache.Set(cacheKey, runtime, itemPolicy);
+
+                logger.ConfigurationLoaded(settingsPath);
             }
             else
             {
+                logger.UsingCachedConfiguration(settingsPath);
+
+                // as it changes at each invocation, must be set again here
                 runtime.RequestContext = requestContext;
             }
 
             return runtime.Clone() as RuntimeContext;
         }
 
-        public static RuntimeContext MakeRuntimeContext(string settingsPath, TFSAggregatorSettings settings, IRequestContext requestContext, ILogEvents logger)
+        public static RuntimeContext MakeRuntimeContext(
+            string settingsPath,
+            TFSAggregatorSettings settings,
+            IRequestContext requestContext,
+            ILogEvents logger,
+            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
         {
             var runtime = new RuntimeContext();
 
@@ -64,6 +81,7 @@ namespace Aggregator.Core.Context
             runtime.Settings = settings;
             runtime.RateLimiter = new RateLimiter(runtime);
             logger.MinimumLogLevel = runtime.Settings.LogLevel;
+            runtime.repoBuilder = repoBuilder;
 
             runtime.HasErrors = false;
             return runtime;
@@ -93,35 +111,47 @@ namespace Aggregator.Core.Context
         {
             get
             {
-                // TODO instead of GetHashCode need a unique per-Collection Id
-                int dictHash = this.scriptEngines.Keys.Aggregate(
-                    0,
-                    (running, current) => { return (int)(((long)running + current.GetHashCode()) % 0xffffffff); });
-
-                return this.Settings.Hash + dictHash.ToString("x8");
+                return this.Settings.Hash;
             }
         }
 
         public ILogEvents Logger { get; private set; }
 
-        private readonly ConcurrentDictionary<IWorkItemRepository, ScriptEngine> scriptEngines = new ConcurrentDictionary<IWorkItemRepository, ScriptEngine>();
+        private ScriptEngine cachedEngine = null;
 
-        public ScriptEngine GetEngine(IWorkItemRepository workItemStore)
+        public ScriptEngine GetEngine()
         {
-            Func<IWorkItemRepository, ScriptEngine> builder = (store) =>
+            if (this.cachedEngine == null)
             {
-                var newEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, workItemStore, this.Logger, this.Settings.Debug);
+                System.Diagnostics.Debug.WriteLine("Cache empty for thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
+                this.cachedEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug);
                 foreach (var rule in this.Settings.Rules)
                 {
-                    newEngine.Load(rule.Name, rule.Script);
+                    this.cachedEngine.Load(rule.Name, rule.Script);
                 }
 
-                newEngine.LoadCompleted();
-                return newEngine;
-            };
+                this.cachedEngine.LoadCompleted();
+            }
 
-            ScriptEngine engine = this.scriptEngines.GetOrAdd(workItemStore, builder);
-            return engine;
+            return this.cachedEngine;
+        }
+
+        // isolate type constructor to facilitate Unit testing
+        private Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder;
+
+        public IWorkItemRepository GetWorkItemRepository()
+        {
+            var uri = this.RequestContext.GetProjectCollectionUri();
+
+            Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor toImpersonate = null;
+            if (this.Settings.AutoImpersonate)
+            {
+                toImpersonate = this.RequestContext.GetIdentityToImpersonate();
+            }
+
+            var newRepo = this.repoBuilder(uri, toImpersonate, this.Logger);
+            this.Logger.WorkItemRepositoryBuilt(uri, toImpersonate);
+            return newRepo;
         }
 
         public object Clone()

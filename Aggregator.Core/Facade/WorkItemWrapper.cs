@@ -68,16 +68,18 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return this.workItem[name];
+                // Ensure that this uses the FieldCollection and not directly accesses the
+                // <code>workItem[name]</code> indexer, that would ignore the double fix.
+                return this.Fields[name].Value;
             }
 
             set
             {
-                this.workItem[name] = value;
+                this.Fields[name].Value = value;
             }
         }
 
-        public IFieldCollectionWrapper Fields
+        public IFieldCollection Fields
         {
             get
             {
@@ -138,6 +140,32 @@ namespace Aggregator.Core.Facade
             get
             {
                 return new WorkItemTypeWrapper(this.Type);
+            }
+        }
+
+        public DateTime RevisedDate
+        {
+            get
+            {
+                return this.workItem.RevisedDate;
+            }
+        }
+
+        public int Revision
+        {
+            get
+            {
+                return this.workItem.Revision;
+            }
+        }
+
+        public IRevision LastRevision
+        {
+            get
+            {
+                // works even on a new workitem with no revisions...
+                return new RevisionWrapper(
+                    this.workItem.Revisions[this.workItem.Revisions.Count - 1]);
             }
         }
 

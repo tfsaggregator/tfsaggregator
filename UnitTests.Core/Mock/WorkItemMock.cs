@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Aggregator.Core;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Navigation;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace UnitTests.Core.Mock
 {
@@ -19,7 +20,7 @@ namespace UnitTests.Core.Mock
             this.IsDirty = false;
         }
 
-        public IFieldCollectionWrapper Fields
+        public IFieldCollection Fields
         {
             get
             {
@@ -100,6 +101,30 @@ namespace UnitTests.Core.Mock
 
         public IWorkItemType Type { get; set; }
 
+        public DateTime RevisedDate
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public int Revision
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public IRevision LastRevision
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public bool ShouldLimit(RateLimiter limiter)
         {
             return false;
@@ -113,7 +138,6 @@ namespace UnitTests.Core.Mock
 
         public void TransitionToState(string state, string comment)
         {
-            // HACK
             StateWorkFlow.TransitionToState(this, state, comment, this.Logger);
         }
 

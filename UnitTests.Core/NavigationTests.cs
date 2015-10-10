@@ -17,7 +17,7 @@ namespace UnitTests.Core
     using UnitTests.Core.Mock;
 
     [TestClass]
-    public class Navigation
+    public class NavigationTests
     {
         private static WorkItemRepositoryMock MakeRepository(out IWorkItem startPoint)
         {
@@ -85,8 +85,8 @@ return searchResult;
             var logger = Substitute.For<ILogEvents>();
             repository.Logger = logger;
 
-            var engine = new CSharpScriptEngine(repository, logger, false);
-            engine.LoadAndRun("test", script, startPoint);
+            var engine = new CSharpScriptEngine(logger, false);
+            engine.LoadAndRun("test", script, startPoint, repository);
 
             var expected = new FluentQuery(startPoint);
             expected.WorkItemType = "Task";
@@ -127,9 +127,11 @@ return searchResult;
             workItem.Id = 42;
             workItem.Type = workItemType;
             workItem.TypeName = workItemType.Name;
-            ((FieldMock)workItem.Fields["State"]).OriginalValue = string.Empty;
+            FieldMock mockedField = new FieldMock(workItem, "State");
+            workItem.Fields[mockedField.Name] = mockedField;
+            mockedField.OriginalValue = string.Empty;
             workItem.Fields["State"].Value = workItem.Fields["State"].OriginalValue;
-            ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
+            mockedField.Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
             repository.SetWorkItems(new[] { workItem });
             string targetState = "Done";
 
@@ -153,9 +155,13 @@ return searchResult;
             workItem.Id = 42;
             workItem.Type = workItemType;
             workItem.TypeName = workItemType.Name;
-            workItem.Fields["State"].Value = string.Empty;
-            ((FieldMock)workItem.Fields["State"]).OriginalValue = string.Empty;
-            ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
+
+            FieldMock mockedField = new FieldMock(workItem, "State");
+            mockedField.Value = string.Empty;
+            mockedField.OriginalValue = string.Empty;
+            mockedField.Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
+            workItem.Fields[mockedField.Name] = mockedField;
+
             repository.SetWorkItems(new[] { workItem });
             string targetState = "DoesNotExists";
 
@@ -184,13 +190,17 @@ self.TransitionToState(""Done"", ""script test"");
             workItem.Id = 42;
             workItem.Type = workItemType;
             workItem.TypeName = workItemType.Name;
-            ((FieldMock)workItem.Fields["State"]).OriginalValue = string.Empty;
-            workItem.Fields["State"].Value = workItem.Fields["State"].OriginalValue;
-            ((FieldMock)workItem.Fields["State"]).Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
+
+            FieldMock mockedField = new FieldMock(workItem, "State");
+            workItem.Fields[mockedField.Name] = mockedField;
+            mockedField.OriginalValue = string.Empty;
+            mockedField.Value = mockedField.OriginalValue;
+            mockedField.Status = Microsoft.TeamFoundation.WorkItemTracking.Client.FieldStatus.InvalidValueNotInOtherField;
+
             repository.SetWorkItems(new[] { workItem });
 
-            var engine = new CSharpScriptEngine(repository, logger, false);
-            engine.LoadAndRun("test", script, workItem);
+            var engine = new CSharpScriptEngine(logger, false);
+            engine.LoadAndRun("test", script, workItem, repository);
 
             Assert.AreEqual("Done", workItem.Fields["State"].Value);
             Assert.AreEqual(2, workItem.InternalSaveCount);

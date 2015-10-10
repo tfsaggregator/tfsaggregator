@@ -1,11 +1,13 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
+﻿using System;
+
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Interfaces
 {
     /// <summary>
     /// Decouples Core from TFS Client API <see cref="Microsoft.TeamFoundation.WorkItemTracking.Client.Field"/>
     /// </summary>
-    public interface IFieldWrapper
+    public interface IField
     {
         string Name { get; }
 
@@ -16,5 +18,7 @@ namespace Aggregator.Core.Interfaces
         FieldStatus Status { get; }
 
         object OriginalValue { get; }
+
+        Type DataType { get; }
     }
 }

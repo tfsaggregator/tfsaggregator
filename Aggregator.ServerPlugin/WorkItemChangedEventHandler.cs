@@ -52,10 +52,14 @@ namespace TFSAggregator.TfsSpecific
             out string statusMessage,
             out ExceptionPropertyCollection properties)
         {
+            var logger = new ServerEventLogger(LogLevel.Normal);
+            var context = new RequestContextWrapper(requestContext, notificationType, notificationEventArgs);
             var runtime = RuntimeContext.GetContext(
                 GetServerSettingsFullPath,
-                new RequestContextWrapper(requestContext),
-                new ServerEventLogger(LogLevel.Normal));
+                context,
+                logger,
+                (Uri _collectionUri, IdentityDescriptor _toImpersonate, ILogEvents _logger) =>
+                    new WorkItemRepository(_collectionUri, _toImpersonate, _logger));
 
             if (runtime.HasErrors)
             {
@@ -65,32 +69,16 @@ namespace TFSAggregator.TfsSpecific
                 return EventNotificationStatus.ActionPermitted;
             }
 
-            // HACK: remove cast for ProcessEventException
-            var logger = (ServerEventLogger)runtime.Logger;
-
             var result = new ProcessingResult();
             try
             {
                 // Check if we have a workitem changed event before proceeding
                 if (notificationType == NotificationType.Notification && notificationEventArgs is WorkItemChangedEvent)
                 {
-                    var uri = this.GetCollectionUriFromContext(requestContext);
-
-                    IdentityDescriptor toImpersonate = null;
-                    if (runtime.Settings.AutoImpersonate)
+                    using (EventProcessor eventProcessor = new EventProcessor(runtime))
                     {
-                        toImpersonate = this.GetIdentityToImpersonate(requestContext, notificationEventArgs as WorkItemChangedEvent);
-                    }
-
-                    using (EventProcessor eventProcessor = new EventProcessor(uri.AbsoluteUri, toImpersonate, runtime))
-                    {
-                        var context = runtime.RequestContext;
-                        var notification = new NotificationWrapper(
-                            notificationType,
-                            notificationEventArgs as WorkItemChangedEvent);
-
-                        logger.StartingProcessing(context, notification);
-                        result = eventProcessor.ProcessEvent(context, notification);
+                        logger.StartingProcessing(context, context.Notification);
+                        result = eventProcessor.ProcessEvent(context, context.Notification);
                         logger.ProcessingCompleted(result);
                     }
                 }
@@ -109,30 +97,6 @@ namespace TFSAggregator.TfsSpecific
             statusMessage = result.StatusMessage;
             properties = result.ExceptionProperties;
             return result.NotificationStatus;
-        }
-
-        private Uri GetCollectionUriFromContext(TeamFoundationRequestContext requestContext)
-        {
-            ILocationService service = requestContext.GetService<ILocationService>();
-            return service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));
-        }
-
-        private IdentityDescriptor GetIdentityToImpersonate(TeamFoundationRequestContext requestContext, WorkItemChangedEvent workItemChangedEvent)
-        {
-            Uri server = this.GetCollectionUriFromContext(requestContext);
-
-            var configurationServer = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(server);
-
-            // TODO: Find a way to read the identity from the server object model instead.
-            IIdentityManagementService identityManagementService =
-            configurationServer.GetService<IIdentityManagementService>();
-
-            TeamFoundationIdentity identity =
-                identityManagementService.ReadIdentities(
-                    new Guid[] { new Guid(workItemChangedEvent.ChangerTeamFoundationId) },
-                    MembershipQuery.None).FirstOrDefault();
-
-            return identity?.Descriptor;
         }
 
         private static string GetServerSettingsFullPath()

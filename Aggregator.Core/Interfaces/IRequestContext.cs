@@ -7,14 +7,20 @@ namespace Aggregator.Core.Interfaces
     /// </summary>
     public interface IRequestContext
     {
+        Uri GetProjectCollectionUri();
+
         string CollectionName { get; }
 
         string GetProjectName(Uri teamProjectUri);
 
-        IProjectPropertyWrapper[] GetProjectProperties(Uri teamProjectUri);
+        IProjectProperty[] GetProjectProperties(Uri teamProjectUri);
 
-        IProcessTemplateVersionWrapper GetCurrentProjectProcessVersion(Uri projectUri);
+        IProcessTemplateVersion GetCurrentProjectProcessVersion(Uri projectUri);
 
-        IProcessTemplateVersionWrapper GetCreationProjectProcessVersion(Uri projectUri);
+        IProcessTemplateVersion GetCreationProjectProcessVersion(Uri projectUri);
+
+        Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor GetIdentityToImpersonate();
+
+        INotification Notification { get; }
     }
 }

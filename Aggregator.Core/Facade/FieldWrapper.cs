@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 using Aggregator.Core.Interfaces;
 
@@ -6,7 +7,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
 {
-    public class FieldWrapper : IFieldWrapper
+    public class FieldWrapper : IField
     {
         private readonly Field tfsField;
 
@@ -40,23 +41,6 @@ namespace Aggregator.Core.Facade
 
             set
             {
-                if (
-                    value != null
-                    && this.tfsField.Value != null
-                    && this.tfsField.FieldDefinition.SystemType == typeof(double))
-                {
-                    // Ugly hack to ensure the double comparison goes safely. TFS internally rounds/truncates the values.
-                    CultureInfo invariant = CultureInfo.InvariantCulture;
-                    decimal original = decimal.Parse(((double)this.tfsField.Value).ToString(invariant), invariant);
-                    decimal proposed = decimal.Parse(((double)value).ToString(invariant), invariant);
-
-                    // Ignore when the same value is assigned.
-                    if (original == proposed)
-                    {
-                        return;
-                    }
-                }
-
                 this.tfsField.Value = value;
             }
         }
@@ -69,6 +53,14 @@ namespace Aggregator.Core.Facade
         public object OriginalValue
         {
             get { return this.tfsField.OriginalValue; }
+        }
+
+        public Type DataType
+        {
+            get
+            {
+                return this.tfsField.FieldDefinition.SystemType;
+            }
         }
     }
 }

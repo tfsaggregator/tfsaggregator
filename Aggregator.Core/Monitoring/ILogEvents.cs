@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Runtime.Caching;
 using System.Xml.Schema;
-
+using Aggregator.Core.Configuration;
 using Aggregator.Core.Interfaces;
-
+using Microsoft.TeamFoundation.Framework.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Monitoring
@@ -38,7 +38,7 @@ namespace Aggregator.Core.Monitoring
     {
         IRuleLogger ScriptLogger { get; set; }
 
-        void ScriptLog(string ruleName, string s);
+        void ScriptLog(LogLevel level, string ruleName, string message);
 
         void ConfigurationLoaded(string policyFile);
 
@@ -91,5 +91,13 @@ namespace Aggregator.Core.Monitoring
         void AddingHyperlink(int id, string destination, string comment);
 
         void HyperlinkAlreadyExists(int id, string destination, string comment);
+
+        void NoPolicesApply();
+
+        void PolicyScopeMatchResult(PolicyScope scope, ScopeMatchResult result);
+
+        void RuleScopeMatchResult(RuleScope scope, ScopeMatchResult result);
+
+        void WorkItemRepositoryBuilt(Uri uri, IdentityDescriptor toImpersonate);
     }
 }

@@ -8,16 +8,16 @@ namespace Aggregator.Core
 
     public class VBNetScriptEngine : DotNetScriptEngine<VBCodeProvider>
     {
-        public VBNetScriptEngine(IWorkItemRepository store, ILogEvents logger, bool debug)
-            : base(store, logger, debug)
+        public VBNetScriptEngine(ILogEvents logger, bool debug)
+            : base(logger, debug)
         {
         }
 
-        protected override int LineOffset
+        protected override int LinesOfCodeBeforeScript
         {
             get
             {
-                return 11;
+                return 14;
             }
         }
 
@@ -32,8 +32,8 @@ Imports Aggregator.Core.Navigation
 Imports Aggregator.Core.Monitoring
 Imports System.Linq
 
-Namespace RESERVED
-  Public Class Script_" + scriptName + @"
+Namespace " + this.Namespace + @"
+  Public Class " + this.ClassPrefix + scriptName + @"
     Implements Aggregator.Core.Script.IDotNetScript
   
     Public Function RunScript(ByVal self As Aggregator.Core.Interfaces.IWorkItemExposed, ByVal store As Aggregator.Core.Interfaces.IWorkItemRepositoryExposed, ByVal logger As  Aggregator.Core.Monitoring.IRuleLogger) As Object Implements Aggregator.Core.Script.IDotNetScript.RunScript

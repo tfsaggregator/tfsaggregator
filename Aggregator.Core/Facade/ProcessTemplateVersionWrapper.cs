@@ -8,7 +8,7 @@ using Aggregator.Core.Interfaces;
 
 namespace Aggregator.Core.Facade
 {
-    public class ProcessTemplateVersionWrapper : IProcessTemplateVersionWrapper
+    public class ProcessTemplateVersionWrapper : IProcessTemplateVersion
     {
         public ProcessTemplateVersionWrapper()
         {

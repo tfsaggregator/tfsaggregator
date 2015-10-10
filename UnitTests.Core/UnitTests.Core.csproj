@@ -96,25 +96,25 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="ContextCache.cs" />
-    <Compile Include="DebugEventLogger.cs" />
-    <Compile Include="DebugEventLogger1.cs" />
+    <Compile Include="ContextCacheTests.cs" />
+    <Compile Include="Helpers\DebugTextLogger.cs" />
+    <Compile Include="Helpers\DebugEventLogger.cs" />
     <Compile Include="RulesAndPolicyTests.cs" />
     <Compile Include="ItemCreationTests.cs" />
     <Compile Include="Mock\WorkItemLinkCollectionMock.cs" />
     <Compile Include="Mock\WorkItemTypeMock.cs" />
-    <Compile Include="Navigation.cs" />
-    <Compile Include="PolicyScope.cs" />
-    <Compile Include="ScriptEngines.cs" />
+    <Compile Include="NavigationTests.cs" />
+    <Compile Include="PolicyScopeTests.cs" />
+    <Compile Include="ScriptEnginesTests.cs" />
     <Compile Include="Mock\FieldCollectionMock.cs" />
     <Compile Include="Mock\FieldMock.cs" />
     <Compile Include="Mock\WorkItemMock.cs" />
     <Compile Include="Mock\WorkItemRepositoryMock.cs" />
-    <Compile Include="SingleParentChildAggregations.cs" />
+    <Compile Include="SingleParentChildAggregationsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestHelpers.cs" />
+    <Compile Include="Helpers\TestHelpers.cs" />
     <Compile Include="Mock\WorkItemLinkMock.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aggregator.Core\Aggregator.Core.csproj">
@@ -124,16 +124,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ConfigurationsForTests\allInOne.policies" />
+    <EmbeddedResource Include="ConfigurationsForTests\NoOp.policies" />
     <EmbeddedResource Include="ConfigurationsForTests\SumFieldsOnSingleWorkItem.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ConfigurationsForTests\SumFieldsOnSingleWorkItem-Short.policies" />
     <EmbeddedResource Include="ConfigurationsForTests\Rollup.policies" />
     <EmbeddedResource Include="ConfigurationsForTests\SumFieldsOnSingleWorkItemVB.policies" />
-    <EmbeddedResource Include="ConfigurationsForTests\SimpleRollup.policies">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="ConfigurationsForTests\NewObjects.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -143,7 +140,6 @@
     <EmbeddedResource Include="ConfigurationsForTests\RateLimiting.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ConfigurationsForTests\NoOp.policies" />
     <None Include="packages.config" />
     <None Include="UnitTests.Core.ruleset" />
   </ItemGroup>

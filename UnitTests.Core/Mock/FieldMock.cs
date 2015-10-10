@@ -1,10 +1,12 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System;
+
+using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace UnitTests.Core.Mock
 {
-    internal class FieldMock : IFieldWrapper
+    internal class FieldMock : IField
     {
         private readonly WorkItemMock workItemMock;
 
@@ -37,5 +39,20 @@ namespace UnitTests.Core.Mock
         public FieldStatus Status { get; set; }
 
         public object OriginalValue { get; set; }
+
+        private Type dataType;
+
+        public Type DataType
+        {
+            get
+            {
+                return this.dataType ?? this.Value?.GetType() ?? typeof(object);
+            }
+
+            set
+            {
+                this.dataType = value;
+            }
+        }
     }
 }

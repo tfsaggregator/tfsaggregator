@@ -31,25 +31,14 @@ namespace Aggregator.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="EventProcessor"/> class.
         /// </summary>
-        /// <param name="tfsCollectionUrl">The TFS Project Colection Uri</param>
-        /// <param name="toImpersonate">The IdentityDescriptor to Impoersonate</param>
-        /// <param name="runtime">The runtime context</param>
-        public EventProcessor(string tfsCollectionUrl, IdentityDescriptor toImpersonate, IRuntimeContext runtime)
-            : this(new WorkItemRepository(tfsCollectionUrl, toImpersonate, runtime.Logger), runtime)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EventProcessor"/> class.
-        /// </summary>
-        public EventProcessor(IWorkItemRepository workItemStore, IRuntimeContext runtime)
+        public EventProcessor(IRuntimeContext runtime)
         {
             this.logger = runtime.Logger;
-            this.store = workItemStore;
             this.settings = runtime.Settings;
             this.limiter = runtime.RateLimiter;
 
-            this.engine = runtime.GetEngine(workItemStore);
+            this.store = runtime.GetWorkItemRepository();
+            this.engine = runtime.GetEngine();
         }
 
         /// <summary>
@@ -80,6 +69,7 @@ namespace Aggregator.Core
             }
             else
             {
+                this.logger.NoPolicesApply();
                 result.StatusCode = 1;
                 result.StatusMessage = "No operation";
             }
@@ -89,7 +79,12 @@ namespace Aggregator.Core
 
         private IEnumerable<Policy> FilterPolicies(IEnumerable<Policy> policies, IRequestContext requestContext, INotification notification)
         {
-            return policies.Where(policy => policy.Scope.All(s => s.Matches(requestContext, notification)));
+            return policies.Where(policy => policy.Scope.All(scope =>
+            {
+                var result = scope.Matches(requestContext, notification);
+                this.logger.PolicyScopeMatchResult(scope, result);
+                return result.Success;
+            }));
         }
 
         private void ApplyRules(IWorkItem workItem, IEnumerable<Rule> rules)
@@ -103,15 +98,32 @@ namespace Aggregator.Core
 
         private void ApplyRule(Rule rule, IWorkItem workItem)
         {
-            if (rule.Scope.All(s => s.Matches(workItem)))
+            if (rule.Scope.All(scope =>
+            {
+                var result = scope.Matches(workItem);
+                this.logger.RuleScopeMatchResult(scope, result);
+                return result.Success;
+            }))
             {
                 this.logger.RunningRule(rule.Name, workItem);
-                this.engine.Run(rule.Name, workItem);
+                this.engine.Run(rule.Name, workItem, this.store);
+            }
+        }
+
+        private readonly List<int> savedWorkItemIds = new List<int>();
+
+        public IEnumerable<int> SavedWorkItems
+        {
+            get
+            {
+                return this.savedWorkItemIds.AsEnumerable();
             }
         }
 
         private void SaveChangedWorkItems()
         {
+            this.savedWorkItemIds.Clear();
+
             // Save new work items to the target work items.
             foreach (IWorkItem workItem in this.store.CreatedWorkItems.Where(w => w.IsDirty))
             {
@@ -138,6 +150,9 @@ namespace Aggregator.Core
                 {
                     workItem.PartialOpen();
                     workItem.Save();
+
+                    // track
+                    this.savedWorkItemIds.Add(workItem.Id);
                 }
             }
         }

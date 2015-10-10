@@ -18,6 +18,19 @@ Well, this is a check list of things to double check.
 Also if you are having issues we recommend debugging your Policies file using `TFSAggregator2.ConsoleApp.exe` and trying that out.
 
 
+## Use Console Application
+
+The `TFSAggregator2.ConsoleApp.exe` command line tool is extremely useful to test and validate your policy files before applying to TFS.
+
+**Sample invocation**
+
+```
+TFSAggregator2.ConsoleApp.exe run --logLevel=diagnostic --policyFile=samples\TFSAggregator2.ServerPlugin.policies --teamProjectCollectionUrl=http://localhost:8080/tfs/DefaultCollection --teamProjectName=TfsAggregatorTest1 --workItemId=42
+```
+
+See (Console Application)[Console-App.md] for more details.
+
+
 ## Enable Logging
 
 You can also enable Logging. There are two parts to enable logging.
@@ -35,7 +48,7 @@ Use a value like `Verbose` or `Diagnostic`.
 
 Then you need to download **DebugView** from Microsoft's SysInternals site.
 DebugView is a Trace Listener and will capture the trace messages from TFSAggregator.
-> **You have to run DebugView on _all_ TFS App Tier machines**.
+> **You have to run DebugView on _all_ TFS Application Tier machines**.
 
 We would recommend adding the following filter to DebugView so that you only see the TFSAggregator traces.
 
@@ -43,6 +56,7 @@ We would recommend adding the following filter to DebugView so that you only see
 *TFSAggregator:*
 ```
 
+Make sure to enable the **Capture Global Win32** option.
 Download DebugView at <http://technet.microsoft.com/en-us/sysinternals/bb896647>.
 
 Note that you can use the [`logger` object](Scripting.md) to trace values from within the rules.

@@ -2,7 +2,7 @@
 
 namespace Aggregator.Core.Facade
 {
-    public class ProjectPropertyWrapper : IProjectPropertyWrapper
+    public class ProjectPropertyWrapper : IProjectProperty
     {
         public string Name { get; set; }
 

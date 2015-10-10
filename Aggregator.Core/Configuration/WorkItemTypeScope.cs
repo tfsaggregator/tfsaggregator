@@ -10,10 +10,20 @@ namespace Aggregator.Core.Configuration
     {
         public string[] ApplicableTypes { private get; set; }
 
-        public override bool Matches(IWorkItem item)
+        public override string DisplayName
         {
+            get
+            {
+                return string.Format("WorkItemTypes({0})", string.Join(", ", this.ApplicableTypes));
+            }
+        }
 
-            return this.ApplicableTypes.Any(type => type.SameAs(item.TypeName));
+        public override ScopeMatchResult Matches(IWorkItem item)
+        {
+            var res = new ScopeMatchResult();
+            res.Add(item.TypeName);
+            res.Success = this.ApplicableTypes.Any(type => type.SameAs(item.TypeName));
+            return res;
         }
     }
 }

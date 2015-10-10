@@ -15,7 +15,7 @@ using NSubstitute;
 namespace UnitTests.Core
 {
     [TestClass]
-    public class ContextCache
+    public class ContextCacheTests
     {
         private readonly DateTime referenceDate = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -35,7 +35,7 @@ namespace UnitTests.Core
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
-            var runtime = RuntimeContext.GetContext(() => path, context, logger);
+            var runtime = RuntimeContext.GetContext(() => path, context, logger, null);
 
             var level = runtime.Settings.LogLevel;
 
@@ -49,14 +49,13 @@ namespace UnitTests.Core
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
-            var runtime1 = RuntimeContext.GetContext(() => path, context, logger);
-            var runtime2 = RuntimeContext.GetContext(() => path, context, logger);
+            var runtime1 = RuntimeContext.GetContext(() => path, context, logger, null);
+            var runtime2 = RuntimeContext.GetContext(() => path, context, logger, null);
 
             Assert.AreEqual(runtime1.Hash, runtime2.Hash);
         }
 
         [TestMethod]
-        [Ignore]
         public void ContextCache_file_changed_succeeds()
         {
             string sourcePath = @"..\..\ConfigurationsForTests\NoOp.policies";
@@ -66,15 +65,13 @@ namespace UnitTests.Core
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
-            var runtime1 = RuntimeContext.GetContext(() => destPath, context, logger);
+            var runtime1 = RuntimeContext.GetContext(() => destPath, context, logger, null);
 
-            File.SetLastWriteTimeUtc(destPath, DateTime.UtcNow);
+            File.Copy(sourcePath, destPath, true);
 
-            // this delay is ok while Debugging
-            // in Run, it *never* works
-            Pause();
+            Pause(); // this delay is necessary for the file change to be sensed
 
-            var runtime2 = RuntimeContext.GetContext(() => destPath, context, logger);
+            var runtime2 = RuntimeContext.GetContext(() => destPath, context, logger, null);
 
             Assert.AreNotEqual(runtime1.Hash, runtime2.Hash);
         }

@@ -64,4 +64,4 @@ You can find the complete list:
 
 if you have TFS 2015 or TFS 2013 installed on your development machine, the assemblies for that version will be loaded automatically from the installation folder.
 
-More information and useful details on the internal design is [here](docs/Internals.md)
+More information on customizing and the internal design of TFS Aggregator is [here](docs/Developer-Info.md).

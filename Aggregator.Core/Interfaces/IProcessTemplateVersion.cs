@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aggregator.Core.Interfaces
 {
-    public interface IProcessTemplateVersionWrapper
+    public interface IProcessTemplateVersion
     {
         Guid TypeId { get; set; }
 

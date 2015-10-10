@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Aggregator.Core;
 using Aggregator.Core.Context;
@@ -30,8 +31,15 @@ namespace Aggregator.ConsoleApp
               value => this.TeamProjectCollectionUrl = value);
             this.HasRequiredOption("p|teamProjectName=", "TFS Team Project",
               value => this.TeamProjectName = value);
-            this.HasRequiredOption("n|id|workItem=", "Work Item Id",
+            this.HasRequiredOption("n|id|workItemId=", "Work Item Id",
               value => this.WorkItemId = int.Parse(value));
+            this.HasOption("l|logLevel=", "Logging level (critical, error, warning, information, normal, verbose, diagnostic)",
+              value =>
+              {
+                  // use a string but parse so we know it is correct
+                  Enum.Parse(typeof(LogLevel), value, true);
+                  this.LogLevelName = value;
+              });
         }
 
         internal bool ShowHelp { get; set; }
@@ -44,6 +52,8 @@ namespace Aggregator.ConsoleApp
 
         internal int WorkItemId { get; set; }
 
+        internal string LogLevelName { get; set; }
+
         /// <summary>
         /// Called by the ManyConsole framework to execute the  <i>run</i> command.
         /// </summary>
@@ -51,37 +61,62 @@ namespace Aggregator.ConsoleApp
         /// <returns>0 for success, error code otherwise</returns>
         public override int Run(string[] remainingArguments)
         {
+            // cache requires absolute path
+            this.PolicyFile = System.IO.Path.GetFullPath(this.PolicyFile);
+
             // need a logger to show errors in config file (Catch 22)
             var logger = new ConsoleEventLogger(LogLevel.Warning);
 
+            var context = new RequestContext(this.TeamProjectCollectionUrl, this.TeamProjectName);
             var runtime = RuntimeContext.GetContext(
                 () => this.PolicyFile,
-                new RequestContext(this.TeamProjectCollectionUrl, this.TeamProjectName),
-                logger);
+                context,
+                logger,
+                (Uri _collectionUri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor _toImpersonate, ILogEvents _logger) =>
+                    new Core.Facade.WorkItemRepository(_collectionUri, _toImpersonate, _logger));
+
+            if (!string.IsNullOrWhiteSpace(this.LogLevelName))
+            {
+                // command line wins
+                LogLevel logLevel = (LogLevel)Enum.Parse(typeof(LogLevel), this.LogLevelName, true);
+                runtime.Logger.MinimumLogLevel = logLevel;
+            }
 
             if (runtime.HasErrors)
             {
-                return 99;
+                return 3;
             }
 
             logger.ConfigurationLoaded(this.PolicyFile);
-            using (EventProcessor eventProcessor = new EventProcessor(this.TeamProjectCollectionUrl, null, runtime))
+            using (EventProcessor eventProcessor = new EventProcessor(runtime))
             {
                 try
                 {
-                    var context = runtime.RequestContext;
-                    var notification = new Notification(this.WorkItemId, this.TeamProjectName);
+                    var workItemIds = new Queue<int>();
+                    workItemIds.Enqueue(this.WorkItemId);
 
-                    logger.StartingProcessing(context, notification);
-                    ProcessingResult result = eventProcessor.ProcessEvent(context, notification);
-                    logger.ProcessingCompleted(result);
+                    ProcessingResult result = null;
+                    while (workItemIds.Count > 0)
+                    {
+                        context.CurrentWorkItemId = workItemIds.Dequeue();
+                        var notification = context.Notification;
+
+                        logger.StartingProcessing(context, notification);
+                        result = eventProcessor.ProcessEvent(context, notification);
+                        logger.ProcessingCompleted(result);
+
+                        foreach (var savedId in eventProcessor.SavedWorkItems)
+                        {
+                            workItemIds.Enqueue(savedId);
+                        }
+                    }
 
                     return result.StatusCode;
                 }
                 catch (Exception e)
                 {
                     logger.ProcessEventException(e);
-                    return -1;
+                    return 1;
                 }
             }
         }
