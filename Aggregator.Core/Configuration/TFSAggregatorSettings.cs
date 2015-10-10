@@ -11,41 +11,39 @@ namespace Aggregator.Core.Configuration
     using System.Xml.Schema;
 
     /// <summary>
-    /// This class' represents Core settings as properties
+    /// This class represents Core settings as properties
     /// </summary>
+    /// <remarks>Marked partial to apply nested trick</remarks>
     public partial class TFSAggregatorSettings
     {
         private static readonly char[] ListSeparators = new char[] { ',', ';' };
 
+        /// <summary>
+        /// Load configuration from file. Main scenario.
+        /// </summary>
+        /// <param name="settingsPath">Path to policies file</param>
+        /// <param name="logger">Logging object</param>
+        /// <returns>An instance of <see cref="TFSAggregatorSettings"/> or null</returns>
         public static TFSAggregatorSettings LoadFromFile(string settingsPath, ILogEvents logger)
         {
             DateTime lastWriteTime
                 = System.IO.File.GetLastWriteTimeUtc(settingsPath);
-            return Load(lastWriteTime, (xmlLoadOptions) => XDocument.Load(settingsPath, xmlLoadOptions), logger);
-        }
-
-        public static TFSAggregatorSettings LoadXml(string content, ILogEvents logger)
-        {
-            // conventional point in time reference
-            DateTime staticTime = new DateTime(0, DateTimeKind.Utc);
-            return LoadXml(content, staticTime, logger);
-        }
-
-        public static TFSAggregatorSettings LoadXml(string content, DateTime timestamp, ILogEvents logger)
-        {
-            return Load(timestamp, (xmlLoadOptions) => XDocument.Parse(content, xmlLoadOptions), logger);
+            var parser = new AggregatorSettingsXmlParser(logger);
+            return parser.Parse(lastWriteTime, (xmlLoadOptions) => XDocument.Load(settingsPath, xmlLoadOptions));
         }
 
         /// <summary>
-        /// Parse the specified <see cref="XDocument"/> to build a <see cref="TFSAggregatorSettings"/> instance.
+        /// Load configuration from string. Used by automated tests.
         /// </summary>
-        /// <param name="lastWriteTime">Last time the document has been changed.</param>
-        /// <param name="load">A lambda returning the <see cref="XDocument"/> to parse.</param>
-        /// <returns></returns>
-        public static TFSAggregatorSettings Load(DateTime lastWriteTime, Func<LoadOptions, XDocument> load, ILogEvents logger)
+        /// <param name="content">Configuration data to parse</param>
+        /// <param name="logger">Logging object</param>
+        /// <returns>An instance of <see cref="TFSAggregatorSettings"/> or null</returns>
+        public static TFSAggregatorSettings LoadXml(string content, ILogEvents logger)
         {
+            // conventional point in time reference
+            DateTime staticTimestamp = new DateTime(0, DateTimeKind.Utc);
             var parser = new AggregatorSettingsXmlParser(logger);
-            return parser.Parse(lastWriteTime, load);
+            return parser.Parse(staticTimestamp, (xmlLoadOptions) => XDocument.Parse(content, xmlLoadOptions));
         }
 
         public LogLevel LogLevel { get; private set; }

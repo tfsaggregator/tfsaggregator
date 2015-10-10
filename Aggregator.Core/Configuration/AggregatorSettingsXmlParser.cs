@@ -12,6 +12,10 @@ namespace Aggregator.Core.Configuration
 
     public partial class TFSAggregatorSettings
     {
+        /// <summary>
+        /// Populates a <see cref="TFSAggregatorSettings"/> instance parsing an <see cref="XDocument" />.
+        /// </summary>
+        /// <remarks>As a nested class can access all private setters of <see cref="TFSAggregatorSettings"/></remarks>
         public class AggregatorSettingsXmlParser
         {
             private TFSAggregatorSettings instance;
@@ -22,6 +26,12 @@ namespace Aggregator.Core.Configuration
                 this.logger = logger;
             }
 
+            /// <summary>
+            /// Parse the specified <see cref="XDocument"/> to build a <see cref="TFSAggregatorSettings"/> instance.
+            /// </summary>
+            /// <param name="lastWriteTime">Last time the document has been changed.</param>
+            /// <param name="load">A lambda returning the <see cref="XDocument"/> to parse.</param>
+            /// <returns>An instance of <see cref="TFSAggregatorSettings"/> or null</returns>
             public TFSAggregatorSettings Parse(DateTime lastWriteTime, Func<LoadOptions, XDocument> load)
             {
                 this.instance = new TFSAggregatorSettings();
