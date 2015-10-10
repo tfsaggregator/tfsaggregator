@@ -59,7 +59,7 @@ namespace Aggregator.Core.Facade
             return service.GetSelfReferenceUri(this.context, service.GetDefaultAccessMapping(this.context));
         }
 
-        public IProjectPropertyWrapper[] GetProjectProperties(Uri projectUri)
+        public IProjectProperty[] GetProjectProperties(Uri projectUri)
         {
             var ics = this.context.GetService<ICommonStructureService>();
             string projectName;
@@ -69,7 +69,7 @@ namespace Aggregator.Core.Facade
 
             ics.GetProjectProperties(this.context, projectUri.ToString(), out projectName, out projectState, out projectProperties);
 
-            return projectProperties.Select(p => (IProjectPropertyWrapper)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
+            return projectProperties.Select(p => (IProjectProperty)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
         }
 
         private ArtifactSpec GetProcessTemplateVersionSpec(string projectUri)
@@ -79,17 +79,17 @@ namespace Aggregator.Core.Facade
             return new ArtifactSpec(ArtifactKinds.ProcessTemplate, guid.ToByteArray(), 0);
         }
 
-        public IProcessTemplateVersionWrapper GetCurrentProjectProcessVersion(Uri projectUri)
+        public IProcessTemplateVersion GetCurrentProjectProcessVersion(Uri projectUri)
         {
             return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CurrentVersion);
         }
 
-        public IProcessTemplateVersionWrapper GetCreationProjectProcessVersion(Uri projectUri)
+        public IProcessTemplateVersion GetCreationProjectProcessVersion(Uri projectUri)
         {
             return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CreationVersion);
         }
 
-        private IProcessTemplateVersionWrapper GetProjectProcessVersion(string projectUri, string versionPropertyName)
+        private IProcessTemplateVersion GetProjectProcessVersion(string projectUri, string versionPropertyName)
         {
             ArtifactSpec processTemplateVersionSpec = this.GetProcessTemplateVersionSpec(projectUri);
 

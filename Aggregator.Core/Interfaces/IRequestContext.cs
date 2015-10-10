@@ -13,11 +13,11 @@ namespace Aggregator.Core.Interfaces
 
         string GetProjectName(Uri teamProjectUri);
 
-        IProjectPropertyWrapper[] GetProjectProperties(Uri teamProjectUri);
+        IProjectProperty[] GetProjectProperties(Uri teamProjectUri);
 
-        IProcessTemplateVersionWrapper GetCurrentProjectProcessVersion(Uri projectUri);
+        IProcessTemplateVersion GetCurrentProjectProcessVersion(Uri projectUri);
 
-        IProcessTemplateVersionWrapper GetCreationProjectProcessVersion(Uri projectUri);
+        IProcessTemplateVersion GetCreationProjectProcessVersion(Uri projectUri);
 
         Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor GetIdentityToImpersonate();
 

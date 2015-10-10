@@ -20,7 +20,7 @@ namespace UnitTests.Core.Mock
             this.IsDirty = false;
         }
 
-        public IFieldCollectionWrapper Fields
+        public IFieldCollection Fields
         {
             get
             {

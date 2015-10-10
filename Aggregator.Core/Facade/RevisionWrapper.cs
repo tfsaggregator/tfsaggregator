@@ -23,7 +23,7 @@ namespace Aggregator.Core.Facade
             }
         }
 
-        public IFieldCollectionWrapper Fields
+        public IFieldCollection Fields
         {
             get
             {

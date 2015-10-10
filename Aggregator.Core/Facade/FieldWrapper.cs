@@ -6,7 +6,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
 {
-    public class FieldWrapper : IFieldWrapper
+    public class FieldWrapper : IField
     {
         private readonly Field tfsField;
 

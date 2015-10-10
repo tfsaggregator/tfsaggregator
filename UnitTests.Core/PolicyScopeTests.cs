@@ -193,7 +193,7 @@
             context.GetProjectName(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne")).Returns("TestOne");
             context.GetProjectProperties(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
                 .Returns(
-                    new IProjectPropertyWrapper[]
+                    new IProjectProperty[]
                     {
                         new ProjectPropertyWrapper()
                         {
@@ -369,7 +369,7 @@
                 .Returns(new ProcessTemplateVersionWrapper(Guid.Empty, 5, 3));
             context.GetProjectProperties(new Uri("http://localhost:8080/tfs/defaultcollection/TestOne"))
                 .Returns(
-                    new IProjectPropertyWrapper[]
+                    new IProjectProperty[]
                                 {
                                     new ProjectPropertyWrapper()
                                     {

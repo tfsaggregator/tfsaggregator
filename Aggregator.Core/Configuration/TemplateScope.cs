@@ -56,8 +56,8 @@ namespace Aggregator.Core.Configuration
             var res = new ScopeMatchResult();
 
             var info = GetTemplateInfo(currentRequestContext, currentNotification);
-            IProcessTemplateVersionWrapper currentversion = info.Item1;
-            IProjectPropertyWrapper templateNameProperty = info.Item2;
+            IProcessTemplateVersion currentversion = info.Item1;
+            IProjectProperty templateNameProperty = info.Item2;
 
             string processTemplateDescription = string.Format(
                 "{0} v{1}.{2} [{3}]",
@@ -75,16 +75,16 @@ namespace Aggregator.Core.Configuration
             return res;
         }
 
-        private static Tuple<IProcessTemplateVersionWrapper, IProjectPropertyWrapper> GetTemplateInfo(IRequestContext currentRequestContext, INotification currentNotification)
+        private static Tuple<IProcessTemplateVersion, IProjectProperty> GetTemplateInfo(IRequestContext currentRequestContext, INotification currentNotification)
         {
             var currentversion = currentRequestContext.GetCurrentProjectProcessVersion(new Uri(currentNotification.ProjectUri));
-            IProjectPropertyWrapper[] properties = currentRequestContext.GetProjectProperties(new Uri(currentNotification.ProjectUri));
+            IProjectProperty[] properties = currentRequestContext.GetProjectProperties(new Uri(currentNotification.ProjectUri));
             var templateNameProperty = properties.FirstOrDefault(
                     p => string.Equals(TemplateNameKey, p.Name, StringComparison.OrdinalIgnoreCase));
             return Tuple.Create(currentversion, templateNameProperty);
         }
 
-        private bool MatchesMaxVersion(IProcessTemplateVersionWrapper currentversion)
+        private bool MatchesMaxVersion(IProcessTemplateVersion currentversion)
         {
             if (string.IsNullOrWhiteSpace(this.MaxVersion))
             {
@@ -98,7 +98,7 @@ namespace Aggregator.Core.Configuration
             return current <= max;
         }
 
-        private bool MatchesMinVersion(IProcessTemplateVersionWrapper currentversion)
+        private bool MatchesMinVersion(IProcessTemplateVersion currentversion)
         {
             if (string.IsNullOrWhiteSpace(this.MinVersion))
             {
@@ -112,7 +112,7 @@ namespace Aggregator.Core.Configuration
             return current >= min;
         }
 
-        private bool MatchesId(IProcessTemplateVersionWrapper currentversion)
+        private bool MatchesId(IProcessTemplateVersion currentversion)
         {
             if (string.IsNullOrWhiteSpace(this.TemplateTypeId))
             {
@@ -122,7 +122,7 @@ namespace Aggregator.Core.Configuration
             return currentversion.TypeId.Equals(new Guid(this.TemplateTypeId));
         }
 
-        private bool MatchesName(IProjectPropertyWrapper templateNameProperty)
+        private bool MatchesName(IProjectProperty templateNameProperty)
         {
             if (string.IsNullOrWhiteSpace(this.TemplateName))
             {

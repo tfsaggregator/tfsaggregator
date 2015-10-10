@@ -12,7 +12,7 @@ namespace Aggregator.Core.Interfaces
     /// </summary>
     public interface IWorkItemExposed
     {
-        IFieldCollectionWrapper Fields { get; }
+        IFieldCollection Fields { get; }
 
         string History { get; set; }
 

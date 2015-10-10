@@ -5,9 +5,9 @@ using Aggregator.Core.Interfaces;
 
 namespace UnitTests.Core.Mock
 {
-    internal class FieldCollectionMock : IFieldCollectionWrapper
+    internal class FieldCollectionMock : IFieldCollection
     {
-        private readonly Dictionary<string, IFieldWrapper> fields = new Dictionary<string, IFieldWrapper>();
+        private readonly Dictionary<string, IField> fields = new Dictionary<string, IField>();
 
         private readonly WorkItemMock workItemMock;
 
@@ -16,7 +16,7 @@ namespace UnitTests.Core.Mock
             this.workItemMock = workItemMock;
         }
 
-        public IFieldWrapper this[string name]
+        public IField this[string name]
         {
             get
             {
@@ -34,7 +34,7 @@ namespace UnitTests.Core.Mock
             }
         }
 
-        public IEnumerator<IFieldWrapper> GetEnumerator()
+        public IEnumerator<IField> GetEnumerator()
         {
             return this.fields.Values.GetEnumerator();
         }

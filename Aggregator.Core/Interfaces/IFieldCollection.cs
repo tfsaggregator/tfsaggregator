@@ -5,8 +5,8 @@ namespace Aggregator.Core.Interfaces
     /// <summary>
     /// Decouples Core from TFS Client API <see cref="Microsoft.TeamFoundation.WorkItemTracking.Client.FieldCollection"/>
     /// </summary>
-    public interface IFieldCollectionWrapper : IEnumerable<IFieldWrapper>
+    public interface IFieldCollection : IEnumerable<IField>
     {
-        IFieldWrapper this[string name] { get; set; }
+        IField this[string name] { get; set; }
     }
 }

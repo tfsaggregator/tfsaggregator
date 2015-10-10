@@ -8,17 +8,17 @@ using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
 {
-    public class FieldCollectionWrapper : IFieldCollectionWrapper
+    public class FieldCollectionWrapper : IFieldCollection
     {
-        private readonly FieldCollection fields;
+        private readonly Microsoft.TeamFoundation.WorkItemTracking.Client.FieldCollection fields;
 
-        public FieldCollectionWrapper(FieldCollection fieldCollection)
+        public FieldCollectionWrapper(Microsoft.TeamFoundation.WorkItemTracking.Client.FieldCollection fieldCollection)
         {
             this.fields = fieldCollection;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("SonarQube", "S3237:\"value\" parameters should be used", Justification = "Available for mock testing only")]
-        public IFieldWrapper this[string name]
+        public IField this[string name]
         {
             get
             {
@@ -32,9 +32,9 @@ namespace Aggregator.Core.Facade
             }
         }
 
-        public IEnumerator<IFieldWrapper> GetEnumerator()
+        public IEnumerator<IField> GetEnumerator()
         {
-            return this.fields.Cast<Field>().Select(f => (IFieldWrapper)new FieldWrapper(f)).GetEnumerator();
+            return this.fields.Cast<Field>().Select(f => (IField)new FieldWrapper(f)).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

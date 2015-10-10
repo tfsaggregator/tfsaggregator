@@ -4,7 +4,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace UnitTests.Core.Mock
 {
-    internal class FieldMock : IFieldWrapper
+    internal class FieldMock : IField
     {
         private readonly WorkItemMock workItemMock;
 

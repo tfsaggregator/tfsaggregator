@@ -58,7 +58,7 @@ namespace Aggregator.ConsoleApp
             return this.teamProjectName;
         }
 
-        public IProjectPropertyWrapper[] GetProjectProperties(Uri projectUri)
+        public IProjectProperty[] GetProjectProperties(Uri projectUri)
         {
             var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(this.teamProjectCollectionUrl));
             var ics = context.GetService<ICommonStructureService4>();
@@ -70,20 +70,20 @@ namespace Aggregator.ConsoleApp
 
             ics.GetProjectProperties(projectUri.ToString(), out projectName, out projectState, out templateId, out projectProperties);
 
-            return projectProperties.Select(p => (IProjectPropertyWrapper)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
+            return projectProperties.Select(p => (IProjectProperty)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
         }
 
-        public IProcessTemplateVersionWrapper GetCurrentProjectProcessVersion(Uri projectUri)
+        public IProcessTemplateVersion GetCurrentProjectProcessVersion(Uri projectUri)
         {
             return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CurrentVersion);
         }
 
-        public IProcessTemplateVersionWrapper GetCreationProjectProcessVersion(Uri projectUri)
+        public IProcessTemplateVersion GetCreationProjectProcessVersion(Uri projectUri)
         {
             return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CreationVersion);
         }
 
-        private IProcessTemplateVersionWrapper GetProjectProcessVersion(string projectUri, string versionPropertyName)
+        private IProcessTemplateVersion GetProjectProcessVersion(string projectUri, string versionPropertyName)
         {
             var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(this.teamProjectCollectionUrl));
             var ics = context.GetService<ICommonStructureService4>();

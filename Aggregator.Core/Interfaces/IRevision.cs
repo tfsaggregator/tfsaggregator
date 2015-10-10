@@ -4,7 +4,7 @@
     {
         object this[string name] { get; }
 
-        IFieldCollectionWrapper Fields { get; }
+        IFieldCollection Fields { get; }
 
         int Index { get; }
     }

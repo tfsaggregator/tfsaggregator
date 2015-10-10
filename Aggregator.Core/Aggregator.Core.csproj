@@ -90,7 +90,7 @@
     <Compile Include="Configuration\WorkItemTypeScope.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
     <Compile Include="Facade\RevisionWrapper.cs" />
-    <Compile Include="Interfaces\IProcessTemplateVersionWrapper.cs" />
+    <Compile Include="Interfaces\IProcessTemplateVersion.cs" />
     <Compile Include="Interfaces\IRevision.cs" />
     <Compile Include="Monitoring\IRuleLogger.cs" />
     <Compile Include="Monitoring\RuleLogger.cs" />
@@ -114,7 +114,7 @@
     <Compile Include="Facade\WorkItemLinkWrapper.cs" />
     <Compile Include="Facade\WorkItemTypeWrapper.cs" />
     <Compile Include="Monitoring\ILogEvents.cs" />
-    <Compile Include="Interfaces\IProjectPropertyWrapper.cs" />
+    <Compile Include="Interfaces\IProjectProperty.cs" />
     <Compile Include="Interfaces\IWorkItemType.cs" />
     <Compile Include="Monitoring\ITextLogger.cs" />
     <Compile Include="Monitoring\TextLogComposer.cs" />
@@ -128,8 +128,8 @@
     <Compile Include="Script\CSharpScriptEngine.cs" />
     <Compile Include="Script\DotNetScriptEngine.cs" />
     <Compile Include="Script\ScriptEngine.cs" />
-    <Compile Include="Interfaces\IFieldCollectionWrapper.cs" />
-    <Compile Include="Interfaces\IFieldWrapper.cs" />
+    <Compile Include="Interfaces\IFieldCollection.cs" />
+    <Compile Include="Interfaces\IField.cs" />
     <Compile Include="Interfaces\INotification.cs" />
     <Compile Include="Interfaces\IRequestContext.cs" />
     <Compile Include="Interfaces\IWorkItem.cs" />
