@@ -1,4 +1,6 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.Client;
+﻿using System;
+
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Interfaces
 {
@@ -16,5 +18,7 @@ namespace Aggregator.Core.Interfaces
         FieldStatus Status { get; }
 
         object OriginalValue { get; }
+
+        Type DataType { get; }
     }
 }

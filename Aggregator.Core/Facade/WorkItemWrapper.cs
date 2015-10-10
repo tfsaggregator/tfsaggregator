@@ -68,6 +68,8 @@ namespace Aggregator.Core.Facade
         {
             get
             {
+                // Ensure that this uses the FieldCollection and not directly accesses the
+                // <code>workItem[name]</code> indexer, that would ignore the double fix.
                 return this.Fields[name].Value;
             }
 

@@ -88,6 +88,7 @@
     <Compile Include="Configuration\ScopeMatchResult.cs" />
     <Compile Include="Configuration\TemplateScope.cs" />
     <Compile Include="Configuration\WorkItemTypeScope.cs" />
+    <Compile Include="Extensions\DoubleFixFieldDecorator.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
     <Compile Include="Facade\RevisionWrapper.cs" />
     <Compile Include="Interfaces\IProcessTemplateVersion.cs" />

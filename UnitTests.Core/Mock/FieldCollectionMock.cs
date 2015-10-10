@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
+using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 
 namespace UnitTests.Core.Mock
@@ -22,7 +23,8 @@ namespace UnitTests.Core.Mock
             {
                 if (!this.fields.ContainsKey(name))
                 {
-                    this.fields.Add(name, new FieldMock(this.workItemMock, name));
+                    IField field = new FieldMock(this.workItemMock, name);
+                    this.fields.Add(name, new DoubleFixFieldDecorator(field));
                 }
 
                 return this.fields[name];

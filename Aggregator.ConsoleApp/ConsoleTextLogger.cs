@@ -10,23 +10,17 @@
     {
         private readonly Stopwatch clock = new Stopwatch();
 
-        private LogLevel minimumLogLevel;
-
         internal ConsoleTextLogger(LogLevel minimumLogLevel)
         {
-            this.minimumLogLevel = minimumLogLevel;
+            this.MinimumLogLevel = minimumLogLevel;
             this.clock.Restart();
         }
 
-        public LogLevel MinimumLogLevel
-        {
-            get { return this.minimumLogLevel; }
-            set { this.minimumLogLevel = value; }
-        }
+        public LogLevel MinimumLogLevel { get; set; }
 
         public void Log(LogLevel level, string format, params object[] args)
         {
-            if (level > this.minimumLogLevel)
+            if (level > this.MinimumLogLevel)
             {
                 return;
             }

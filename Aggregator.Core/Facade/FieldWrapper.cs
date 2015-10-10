@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 using Aggregator.Core.Interfaces;
 
@@ -40,22 +41,6 @@ namespace Aggregator.Core.Facade
 
             set
             {
-                if (
-                    value != null
-                    && this.tfsField.Value != null
-                    && this.tfsField.FieldDefinition.SystemType == typeof(double))
-                {
-                    CultureInfo invariant = CultureInfo.InvariantCulture;
-                    decimal original = decimal.Parse(((double)this.tfsField.Value).ToString(invariant), invariant);
-                    decimal proposed = decimal.Parse(((double)value).ToString(invariant), invariant);
-
-                    // Ignore when the same value is assigned.
-                    if (original == proposed)
-                    {
-                        return;
-                    }
-                }
-
                 this.tfsField.Value = value;
             }
         }
@@ -68,6 +53,14 @@ namespace Aggregator.Core.Facade
         public object OriginalValue
         {
             get { return this.tfsField.OriginalValue; }
+        }
+
+        public Type DataType
+        {
+            get
+            {
+                return this.tfsField.FieldDefinition.SystemType;
+            }
         }
     }
 }

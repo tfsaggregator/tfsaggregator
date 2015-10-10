@@ -9,8 +9,8 @@
     <rule name="Rollup"
           appliesTo="Task">
             <![CDATA[
-		if (self.HasParent())
-		{
+        if (self.HasParent())
+        {
             self.Parent["Total Work Remaining"] = (double)(self["Remaining Dev Work"]??0d) + (double)(self["Remaining Test Work"]??0d);
             self.Parent["Total Estimate"] = (double)(self["Estimated Dev Work"]??0d) + (double)(self["Estimated Test Work"]??0d);
             // Sum up all estimates to the sprint

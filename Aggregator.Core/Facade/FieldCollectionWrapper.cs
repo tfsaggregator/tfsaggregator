@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
+using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
@@ -10,9 +13,9 @@ namespace Aggregator.Core.Facade
 {
     public class FieldCollectionWrapper : IFieldCollection
     {
-        private readonly Microsoft.TeamFoundation.WorkItemTracking.Client.FieldCollection fields;
+        private readonly FieldCollection fields;
 
-        public FieldCollectionWrapper(Microsoft.TeamFoundation.WorkItemTracking.Client.FieldCollection fieldCollection)
+        public FieldCollectionWrapper(FieldCollection fieldCollection)
         {
             this.fields = fieldCollection;
         }
@@ -22,24 +25,31 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new FieldWrapper(this.fields[name]);
+                return this.ApplyDoubleFix(this.fields[name]);
             }
 
+            [EditorBrowsable(EditorBrowsableState.Never)]
             set
             {
-                // Do nothing - this is here for unit testing purposes.
-                // We don't actually want to add fields in our app code
+                throw new InvalidOperationException("Only used for mocking from unit tests");
             }
         }
 
         public IEnumerator<IField> GetEnumerator()
         {
-            return this.fields.Cast<Field>().Select(f => (IField)new FieldWrapper(f)).GetEnumerator();
+            return this.fields.Cast<Field>().Select(this.ApplyDoubleFix).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        private IField ApplyDoubleFix(Field field)
+        {
+            IField wrappedField = new FieldWrapper(field);
+            IField fixedField = new DoubleFixFieldDecorator(wrappedField);
+            return fixedField;
         }
     }
 }

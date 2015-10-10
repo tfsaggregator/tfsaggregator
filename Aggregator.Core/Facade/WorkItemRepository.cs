@@ -23,6 +23,7 @@ namespace Aggregator.Core.Facade
         private readonly ILogEvents logger;
 
         private readonly Dictionary<int, IWorkItem> loadedWorkItems = new Dictionary<int, IWorkItem>();
+
         private readonly List<IWorkItem> createdWorkItems = new List<IWorkItem>();
 
         private readonly WorkItemStore workItemStore;
