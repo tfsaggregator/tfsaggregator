@@ -53,6 +53,7 @@ namespace Aggregator.Core
 
         private static Type GetScriptEngineType(string scriptLanguage)
         {
+            // switch cases must match language attribute defined in AggregatorConfiguration.xsd
             switch (scriptLanguage.ToUpperInvariant())
             {
                 case "VB":
@@ -68,7 +69,6 @@ namespace Aggregator.Core
                 case "CS":
                 case "CSHARP":
                 case "C#":
-                    // TODO Log unsupported or wrong code
                     return typeof(CSharpScriptEngine);
             }
         }
