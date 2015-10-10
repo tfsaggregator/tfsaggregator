@@ -108,11 +108,13 @@ All scopes must match for the policy to apply (logical _and_).
 
 **templateScope**: Scope the policy to Team Projects using a particular Process Template. (Optional, Repeatable)
 
- - **name**: Name of Process Template matching. (Optional)
+ - **name**: Name of Process Template matching. (Mandatory/Optional)
  - (Not working due to Microsoft not setting these values for on-premise installations)
-  - **typeId**: Process Template GUID to match. (Optional)
+  - **typeId**: Process Template GUID to match. (Optional/Mandatory)
   - **minVersion**: Minimum version for Process Template. (Optional)
   - **maxVersion**: Minimum version for Process Template. (Optional)
+
+**templateScope** requires that **name** or **typeId** must be present.
 
   Download the Process Template and look for the `metadata/version` node in `ProcessTemplate.xml` file to see matching values.
 

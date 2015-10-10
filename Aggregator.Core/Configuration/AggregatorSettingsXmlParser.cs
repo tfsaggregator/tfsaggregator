@@ -42,13 +42,14 @@ namespace Aggregator.Core.Configuration
 
                 Dictionary<string, Rule> rules = this.ParseRulesSection(doc);
 
+                // prepare data for later checks
                 var ruleInUse = rules.Keys.ToDictionary(ruleName => ruleName, ruleName => false);
 
                 List<Policy> policies = this.ParsePoliciesSection(doc, rules, ruleInUse);
 
                 this.instance.Policies = policies;
 
-                // checks
+                // check if there Rule are referenced at least once
                 foreach (var unusedRule in ruleInUse.Where(kv => kv.Value == false))
                 {
                     this.logger.UnreferencedRule(unusedRule.Key);
@@ -135,6 +136,8 @@ namespace Aggregator.Core.Configuration
                     };
 
                     List<PolicyScope> scope = new List<PolicyScope>();
+
+                    // trick to return string.Empty in case of missing attribute
                     var nullAttribute = new XAttribute("empty", string.Empty);
 
                     foreach (var element in policyElem.Elements())
@@ -151,19 +154,27 @@ namespace Aggregator.Core.Configuration
 
                             case "templateScope":
                                 {
-                                    // TODO check for proper attribute combo (cannot be done in XSD)
                                     string templateName = (element.Attribute("name") ?? nullAttribute).Value;
                                     string templateId = (element.Attribute("typeId") ?? nullAttribute).Value;
                                     string minVersion = (element.Attribute("minVersion") ?? nullAttribute).Value;
                                     string maxVersion = (element.Attribute("maxVersion") ?? nullAttribute).Value;
 
-                                    scope.Add(new TemplateScope()
+                                    // check for proper attribute combo (cannot be done in XSD)
+                                    if (string.IsNullOrWhiteSpace(templateName) && string.IsNullOrWhiteSpace(templateId))
                                     {
-                                        TemplateName = templateName,
-                                        TemplateTypeId = templateId,
-                                        MinVersion = minVersion,
-                                        MaxVersion = maxVersion
-                                    });
+                                        this.logger.TemplateScopeConfigurationRequiresAtLeastNameOrType();
+                                    }
+                                    else
+                                    {
+                                        scope.Add(new TemplateScope()
+                                        {
+                                            TemplateName = templateName,
+                                            TemplateTypeId = templateId,
+                                            MinVersion = minVersion,
+                                            MaxVersion = maxVersion
+                                        });
+                                    }
+
                                     break;
                                 }
 

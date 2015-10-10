@@ -99,5 +99,7 @@ namespace Aggregator.Core.Monitoring
         void RuleScopeMatchResult(RuleScope scope, ScopeMatchResult result);
 
         void WorkItemRepositoryBuilt(Uri uri, IdentityDescriptor toImpersonate);
+
+        void TemplateScopeConfigurationRequiresAtLeastNameOrType();
     }
 }
