@@ -131,7 +131,7 @@ namespace Aggregator.Core.Facade
 
             // TODO: Find a way to read the identity from the server object model instead.
             IIdentityManagementService identityManagementService =
-            configurationServer.GetService<IIdentityManagementService>();
+                configurationServer.GetService<IIdentityManagementService>();
 
             Microsoft.TeamFoundation.Framework.Client.TeamFoundationIdentity identity =
                 identityManagementService.ReadIdentities(

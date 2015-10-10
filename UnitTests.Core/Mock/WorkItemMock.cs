@@ -138,7 +138,6 @@ namespace UnitTests.Core.Mock
 
         public void TransitionToState(string state, string comment)
         {
-            // HACK
             StateWorkFlow.TransitionToState(this, state, comment, this.Logger);
         }
 
