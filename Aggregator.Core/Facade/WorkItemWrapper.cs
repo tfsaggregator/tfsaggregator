@@ -182,9 +182,29 @@ namespace Aggregator.Core.Facade
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
         {
-            var destLinkType = this.workItem.Store.WorkItemLinkTypes
-                .FirstOrDefault(t => t.ForwardEnd.Name == linkTypeName)
-                .ForwardEnd;
+            WorkItemLinkType workItemLinkType = this.workItem.Store.WorkItemLinkTypes
+                .FirstOrDefault(
+                    t => new string[] { t.ForwardEnd.ImmutableName, t.ForwardEnd.Name, t.ReverseEnd.ImmutableName, t.ReverseEnd.Name }
+                        .Contains(linkTypeName, StringComparer.OrdinalIgnoreCase));
+
+            if (workItemLinkType == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(linkTypeName));
+            }
+
+            WorkItemLinkTypeEnd destLinkType;
+
+            if (
+                new string[] { workItemLinkType.ForwardEnd.ImmutableName, workItemLinkType.ForwardEnd.Name }
+                    .Contains(linkTypeName, StringComparer.OrdinalIgnoreCase))
+            {
+                destLinkType = workItemLinkType.ForwardEnd;
+            }
+            else
+            {
+                destLinkType = workItemLinkType.ReverseEnd;
+            }
+
             var relationship = new WorkItemLink(destLinkType, this.Id, destination.Id);
 
             // check it does not exist already
