@@ -10,12 +10,12 @@ using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.Integration.Server;
 using Microsoft.TeamFoundation.Server.Core;
 using Microsoft.TeamFoundation.WorkItemTracking.Server;
-#if TFS2015
+#if TFS2015 || TFS20151
 using Microsoft.VisualStudio.Services.Location.Server;
 #endif
 
 using ArtifactPropertyValue = Microsoft.TeamFoundation.Framework.Server.ArtifactPropertyValue;
-#if TFS2015
+#if TFS2015 || TFS20151
 using ILocationService = Microsoft.VisualStudio.Services.Location.Server.ILocationService;
 #elif TFS2013
 using ILocationService = Microsoft.TeamFoundation.Framework.Server.TeamFoundationLocationService;
@@ -29,9 +29,20 @@ namespace Aggregator.Core.Facade
 {
     public class RequestContextWrapper : IRequestContext
     {
+#if TFS20151
+        private readonly IVssRequestContext context;
+#else
         private readonly TeamFoundationRequestContext context;
+#endif
 
-        public RequestContextWrapper(TeamFoundationRequestContext context, NotificationType notificationType, object notificationEventArgs)
+        public RequestContextWrapper(
+#if TFS20151
+            IVssRequestContext context,
+#else
+            TeamFoundationRequestContext context,
+#endif
+            NotificationType notificationType,
+            object notificationEventArgs)
         {
             this.context = context;
             this.Notification = new NotificationWrapper(notificationType, notificationEventArgs as WorkItemChangedEvent);
@@ -141,7 +152,13 @@ namespace Aggregator.Core.Facade
             return identity?.Descriptor;
         }
 
-        private Uri GetCollectionUriFromContext(TeamFoundationRequestContext requestContext)
+        private Uri GetCollectionUriFromContext(
+#if TFS20151
+            IVssRequestContext requestContext
+#else
+            TeamFoundationRequestContext requestContext
+#endif
+            )
         {
             ILocationService service = requestContext.GetService<ILocationService>();
             return service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));

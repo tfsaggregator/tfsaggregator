@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <TfsVersion Condition="'TfsVersion' == ''">14.0</TfsVersion>
+    <TfsVersion Condition="'TfsVersion' == ''">14.1</TfsVersion>
   </PropertyGroup>
   
   <Choose>
@@ -88,14 +88,16 @@
       </ItemGroup>
     </When>
 
-    <When Condition="'$(TfsVersion)' == '14.0'">
+    <When Condition="'$(TfsVersion)' == '14.0' Or '$(TfsVersion)' == '14.1'">
       <PropertyGroup>
-        <DefineConstants>$(DefineConstants);TFS2015</DefineConstants>
+        <DefineConstants Condition="'$(TfsVersion)' == '14.0'">$(DefineConstants);TFS2015</DefineConstants>
+        <DefineConstants Condition="'$(TfsVersion)' == '14.1'">$(DefineConstants);TFS20151;TFS2015</DefineConstants>
         
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
         <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)\Application Tier\Web Services\bin</ServerAssemblies>
-        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'==''">..\References\2015</ServerAssemblies>
+        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '14.0'">..\References\2015</ServerAssemblies>
+        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '14.1'">..\References\2015.1</ServerAssemblies>
       </PropertyGroup>
 
       <ItemGroup>
@@ -303,7 +305,7 @@
       <ItemGroup>
         <Reference Include="Microsoft.TeamFoundation.Framework.Server"/>
         <Reference Include="Microsoft.TeamFoundation.Server.Core"/>
-          <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server"/>
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server"/>
         <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer"/>
         <Reference Include="Newtonsoft.Json"/>
         <Reference Include="Microsoft.TeamFoundation.Client"/>
@@ -318,7 +320,7 @@
 
   <Import Project="..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\build\Microsoft.TeamFoundationServer.ExtendedClient.targets" Condition="('$(TfsVersion)' == '14.0') and Exists('..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\build\Microsoft.TeamFoundationServer.ExtendedClient.targets')" />
 
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="'$(TfsVersion)' == '14.0'">
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="'$(TfsVersion)' == '14.0' OR '$(TfsVersion)' == '14.1'">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>

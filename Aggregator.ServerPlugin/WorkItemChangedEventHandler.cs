@@ -45,7 +45,11 @@ namespace TFSAggregator.TfsSpecific
         /// This is the one where all the magic starts.  Main() so to speak.  I will load the settings, connect to TFS and apply the aggregation rules.
         /// </summary>
         public EventNotificationStatus ProcessEvent(
-            TeamFoundationRequestContext requestContext,
+#if TFS20151
+            IVssRequestContext requestContext,
+#else
+            TeamFoundationRequestContext context,
+#endif
             NotificationType notificationType,
             object notificationEventArgs,
             out int statusCode,
