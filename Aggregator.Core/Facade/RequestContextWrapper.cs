@@ -35,6 +35,7 @@ namespace Aggregator.Core.Facade
         private readonly TeamFoundationRequestContext context;
 #endif
 
+#pragma warning disable SA1111, SA1115, SA1114, SA1009
         public RequestContextWrapper(
 #if TFS20151
             IVssRequestContext context,
@@ -43,6 +44,7 @@ namespace Aggregator.Core.Facade
 #endif
             NotificationType notificationType,
             object notificationEventArgs)
+#pragma warning restore SA1111, SA1115, SA1114, SA1009
         {
             this.context = context;
             this.Notification = new NotificationWrapper(notificationType, notificationEventArgs as WorkItemChangedEvent);
@@ -152,6 +154,7 @@ namespace Aggregator.Core.Facade
             return identity?.Descriptor;
         }
 
+#pragma warning disable SA1111,  SA1115, SA1114, SA1009
         private Uri GetCollectionUriFromContext(
 #if TFS20151
             IVssRequestContext requestContext
@@ -159,6 +162,7 @@ namespace Aggregator.Core.Facade
             TeamFoundationRequestContext requestContext
 #endif
             )
+#pragma warning restore SA1111,  SA1115, SA1114, SA1009
         {
             ILocationService service = requestContext.GetService<ILocationService>();
             return service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));
