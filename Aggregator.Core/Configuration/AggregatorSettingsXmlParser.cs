@@ -43,7 +43,6 @@ namespace Aggregator.Core.Configuration
 
                 if (!this.ValidateDocAgainstSchema(doc))
                 {
-                    // HACK we must handle this scenario with clean exit
                     return null;
                 }
 
@@ -52,17 +51,30 @@ namespace Aggregator.Core.Configuration
 
                 Dictionary<string, Rule> rules = this.ParseRulesSection(doc);
 
-                // prepare data for later checks
-                var ruleInUse = rules.Keys.ToDictionary(ruleName => ruleName, ruleName => false);
-
-                List<Policy> policies = this.ParsePoliciesSection(doc, rules, ruleInUse);
+                List<Policy> policies = this.ParsePoliciesSection(doc, rules);
 
                 this.instance.Policies = policies;
 
-                // check if there Rule are referenced at least once
-                foreach (var unusedRule in ruleInUse.Where(kv => kv.Value == false))
+                foreach (var policy in this.instance.Policies)
                 {
-                    this.logger.UnreferencedRule(unusedRule.Key);
+                    if (!policy.Scope.Any())
+                    {
+                        this.logger.PolicyShouldHaveAScope(policy.Name);
+                    }
+                }
+
+                var usedRules = new List<Rule>();
+                foreach (var policy in this.instance.Policies)
+                {
+                    usedRules.AddRange(policy.Rules);
+                }
+
+                var unusedRules = rules.Values.Except(usedRules);
+
+                // check if there Rule are referenced at least once
+                foreach (var unusedRule in unusedRules)
+                {
+                    this.logger.UnreferencedRule(unusedRule.Name);
                 }
 
                 return this.instance;
@@ -135,7 +147,7 @@ namespace Aggregator.Core.Configuration
                 this.instance.ScriptLanguage = scriptNode?.Attribute("language").Value ?? "C#";
             }
 
-            private List<Policy> ParsePoliciesSection(XDocument doc, Dictionary<string, Rule> rules, Dictionary<string, bool> ruleInUse)
+            private List<Policy> ParsePoliciesSection(XDocument doc, Dictionary<string, Rule> rules)
             {
                 var policies = new List<Policy>();
                 foreach (var policyElem in doc.Root.Elements("policy"))
@@ -212,8 +224,6 @@ namespace Aggregator.Core.Configuration
                         string refName = ruleRefElem.Attribute("name").Value;
                         var rule = rules[refName];
                         referredRules.Add(rule);
-
-                        ruleInUse[refName] = true;
                     }
 
                     policy.Rules = referredRules;

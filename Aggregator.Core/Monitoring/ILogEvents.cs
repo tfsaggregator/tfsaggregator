@@ -80,6 +80,8 @@ namespace Aggregator.Core.Monitoring
 
         void LoadingConfiguration(string settingsPath);
 
+        void PolicyShouldHaveAScope(string name);
+
         void UsingCachedConfiguration(string settingsPath);
 
         void ConfigurationChanged(string settingsPath, CacheEntryRemovedReason removedReason);
