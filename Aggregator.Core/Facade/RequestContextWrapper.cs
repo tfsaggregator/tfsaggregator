@@ -10,12 +10,12 @@ using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.Integration.Server;
 using Microsoft.TeamFoundation.Server.Core;
 using Microsoft.TeamFoundation.WorkItemTracking.Server;
-#if TFS2015 || TFS20151
+#if TFS2015 || TFS2015u1
 using Microsoft.VisualStudio.Services.Location.Server;
 #endif
 
 using ArtifactPropertyValue = Microsoft.TeamFoundation.Framework.Server.ArtifactPropertyValue;
-#if TFS2015 || TFS20151
+#if TFS2015 || TFS2015u1
 using ILocationService = Microsoft.VisualStudio.Services.Location.Server.ILocationService;
 #elif TFS2013
 using ILocationService = Microsoft.TeamFoundation.Framework.Server.TeamFoundationLocationService;
@@ -23,7 +23,7 @@ using ILocationService = Microsoft.TeamFoundation.Framework.Server.TeamFoundatio
 #error Define TFS version!
 #endif
 
-#if TFS20151
+#if TFS2015u1
 using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.IVssRequestContext;
 #else
 using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext;
