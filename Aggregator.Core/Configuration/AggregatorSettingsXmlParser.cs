@@ -55,6 +55,13 @@ namespace Aggregator.Core.Configuration
 
                 this.instance.Policies = policies;
 
+                ValidateSemantic(rules);
+
+                return this.instance;
+            }
+
+            private void ValidateSemantic(Dictionary<string, Rule> rules)
+            {
                 foreach (var policy in this.instance.Policies)
                 {
                     if (!policy.Scope.Any())
@@ -76,8 +83,6 @@ namespace Aggregator.Core.Configuration
                 {
                     this.logger.UnreferencedRule(unusedRule.Name);
                 }
-
-                return this.instance;
             }
 
             private string ComputeHash(XDocument doc, DateTime timestamp)
