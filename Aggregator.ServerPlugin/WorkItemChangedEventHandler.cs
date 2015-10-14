@@ -64,8 +64,8 @@ namespace TFSAggregator.TfsSpecific
                 GetServerSettingsFullPath,
                 context,
                 logger,
-                (Uri _collectionUri, IdentityDescriptor _toImpersonate, ILogEvents _logger) =>
-                    new WorkItemRepository(_collectionUri, _toImpersonate, _logger));
+                (collectionUri, toImpersonate, logEvents) =>
+                    new WorkItemRepository(collectionUri, toImpersonate, logEvents));
 
             if (runtime.HasErrors)
             {

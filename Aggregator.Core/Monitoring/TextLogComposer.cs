@@ -93,7 +93,11 @@ namespace Aggregator.Core.Monitoring
             this.logger.Log(
                 LogLevel.Error,
                 "Error {3} in script '{0}' at line {1}, column {2}: {4}",
-                scriptName, line, column, errorCode, errorText);
+                scriptName,
+                line,
+                column,
+                errorCode,
+                errorText);
         }
 
         public void ScriptHasWarning(string scriptName, int line, int column, string errorCode, string errorText)
@@ -352,7 +356,9 @@ namespace Aggregator.Core.Monitoring
 
         public void PolicyScopeMatchResult(PolicyScope scope, ScopeMatchResult result)
         {
-            this.logger.Log(LogLevel.Diagnostic, "Policy scope {0} {1} {2}",
+            this.logger.Log(
+                LogLevel.Diagnostic,
+                "Policy scope {0} {1} {2}",
                 scope.DisplayName,
                 result.Success ? "matches" : "does not match",
                 result.Arguments);
@@ -360,7 +366,9 @@ namespace Aggregator.Core.Monitoring
 
         public void RuleScopeMatchResult(RuleScope scope, ScopeMatchResult result)
         {
-            this.logger.Log(LogLevel.Diagnostic, "Rule scope {0} {1} {2}",
+            this.logger.Log(
+                LogLevel.Diagnostic,
+                "Rule scope {0} {1} {2}",
                 scope.DisplayName,
                 result.Success ? "matches" : "does not match",
                 result.Arguments);

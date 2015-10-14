@@ -100,28 +100,33 @@ namespace Aggregator.Core.Configuration
             var stream = thisAssembly.GetManifestResourceStream("Aggregator.Core.Configuration.AggregatorConfiguration.xsd");
             schemas.Add(string.Empty, XmlReader.Create(stream));
             bool valid = true;
-            doc.Validate(schemas, (o, e) =>
-            {
-                logger.InvalidConfiguration(e.Severity, e.Message, e.Exception.LineNumber, e.Exception.LinePosition);
-                valid = false;
-            }, true);
+            doc.Validate(
+                schemas,
+                (o, e) =>
+                {
+                    logger.InvalidConfiguration(e.Severity, e.Message, e.Exception.LineNumber, e.Exception.LinePosition);
+                    valid = false;
+                },
+                true);
             return valid;
         }
 
         private static void ParseRuntimeSection(TFSAggregatorSettings instance, XDocument doc)
         {
-            var loggingNode = doc.Root.Element("runtime") != null ?
+            var loggingNode = doc?.Root?.Element("runtime") != null ?
                 doc.Root.Element("runtime")?.Element("logging") : null;
             instance.LogLevel = loggingNode != null ?
                 (LogLevel)Enum.Parse(typeof(LogLevel), loggingNode.Attribute("level").Value)
                 : LogLevel.Normal;
 
-            var rateLimitElement = doc.Root.Element("runtime")?.Element("rateLimiting");
+            var rateLimitElement = doc?.Root?.Element("runtime")?.Element("rateLimiting");
             if (rateLimitElement != null)
             {
-                var rateLimit = new RateLimit();
-                rateLimit.Changes = int.Parse(rateLimitElement.Attribute("changes").Value);
-                rateLimit.Interval = TimeSpan.Parse(rateLimitElement.Attribute("interval").Value);
+                var rateLimit = new RateLimit
+                {
+                    Changes = int.Parse(rateLimitElement.Attribute("changes").Value),
+                    Interval = TimeSpan.Parse(rateLimitElement.Attribute("interval").Value)
+                };
                 instance.RateLimit = rateLimit;
             }
             else
@@ -129,16 +134,16 @@ namespace Aggregator.Core.Configuration
                 instance.RateLimit = null;
             }
 
-            var runtimeNode = doc.Root.Element("runtime") ?? null;
+            var runtimeNode = doc?.Root?.Element("runtime") ?? null;
             var debugvalue = runtimeNode?.Attribute("debug")?.Value;
             instance.Debug = debugvalue != null && bool.Parse(debugvalue);
 
-            var authenticationNode = doc.Root.Element("runtime") != null ?
+            var authenticationNode = doc?.Root?.Element("runtime") != null ?
                 doc.Root.Element("runtime")?.Element("authentication") : null;
             instance.AutoImpersonate = authenticationNode != null
                 && bool.Parse(authenticationNode.Attribute("autoImpersonate").Value);
 
-            var scriptNode = doc.Root.Element("runtime") != null ?
+            var scriptNode = doc?.Root?.Element("runtime") != null ?
                 doc.Root.Element("runtime")?.Element("script") : null;
 
             instance.ScriptLanguage = scriptNode?.Attribute("language").Value ?? "C#";
