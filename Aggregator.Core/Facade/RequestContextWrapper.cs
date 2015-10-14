@@ -22,6 +22,13 @@ using ILocationService = Microsoft.TeamFoundation.Framework.Server.TeamFoundatio
 #else
 #error Define TFS version!
 #endif
+
+#if TFS20151
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.IVssRequestContext;
+#else
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext;
+#endif
+
 using ArtifactSpec = Microsoft.TeamFoundation.Framework.Server.ArtifactSpec;
 using PropertyValue = Microsoft.TeamFoundation.Framework.Server.PropertyValue;
 
@@ -29,22 +36,12 @@ namespace Aggregator.Core.Facade
 {
     public class RequestContextWrapper : IRequestContext
     {
-#if TFS20151
         private readonly IVssRequestContext context;
-#else
-        private readonly TeamFoundationRequestContext context;
-#endif
 
-#pragma warning disable SA1111, SA1115, SA1114, SA1009
         public RequestContextWrapper(
-#if TFS20151
             IVssRequestContext context,
-#else
-            TeamFoundationRequestContext context,
-#endif
             NotificationType notificationType,
             object notificationEventArgs)
-#pragma warning restore SA1111, SA1115, SA1114, SA1009
         {
             this.context = context;
             this.Notification = new NotificationWrapper(notificationType, notificationEventArgs as WorkItemChangedEvent);
@@ -154,15 +151,7 @@ namespace Aggregator.Core.Facade
             return identity?.Descriptor;
         }
 
-#pragma warning disable SA1111,  SA1115, SA1114, SA1009
-        private Uri GetCollectionUriFromContext(
-#if TFS20151
-            IVssRequestContext requestContext
-#else
-            TeamFoundationRequestContext requestContext
-#endif
-            )
-#pragma warning restore SA1111,  SA1115, SA1114, SA1009
+        private Uri GetCollectionUriFromContext(IVssRequestContext requestContext)
         {
             ILocationService service = requestContext.GetService<ILocationService>();
             return service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));

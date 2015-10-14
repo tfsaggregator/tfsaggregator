@@ -22,6 +22,12 @@ using ILocationService = Microsoft.VisualStudio.Services.Location.Server.ILocati
 using ILocationService = Microsoft.TeamFoundation.Framework.Server.TeamFoundationLocationService;
 #endif
 
+#if TFS20151
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.IVssRequestContext;
+#else
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext;
+#endif
+
 namespace TFSAggregator.TfsSpecific
 {
     /// <summary>
@@ -44,19 +50,13 @@ namespace TFSAggregator.TfsSpecific
         /// <summary>
         /// This is the one where all the magic starts.  Main() so to speak.  I will load the settings, connect to TFS and apply the aggregation rules.
         /// </summary>
-#pragma warning disable SA1111, SA1115, SA1114, SA1009
         public EventNotificationStatus ProcessEvent(
-#if TFS20151
             IVssRequestContext requestContext,
-#else
-            TeamFoundationRequestContext requestContext,
-#endif
             NotificationType notificationType,
             object notificationEventArgs,
             out int statusCode,
             out string statusMessage,
             out ExceptionPropertyCollection properties)
-#pragma warning restore SA1111, SA1115, SA1114, SA1009
         {
             var logger = new ServerEventLogger(LogLevel.Normal);
             var context = new RequestContextWrapper(requestContext, notificationType, notificationEventArgs);
