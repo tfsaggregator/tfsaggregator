@@ -49,7 +49,7 @@ namespace TFSAggregator.TfsSpecific
 #if TFS20151
             IVssRequestContext requestContext,
 #else
-            TeamFoundationRequestContext context,
+            TeamFoundationRequestContext requestContext,
 #endif
             NotificationType notificationType,
             object notificationEventArgs,
