@@ -103,7 +103,7 @@ All scopes must match for the policy to apply (logical _and_).
  - **collections**: The TFS Collection to which the policy applies. (List, Mandatory)
 
 ```
-        <templateScope name="" typeId="" minVersion="0.0" maxVersion="10.0" />
+        <templateScope name="Scrum" typeId="" minVersion="0.0" maxVersion="10.0" />
 ```
 
 **templateScope**: Scope the policy to Team Projects using a particular Process Template. (Optional, Repeatable)
