@@ -16,13 +16,13 @@ using Microsoft.TeamFoundation.Framework.Common;
 using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.WorkItemTracking.Server;
 
-#if TFS2015
+#if TFS2015 || TFS2015u1
 using ILocationService = Microsoft.VisualStudio.Services.Location.Server.ILocationService;
 #elif TFS2013
 using ILocationService = Microsoft.TeamFoundation.Framework.Server.TeamFoundationLocationService;
 #endif
 
-#if TFS20151
+#if TFS2015u1
 using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.IVssRequestContext;
 #else
 using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext;
@@ -130,7 +130,7 @@ namespace TFSAggregator.TfsSpecific
         }
 
         /// <summary>
-        /// Returns the priority, thi sis used by TFS to decide in which order to run the ISubscriber plugins.
+        /// Returns the priority, this is used by TFS to decide in which order to run the ISubscriber plugins.
         /// </summary>
         public SubscriberPriority Priority
         {

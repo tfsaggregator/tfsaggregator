@@ -11,6 +11,8 @@ configuration:
   - Release-2013
   - Debug-2015
   - Release-2015
+  - Debug-2015.1
+  - Release-2015.1
 environment:
   containerURL:
     secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3x3eawhSGYVzFy4Pap0dOGw==
@@ -23,6 +25,10 @@ install:
   - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
   - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL$flavor/$file" -OutFile "$env:referenceFolder\$flavor\$file" }
   - ps: $flavor = '2015'
+  - ps: Invoke-RestMethod -Uri "$env:containerURL$flavor`?restype=container&comp=list" -OutFile $containerList
+  - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
+  - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL$flavor/$file" -OutFile "$env:referenceFolder\$flavor\$file" }
+  - ps: $flavor = '2015.1'
   - ps: Invoke-RestMethod -Uri "$env:containerURL$flavor`?restype=container&comp=list" -OutFile $containerList
   - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
   - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL$flavor/$file" -OutFile "$env:referenceFolder\$flavor\$file" }

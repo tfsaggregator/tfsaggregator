@@ -91,7 +91,7 @@
     <When Condition="'$(TfsVersion)' == '14.0' Or '$(TfsVersion)' == '14.1'">
       <PropertyGroup>
         <DefineConstants Condition="'$(TfsVersion)' == '14.0'">$(DefineConstants);TFS2015</DefineConstants>
-        <DefineConstants Condition="'$(TfsVersion)' == '14.1'">$(DefineConstants);TFS20151;TFS2015</DefineConstants>
+        <DefineConstants Condition="'$(TfsVersion)' == '14.1'">$(DefineConstants);TFS2015u1;TFS2015</DefineConstants>
         
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
