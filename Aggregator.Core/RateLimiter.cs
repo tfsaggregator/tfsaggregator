@@ -20,7 +20,7 @@ namespace Aggregator.Core
 
         public RateLimiter(IRuntimeContext context)
         {
-            if (context.Settings.RateLimit != null)
+            if (context.Settings?.RateLimit != null)
             {
                 this.enabled = true;
                 this.interval = context.Settings.RateLimit.Interval;

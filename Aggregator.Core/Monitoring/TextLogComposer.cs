@@ -385,5 +385,15 @@ namespace Aggregator.Core.Monitoring
                 this.logger.Log(LogLevel.Diagnostic, "Built a new Work Item Repository for {0}", uri);
             }
         }
+
+        public void TemplateScopeConfigurationRequiresAtLeastNameOrType()
+        {
+            this.logger.Log(LogLevel.Error, "Error in policy file: templateScope requires name or typeId attribute");
+        }
+
+        public void PolicyShouldHaveAScope(string name)
+        {
+            this.logger.Log(LogLevel.Warning, "Policy {0} has no Scope: it will apply to any incoming requests", name);
+        }
     }
 }

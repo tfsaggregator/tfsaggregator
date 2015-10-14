@@ -101,6 +101,7 @@
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Configuration\AggregatorSettingsXmlParser.cs" />
     <Compile Include="Configuration\CollectionScope.cs" />
     <Compile Include="Configuration\HasFieldsScope.cs" />
     <Compile Include="Configuration\ProjectScope.cs" />

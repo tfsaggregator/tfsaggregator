@@ -7,6 +7,9 @@
     {
         public static void Dump(this Exception e, TextWriter console)
         {
+            ConsoleColor save = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+
             console.Write("Error: ");
 
             Exception toLog = e;
@@ -15,6 +18,8 @@
                 console.WriteLine(e.Message);
                 toLog = toLog.InnerException;
             }
+
+            Console.ForegroundColor = save;
         }
     }
 }

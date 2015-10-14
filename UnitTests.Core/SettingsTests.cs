@@ -136,6 +136,10 @@ namespace UnitTests.Core
     <runtime>
         <rateLimiting />
     </runtime>
+    <rule name='dummy' />
+    <policy name='dummy' >
+        <ruleRef name='dummy' />
+    </policy>
 </AggregatorConfiguration>";
 
             var settings = TFSAggregatorSettings.LoadXml(config, logger);
@@ -157,6 +161,10 @@ namespace UnitTests.Core
     <runtime>
         <rateLimiting changes=""100"" />
     </runtime>
+    <rule name='dummy' />
+    <policy name='dummy' >
+        <ruleRef name='dummy' />
+    </policy>
 </AggregatorConfiguration>";
 
             var settings = TFSAggregatorSettings.LoadXml(config, logger);
@@ -174,6 +182,10 @@ namespace UnitTests.Core
     <runtime>
         <rateLimiting interval=""01:00:00.0"" />
     </runtime>
+    <rule name='dummy' />
+    <policy name='dummy' >
+        <ruleRef name='dummy' />
+    </policy>
 </AggregatorConfiguration>";
 
             var settings = TFSAggregatorSettings.LoadXml(config, logger);
