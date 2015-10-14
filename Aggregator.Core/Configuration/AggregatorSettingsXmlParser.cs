@@ -55,7 +55,7 @@ namespace Aggregator.Core.Configuration
 
                 this.instance.Policies = policies;
 
-                ValidateSemantic(rules);
+                this.ValidateSemantic(rules);
 
                 return this.instance;
             }
@@ -108,11 +108,14 @@ namespace Aggregator.Core.Configuration
                 var stream = thisAssembly.GetManifestResourceStream("Aggregator.Core.Configuration.AggregatorConfiguration.xsd");
                 schemas.Add(string.Empty, XmlReader.Create(stream));
                 bool valid = true;
-                doc.Validate(schemas, (o, e) =>
-                {
-                    this.logger.InvalidConfiguration(e.Severity, e.Message, e.Exception.LineNumber, e.Exception.LinePosition);
-                    valid = false;
-                }, true);
+                doc.Validate(
+                    schemas,
+                    (o, e) =>
+                    {
+                        this.logger.InvalidConfiguration(e.Severity, e.Message, e.Exception.LineNumber, e.Exception.LinePosition);
+                        valid = false;
+                    },
+                    true);
                 return valid;
             }
 
