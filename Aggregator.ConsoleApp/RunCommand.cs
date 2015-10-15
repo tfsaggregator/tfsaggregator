@@ -23,23 +23,35 @@ namespace Aggregator.ConsoleApp
         {
             this.IsCommand("run", "Applies a policy file to specified work item");
 
-            this.HasOption("h|help", "Shows this message and exit",
-              value => this.ShowHelp = value != null);
-            this.HasRequiredOption("f|policyFile=", "Policy file to apply",
-              value => this.PolicyFile = value);
-            this.HasRequiredOption("c|teamProjectCollectionUrl=", "TFS Team Project Collection Url, e.g. http://localhost:8080/tfs/DefaultCollection",
-              value => this.TeamProjectCollectionUrl = value);
-            this.HasRequiredOption("p|teamProjectName=", "TFS Team Project",
-              value => this.TeamProjectName = value);
-            this.HasRequiredOption("n|id|workItemId=", "Work Item Id",
-              value => this.WorkItemId = int.Parse(value));
-            this.HasOption("l|logLevel=", "Logging level (critical, error, warning, information, normal, verbose, diagnostic)",
-              value =>
-              {
-                  // use a string but parse so we know it is correct
-                  Enum.Parse(typeof(LogLevel), value, true);
-                  this.LogLevelName = value;
-              });
+            this.HasOption(
+                "h|help",
+                "Shows this message and exit",
+                value => this.ShowHelp = value != null);
+            this.HasRequiredOption(
+                "f|policyFile=",
+                "Policy file to apply",
+                value => this.PolicyFile = value);
+            this.HasRequiredOption(
+                "c|teamProjectCollectionUrl=",
+                "TFS Team Project Collection Url, e.g. http://localhost:8080/tfs/DefaultCollection",
+                value => this.TeamProjectCollectionUrl = value);
+            this.HasRequiredOption(
+                "p|teamProjectName=",
+                "TFS Team Project",
+                value => this.TeamProjectName = value);
+            this.HasRequiredOption(
+                "n|id|workItemId=",
+                "Work Item Id",
+                value => this.WorkItemId = int.Parse(value));
+            this.HasOption(
+                "l|logLevel=",
+                "Logging level (critical, error, warning, information, normal, verbose, diagnostic)",
+                value =>
+                {
+                    // use a string but parse so we know it is correct
+                    Enum.Parse(typeof(LogLevel), value, true);
+                    this.LogLevelName = value;
+                });
         }
 
         internal bool ShowHelp { get; set; }
@@ -72,8 +84,8 @@ namespace Aggregator.ConsoleApp
                 () => this.PolicyFile,
                 context,
                 logger,
-                (Uri _collectionUri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor _toImpersonate, ILogEvents _logger) =>
-                    new Core.Facade.WorkItemRepository(_collectionUri, _toImpersonate, _logger));
+                (collectionUri, toImpersonate, logEvents) =>
+                    new Core.Facade.WorkItemRepository(collectionUri, toImpersonate, logEvents));
 
             if (!string.IsNullOrWhiteSpace(this.LogLevelName))
             {

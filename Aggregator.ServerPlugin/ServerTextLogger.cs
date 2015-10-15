@@ -53,7 +53,8 @@ namespace Aggregator.ServerPlugin
                 string levelAsString = level.ToString();
                 string formattedMessage = string.Format(
                     "TFSAggregator: [{0}]{1} {2}",
-                    levelAsString, string.Empty.PadLeft(LogLevelMaximumStringLength - levelAsString.Length),
+                    levelAsString,
+                    string.Empty.PadLeft(LogLevelMaximumStringLength - levelAsString.Length),
                     message);
 
                 Debug.WriteLine(formattedMessage);

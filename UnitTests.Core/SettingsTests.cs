@@ -61,7 +61,8 @@ namespace UnitTests.Core
             logger.Received().InvalidConfiguration(
                 XmlSeverityType.Error,
                 "The 'level' attribute is invalid - The value 'Diag' is invalid according to its datatype 'String' - The Enumeration constraint failed.",
-                1, 44);
+                1,
+                44);
         }
 
         [TestMethod]
@@ -82,7 +83,8 @@ namespace UnitTests.Core
             logger.Received().InvalidConfiguration(
                 XmlSeverityType.Error,
                 "Reference to undeclared ID is 'r2'.",
-                5, 18);
+                5,
+                18);
         }
 
         [TestMethod]
@@ -101,7 +103,8 @@ namespace UnitTests.Core
             logger.Received().InvalidConfiguration(
                 XmlSeverityType.Error,
                 "The element 'policy' has incomplete content. List of possible elements expected: 'collectionScope, templateScope, projectScope, ruleRef'.",
-                4, 6);
+                4,
+                6);
         }
 
         [TestMethod]
@@ -133,6 +136,10 @@ namespace UnitTests.Core
     <runtime>
         <rateLimiting />
     </runtime>
+    <rule name='dummy' />
+    <policy name='dummy' >
+        <ruleRef name='dummy' />
+    </policy>
 </AggregatorConfiguration>";
 
             var settings = TFSAggregatorSettings.LoadXml(config, logger);
@@ -154,6 +161,10 @@ namespace UnitTests.Core
     <runtime>
         <rateLimiting changes=""100"" />
     </runtime>
+    <rule name='dummy' />
+    <policy name='dummy' >
+        <ruleRef name='dummy' />
+    </policy>
 </AggregatorConfiguration>";
 
             var settings = TFSAggregatorSettings.LoadXml(config, logger);
@@ -171,6 +182,10 @@ namespace UnitTests.Core
     <runtime>
         <rateLimiting interval=""01:00:00.0"" />
     </runtime>
+    <rule name='dummy' />
+    <policy name='dummy' >
+        <ruleRef name='dummy' />
+    </policy>
 </AggregatorConfiguration>";
 
             var settings = TFSAggregatorSettings.LoadXml(config, logger);

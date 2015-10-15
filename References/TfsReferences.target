@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <TfsVersion Condition="'TfsVersion' == ''">14.0</TfsVersion>
+    <TfsVersion Condition="'TfsVersion' == ''">14.1</TfsVersion>
   </PropertyGroup>
   
   <Choose>
@@ -88,18 +88,23 @@
       </ItemGroup>
     </When>
 
-    <When Condition="'$(TfsVersion)' == '14.0'">
+    <When Condition="'$(TfsVersion)' == '14.0' Or '$(TfsVersion)' == '14.1'">
       <PropertyGroup>
-        <DefineConstants>$(DefineConstants);TFS2015</DefineConstants>
+        <DefineConstants Condition="'$(TfsVersion)' == '14.0'">$(DefineConstants);TFS2015</DefineConstants>
+        <DefineConstants Condition="'$(TfsVersion)' == '14.1'">$(DefineConstants);TFS2015u1;TFS2015</DefineConstants>
         
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
         <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)\Application Tier\Web Services\bin</ServerAssemblies>
-        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'==''">..\References\2015</ServerAssemblies>
+        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '14.0'">..\References\2015</ServerAssemblies>
+        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '14.1'">..\References\2015.1</ServerAssemblies>
       </PropertyGroup>
 
       <ItemGroup>
         <!-- Server Assemblies -->
+        <Reference Include="Microsoft.TeamFoundation.Common, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Common.dll</HintPath>
+        </Reference>
         <Reference Include="Microsoft.TeamFoundation.Framework.Server, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Framework.Server.dll</HintPath>
         </Reference>
@@ -148,11 +153,13 @@
           <HintPath>..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\lib\net45\Microsoft.TeamFoundation.Client.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.Common, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+        <!--
+        <Reference Include="Microsoft.TeamFoundation.Common, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\Microsoft.VisualStudio.Services.Client.14.83.0\lib\net45\Microsoft.TeamFoundation.Common.dll</HintPath>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.Core.WebApi, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+        -->
+        <Reference Include="Microsoft.TeamFoundation.Core.WebApi, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\Microsoft.TeamFoundationServer.Client.14.83.0\lib\net45\Microsoft.TeamFoundation.Core.WebApi.dll</HintPath>
         </Reference>
@@ -203,7 +210,7 @@
           <HintPath>..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\lib\net45\Microsoft.TeamFoundation.SharePointReporting.Integration.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.SourceControl.WebApi, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.TeamFoundation.SourceControl.WebApi, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\Microsoft.TeamFoundationServer.Client.14.83.0\lib\net45\Microsoft.TeamFoundation.SourceControl.WebApi.dll</HintPath>
         </Reference>
@@ -222,7 +229,7 @@
           <HintPath>..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\lib\net45\Microsoft.TeamFoundation.TestManagement.Common.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.TestManagement.WebApi, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.TeamFoundation.TestManagement.WebApi, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\Microsoft.TeamFoundationServer.Client.14.83.0\lib\net45\Microsoft.TeamFoundation.TestManagement.WebApi.dll</HintPath>
         </Reference>
@@ -238,7 +245,7 @@
           <HintPath>..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\lib\net45\Microsoft.TeamFoundation.VersionControl.Common.Integration.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.Work.WebApi">
+        <Reference Include="Microsoft.TeamFoundation.Work.WebApi, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>..\packages\Microsoft.TeamFoundationServer.Client.14.83.0\lib\net45\Microsoft.TeamFoundation.Work.WebApi.dll</HintPath>
         </Reference>
         <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Client, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -261,18 +268,18 @@
           <HintPath>..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.Proxy.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.WebApi">
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.WebApi, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>..\packages\Microsoft.TeamFoundationServer.Client.14.83.0\lib\net45\Microsoft.TeamFoundation.WorkItemTracking.WebApi.dll</HintPath>
         </Reference>
         <Reference Include="Microsoft.VisualStudio.Services.Client, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>..\packages\Microsoft.VisualStudio.Services.InteractiveClient.14.83.0\lib\net45\Microsoft.VisualStudio.Services.Client.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Microsoft.VisualStudio.Services.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.VisualStudio.Services.Common, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\Microsoft.VisualStudio.Services.Client.14.83.0\lib\net45\Microsoft.VisualStudio.Services.Common.dll</HintPath>
         </Reference>
-        <Reference Include="Microsoft.VisualStudio.Services.WebApi, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.VisualStudio.Services.WebApi, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\packages\Microsoft.VisualStudio.Services.Client.14.83.0\lib\net45\Microsoft.VisualStudio.Services.WebApi.dll</HintPath>
         </Reference>
@@ -303,7 +310,7 @@
       <ItemGroup>
         <Reference Include="Microsoft.TeamFoundation.Framework.Server"/>
         <Reference Include="Microsoft.TeamFoundation.Server.Core"/>
-          <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server"/>
+        <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server"/>
         <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer"/>
         <Reference Include="Newtonsoft.Json"/>
         <Reference Include="Microsoft.TeamFoundation.Client"/>
@@ -318,7 +325,7 @@
 
   <Import Project="..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\build\Microsoft.TeamFoundationServer.ExtendedClient.targets" Condition="('$(TfsVersion)' == '14.0') and Exists('..\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\build\Microsoft.TeamFoundationServer.ExtendedClient.targets')" />
 
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="'$(TfsVersion)' == '14.0'">
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="'$(TfsVersion)' == '14.0' OR '$(TfsVersion)' == '14.1'">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>

@@ -182,9 +182,36 @@ namespace Aggregator.Core.Facade
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
         {
-            var destLinkType = this.workItem.Store.WorkItemLinkTypes
-                .FirstOrDefault(t => t.ForwardEnd.Name == linkTypeName)
-                .ForwardEnd;
+            IEnumerable<WorkItemLinkType> availableLinkTypes = this.workItem.Store.WorkItemLinkTypes;
+            this.AddWorkItemLink(destination, linkTypeName, availableLinkTypes);
+        }
+
+        internal void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName, IEnumerable<WorkItemLinkType> availableLinkTypes)
+        {
+            WorkItemLinkType workItemLinkType = availableLinkTypes
+                .FirstOrDefault(
+                    t => new string[] { t.ForwardEnd.ImmutableName, t.ForwardEnd.Name, t.ReverseEnd.ImmutableName, t.ReverseEnd.Name }
+                        .Contains(linkTypeName, StringComparer.OrdinalIgnoreCase));
+
+            if (workItemLinkType == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(linkTypeName));
+            }
+
+            WorkItemLinkTypeEnd destLinkType;
+#pragma warning disable S3240
+            if (
+                new string[] { workItemLinkType.ForwardEnd.ImmutableName, workItemLinkType.ForwardEnd.Name }
+                    .Contains(linkTypeName, StringComparer.OrdinalIgnoreCase))
+            {
+                destLinkType = workItemLinkType.ForwardEnd;
+            }
+            else
+            {
+                destLinkType = workItemLinkType.ReverseEnd;
+            }
+#pragma warning restore S3240
+
             var relationship = new WorkItemLink(destLinkType, this.Id, destination.Id);
 
             // check it does not exist already

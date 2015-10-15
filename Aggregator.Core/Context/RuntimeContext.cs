@@ -47,11 +47,14 @@ namespace Aggregator.Core.Context
                 var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
                 runtime = MakeRuntimeContext(settingsPath, settings, requestContext, logger, repoBuilder);
 
-                var itemPolicy = new CacheItemPolicy();
-                itemPolicy.Priority = CacheItemPriority.NotRemovable;
-                itemPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string>() { settingsPath }));
+                if (!runtime.HasErrors)
+                {
+                    var itemPolicy = new CacheItemPolicy();
+                    itemPolicy.Priority = CacheItemPriority.NotRemovable;
+                    itemPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string>() { settingsPath }));
 
-                Cache.Set(cacheKey, runtime, itemPolicy);
+                    Cache.Set(cacheKey, runtime, itemPolicy);
+                }
 
                 logger.ConfigurationLoaded(settingsPath);
             }
@@ -80,10 +83,10 @@ namespace Aggregator.Core.Context
             runtime.SettingsPath = settingsPath;
             runtime.Settings = settings;
             runtime.RateLimiter = new RateLimiter(runtime);
-            logger.MinimumLogLevel = runtime.Settings.LogLevel;
+            logger.MinimumLogLevel = runtime.Settings?.LogLevel ?? LogLevel.Normal;
             runtime.repoBuilder = repoBuilder;
 
-            runtime.HasErrors = false;
+            runtime.HasErrors = settings == null;
             return runtime;
         }
 

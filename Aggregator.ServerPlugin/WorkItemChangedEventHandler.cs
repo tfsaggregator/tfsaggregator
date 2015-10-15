@@ -16,10 +16,16 @@ using Microsoft.TeamFoundation.Framework.Common;
 using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.WorkItemTracking.Server;
 
-#if TFS2015
+#if TFS2015 || TFS2015u1
 using ILocationService = Microsoft.VisualStudio.Services.Location.Server.ILocationService;
 #elif TFS2013
 using ILocationService = Microsoft.TeamFoundation.Framework.Server.TeamFoundationLocationService;
+#endif
+
+#if TFS2015u1
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.IVssRequestContext;
+#else
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext;
 #endif
 
 namespace TFSAggregator.TfsSpecific
@@ -45,7 +51,7 @@ namespace TFSAggregator.TfsSpecific
         /// This is the one where all the magic starts.  Main() so to speak.  I will load the settings, connect to TFS and apply the aggregation rules.
         /// </summary>
         public EventNotificationStatus ProcessEvent(
-            TeamFoundationRequestContext requestContext,
+            IVssRequestContext requestContext,
             NotificationType notificationType,
             object notificationEventArgs,
             out int statusCode,
@@ -58,8 +64,8 @@ namespace TFSAggregator.TfsSpecific
                 GetServerSettingsFullPath,
                 context,
                 logger,
-                (Uri _collectionUri, IdentityDescriptor _toImpersonate, ILogEvents _logger) =>
-                    new WorkItemRepository(_collectionUri, _toImpersonate, _logger));
+                (collectionUri, toImpersonate, logEvents) =>
+                    new WorkItemRepository(collectionUri, toImpersonate, logEvents));
 
             if (runtime.HasErrors)
             {
@@ -124,7 +130,7 @@ namespace TFSAggregator.TfsSpecific
         }
 
         /// <summary>
-        /// Returns the priority, thi sis used by TFS to decide in which order to run the ISubscriber plugins.
+        /// Returns the priority, this is used by TFS to decide in which order to run the ISubscriber plugins.
         /// </summary>
         public SubscriberPriority Priority
         {

@@ -10,18 +10,25 @@ using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.Integration.Server;
 using Microsoft.TeamFoundation.Server.Core;
 using Microsoft.TeamFoundation.WorkItemTracking.Server;
-#if TFS2015
+#if TFS2015 || TFS2015u1
 using Microsoft.VisualStudio.Services.Location.Server;
 #endif
 
 using ArtifactPropertyValue = Microsoft.TeamFoundation.Framework.Server.ArtifactPropertyValue;
-#if TFS2015
+#if TFS2015 || TFS2015u1
 using ILocationService = Microsoft.VisualStudio.Services.Location.Server.ILocationService;
 #elif TFS2013
 using ILocationService = Microsoft.TeamFoundation.Framework.Server.TeamFoundationLocationService;
 #else
 #error Define TFS version!
 #endif
+
+#if TFS2015u1
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.IVssRequestContext;
+#else
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext;
+#endif
+
 using ArtifactSpec = Microsoft.TeamFoundation.Framework.Server.ArtifactSpec;
 using PropertyValue = Microsoft.TeamFoundation.Framework.Server.PropertyValue;
 
@@ -29,9 +36,12 @@ namespace Aggregator.Core.Facade
 {
     public class RequestContextWrapper : IRequestContext
     {
-        private readonly TeamFoundationRequestContext context;
+        private readonly IVssRequestContext context;
 
-        public RequestContextWrapper(TeamFoundationRequestContext context, NotificationType notificationType, object notificationEventArgs)
+        public RequestContextWrapper(
+            IVssRequestContext context,
+            NotificationType notificationType,
+            object notificationEventArgs)
         {
             this.context = context;
             this.Notification = new NotificationWrapper(notificationType, notificationEventArgs as WorkItemChangedEvent);
@@ -141,7 +151,7 @@ namespace Aggregator.Core.Facade
             return identity?.Descriptor;
         }
 
-        private Uri GetCollectionUriFromContext(TeamFoundationRequestContext requestContext)
+        private Uri GetCollectionUriFromContext(IVssRequestContext requestContext)
         {
             ILocationService service = requestContext.GetService<ILocationService>();
             return service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));
