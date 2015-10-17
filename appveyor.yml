@@ -49,16 +49,7 @@ build:
   # MSBuild verbosity level: quiet|minimal|normal|detailed
   verbosity: minimal
 after_build:
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ServerPlugin\bin\%CONFIGURATION%\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\Aggregator.ConsoleApp\bin\%CONFIGURATION%\* -r -x!Microsoft.* -x!System.* -x!Newtonsoft.*
-  - git clone --depth=1 --single-branch --separate-git-dir=%TEMP%\dummy-git https://github.com/tfsaggregator/tfsaggregator.wiki.git docs
-  - rm docs\.git
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\docs\*.* -r
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\LICENSE*.txt
-  # pick samples
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\*.policies -r
-  # setup scripts from project root
-  - 7z a "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER%\*.ps1
+  - package.cmd "%APPVEYOR_PROJECT_NAME%-%GitVersion_SemVer%-%CONFIGURATION%-%GitVersion_BranchName%.zip" %APPVEYOR_BUILD_FOLDER% %CONFIGURATION%
 test:
   assemblies:
     - UnitTests.Core.dll
