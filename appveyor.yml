@@ -49,7 +49,7 @@ build:
   # MSBuild verbosity level: quiet|minimal|normal|detailed
   verbosity: minimal
 after_build:
-  - package.cmd "%APPVEYOR_PROJECT_NAME%-%GitVersion_SemVer%-%CONFIGURATION%-%GitVersion_BranchName%.zip" %APPVEYOR_BUILD_FOLDER% %CONFIGURATION%
+  - package.cmd "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER% %CONFIGURATION%
 test:
   assemblies:
     - UnitTests.Core.dll

@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B94443D9
 		appveyor.yml = appveyor.yml
 		AssemblyVersion.cs = AssemblyVersion.cs
 		install.ps1 = install.ps1
+		package.cmd = package.cmd
 		TfsAggregator.ico = TfsAggregator.ico
 		tfsaggregator.svg = tfsaggregator.svg
 		uninstall.ps1 = uninstall.ps1
