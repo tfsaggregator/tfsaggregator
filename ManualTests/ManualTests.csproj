@@ -71,7 +71,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="allInOne.policies" />
     <None Include="CascadeAndTrigger.policies" />
     <None Include="History.policies" />
     <None Include="SimpleRollup.policies" />

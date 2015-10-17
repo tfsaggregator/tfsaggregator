@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24606.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.Core", "Aggregator.Core\Aggregator.Core.csproj", "{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}"
 EndProject
@@ -21,16 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B94443D9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E0E7919C-5F01-45CC-A758-C3AF34F32F16}"
 	ProjectSection(SolutionItems) = preProject
-		docs\Console-App.md = docs\Console-App.md
-		docs\Developer-Info.md = docs\Developer-Info.md
-		docs\Install.md = docs\Install.md
 		LICENSE-2.0.txt = LICENSE-2.0.txt
-		docs\Policy-Examples.md = docs\Policy-Examples.md
-		docs\Policy-Syntax.md = docs\Policy-Syntax.md
 		README.md = README.md
-		docs\Scripting.md = docs\Scripting.md
-		docs\Troubleshooting.md = docs\Troubleshooting.md
-		docs\Upgrade-from-v1.md = docs\Upgrade-from-v1.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "references", "references", "{6D32EAB0-0194-408F-91EB-B2E2E0125C3E}"
