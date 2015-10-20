@@ -55,7 +55,7 @@ test:
   assemblies:
     - UnitTests.Core.dll
 after_test:
-  # TODO need to pass version number and change MSI name
+  # TODO need to pass version number and change MSI filename
   - msbuild build-installer.proj /p:Configuration=Release
     on:
       branch: wix-setup
