@@ -9,11 +9,31 @@
     <MediaTemplate EmbedCab="yes" />
 
     <Feature Id="ProductFeature" Title="TFS Aggregator" Level="1">
-      <ComponentGroupRef Id="ClientComponents" />
-      <ComponentGroupRef Id="ServerComponents" />
-      <ComponentGroupRef Id="RootComponents" />
-      <ComponentGroupRef Id="SampleComponents" />
-      <ComponentGroupRef Id="DocumentationComponents" />
+      <!-- HACK hard-coded versions -->
+      <Feature Id='Components2013' Level='0'>
+        <ComponentGroupRef Id="ClientComponents2013"/>
+        <ComponentGroupRef Id="ServerComponents1_2013"/>
+        <ComponentGroupRef Id="ServerComponents2_2013"/>
+        <Condition Level="1">TEAMFOUNDATIONSERVERVERSION="2013"</Condition>
+      </Feature>
+      <Feature Id='Components2015' Level='0'>
+        <ComponentGroupRef Id="ClientComponents2015"/>
+        <ComponentGroupRef Id="ServerComponents1_2015"/>
+        <ComponentGroupRef Id="ServerComponents2_2015"/>
+        <Condition Level="1">TEAMFOUNDATIONSERVERVERSION="2015"</Condition>
+      </Feature>
+      <Feature Id='Components2015.1' Level='0'>
+        <ComponentGroupRef Id="ClientComponents2015.1"/>
+        <ComponentGroupRef Id="ServerComponents1_2015.1"/>
+        <ComponentGroupRef Id="ServerComponents2_2015.1"/>
+        <Condition Level="1">TEAMFOUNDATIONSERVERVERSION="2015.1"</Condition>
+      </Feature>
+      <Feature Id='NeutralFeature' Level='1'>
+        <ComponentGroupRef Id="NeutralServerComponents" />
+        <ComponentGroupRef Id="RootComponents" />
+        <ComponentGroupRef Id="SampleComponents" />
+        <ComponentGroupRef Id="DocumentationComponents" />
+      </Feature>
     </Feature>
 
     <UIRef Id="WixUI_Minimal" />
@@ -26,18 +46,34 @@
     <Property Id="TEAMFOUNDATIONSERVER2013">
       <RegistrySearch
         Id="TeamFoundationServer12" Win64="yes"
-        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\12.0"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\12.0\InstalledComponents\ApplicationTier"
         Name="InstallPath" Type="raw" />
     </Property>
     <Property Id="TEAMFOUNDATIONSERVER2015">
       <RegistrySearch
         Id="TeamFoundationServer14" Win64="yes"
-        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\14.0"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\14.0\InstalledComponents\ApplicationTier"
         Name="InstallPath" Type="raw" />
+    </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2015BUILD">
+      <RegistrySearch
+        Id="TeamFoundationServer14Build" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\14.0"
+        Name="BuildNumber" Type="raw" />
     </Property>
     <Condition Message="This application requires Team Foundation Server 2013 or later.">
       <![CDATA[Installed OR TEAMFOUNDATIONSERVER2013 OR TEAMFOUNDATIONSERVER2015]]>
     </Condition>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2013" Before="LaunchConditions" Action="TFSVer2013">
+      <![CDATA[TEAMFOUNDATIONSERVER2013]]>
+    </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2015" Before="LaunchConditions" Action="TFSVer2015RTM">
+      <![CDATA[TEAMFOUNDATIONSERVER2015 AND TEAMFOUNDATIONSERVER2015BUILD = "14.0.23128.0"]]>
+    </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2015.1" Before="LaunchConditions" Action="TFSVer2015u1">
+      <![CDATA[TEAMFOUNDATIONSERVER2015 AND TEAMFOUNDATIONSERVER2015BUILD <> "14.0.23128.0"]]>
+    </SetProperty>
+
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
         <Directory Id="INSTALLFOLDER" Name="TFS Aggregator" >
@@ -46,12 +82,10 @@
           <Directory Id="DocumentationDir" Name="docs" />
         </Directory>
       </Directory>
-      <Directory Id="TFSINSTALLFOLDER" Name="SomeArbitraryValueToBeOverwritten">
-        <Directory Id="TFSApplicationTier" Name="Application Tier">
-          <Directory Id="TFSWebServices" Name="Web Services">
-            <Directory Id="TFSbin" Name="bin">
-              <Directory Id="TFSPlugins" Name="Plugins" />
-            </Directory>
+      <Directory Id="TFSINSTALLFOLDER" Name="Application Tier">
+        <Directory Id="TFSWebServices" Name="Web Services">
+          <Directory Id="TFSbin" Name="bin">
+            <Directory Id="TFSPlugins" Name="Plugins" />
           </Directory>
         </Directory>
       </Directory>
@@ -65,9 +99,6 @@
   </Fragment>
 
   <Fragment>
-    <!-- ComponentGroup Id="ClientComponents" arrives from harvesting... -->
-    <!-- ComponentGroup Id="SampleComponents" arrive from harvesting... -->
-    <!-- ComponentGroup Id="DocumentationComponents" arrives from harvesting... -->
     <ComponentGroup Id="RootComponents" Directory="INSTALLFOLDER">
       <Component Id="Readme">
         <File Id="Readme" Name="Readme.md" Source="$(var.SolutionDir)\Readme.md" />
@@ -76,13 +107,7 @@
         <File Id="License" Name="LICENSE-2.0.txt" Source="$(var.SolutionDir)\LICENSE-2.0.txt" />
       </Component>
     </ComponentGroup>
-    <ComponentGroup Id="ServerComponents" Directory="TFSPlugins">
-      <Component Id="ServerPlugin.Bin" Win64="yes" Guid="{772ED9B4-FDD3-4476-A217-EECC4DAEB217}">
-        <File Id="Aggregator.ServerPlugin" Name="$(var.Aggregator.ServerPlugin.TargetFileName)" Source="$(var.Aggregator.ServerPlugin.TargetPath)" />
-      </Component>
-      <Component Id="Core.Bin.Server" Win64="yes" Guid="{CCE5D6B7-C4B4-4391-A76F-11B729045D55}">
-        <File Id="Aggregator.Core.Server" Name="$(var.Aggregator.Core.TargetFileName)" Source="$(var.Aggregator.Core.TargetPath)" />
-      </Component>
+    <ComponentGroup Id="NeutralServerComponents" Directory="TFSPlugins">
       <Component Id="ServerPlugin.Config" Win64="yes" Permanent="yes" Guid="{BECD39C9-A75A-4823-AB29-1FC3915A0329}" >
         <File Id="ServerPlugin.policies" Name="TFSAggregator2.ServerPlugin.policies" Source="$(var.SolutionDir)\samples\TFSAggregator2.ServerPlugin.policies" />
       </Component>

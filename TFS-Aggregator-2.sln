@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B94443D9
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
 		AssemblyVersion.cs = AssemblyVersion.cs
+		build-installer.proj = build-installer.proj
 		collect.cmd = collect.cmd
 		install.ps1 = install.ps1
 		package.cmd = package.cmd
@@ -72,7 +73,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2015.1", "2015.1", "{CB1029
 		References\2015.1\PLACEHOLDER.txt = References\2015.1\PLACEHOLDER.txt
 	EndProjectSection
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup.Aggregator", "Setup.Aggregator\Setup.Aggregator.wixproj", "{6FD96C32-21B9-4E14-9A3A-6D1594798530}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "installer", "installer", "{E56DE6FC-74A4-4865-BFAD-8F330BC5618F}"
+	ProjectSection(SolutionItems) = preProject
+		Setup.Aggregator\Product.wxs = Setup.Aggregator\Product.wxs
+		Setup.Aggregator\Setup.Aggregator.wixproj = Setup.Aggregator\Setup.Aggregator.wixproj
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeatTransforms", "HeatTransforms", "{EAB2B1DE-FCBF-49F0-9BB8-E29F709E4002}"
+	ProjectSection(SolutionItems) = preProject
+		Setup.Aggregator\T2013.xslt = Setup.Aggregator\T2013.xslt
+		Setup.Aggregator\T2015.1.xslt = Setup.Aggregator\T2015.1.xslt
+		Setup.Aggregator\T2015.xslt = Setup.Aggregator\T2015.xslt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FilesToInstall", "FilesToInstall", "{61340591-23E3-4B33-9E23-8669CBC235A9}"
+	ProjectSection(SolutionItems) = preProject
+		Setup.Aggregator\AggregatorBanner.Bmp = Setup.Aggregator\AggregatorBanner.Bmp
+		Setup.Aggregator\AggregatorDialog.Bmp = Setup.Aggregator\AggregatorDialog.Bmp
+		Setup.Aggregator\LICENSE-2.0.rtf = Setup.Aggregator\LICENSE-2.0.rtf
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -248,32 +267,6 @@ Global
 		{9435D73C-6B29-463F-9B79-CD78E75FBA11}.Release-2015|Any CPU.ActiveCfg = Release|Any CPU
 		{9435D73C-6B29-463F-9B79-CD78E75FBA11}.Release-2015|ia64.ActiveCfg = Release-2015.1|Any CPU
 		{9435D73C-6B29-463F-9B79-CD78E75FBA11}.Release-2015|ia64.Build.0 = Release-2015.1|Any CPU
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug|Any CPU.ActiveCfg = Debug-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug|Any CPU.Build.0 = Debug-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug|ia64.ActiveCfg = Debug-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug|ia64.Build.0 = Debug-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug-2013|Any CPU.ActiveCfg = Debug-2013|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug-2013|ia64.ActiveCfg = Debug-2013|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug-2013|ia64.Build.0 = Debug-2013|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug-2015.1|Any CPU.ActiveCfg = Debug-2015.1|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug-2015.1|ia64.ActiveCfg = Debug-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug-2015.1|ia64.Build.0 = Debug-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug-2015|Any CPU.ActiveCfg = Debug-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug-2015|ia64.ActiveCfg = Debug-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Debug-2015|ia64.Build.0 = Debug-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release|Any CPU.ActiveCfg = Release-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release|Any CPU.Build.0 = Release-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release|ia64.ActiveCfg = Release-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release|ia64.Build.0 = Release-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release-2013|Any CPU.ActiveCfg = Release-2013|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release-2013|ia64.ActiveCfg = Release-2013|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release-2013|ia64.Build.0 = Release-2013|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release-2015.1|Any CPU.ActiveCfg = Release-2015.1|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release-2015.1|ia64.ActiveCfg = Release-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release-2015.1|ia64.Build.0 = Release-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release-2015|Any CPU.ActiveCfg = Release-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release-2015|ia64.ActiveCfg = Release-2015|ia64
-		{6FD96C32-21B9-4E14-9A3A-6D1594798530}.Release-2015|ia64.Build.0 = Release-2015|ia64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -283,5 +276,7 @@ Global
 		{79BBE553-2E3E-4D63-9369-4BDC30523FF1} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
 		{14D62C28-52D1-4267-A40A-80D31A5135CA} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
 		{CB1029ED-AFCB-492F-961B-5AF813F52625} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
+		{EAB2B1DE-FCBF-49F0-9BB8-E29F709E4002} = {E56DE6FC-74A4-4865-BFAD-8F330BC5618F}
+		{61340591-23E3-4B33-9E23-8669CBC235A9} = {E56DE6FC-74A4-4865-BFAD-8F330BC5618F}
 	EndGlobalSection
 EndGlobal
