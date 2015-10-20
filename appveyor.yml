@@ -3,6 +3,7 @@ branches:
   only:
     - master
     - develop
+    - wix-setup
 skip_tags: true
 os:
   - Visual Studio 2015
@@ -53,5 +54,11 @@ after_build:
 test:
   assemblies:
     - UnitTests.Core.dll
+after_test:
+  - msbuild build-installer.proj /p:Configuration=Release
+    on:
+      branch: wix-setup
+      configuration: Release-2015.1
 artifacts:
   - path: '*.zip'
+  - path: '*.msi'
