@@ -46,4 +46,4 @@ after_test:
   - msbuild build-installer.proj /p:Configuration=Release
 artifacts:
   - path: '*.zip'
-  - path: '*.msi'
+  - path: 'Setup.Aggregator\bin\Release\*.msi'
