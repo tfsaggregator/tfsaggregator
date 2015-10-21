@@ -82,9 +82,13 @@
 
   <Target Name="BuildMSI" Condition="$(BuildMSI)">
     <!-- HACK produce fake heat files to be overwritten -->
+    <PropertyGroup>
+      <IntermediateOutputPath>$(MSBuildProjectDirectory)\Setup.Aggregator\obj\$(Configuration)\</IntermediateOutputPath>
+    </PropertyGroup>
+    <MakeDir Directories="$(IntermediateOutputPath)" />
     <MSBuild Projects="$(MSBuildProjectDirectory)\Setup.Aggregator\Setup.Aggregator.wixproj"
              Targets="GenerateVersionSpecificFakes"
-             Properties="Configuration=$(Configuration);IntermediateOutputPath=$(MSBuildProjectDirectory)\Setup.Aggregator\obj\$(Configuration)\;CollectDir=$(CollectDir);CurrentTfsVersion=%(TfsVersion.Identity)" />
+             Properties="Configuration=$(Configuration);IntermediateOutputPath=$(IntermediateOutputPath);CollectDir=$(CollectDir);CurrentTfsVersion=%(TfsVersion.Identity)" />
     <!-- re-entrant call pattern to generate .wxs from collect -->
     <MSBuild Projects="$(MSBuildProjectDirectory)\Setup.Aggregator\Setup.Aggregator.wixproj"
              Targets="CollectVersionSpecificFiles"

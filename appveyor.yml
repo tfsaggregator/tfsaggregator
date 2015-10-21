@@ -7,13 +7,6 @@ branches:
 skip_tags: true
 os:
   - Visual Studio 2015
-configuration:
-  - Debug-2013
-  - Release-2013
-  - Debug-2015
-  - Release-2015
-  - Debug-2015.1
-  - Release-2015.1
 environment:
   containerURL:
     secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3x3eawhSGYVzFy4Pap0dOGw==
@@ -39,18 +32,12 @@ assembly_info:
   assembly_version: "2.0.{build}"
   assembly_file_version: "2.0.{build}"
   assembly_informational_version: "{version}"
-# Uncomment the following to use old C# compiler
-# before_build:
-#  - if %CONFIGURATION%==Debug-2013 set PATH=C:\Program Files (x86)\MSBuild\12.0\Bin;%PATH%
-#  - if %CONFIGURATION%==Release-2013 set PATH=C:\Program Files (x86)\MSBuild\12.0\Bin;%PATH%
 before_build:
   - nuget restore
 build:
   project: TFS-Aggregator-2.sln
   # MSBuild verbosity level: quiet|minimal|normal|detailed
   verbosity: minimal
-after_build:
-  - package.cmd "%APPVEYOR_PROJECT_NAME%-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.zip" %APPVEYOR_BUILD_FOLDER% %CONFIGURATION%
 test:
   assemblies:
     - UnitTests.Core.dll
