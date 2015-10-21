@@ -56,11 +56,7 @@ test:
     - UnitTests.Core.dll
 after_test:
   # TODO need to pass version number and change MSI filename
-  - msbuild build-installer.proj /p:Configuration=Release
-    on:
-      branch: wix-setup
-      configuration: Release-2015.1
+  - if %CONFIGURATION%==Release-2015.1 msbuild build-installer.proj /p:Configuration=Release
 artifacts:
   - path: '*.zip'
   - path: '*.msi'
-#EOF
