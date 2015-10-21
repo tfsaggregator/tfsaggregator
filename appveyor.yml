@@ -43,7 +43,7 @@ test:
     - UnitTests.Core.dll
 after_test:
   # TODO need to pass version number and change MSI filename
-  - if %CONFIGURATION%==Release-2015.1 msbuild build-installer.proj /p:Configuration=Release
+  - msbuild build-installer.proj /p:Configuration=Release
 artifacts:
   - path: '*.zip'
   - path: '*.msi'
