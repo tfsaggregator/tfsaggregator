@@ -5,6 +5,7 @@
     <CollectDir>$(MSBuildProjectDirectory)\_collect\$(Configuration)</CollectDir>
     <NeutralDir>$(CollectDir)\Neutral</NeutralDir>
     <WikiUrl>https://github.com/tfsaggregator/tfsaggregator.wiki.git</WikiUrl>
+    <BuildVersion Condition=" '$(BuildVersion)' == '' ">0.0.2-local</BuildVersion>
     <!-- HACK -->
     <GitExe>C:\Program Files (x86)\Git\bin\git.exe</GitExe>
     <!-- skip process steps by setting False -->
@@ -14,9 +15,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <TfsVersion Include="2013" />
-    <TfsVersion Include="2015" />
-    <TfsVersion Include="2015.1" />
+    <TfsVersion Include="2013" >
+      <Alt>2013</Alt>
+    </TfsVersion>
+    <TfsVersion Include="2015" >
+      <Alt>2015</Alt>
+    </TfsVersion>
+    <TfsVersion Include="2015.1" >
+      <Alt>2015u1</Alt>
+    </TfsVersion>
   </ItemGroup>
 
 
@@ -95,7 +102,7 @@
              Properties="Configuration=$(Configuration);CollectDir=$(CollectDir);CurrentTfsVersion=%(TfsVersion.Identity)" />
     <!-- default target => build MSI -->
     <MSBuild Projects="$(MSBuildProjectDirectory)\Setup.Aggregator\Setup.Aggregator.wixproj"
-             Properties="Configuration=$(Configuration);CollectDir=$(CollectDir);NeutralDir=$(NeutralDir);SolutionDir=$(MSBuildProjectDirectory)" />
+             Properties="@(TfsVersion -> 'Supports%(Alt)=True');OutputName=TFSAggregator-$(BuildVersion)-$(Configuration);Configuration=$(Configuration);CollectDir=$(CollectDir);NeutralDir=$(NeutralDir);SolutionDir=$(MSBuildProjectDirectory)" />
   </Target>
 
 

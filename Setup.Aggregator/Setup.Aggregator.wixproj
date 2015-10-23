@@ -27,20 +27,22 @@
     <AllowIdenticalRows>True</AllowIdenticalRows>
     <SuppressIces>ICE30</SuppressIces>
     <!-- hard-coded -->
-    <DefineConstants>SolutionDir=$(SolutionDir);ClientBinDir2013=$(CollectDir)\2013\bin;ClientBinDir2015=$(CollectDir)\2015\bin;ClientBinDir2015.1=$(CollectDir)\2015.1\bin;ServerBinDir2013=$(CollectDir)\2013\bin;ServerBinDir2015=$(CollectDir)\2015\bin;ServerBinDir2015.1=$(CollectDir)\2015.1\bin;SamplesDir=$(NeutralDir)\samples\;DocumentationDir=$(NeutralDir)\docs\</DefineConstants>
+    <_CollectDirs>ClientBinDir2013=$(CollectDir)\2013\bin;ClientBinDir2015=$(CollectDir)\2015\bin;ClientBinDir2015.1=$(CollectDir)\2015.1\bin;ServerBinDir2013=$(CollectDir)\2013\bin;ServerBinDir2015=$(CollectDir)\2015\bin;ServerBinDir2015.1=$(CollectDir)\2015.1\bin;SamplesDir=$(NeutralDir)\samples\;DocumentationDir=$(NeutralDir)\docs\</_CollectDirs>
+    <_Supports>Supports2013=$(Supports2013);Supports2015=$(Supports2015);Supports2015u1=$(Supports2015u1);</_Supports>
+    <DefineConstants>SolutionDir=$(SolutionDir);$(_Supports);$(_CollectDirs)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
     <!-- hard-coded -->
-    <Compile Include="obj\$(Configuration)\_clientbin_2013.wxs" />
-    <Compile Include="obj\$(Configuration)\_serverbin1_2013.wxs" />
-    <Compile Include="obj\$(Configuration)\_serverbin2_2013.wxs" />
-    <Compile Include="obj\$(Configuration)\_clientbin_2015.wxs" />
-    <Compile Include="obj\$(Configuration)\_serverbin1_2015.wxs" />
-    <Compile Include="obj\$(Configuration)\_serverbin2_2015.wxs" />
-    <Compile Include="obj\$(Configuration)\_clientbin_2015.1.wxs" />
-    <Compile Include="obj\$(Configuration)\_serverbin1_2015.1.wxs" />
-    <Compile Include="obj\$(Configuration)\_serverbin2_2015.1.wxs" />
+    <Compile Include="obj\$(Configuration)\_clientbin_2013.wxs" Condition=" '$(Supports2013)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin1_2013.wxs" Condition=" '$(Supports2013)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin2_2013.wxs" Condition=" '$(Supports2013)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_clientbin_2015.wxs" Condition=" '$(Supports2015)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin1_2015.wxs" Condition=" '$(Supports2015)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin2_2015.wxs" Condition=" '$(Supports2015)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_clientbin_2015.1.wxs" Condition=" '$(Supports2015u1)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin1_2015.1.wxs" Condition=" '$(Supports2015u1)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin2_2015.1.wxs" Condition=" '$(Supports2015u1)' == 'True' " />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUtilExtension">
