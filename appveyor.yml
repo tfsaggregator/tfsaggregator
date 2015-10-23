@@ -46,8 +46,8 @@ test:
   assemblies:
     - UnitTests.Core.dll
 after_test:
-  - msbuild build-installer.proj /p:Configuration=$(Configuration) /p:SourceBranch=$(APPVEYOR_REPO_BRANCH) /p:BuildVersion=$(APPVEYOR_BUILD_VERSION)
+  - msbuild build-installer.proj /p:Configuration=%CONFIGURATION% /p:SourceBranch=%APPVEYOR_REPO_BRANCH% /p:BuildVersion=%APPVEYOR_BUILD_VERSION%
 artifacts:
   - path: '*.zip'
-  - path: 'Setup.Aggregator\bin\$(Configuration)\*.msi'
+  - path: '**\*.msi'
     name: MSI
