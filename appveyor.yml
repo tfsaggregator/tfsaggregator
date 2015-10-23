@@ -7,6 +7,10 @@ branches:
 skip_tags: true
 os:
   - Visual Studio 2015
+configuration:
+  # build both flavors
+  - Debug
+  - Release
 environment:
   containerURL:
     secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3x3eawhSGYVzFy4Pap0dOGw==
@@ -42,8 +46,8 @@ test:
   assemblies:
     - UnitTests.Core.dll
 after_test:
-  # TODO need to pass version number and change MSI filename
-  - msbuild build-installer.proj /p:Configuration=Release
+  - msbuild build-installer.proj /p:Configuration=$(Configuration) /p:SourceBranch=$(APPVEYOR_REPO_BRANCH) /p:BuildVersion=$(APPVEYOR_BUILD_VERSION)
 artifacts:
   - path: '*.zip'
-  - path: 'Setup.Aggregator\bin\Release\*.msi'
+  - path: 'Setup.Aggregator\bin\$(Configuration)\*.msi'
+    name: MSI
