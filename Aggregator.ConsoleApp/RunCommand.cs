@@ -21,7 +21,7 @@ namespace Aggregator.ConsoleApp
         /// </summary>
         public RunCommand()
         {
-            this.IsCommand("run", "Applies a policy file to specified work item");
+            this.IsCommand("run", "Applies a policy file to specified work item(s)");
 
             this.HasOption(
                 "h|help",
@@ -77,7 +77,7 @@ namespace Aggregator.ConsoleApp
             this.PolicyFile = System.IO.Path.GetFullPath(this.PolicyFile);
 
             // need a logger to show errors in config file (Catch 22)
-            var logger = new ConsoleEventLogger(LogLevel.Warning);
+            var logger = new ConsoleEventLogger(LogLevel.Normal);
 
             var context = new RequestContext(this.TeamProjectCollectionUrl, this.TeamProjectName);
             var runtime = RuntimeContext.GetContext(
@@ -99,7 +99,6 @@ namespace Aggregator.ConsoleApp
                 return 3;
             }
 
-            logger.ConfigurationLoaded(this.PolicyFile);
             using (EventProcessor eventProcessor = new EventProcessor(runtime))
             {
                 try

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Management.Automation;
+using System.Reflection;
 using System.Runtime.Caching;
 using System.Xml.Schema;
 using Aggregator.Core.Configuration;
@@ -38,6 +40,28 @@ namespace Aggregator.Core.Monitoring
             {
                 this.logger.MinimumLogLevel = value;
             }
+        }
+
+        public void HelloWorld()
+        {
+            var title = GetCustomAttribute<AssemblyTitleAttribute>();
+            var config = GetCustomAttribute<AssemblyConfigurationAttribute>();
+            var fileVersion = GetCustomAttribute<AssemblyFileVersionAttribute>();
+            var infoVersion = GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+
+            this.logger.Log(
+                LogLevel.Normal,
+                "{0} started, version: {1}, build: {2}, configuration: {3}",
+                title.Title,
+                infoVersion.InformationalVersion,
+                fileVersion.Version,
+                config.Configuration);
+        }
+
+        private static T GetCustomAttribute<T>()
+            where T : Attribute
+        {
+            return Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(T), false).FirstOrDefault() as T;
         }
 
         public void ResultsFromScriptRun(string scriptName, Collection<PSObject> results)
