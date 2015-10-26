@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">ia64</Platform>
+    <ProductVersion>3.10</ProductVersion>
+    <ProjectGuid>6fd96c32-21b9-4e14-9a3a-6d1594798530</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>TFSAggregator</OutputName>
+    <OutputType>Package</OutputType>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|ia64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ia64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+    <!-- running heat on the same files multiple times -->
+    <AllowIdenticalRows>True</AllowIdenticalRows>
+    <SuppressIces>ICE30</SuppressIces>
+    <!-- hard-coded -->
+    <_CollectDirs>ClientBinDir2013=$(CollectDir)\2013\bin;ClientBinDir2015=$(CollectDir)\2015\bin;ClientBinDir2015.1=$(CollectDir)\2015.1\bin;ServerBinDir2013=$(CollectDir)\2013\bin;ServerBinDir2015=$(CollectDir)\2015\bin;ServerBinDir2015.1=$(CollectDir)\2015.1\bin;SamplesDir=$(NeutralDir)\samples\;DocumentationDir=$(NeutralDir)\docs\</_CollectDirs>
+    <_Supports>Supports2013=$(Supports2013);Supports2015=$(Supports2015);Supports2015u1=$(Supports2015u1);</_Supports>
+    <DefineConstants>SolutionDir=$(SolutionDir);$(_Supports);$(_CollectDirs)</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Product.wxs" />
+    <!-- hard-coded -->
+    <Compile Include="obj\$(Configuration)\_clientbin_2013.wxs" Condition=" '$(Supports2013)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin1_2013.wxs" Condition=" '$(Supports2013)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin2_2013.wxs" Condition=" '$(Supports2013)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_clientbin_2015.wxs" Condition=" '$(Supports2015)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin1_2015.wxs" Condition=" '$(Supports2015)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin2_2015.wxs" Condition=" '$(Supports2015)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_clientbin_2015.1.wxs" Condition=" '$(Supports2015u1)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin1_2015.1.wxs" Condition=" '$(Supports2015u1)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_serverbin2_2015.1.wxs" Condition=" '$(Supports2015u1)' == 'True' " />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\TfsAggregator.ico">
+      <Link>TfsAggregator.ico</Link>
+    </Content>
+    <Content Include="AggregatorBanner.Bmp" />
+    <Content Include="AggregatorDialog.Bmp" />
+    <Content Include="LICENSE-2.0.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <HarvestDirectory Include="$(NeutralDir)\samples\">
+      <ComponentGroupName>SampleComponents</ComponentGroupName>
+      <DirectoryRefId>SamplesDir</DirectoryRefId>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+      <PreprocessorVariable>var.SamplesDir</PreprocessorVariable>
+      <Link>
+      </Link>
+    </HarvestDirectory>
+  </ItemGroup>
+  <ItemGroup>
+    <HarvestDirectory Include="$(NeutralDir)\docs\">
+      <ComponentGroupName>DocumentationComponents</ComponentGroupName>
+      <DirectoryRefId>DocumentationDir</DirectoryRefId>
+      <SuppressRootDirectory>true</SuppressRootDirectory>
+      <PreprocessorVariable>var.DocumentationDir</PreprocessorVariable>
+      <Link>
+      </Link>
+    </HarvestDirectory>
+  </ItemGroup>
+  
+  <Import Project="$(WixTargetsPath)" />
+
+  <Target Name="GenerateVersionSpecificClientFakes">
+    <ItemGroup>
+      <OutputFile Include="$(IntermediateOutputPath)_clientbin_$(CurrentTfsVersion).wxs"/>
+      <clientbinBody Include='&lt;?xml version="1.0" encoding="utf-8"?>' />
+      <clientbinBody Include='&lt;Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">' />
+      <clientbinBody Include=' &lt;Fragment>' />
+      <clientbinBody Include='  &lt;DirectoryRef Id="ClientBinDir" />' />
+      <clientbinBody Include=' &lt;/Fragment>' />
+      <clientbinBody Include=' &lt;Fragment>' />
+      <clientbinBody Include='  &lt;ComponentGroup Id="ClientComponents$(CurrentTfsVersion)" />' />
+      <clientbinBody Include=' &lt;/Fragment>' />
+      <clientbinBody Include='&lt;/Wix>' />
+    </ItemGroup>
+    <WriteLinesToFile
+        File="@(OutputFile)"
+        Lines="@(clientbinBody)"
+        Overwrite="true"
+        Encoding="UTF-8" />
+  </Target>
+
+  <Target Name="GenerateVersionSpecificServerFakes">
+    <ItemGroup>
+      <OutputFile1 Include="$(IntermediateOutputPath)_serverbin1_$(CurrentTfsVersion).wxs"/>
+      <serverBody1 Include='&lt;?xml version="1.0" encoding="utf-8"?>' />
+      <serverBody1 Include='&lt;Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">' />
+      <serverBody1 Include=' &lt;Fragment>' />
+      <serverBody1 Include='  &lt;DirectoryRef Id="TFSPlugins" />' />
+      <serverBody1 Include=' &lt;/Fragment>' />
+      <serverBody1 Include=' &lt;Fragment>' />
+      <serverBody1 Include='  &lt;ComponentGroup Id="ServerComponents1_$(CurrentTfsVersion)" />' />
+      <serverBody1 Include=' &lt;/Fragment>' />
+      <serverBody1 Include='&lt;/Wix>' />
+      <OutputFile2 Include="$(IntermediateOutputPath)_serverbin2_$(CurrentTfsVersion).wxs"/>
+      <serverBody2 Include='&lt;?xml version="1.0" encoding="utf-8"?>' />
+      <serverBody2 Include='&lt;Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">' />
+      <serverBody2 Include=' &lt;Fragment>' />
+      <serverBody2 Include='  &lt;DirectoryRef Id="TFSPlugins" />' />
+      <serverBody2 Include=' &lt;/Fragment>' />
+      <serverBody2 Include=' &lt;Fragment>' />
+      <serverBody2 Include='  &lt;ComponentGroup Id="ServerComponents2_$(CurrentTfsVersion)" />' />
+      <serverBody2 Include=' &lt;/Fragment>' />
+      <serverBody2 Include='&lt;/Wix>' />
+    </ItemGroup>
+    <WriteLinesToFile
+        File="@(OutputFile1)"
+        Lines="@(serverBody1)"
+        Overwrite="true"
+        Encoding="UTF-8" />
+    <WriteLinesToFile
+        File="@(OutputFile2)"
+        Lines="@(serverBody2)"
+        Overwrite="true"
+        Encoding="UTF-8" />
+  </Target>
+  
+  <Target Name="GenerateVersionSpecificFakes" DependsOnTargets="GenerateVersionSpecificClientFakes;GenerateVersionSpecificServerFakes">
+  </Target>
+
+  <Target Name="CollectClientVersionSpecificFiles">
+    <ItemGroup>
+      <clientbin Include="$(CollectDir)\$(CurrentTfsVersion)\bin" />
+    </ItemGroup>
+    <HeatDirectory
+      NoLogo="True"
+      AutogenerateGuids="False" GenerateGuidsNow="True"
+      Transforms="T$(CurrentTfsVersion).xslt"
+      OutputFile="$(IntermediateOutputPath)_clientbin_$(CurrentTfsVersion).wxs"
+      Directory="@(clientbin)"
+      ComponentGroupName="ClientComponents$(CurrentTfsVersion)"
+      DirectoryRefId="ClientBinDir"
+      PreprocessorVariable="var.ClientBinDir$(CurrentTfsVersion)"
+      SuppressCom="True" SuppressRootDirectory="True" SuppressRegistry="True"
+      ToolPath="$(WixToolPath)" ContinueOnError="WarnAndContinue" />
+  </Target>
+
+  <Target Name="CollectServerVersionSpecificFiles">
+    <HeatFile
+      NoLogo="True"
+      AutogenerateGuids="False" GenerateGuidsNow="True"
+      SuppressUniqueIds="True"
+      Transforms="T$(CurrentTfsVersion).xslt"
+      OutputFile="$(IntermediateOutputPath)_serverbin1_$(CurrentTfsVersion).wxs"
+      File="$(CollectDir)\$(CurrentTfsVersion)\bin\TFSAggregator2.ServerPlugin.dll"
+      ComponentGroupName="ServerComponents1_$(CurrentTfsVersion)"
+      DirectoryRefId="TFSPlugins"
+      PreprocessorVariable="var.ServerBinDir$(CurrentTfsVersion)"
+      SuppressCom="True" SuppressRootDirectory="True" SuppressRegistry="True"
+      ToolPath="$(WixToolPath)" ContinueOnError="WarnAndContinue" />
+    <HeatFile
+      NoLogo="True"
+      AutogenerateGuids="False" GenerateGuidsNow="True"
+      SuppressUniqueIds="True"
+      Transforms="T$(CurrentTfsVersion).xslt"
+      OutputFile="$(IntermediateOutputPath)_serverbin2_$(CurrentTfsVersion).wxs"
+      File="$(CollectDir)\$(CurrentTfsVersion)\bin\TFSAggregator2.Core.dll"
+      ComponentGroupName="ServerComponents2_$(CurrentTfsVersion)"
+      DirectoryRefId="TFSPlugins"
+      PreprocessorVariable="var.ServerBinDir$(CurrentTfsVersion)"
+      SuppressCom="True" SuppressRootDirectory="True" SuppressRegistry="True"
+      ToolPath="$(WixToolPath)" ContinueOnError="WarnAndContinue" />
+  </Target>
+
+  <Target Name="CollectVersionSpecificFiles" DependsOnTargets="CollectClientVersionSpecificFiles;CollectServerVersionSpecificFiles">
+  </Target>
+
+</Project>

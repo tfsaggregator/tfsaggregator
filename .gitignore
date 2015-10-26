@@ -181,3 +181,4 @@ References/*.dll
 #Visual Studio Hoting process and cache
 .vs/
 References/*/*.dll
+_collect/

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  
+  <Product Id="*" Name="TFS Aggregator" Language="1033" Version="2.0.0.0" Manufacturer="TFS Aggregator Team" UpgradeCode="1c6958f9-0865-449d-abd9-71b4600ff1f0">
+    <Package InstallerVersion="400" Compressed="yes" InstallScope="perMachine" Platform="x64"/>
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="ProductFeature" Title="TFS Aggregator" Level="1">
+      <!-- HACK hard-coded versions -->
+      <?if $(var.Supports2013) = "True" ?>
+      <Feature Id='Components2013' Level='0'>
+        <ComponentGroupRef Id="ClientComponents2013"/>
+        <ComponentGroupRef Id="ServerComponents1_2013"/>
+        <ComponentGroupRef Id="ServerComponents2_2013"/>
+        <Condition Level="1">TEAMFOUNDATIONSERVERVERSION="2013"</Condition>
+      </Feature>
+      <?endif ?>
+      <?if $(var.Supports2015) = "True" ?>
+      <Feature Id='Components2015' Level='0'>
+        <ComponentGroupRef Id="ClientComponents2015"/>
+        <ComponentGroupRef Id="ServerComponents1_2015"/>
+        <ComponentGroupRef Id="ServerComponents2_2015"/>
+        <Condition Level="1">TEAMFOUNDATIONSERVERVERSION="2015"</Condition>
+      </Feature>
+      <?endif ?>
+      <?if $(var.Supports2015u1) = "True" ?>
+      <Feature Id='Components2015.1' Level='0'>
+        <ComponentGroupRef Id="ClientComponents2015.1"/>
+        <ComponentGroupRef Id="ServerComponents1_2015.1"/>
+        <ComponentGroupRef Id="ServerComponents2_2015.1"/>
+        <Condition Level="1">TEAMFOUNDATIONSERVERVERSION="2015.1"</Condition>
+      </Feature>
+      <?endif ?>
+      <Feature Id='NeutralFeature' Level='1'>
+        <ComponentGroupRef Id="NeutralServerComponents" />
+        <ComponentGroupRef Id="RootComponents" />
+        <ComponentGroupRef Id="SampleComponents" />
+        <ComponentGroupRef Id="DocumentationComponents" />
+      </Feature>
+    </Feature>
+
+    <UIRef Id="WixUI_Minimal" />
+    <WixVariable Id="WixUILicenseRtf" Value="LICENSE-2.0.rtf" />
+    <WixVariable Id="WixUIBannerBmp" Value="AggregatorBanner.Bmp"/>
+    <WixVariable Id="WixUIDialogBmp" Value="AggregatorDialog.Bmp"/>
+  </Product>
+
+  <Fragment>
+    <Property Id="TEAMFOUNDATIONSERVER2013">
+      <RegistrySearch
+        Id="TeamFoundationServer12" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\12.0\InstalledComponents\ApplicationTier"
+        Name="InstallPath" Type="raw" />
+    </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2015">
+      <RegistrySearch
+        Id="TeamFoundationServer14" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\14.0\InstalledComponents\ApplicationTier"
+        Name="InstallPath" Type="raw" />
+    </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2015BUILD">
+      <RegistrySearch
+        Id="TeamFoundationServer14Build" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\14.0"
+        Name="BuildNumber" Type="raw" />
+    </Property>
+    <Condition Message="This application requires Team Foundation Server 2013 or later.">
+      <![CDATA[Installed OR TEAMFOUNDATIONSERVER2013 OR TEAMFOUNDATIONSERVER2015]]>
+    </Condition>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2013" Before="LaunchConditions" Action="TFSVer2013">
+      <![CDATA[TEAMFOUNDATIONSERVER2013]]>
+    </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2015" Before="LaunchConditions" Action="TFSVer2015RTM">
+      <![CDATA[TEAMFOUNDATIONSERVER2015 AND TEAMFOUNDATIONSERVER2015BUILD = "14.0.23128.0"]]>
+    </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2015.1" Before="LaunchConditions" Action="TFSVer2015u1">
+      <![CDATA[TEAMFOUNDATIONSERVER2015 AND TEAMFOUNDATIONSERVER2015BUILD <> "14.0.23128.0"]]>
+    </SetProperty>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="TFS Aggregator" >
+          <Directory Id="ClientBinDir" Name="bin" />
+          <Directory Id="SamplesDir" Name="samples" />
+          <Directory Id="DocumentationDir" Name="docs" />
+        </Directory>
+      </Directory>
+      <Directory Id="TFSINSTALLFOLDER" Name="Application Tier">
+        <Directory Id="TFSWebServices" Name="Web Services">
+          <Directory Id="TFSbin" Name="bin">
+            <Directory Id="TFSPlugins" Name="Plugins" />
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+    <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2015]" Action="SetTFSINSTALLFOLDER2015">
+      TEAMFOUNDATIONSERVER2015
+    </SetDirectory>
+    <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2013]" Action="SetTFSINSTALLFOLDER2013">
+      TEAMFOUNDATIONSERVER2013 AND NOT TEAMFOUNDATIONSERVER2015
+    </SetDirectory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="RootComponents" Directory="INSTALLFOLDER">
+      <Component Id="Readme">
+        <File Id="Readme" Name="Readme.md" Source="$(var.SolutionDir)\Readme.md" />
+      </Component>
+      <Component Id="License">
+        <File Id="License" Name="LICENSE-2.0.txt" Source="$(var.SolutionDir)\LICENSE-2.0.txt" />
+      </Component>
+    </ComponentGroup>
+    <ComponentGroup Id="NeutralServerComponents" Directory="TFSPlugins">
+      <Component Id="ServerPlugin.Config" Win64="yes" Permanent="yes" Guid="{BECD39C9-A75A-4823-AB29-1FC3915A0329}" >
+        <File Id="ServerPlugin.policies" Name="TFSAggregator2.ServerPlugin.policies" Source="$(var.SolutionDir)\samples\TFSAggregator2.ServerPlugin.policies" />
+      </Component>
+      <Component Id="eventSource" Win64="yes">
+        <util:EventSource
+          KeyPath="yes"
+          Log="Application" Name="TFSAggregator"
+          EventMessageFile="[NETFRAMEWORK40INSTALLROOTDIR]EventLogMessages.dll" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
