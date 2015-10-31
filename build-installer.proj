@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  MSBuild file to generate the MSI for current $(Configuration)
+  
+  Iterates over supported TFS versions.
+-->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
     <CollectDir>$(MSBuildProjectDirectory)\_collect\$(Configuration)</CollectDir>
     <NeutralDir>$(CollectDir)\Neutral</NeutralDir>
     <WikiUrl>https://github.com/tfsaggregator/tfsaggregator.wiki.git</WikiUrl>
+    <!-- Local builds get v0, AppVeyor replace with proper value -->
     <BuildVersion Condition=" '$(BuildVersion)' == '' ">0.0.2-local</BuildVersion>
     <!-- HACK -->
     <GitExe>C:\Program Files (x86)\Git\bin\git.exe</GitExe>
@@ -14,6 +20,12 @@
     <BuildMSI>True</BuildMSI>
   </PropertyGroup>
 
+  <!-- TFS versions supported 
+  Note: these values are all-over the places, e.g.
+    - source code conditional compile
+    - WiX sources
+    - MSBuild project files
+  -->
   <ItemGroup>
     <TfsVersion Include="2013" >
       <Alt>2013</Alt>
@@ -60,7 +72,7 @@
       <docs>$(NeutralDir)\docs</docs>
     </PropertyGroup>
 
-    
+    <!-- take snapshot of GitHub Wiki -->
     <Exec Command="&quot;$(GitExe)&quot; clone --depth=1 --single-branch --separate-git-dir=$(GitDir) $(WikiUrl) docs"
           WorkingDirectory="$(NeutralDir)"
           Condition="!Exists('$(docs)')" />

@@ -15,11 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B94443D9
 		AssemblyVersion.cs = AssemblyVersion.cs
 		build-installer.proj = build-installer.proj
 		collect.cmd = collect.cmd
-		install.ps1 = install.ps1
 		package.cmd = package.cmd
 		TfsAggregator.ico = TfsAggregator.ico
 		tfsaggregator.svg = tfsaggregator.svg
-		uninstall.ps1 = uninstall.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E0E7919C-5F01-45CC-A758-C3AF34F32F16}"
@@ -35,7 +33,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "references", "references", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B1913F70-5A32-4EAE-BDD2-0C46295656A6}"
 	ProjectSection(SolutionItems) = preProject
+		samples\install.ps1 = samples\install.ps1
 		samples\TFSAggregator2.ServerPlugin.policies = samples\TFSAggregator2.ServerPlugin.policies
+		samples\uninstall.ps1 = samples\uninstall.ps1
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.ConsoleApp", "Aggregator.ConsoleApp\Aggregator.ConsoleApp.csproj", "{200CF240-476E-4429-A8FC-66001806A2DE}"
