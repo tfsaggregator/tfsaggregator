@@ -45,7 +45,7 @@ Migrating from v1
 ================================================
 If you used TFS Aggregator in the past, [here](https://github.com/tfsaggregator/tfsaggregator/wiki/Upgrade-from-v1) are the instructions on switching from older versions.
 
-If you're looking for the latest version of V1 (including a large number of fixes and security updates), you can still find it [here](https://github.com/tfsaggregator/tfsaggregator/tree/8ae990810f580c161247a6f6f4720d9b72d98288). 
+If you're looking for the latest version of V1 (including a large number of fixes and security updates), you can still find it [here](https://github.com/tfsaggregator/tfsaggregator/tree/v1.0.1). 
 
 **Note**: we won't provide any further support on this old version. But if you have a large investment in the old-style rules, it may provide you a better, stabler version until you're ready to move to V2. 
 
