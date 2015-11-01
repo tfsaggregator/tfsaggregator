@@ -2,7 +2,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/github/tfsaggregator/tfsaggregator?svg=true)](https://ci.appveyor.com/project/giuliov/tfsaggregator)
 [![Join the chat at https://gitter.im/tfsaggregator/tfsaggregator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tfsaggregator/tfsaggregator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This server side plugin for TFS 2013 and 2015 enables dynamic calculation of field values in TFS.
+This server side plugin for TFS 2013 and later enables dynamic calculation of field values in TFS and more.
 (For example: Dev work + Test Work = Total Work).
 
 ## What's new in v2
@@ -13,6 +13,8 @@ This server side plugin for TFS 2013 and 2015 enables dynamic calculation of fie
  * Console application to quickly test new rules
  * Richer logging
  * Test harness and modularity to ease adding new features
+ * Create new Work Items and Links using rules
+ * and more...
 
 Example Uses
 ================================================
@@ -27,7 +29,7 @@ Example Uses
 Setup & install
 ================================================
 
-The latest [Install](https://github.com/tfsaggregator/tfsaggregator/releases) file contains the full details to correctly setup Aggregator. The general process is:
+The latest [Install](https://github.com/tfsaggregator/tfsaggregator/releases) package contains the full details to correctly setup Aggregator. The general process is:
 
  1. Download and extract the binaries from the latest release
  2. Create `TFSAggregator2.ServerPlugin.policies` (or rename one of the existing samples to get started) and change the example settings to your actual settings.
@@ -37,31 +39,20 @@ The latest [Install](https://github.com/tfsaggregator/tfsaggregator/releases) fi
 That is all. TFS will detect that a file was copied in and will load it in.
 
 
-Troubleshooting
-================================================
-Is it not working? Here is the troubleshooting and how to get help page: [TFS Aggregator Troubleshooting](docs/Troubleshooting.md)
 
 
 Migrating from v1
 ================================================
-If you used TFS Aggregator in the past, [here](docs/Upgrade-from-v1.md) are the instructions on switching from older versions.
+If you used TFS Aggregator in the past, [here](https://github.com/tfsaggregator/tfsaggregator/wiki/Upgrade-from-v1) are the instructions on switching from older versions.
 
-If you're looking for the latest version of V1 (including a lare number of fixes and security updates), you can still find it [here](https://github.com/tfsaggregator/tfsaggregator/tree/v1.0.1). 
+If you're looking for the latest version of V1 (including a large number of fixes and security updates), you can still find it [here](https://github.com/tfsaggregator/tfsaggregator/tree/v1.0.1). 
 
-**Note**: we won't provide any further support on this old version. Bt if you have a large investment in the old-style rules, it may provide you a better, stabler version until you're ready to move to V2. 
+**Note**: we won't provide any further support on this old version. But if you have a large investment in the old-style rules, it may provide you a better, stabler version until you're ready to move to V2. 
 
 **Note**: You can run both V1 and V2 side-by-side on the same TFS system, you will have to be extra careful not to create infinite loops though.
 
-Build and customize
+
+Documentation
 ================================================
-We used Visual Studio Community Edition 2015 to develop this version.
-It requires a number of TFS assemblies that cannot be redistributed. 
 
-You can find the complete list:
-
- - 2013: [here](./References/2013/PLACEHOLDER.txt).
- - 2015: [here](./References/2015/PLACEHOLDER.txt).
-
-if you have TFS 2015 or TFS 2013 installed on your development machine, the assemblies for that version will be loaded automatically from the installation folder.
-
-More information on customizing and the internal design of TFS Aggregator is [here](docs/Developer-Info.md).
+The complete documentation is available on the [project's Wiki](https://github.com/tfsaggregator/tfsaggregator/wiki).

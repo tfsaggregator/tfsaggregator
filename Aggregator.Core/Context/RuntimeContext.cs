@@ -42,6 +42,8 @@ namespace Aggregator.Core.Context
             var runtime = (RuntimeContext)Cache.Get(cacheKey);
             if (runtime == null)
             {
+                logger.HelloWorld();
+
                 logger.LoadingConfiguration(settingsPath);
 
                 var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);

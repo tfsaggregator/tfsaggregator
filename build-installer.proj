@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  MSBuild file to generate the MSI for current $(Configuration)
+  
+  Iterates over supported TFS versions.
+-->
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <CollectDir>$(MSBuildProjectDirectory)\_collect\$(Configuration)</CollectDir>
+    <NeutralDir>$(CollectDir)\Neutral</NeutralDir>
+    <WikiUrl>https://github.com/tfsaggregator/tfsaggregator.wiki.git</WikiUrl>
+    <!-- Local builds get v0, AppVeyor replace with proper value -->
+    <BuildVersion Condition=" '$(BuildVersion)' == '' ">0.0.2-local</BuildVersion>
+    <!-- HACK -->
+    <GitExe>C:\Program Files (x86)\Git\bin\git.exe</GitExe>
+    <!-- skip process steps by setting False -->
+    <BuildSolution>True</BuildSolution>
+    <CollectFiles>True</CollectFiles>
+    <BuildMSI>True</BuildMSI>
+  </PropertyGroup>
+
+  <!-- TFS versions supported 
+  Note: these values are all-over the places, e.g.
+    - source code conditional compile
+    - WiX sources
+    - MSBuild project files
+  -->
+  <ItemGroup>
+    <TfsVersion Include="2013" >
+      <Alt>2013</Alt>
+    </TfsVersion>
+    <TfsVersion Include="2015" >
+      <Alt>2015</Alt>
+    </TfsVersion>
+    <TfsVersion Include="2015.1" >
+      <Alt>2015u1</Alt>
+    </TfsVersion>
+  </ItemGroup>
+
+
+
+  <Target Name="BuildSolution" Condition="$(BuildSolution)">
+    <MSBuild Projects="$(MSBuildProjectDirectory)\TFS-Aggregator-2.sln"
+             Properties="Configuration=$(Configuration)-%(TfsVersion.Identity)" />
+  </Target>
+
+
+
+  <Target Name="CollectVersionSpecificFiles">
+    
+    <ItemGroup>
+      <bin Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\*.exe" Exclude="*.vshost.exe" />
+      <bin Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\**\*.dll" Exclude="*.Server.*" />
+      <bin Include="$(MSBuildProjectDirectory)\Aggregator.ServerPlugin\bin\$(CurrentFlavor)\*.dll" Exclude="*.Server.*" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(CollectDir)\$(CurrentTfsVersion)\bin" />
+    <Copy SourceFiles="@(bin)" DestinationFolder="$(CollectDir)\$(CurrentTfsVersion)\bin" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" />
+  </Target>
+  
+  <Target Name="CollectFiles" Condition="$(CollectFiles)">
+
+    <!-- re-entrant call pattern -->
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CollectVersionSpecificFiles"
+             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity)" />
+
+    <MakeDir Directories="$(NeutralDir)" />
+
+    <PropertyGroup>
+      <GitDir>$(CollectDir)\.dummy-git</GitDir>
+      <docs>$(NeutralDir)\docs</docs>
+    </PropertyGroup>
+
+    <!-- take snapshot of GitHub Wiki -->
+    <Exec Command="&quot;$(GitExe)&quot; clone --depth=1 --single-branch --separate-git-dir=$(GitDir) $(WikiUrl) docs"
+          WorkingDirectory="$(NeutralDir)"
+          Condition="!Exists('$(docs)')" />
+    <Exec Command="&quot;$(GitExe)&quot; --git-dir=$(GitDir) pull"
+          WorkingDirectory="$(docs)"
+          Condition="Exists('$(docs)')" />
+
+    <ItemGroup>
+      <samples Include="$(MSBuildProjectDirectory)\samples\*.*" />
+      <samples Include="$(MSBuildProjectDirectory)\UnitTests.Core\**\*.policies" />
+      <samples Include="$(MSBuildProjectDirectory)\ManualTests\**\*.policies" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(NeutralDir)\samples" />
+    <Copy SourceFiles="@(samples)" DestinationFolder="$(NeutralDir)\samples" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" />
+
+    <ItemGroup>
+      <miscellanea Include="$(MSBuildProjectDirectory)\LICENSE*.*" />
+      <miscellanea Include="$(MSBuildProjectDirectory)\readme*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(miscellanea)" DestinationFolder="$(NeutralDir)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" />
+
+  </Target>
+
+
+
+  <Target Name="BuildMSI" Condition="$(BuildMSI)">
+    <!-- HACK produce fake heat files to be overwritten -->
+    <PropertyGroup>
+      <IntermediateOutputPath>$(MSBuildProjectDirectory)\Setup.Aggregator\obj\$(Configuration)\</IntermediateOutputPath>
+    </PropertyGroup>
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <MSBuild Projects="$(MSBuildProjectDirectory)\Setup.Aggregator\Setup.Aggregator.wixproj"
+             Targets="GenerateVersionSpecificFakes"
+             Properties="Configuration=$(Configuration);IntermediateOutputPath=$(IntermediateOutputPath);CollectDir=$(CollectDir);CurrentTfsVersion=%(TfsVersion.Identity)" />
+    <!-- re-entrant call pattern to generate .wxs from collect -->
+    <MSBuild Projects="$(MSBuildProjectDirectory)\Setup.Aggregator\Setup.Aggregator.wixproj"
+             Targets="CollectVersionSpecificFiles"
+             Properties="Configuration=$(Configuration);CollectDir=$(CollectDir);CurrentTfsVersion=%(TfsVersion.Identity)" />
+    <!-- default target => build MSI -->
+    <MSBuild Projects="$(MSBuildProjectDirectory)\Setup.Aggregator\Setup.Aggregator.wixproj"
+             Properties="@(TfsVersion -> 'Supports%(Alt)=True');OutputName=TFSAggregator-$(BuildVersion)-$(Configuration);Configuration=$(Configuration);CollectDir=$(CollectDir);NeutralDir=$(NeutralDir);SolutionDir=$(MSBuildProjectDirectory)" />
+  </Target>
+
+
+
+  <Target Name="Build" DependsOnTargets="BuildSolution;CollectFiles;BuildMSI">
+  </Target>
+
+</Project>
