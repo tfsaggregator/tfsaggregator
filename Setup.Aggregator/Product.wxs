@@ -10,11 +10,14 @@
 
     <Feature Id="ProductFeature" Title="TFS Aggregator" Level="1">
       <!-- HACK hard-coded versions -->
+      <!-- TODO generate these snippets -->
       <?if $(var.Supports2013) = "True" ?>
       <Feature Id='Components2013' Level='0'>
         <ComponentGroupRef Id="ClientComponents2013"/>
         <ComponentGroupRef Id="ServerComponents1_2013"/>
+        <ComponentGroupRef Id="ServerComponents1d_2013"/>
         <ComponentGroupRef Id="ServerComponents2_2013"/>
+        <ComponentGroupRef Id="ServerComponents2d_2013"/>
         <Condition Level="1">TEAMFOUNDATIONSERVERVERSION="2013"</Condition>
       </Feature>
       <?endif ?>
@@ -22,7 +25,9 @@
       <Feature Id='Components2015' Level='0'>
         <ComponentGroupRef Id="ClientComponents2015"/>
         <ComponentGroupRef Id="ServerComponents1_2015"/>
+        <ComponentGroupRef Id="ServerComponents1d_2015"/>
         <ComponentGroupRef Id="ServerComponents2_2015"/>
+        <ComponentGroupRef Id="ServerComponents2d_2015"/>
         <Condition Level="1">TEAMFOUNDATIONSERVERVERSION="2015"</Condition>
       </Feature>
       <?endif ?>
@@ -30,7 +35,9 @@
       <Feature Id='Components2015.1' Level='0'>
         <ComponentGroupRef Id="ClientComponents2015.1"/>
         <ComponentGroupRef Id="ServerComponents1_2015.1"/>
+        <ComponentGroupRef Id="ServerComponents1d_2015.1"/>
         <ComponentGroupRef Id="ServerComponents2_2015.1"/>
+        <ComponentGroupRef Id="ServerComponents2d_2015.1"/>
         <Condition Level="1">TEAMFOUNDATIONSERVERVERSION="2015.1"</Condition>
       </Feature>
       <?endif ?>
