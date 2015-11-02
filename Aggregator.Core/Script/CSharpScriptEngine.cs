@@ -2,6 +2,8 @@
 using Aggregator.Core.Monitoring;
 using Aggregator.Core.Script;
 
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
 namespace Aggregator.Core
 {
     using Microsoft.CSharp;
@@ -17,7 +19,7 @@ namespace Aggregator.Core
         {
             get
             {
-                return 14;
+                return 15;
             }
         }
 
@@ -32,6 +34,7 @@ namespace Aggregator.Core
   using Aggregator.Core.Navigation;
   using Aggregator.Core.Monitoring;
   using System.Linq;
+  using CoreFieldReferenceNames = Microsoft.TeamFoundation.WorkItemTracking.Client.CoreFieldReferenceNames;
 
   public class " + this.ClassPrefix + scriptName + @" : Aggregator.Core.Script.IDotNetScript
   {

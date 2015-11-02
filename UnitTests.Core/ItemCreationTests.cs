@@ -6,6 +6,7 @@ using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.Framework.Server;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using NSubstitute;
@@ -104,7 +105,8 @@ namespace UnitTests.Core
             var parent = new WorkItemMock(repository);
             parent.Id = 1;
             parent.TypeName = "Bug";
-            parent["Title"] = "My bug #1";
+            parent[CoreFieldReferenceNames.Title] = "My bug #1";
+            parent[CoreFieldReferenceNames.TeamProject] = "MyTeamProject";
 
             repository.SetWorkItems(new[] { parent });
 
@@ -122,8 +124,6 @@ namespace UnitTests.Core
                 Assert.AreEqual(0, result.ExceptionProperties.Count());
                 Assert.AreEqual(1, repository.LoadedWorkItems.Count);
                 Assert.AreEqual(1, repository.CreatedWorkItems.Count);
-                Assert.IsTrue(parent.InternalWasSaveCalled);
-                Assert.IsTrue(parent.HasChildren());
             }
         }
     }

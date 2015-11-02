@@ -11,6 +11,8 @@ namespace Aggregator.Core.Interfaces
         IWorkItem GetWorkItem(int workItemId);
 
         IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName);
+
+        IWorkItem MakeNewWorkItem(IWorkItem inSameProjectAs, string workItemTypeName);
     }
 
     /// <summary>

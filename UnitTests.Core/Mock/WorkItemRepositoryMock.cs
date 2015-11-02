@@ -7,6 +7,8 @@ using Aggregator.Core;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
 namespace UnitTests.Core.Mock
 {
     internal class WorkItemRepositoryMock : IWorkItemRepository
@@ -36,13 +38,24 @@ namespace UnitTests.Core.Mock
 
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
         {
-            var newWorkItem = new WorkItemMock(this);
-            newWorkItem.Id = 0;
-            newWorkItem.TypeName = workItemTypeName;
+            var newWorkItem = new WorkItemMock(this)
+            {
+                Id = 0, TypeName = workItemTypeName
+            };
 
             // don't forget to add to collection
             this.createdWorkItems.Add(newWorkItem);
             return newWorkItem;
+        }
+
+        public IWorkItem MakeNewWorkItem(IWorkItem inSameProjectAs, string workItemTypeName)
+        {
+            if (inSameProjectAs == null)
+            {
+                throw new ArgumentNullException(nameof(inSameProjectAs));
+            }
+
+            return this.MakeNewWorkItem(workItemTypeName, inSameProjectAs[CoreFieldReferenceNames.TeamProject] as string);
         }
 
         public ReadOnlyCollection<IWorkItem> LoadedWorkItems

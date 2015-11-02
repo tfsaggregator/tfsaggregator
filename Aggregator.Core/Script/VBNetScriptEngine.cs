@@ -17,7 +17,7 @@ namespace Aggregator.Core
         {
             get
             {
-                return 14;
+                return 15;
             }
         }
 
@@ -31,6 +31,7 @@ Imports Aggregator.Core.Interfaces
 Imports Aggregator.Core.Navigation
 Imports Aggregator.Core.Monitoring
 Imports System.Linq
+Imports CoreFieldReferenceNames = Microsoft.TeamFoundation.WorkItemTracking.Client.CoreFieldReferenceNames
 
 Namespace " + this.Namespace + @"
   Public Class " + this.ClassPrefix + scriptName + @"

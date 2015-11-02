@@ -19,10 +19,12 @@
           appliesTo="Bug">
         <![CDATA[
         var parent = self;
-        //var child = store.MakeNewWorkItem(self.ProjectName, "Task");
-        var child = store.MakeNewWorkItem("fake", "Task");
-        child["Title"] = "Task auto-generated for " + parent["Title"];
-        parent.AddWorkItemLink(child, WorkItemImplementationBase.ChildRelationship);
+        if (!self.HasChildren())
+        {
+            var child = store.MakeNewWorkItem((string)parent["System.TeamProject"], "Task");
+            child["Title"] = "Task auto-generated for " + parent["Title"];
+            child.AddWorkItemLink(parent, WorkItemImplementationBase.ParentRelationship);
+        }
         ]]>
     </rule>
 

@@ -67,12 +67,31 @@ namespace Aggregator.Core.Facade
 
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
         {
+            if (string.IsNullOrWhiteSpace(projectName))
+            {
+                throw new ArgumentNullException(nameof(projectName));
+            }
+            if (string.IsNullOrWhiteSpace(workItemTypeName))
+            {
+                throw new ArgumentNullException(nameof(workItemTypeName));
+            }
+
             var targetType = this.workItemStore.Projects[projectName].WorkItemTypes[workItemTypeName];
             var target = new WorkItem(targetType);
 
             IWorkItem justCreated = new WorkItemWrapper(target, this, this.logger);
             this.createdWorkItems.Add(justCreated);
             return justCreated;
+        }
+
+        public IWorkItem MakeNewWorkItem(IWorkItem inSameProjectAs, string workItemTypeName)
+        {
+            if (inSameProjectAs == null)
+            {
+                throw new ArgumentNullException(nameof(inSameProjectAs));
+            }
+
+            return this.MakeNewWorkItem(workItemTypeName, inSameProjectAs[CoreFieldReferenceNames.TeamProject] as string);
         }
 
         public void Dispose()
