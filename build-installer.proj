@@ -97,6 +97,13 @@
 
   </Target>
 
+  <Target Name="FixupWikiLinks">
+    <ItemGroup>
+      <WikiPages Include="$(NeutralDir)\docs\*.md" />
+    </ItemGroup>
+    <FixupWikiLinks Pages="@(WikiPages)" />
+  </Target>
+
 
 
   <Target Name="BuildMSI" Condition="$(BuildMSI)">
@@ -119,7 +126,60 @@
 
 
 
-  <Target Name="Build" DependsOnTargets="BuildSolution;CollectFiles;BuildMSI">
+  <Target Name="Build" DependsOnTargets="BuildSolution;CollectFiles;FixupWikiLinks;BuildMSI">
   </Target>
 
+
+  <UsingTask TaskName="FixupWikiLinks" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <Pages ParameterType="Microsoft.Build.Framework.ITaskItem[]" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System.Core" />
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Text.RegularExpressions" />
+      <Code Type="Fragment" Language="cs">
+      <![CDATA[
+        foreach(var page in this.Pages)
+        {
+            string fileName = page.GetMetadata("FullPath");
+            if(!File.Exists(fileName))
+            {
+              Log.LogError("Could not find file: {0}", fileName);
+              return false;
+            }
+            string find = @"
+\[ (?<Label> [^\]]* ) \]
+\(
+  (?:https\:\/\/github\.com\/tfsaggregator\/tfsaggregator\/wiki\/)? # drop
+  (?:
+    (?<Page> [A-Za-z0-9\-_]+ )
+    | (?<Url> \S* )
+  )
+\)
+";
+            var options = RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace;
+            var timeOut = TimeSpan.FromSeconds(2);
+            string content = File.ReadAllText(fileName);
+            string result = Regex.Replace(
+                content,
+                find,
+                (Match m) => {
+                    string Label = m.Groups["Label"].Value;
+                    string Page = m.Groups["Page"].Value;
+                    string Url = m.Groups["Url"].Value;
+                    return string.IsNullOrWhiteSpace(Page)
+                        ? string.Format("[{0}]({1})", Label, Url)
+                        : string.Format("[{0}]({1}.md)", Label, Page);
+                },
+                options,
+                timeOut);
+            File.WriteAllText(fileName, result);
+        }
+      ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+  
 </Project>
