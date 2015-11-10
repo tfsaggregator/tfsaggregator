@@ -13,14 +13,14 @@
         
         string oldText = self["Title"].ToString();
 
-        string regex = @"\{(?<parName>\w+)\}(?:\([^\)]+\))?";
+        string regex = @"\{(?<paramName>\w+)\}(?:\([^\)]+\))?";
         string newText = System.Text.RegularExpressions.Regex.Replace(
               oldText,
               regex,
               (System.Text.RegularExpressions.Match m) =>
               {
-                  string parName = m.Groups["parName"].Value;
-                  return string.Format("{{{0}}}({1})", parName, userParams[parName]);
+                  string paramName = m.Groups["paramName"].Value;
+                  return string.Format("{{{0}}}({1})", paramName, userParams[paramName]);
               },
               System.Text.RegularExpressions.RegexOptions.Singleline);
               
