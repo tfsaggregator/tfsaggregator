@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Xml;
 
 using Aggregator.Core;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System.Xml;
 
 namespace UnitTests.Core.Mock
 {
@@ -21,6 +21,11 @@ namespace UnitTests.Core.Mock
         private readonly List<IWorkItem> createdWorkItems = new List<IWorkItem>();
 
         public ILogEvents Logger { get; set; }
+
+        private int newItemId = 0;
+        private int nextValidId = 1000;
+
+        internal int PickNextId { get { return this.nextValidId++; } }
 
         public IWorkItem GetWorkItem(int workItemId)
         {
@@ -41,7 +46,7 @@ namespace UnitTests.Core.Mock
         {
             var newWorkItem = new WorkItemMock(this)
             {
-                Id = 0, TypeName = workItemTypeName
+                Id = --this.newItemId, TypeName = workItemTypeName
             };
 
             // don't forget to add to collection

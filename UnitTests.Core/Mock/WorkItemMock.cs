@@ -64,6 +64,7 @@ namespace UnitTests.Core.Mock
 
         public void Save()
         {
+            this.Id = ((WorkItemRepositoryMock)this.Store).PickNextId;
             this.internalSaveCalled++;
         }
 
@@ -143,6 +144,9 @@ namespace UnitTests.Core.Mock
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
         {
+            if (this.Id < 0 || destination.Id < 0)
+                throw new ApplicationException("emulate TF237128: Target workitem Id should be set before adding link to collection.");
+
             // HACK: should use the code in wrapper...
             var relationship = new WorkItemLinkMock(linkTypeName, destination.Id, this.Store);
 

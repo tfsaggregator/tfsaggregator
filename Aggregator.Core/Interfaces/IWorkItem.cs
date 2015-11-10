@@ -46,6 +46,8 @@ namespace Aggregator.Core.Interfaces
 
         // state helpers; must be on interface to work on WorkItemLazyReference
         void TransitionToState(string state, string comment);
+
+        void Save();
     }
 
     public interface IWorkItemImplementation
@@ -62,8 +64,6 @@ namespace Aggregator.Core.Interfaces
         bool IsDirty { get; }
 
         void PartialOpen();
-
-        void Save();
 
         void TryOpen();
 
