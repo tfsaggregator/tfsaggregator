@@ -23,6 +23,7 @@
         {
             var child = store.MakeNewWorkItem((string)parent["System.TeamProject"], "Task");
             child["Title"] = "Task auto-generated for " + parent["Title"];
+            child.Save();
             child.AddWorkItemLink(parent, WorkItemImplementationBase.ParentRelationship);
         }
         ]]>

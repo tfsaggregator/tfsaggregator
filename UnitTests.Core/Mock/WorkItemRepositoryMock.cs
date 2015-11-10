@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Xml;
 
 using Aggregator.Core;
 using Aggregator.Core.Interfaces;
@@ -20,6 +21,11 @@ namespace UnitTests.Core.Mock
         private readonly List<IWorkItem> createdWorkItems = new List<IWorkItem>();
 
         public ILogEvents Logger { get; set; }
+
+        private int newItemId = 0;
+        private int nextValidId = 1000;
+
+        internal int PickNextId { get { return this.nextValidId++; } }
 
         public IWorkItem GetWorkItem(int workItemId)
         {
@@ -40,7 +46,7 @@ namespace UnitTests.Core.Mock
         {
             var newWorkItem = new WorkItemMock(this)
             {
-                Id = 0, TypeName = workItemTypeName
+                Id = --this.newItemId, TypeName = workItemTypeName
             };
 
             // don't forget to add to collection
@@ -56,6 +62,30 @@ namespace UnitTests.Core.Mock
             }
 
             return this.MakeNewWorkItem(workItemTypeName, inSameProjectAs[CoreFieldReferenceNames.TeamProject] as string);
+        }
+
+        public IEnumerable<string> GetGlobalList(string globalListName)
+        {
+            string boo = @"<gl:GLOBALLISTS xmlns:gl='http://schemas.microsoft.com/VisualStudio/2005/workitemtracking/globallists'>
+  <GLOBALLIST name='Builds - Share_Migration_toolkit_for_Sharepoint'>
+    <LISTITEM value='ShareMigrate2/ShareMigrate2_20130318.1' />
+  </GLOBALLIST>
+  <GLOBALLIST name='Builds - MyBuildTests'>
+    <LISTITEM value='DumpEnvironment/DumpEnvironment_20150528.1' />
+    <LISTITEM value='DumpEnvironment/DumpEnvironment_20150528.2' />
+    <LISTITEM value='DumpEnvironment/DumpEnvironment_20150528.3' />
+    <LISTITEM value='DumpEnvironment/DumpEnvironment_20150528.4' />
+    <LISTITEM value='DumpEnvironment/DumpEnvironment_20150528.5' />
+  </GLOBALLIST>
+  <GLOBALLIST name='Aggregator - UserParameters'>
+    <LISTITEM value= 'myParameter=30' />
+  </GLOBALLIST>
+</gl:GLOBALLISTS>";
+
+            var sourceGL = new XmlDocument();
+            sourceGL.LoadXml(boo);
+
+            return Aggregator.Core.Facade.WorkItemRepository.ParseGlobalList(sourceGL, globalListName);
         }
 
         public ReadOnlyCollection<IWorkItem> LoadedWorkItems
