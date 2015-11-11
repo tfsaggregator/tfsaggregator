@@ -71,6 +71,7 @@ namespace Aggregator.Core.Facade
             {
                 throw new ArgumentNullException(nameof(projectName));
             }
+
             if (string.IsNullOrWhiteSpace(workItemTypeName))
             {
                 throw new ArgumentNullException(nameof(workItemTypeName));

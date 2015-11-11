@@ -12,11 +12,6 @@ using Aggregator.Core.Monitoring;
 
 namespace Aggregator.Core.Script
 {
-    public interface IDotNetScript
-    {
-        object RunScript(IWorkItemExposed self, IWorkItemRepositoryExposed store, IRuleLogger scriptLogger);
-    }
-
     /// <summary>
     /// Compiles .Net code on the fly as if scripting engine
     /// </summary>
