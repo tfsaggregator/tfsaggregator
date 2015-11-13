@@ -28,10 +28,12 @@ namespace IntegrationTests.Plugin
 
         public TfsFixture()
         {
-            this.SQLInstance = string.Format(@"{0}\SQLEXPRESS", Environment.MachineName);
-            this.CollectionName = "TfsAggregator2IntegrationTest";
-            this.ProjectName = "ScrumTfvc";
-            this.SQLDataDir = @"C:\Program Files\Microsoft SQL Server\MSSQL12.SQLEXPRESS\MSSQL\DATA";
+            var settings = System.Configuration.ConfigurationManager.AppSettings;
+
+            this.SQLInstance = string.Format(settings["TFS.SQLInstance"], Environment.MachineName);
+            this.CollectionName = settings["TFS.CollectionName"];
+            this.ProjectName = settings["TFS.ProjectName"];
+            this.SQLDataDir = settings["TFS.SQLDataDir"];
 
             this.DetectTeamFoundationSever();
             this.DropCollectionDatabase();
