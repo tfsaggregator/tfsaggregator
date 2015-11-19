@@ -1,10 +1,10 @@
-﻿namespace Aggregator.ConsoleApp
-{
-    using System;
-    using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
-    using Core;
-    using Core.Monitoring;
+using Aggregator.Core.Monitoring;
+
+namespace Aggregator.ConsoleApp
+{
 
     internal class ConsoleTextLogger : ITextLogger
     {
