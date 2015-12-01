@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Aggregator.Core.Interfaces
 {
     /// <summary>
@@ -10,5 +12,7 @@ namespace Aggregator.Core.Interfaces
         IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName);
 
         IWorkItem MakeNewWorkItem(IWorkItem inSameProjectAs, string workItemTypeName);
+
+        IEnumerable<string> GetGlobalList(string globalListName);
     }
 }
