@@ -76,9 +76,12 @@
     </PropertyGroup>
 
     <!-- take snapshot of GitHub Wiki -->
-    <RemoveDir Directories="$(docs)" />
     <Exec Command="&quot;$(GitExe)&quot; clone --depth=1 --single-branch --separate-git-dir=$(GitDir) $(WikiUrl) docs"
-          WorkingDirectory="$(NeutralDir)" />
+          WorkingDirectory="$(NeutralDir)"
+          Condition="!Exists('$(docs)')" />
+    <Exec Command="&quot;$(GitExe)&quot; --git-dir=$(GitDir) pull"
+          WorkingDirectory="$(docs)"
+          Condition="Exists('$(docs)')" />
 
     <ItemGroup>
       <samples Include="$(MSBuildProjectDirectory)\samples\*.*" />
