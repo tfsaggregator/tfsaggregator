@@ -62,6 +62,12 @@
         Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\12.0\InstalledComponents\ApplicationTier"
         Name="InstallPath" Type="raw" />
     </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2013BUILD">
+      <RegistrySearch
+        Id="TeamFoundationServer12Build" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\12.0"
+        Name="BuildNumber" Type="raw" />
+    </Property>
     <Property Id="TEAMFOUNDATIONSERVER2015">
       <RegistrySearch
         Id="TeamFoundationServer14" Win64="yes"
@@ -74,8 +80,8 @@
         Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\14.0"
         Name="BuildNumber" Type="raw" />
     </Property>
-    <Condition Message="This application requires Team Foundation Server 2013 or later.">
-      <![CDATA[Installed OR TEAMFOUNDATIONSERVER2013 OR TEAMFOUNDATIONSERVER2015]]>
+    <Condition Message="This application requires Team Foundation Server 2013 Update 2 or later.">
+      <![CDATA[Installed OR (TEAMFOUNDATIONSERVER2013BUILD > "30323") OR TEAMFOUNDATIONSERVER2015]]>
     </Condition>
     <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2013" Before="LaunchConditions" Action="TFSVer2013">
       <![CDATA[TEAMFOUNDATIONSERVER2013]]>
