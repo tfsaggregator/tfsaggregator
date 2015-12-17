@@ -12,9 +12,8 @@
     <WikiUrl>https://github.com/tfsaggregator/tfsaggregator.wiki.git</WikiUrl>
     <!-- Local builds get v0, AppVeyor replace with proper value -->
     <BuildVersion Condition=" '$(BuildVersion)' == '' ">0.0.2-local</BuildVersion>
-    <!-- HACK -->
-    <GitExe Condition="'$(CI)' != 'True'">C:\Program Files (x86)\Git\bin\git.exe</GitExe>
-    <GitExe Condition="'$(CI)' == 'True'">git</GitExe>
+    <!-- Defaults to global install -->
+    <GitExe>git</GitExe>
     <!-- skip process steps by setting False -->
     <BuildSolution>True</BuildSolution>
     <CollectFiles>True</CollectFiles>
