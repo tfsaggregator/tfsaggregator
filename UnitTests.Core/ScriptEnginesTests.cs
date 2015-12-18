@@ -185,7 +185,7 @@ return $self.Fields[""z""].Value ";
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
             }
         }

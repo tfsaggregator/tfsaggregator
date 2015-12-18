@@ -16,7 +16,9 @@ namespace Aggregator.Core.Context
     public class RuntimeContext : IRuntimeContext
     {
         private const string CacheKey = "runtime:";
+#pragma warning disable CA2213 // Disposable fields should be disposed
         private static readonly MemoryCache Cache = new MemoryCache("TFSAggregator2");
+#pragma warning restore CA2213 // Disposable fields should be disposed
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RuntimeContext"/> class.

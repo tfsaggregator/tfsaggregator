@@ -2,7 +2,6 @@
 <RuleSet Name="TFS Aggregator Analyzer Configuration" Description="These rules focus on the most critical problems in your code, including potential security holes, application crashes, and other important logic and design errors. You should include this rule set in any custom rule set you create for your projects." ToolsVersion="14.0">
   <Rules AnalyzerId="Microsoft.AnalyzerPowerPack.Common" RuleNamespace="Microsoft.AnalyzerPowerPack.Common">
     <Rule Id="CA1012" Action="Warning" />
-    <Rule Id="CA1052" Action="Warning" />
     <Rule Id="CA1053" Action="Warning" />
     <Rule Id="CA1708" Action="Warning" />
   </Rules>
@@ -74,6 +73,9 @@
     <Rule Id="S2228" Action="None" />
     <Rule Id="S2372" Action="Info" />
     <Rule Id="S3215" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="SonarLint.CSharp" RuleNamespace="SonarLint.CSharp">
+    <Rule Id="S1541" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1200" Action="None" />

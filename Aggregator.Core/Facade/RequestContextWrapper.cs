@@ -34,7 +34,7 @@ using PropertyValue = Microsoft.TeamFoundation.Framework.Server.PropertyValue;
 
 namespace Aggregator.Core.Facade
 {
-    public class RequestContextWrapper : IRequestContext
+    public class RequestContextWrapper : IRequestContext, IDisposable
     {
         private readonly IVssRequestContext context;
 
@@ -155,6 +155,19 @@ namespace Aggregator.Core.Facade
         {
             ILocationService service = requestContext.GetService<ILocationService>();
             return service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                (this.context as IDisposable)?.Dispose();
+            }
         }
     }
 }

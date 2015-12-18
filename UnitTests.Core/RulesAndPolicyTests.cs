@@ -52,7 +52,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.AreEqual(
                     Microsoft.TeamFoundation.Framework.Server.EventNotificationStatus.ActionPermitted,
                     result.NotificationStatus);
@@ -81,7 +81,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.AreEqual(
                     Microsoft.TeamFoundation.Framework.Server.EventNotificationStatus.ActionPermitted,
                     result.NotificationStatus);
@@ -115,7 +115,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.AreEqual(
                     Microsoft.TeamFoundation.Framework.Server.EventNotificationStatus.ActionPermitted,
                     result.NotificationStatus);

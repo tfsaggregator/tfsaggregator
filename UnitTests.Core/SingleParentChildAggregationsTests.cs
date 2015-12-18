@@ -83,7 +83,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 this.workItem.Received().Save();
                 Assert.AreEqual(3.0D, this.workItem.Fields["Estimated Work"].Value);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
@@ -107,7 +107,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 this.workItem.Received().Save();
                 Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
@@ -131,7 +131,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 this.workItem.Received().Save();
                 Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
@@ -185,7 +185,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.IsFalse(child.InternalWasSaveCalled);
                 Assert.IsTrue(parent.InternalWasSaveCalled);
                 Assert.IsFalse(grandParent.InternalWasSaveCalled);
@@ -242,7 +242,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.IsFalse(child.InternalWasSaveCalled);
                 Assert.IsTrue(parent.InternalWasSaveCalled);
                 Assert.IsFalse(grandParent.InternalWasSaveCalled);

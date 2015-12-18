@@ -29,7 +29,7 @@ namespace Aggregator.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemImplementationBase"/> class.
         /// </summary>
-        public WorkItemImplementationBase(IWorkItemRepository store, ILogEvents logger)
+        protected WorkItemImplementationBase(IWorkItemRepository store, ILogEvents logger)
         {
             this.Store = store;
             this.Logger = logger;
