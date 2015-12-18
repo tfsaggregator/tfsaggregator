@@ -28,6 +28,8 @@ namespace Aggregator.Core.Interfaces
 
         int Id { get; }
 
+        Uri Uri { get; }
+
         // navigation helpers
         bool HasRelation(string relation);
 

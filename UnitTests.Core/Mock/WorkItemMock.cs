@@ -39,6 +39,8 @@ namespace UnitTests.Core.Mock
 
         public bool IsDirty { get; set; }
 
+        public Uri Uri { get; set; }
+
         public void PartialOpen()
         {
             // No functionality needed in mock.
