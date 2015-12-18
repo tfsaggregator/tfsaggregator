@@ -98,7 +98,7 @@ namespace Aggregator.Core.Facade
 
         public IEnumerable<string> GetGlobalList(string globalListName)
         {
-            //TODO this.logger.ReadingGlobalList(this.workItemStore.TeamProjectCollection.Name, globalListName);
+            // TODO this.logger.ReadingGlobalList(this.workItemStore.TeamProjectCollection.Name, globalListName);
 
             // get Global Lists from TFS collection
             var sourceGL = this.workItemStore.ExportGlobalLists();
@@ -114,7 +114,7 @@ namespace Aggregator.Core.Facade
             string xpath = string.Format("/gl:GLOBALLISTS/GLOBALLIST[@name='{0}']/LISTITEM/@value", globalListName);
             var nodes = sourceGL.SelectNodes(xpath, ns);
 
-            foreach (XmlAttribute node in nodes)
+            foreach (XmlAttribute node in nodes.Cast<XmlAttribute>())
             {
                 yield return node.Value;
             }

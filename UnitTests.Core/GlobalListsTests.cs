@@ -56,7 +56,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.IsTrue(workItem.InternalWasSaveCalled);
                 Assert.AreEqual("The car shall have a maximum speed of {myParameter}(30) mph.", workItem.Fields["Title"].Value);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
@@ -89,7 +89,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.IsTrue(workItem.InternalWasSaveCalled);
                 Assert.AreEqual("The car shall have a maximum speed of {myParameter}(30) mph.", workItem.Fields["Title"].Value);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
