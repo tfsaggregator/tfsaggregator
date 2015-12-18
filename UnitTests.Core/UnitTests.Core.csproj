@@ -121,6 +121,7 @@
     <Compile Include="ContextCacheTests.cs" />
     <Compile Include="Helpers\DebugTextLogger.cs" />
     <Compile Include="Helpers\DebugEventLogger.cs" />
+    <Compile Include="GlobalListsTests.cs" />
     <Compile Include="RulesAndPolicyTests.cs" />
     <Compile Include="ItemCreationTests.cs" />
     <Compile Include="Mock\WorkItemLinkCollectionMock.cs" />
@@ -160,6 +161,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ConfigurationsForTests\RateLimiting.policies">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigurationsForTests\UserParameters.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />

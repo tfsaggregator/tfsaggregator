@@ -297,5 +297,26 @@ loger.Log(""Test"")
 
             logger.Received().ScriptHasError("bad", 2, 0, "BC30451", "'loger' is not declared. It may be inaccessible due to its protection level.");
         }
+
+        [TestMethod]
+        [TestCategory("CSharpScript")]
+        public void Logger_overloads_work()
+        {
+            string script = @"
+logger.Log(""Hello, World from {1} #{0}!"", self.Id, self.TypeName);
+logger.Log(LogLevel.Warning, ""Unexpected work item state!"");
+";
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            workItem.Id.Returns(1);
+            workItem.TypeName.Returns("Task");
+            repository.GetWorkItem(1).Returns(workItem);
+            var logger = Substitute.For<ILogEvents>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            engine.LoadAndRun("test", script, workItem, repository);
+
+            logger.Received().ScriptLogger.Log(LogLevel.Verbose, "test", "Hello, World from Task #1!");
+            logger.Received().ScriptLogger.Log(LogLevel.Warning, "test", "Unexpected work item state!");
+        }
     }
 }
