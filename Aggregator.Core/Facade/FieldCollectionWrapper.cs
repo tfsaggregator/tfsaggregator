@@ -14,14 +14,15 @@ namespace Aggregator.Core.Facade
     public class FieldCollectionWrapper : IFieldCollection
     {
         private readonly FieldCollection fields;
-        private ILogEvents logger;
+        private readonly ILogEvents logger;
 
         public FieldCollectionWrapper(FieldCollection fieldCollection)
         {
             this.fields = fieldCollection;
         }
 
-        public FieldCollectionWrapper(FieldCollection fieldCollection, ILogEvents logger) : this(fieldCollection)
+        public FieldCollectionWrapper(FieldCollection fieldCollection, ILogEvents logger) 
+            : this(fieldCollection)
         {
             this.logger = logger;
         }

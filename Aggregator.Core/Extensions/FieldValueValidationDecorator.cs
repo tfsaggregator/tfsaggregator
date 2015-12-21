@@ -113,16 +113,11 @@ namespace Aggregator.Core.Extensions
 
         public override bool ValidateFieldValue(Field field, object value)
         {
-            if (value == null)
+            if (value == null && field.IsRequired)
             {
-                if (field.IsRequired)
-                {
-                    this.Logger.FieldValidationFailedFieldRequired(
-                        field.WorkItem.Id,
-                        field.ReferenceName);
+                this.Logger.FieldValidationFailedFieldRequired(field.WorkItem.Id, field.ReferenceName);
 
-                    return false;
-                }
+                return false;
             }
 
             return true;
@@ -138,17 +133,11 @@ namespace Aggregator.Core.Extensions
 
         public override bool ValidateFieldValue(Field field, object value)
         {
-            if (value != null)
+            if (value != null && !field.IsEditable)
             {
-                if (!field.IsEditable)
-                {
-                    this.Logger.FieldValidationFailedFieldNotEditable(
-                        field.WorkItem.Id,
-                        field.ReferenceName,
-                        value);
+                this.Logger.FieldValidationFailedFieldNotEditable(field.WorkItem.Id, field.ReferenceName, value);
 
-                    return false;
-                }
+                return false;
             }
 
             return true;
@@ -170,7 +159,6 @@ namespace Aggregator.Core.Extensions
                 if (field.HasAllowedValuesList && !field.FieldDefinition.IsIdentity)
                 {
                     valid &= ((IList)field.FieldDefinition.AllowedValues).Contains(value);
-
                 }
                 else if (field.HasAllowedValuesList && field.FieldDefinition.IsIdentity)
                 {
@@ -201,19 +189,16 @@ namespace Aggregator.Core.Extensions
 
         public override bool ValidateFieldValue(Field field, object value)
         {
-            if (value != null)
+            if (value != null && value.GetType() != field.FieldDefinition.SystemType)
             {
-                if (value.GetType() != field.FieldDefinition.SystemType)
-                {
-                    this.Logger.FieldValidationFailedInvalidDataType(
-                        field.WorkItem.Id,
-                        field.ReferenceName,
-                        field.FieldDefinition.SystemType,
-                        value.GetType(),
-                        value);
+                this.Logger.FieldValidationFailedInvalidDataType(
+                    field.WorkItem.Id,
+                    field.ReferenceName,
+                    field.FieldDefinition.SystemType,
+                    value.GetType(),
+                    value);
 
-                    return false;
-                }
+                return false;
             }
 
             return true;
