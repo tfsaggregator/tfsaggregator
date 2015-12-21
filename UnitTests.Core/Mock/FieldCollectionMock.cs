@@ -24,7 +24,7 @@ namespace UnitTests.Core.Mock
                 if (!this.fields.ContainsKey(name))
                 {
                     IField field = new FieldMock(this.workItemMock, name);
-                    this.fields.Add(name, new DoubleFixFieldDecorator(field));
+                    this.fields.Add(name, new DoubleFixFieldDecorator(field, null));
                 }
 
                 return this.fields[name];

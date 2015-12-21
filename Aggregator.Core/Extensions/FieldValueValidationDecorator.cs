@@ -5,6 +5,7 @@ using System.Globalization;
 
 using Aggregator.Core.Facade;
 using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
@@ -14,17 +15,19 @@ namespace Aggregator.Core.Extensions
     {
         private readonly FieldWrapper decoratedField;
 
-        private readonly ICollection<BaseFieldValueValidator> validators =
-            new BaseFieldValueValidator[]
-            {
-                new IncorrectDataTypeFieldValidator(),
-                new NullAssignmentToRequiredFieldValueValidator(),
-                new InvalidValueFieldValueValidator(),
-            };
+        private readonly ICollection<BaseFieldValueValidator> validators;
 
-        public FieldValueValidationDecorator(FieldWrapper decoratedField)
+        public FieldValueValidationDecorator(FieldWrapper decoratedField, ILogEvents logger)
         {
             this.decoratedField = decoratedField;
+
+            this.validators = new BaseFieldValueValidator[]
+            {
+                new IncorrectDataTypeFieldValidator(logger),
+                new NullAssignmentToRequiredFieldValueValidator(logger),
+                new InvalidValueFieldValueValidator(logger),
+                new ValueAssignmentToReadonlyFieldValueValidator(logger)
+            };
         }
 
         public string Name
@@ -91,18 +94,59 @@ namespace Aggregator.Core.Extensions
 
     internal abstract class BaseFieldValueValidator
     {
+        protected ILogEvents Logger { get; private set; }
+
+        internal BaseFieldValueValidator(ILogEvents logger)
+        {
+            this.Logger = logger;
+        }
+
         public abstract bool ValidateFieldValue(Field field, object value);
     }
 
     internal class NullAssignmentToRequiredFieldValueValidator : BaseFieldValueValidator
     {
+        internal NullAssignmentToRequiredFieldValueValidator(ILogEvents logger)
+            : base(logger)
+        {
+        }
+
         public override bool ValidateFieldValue(Field field, object value)
         {
             if (value == null)
             {
                 if (field.IsRequired)
                 {
-                    // Log warning;
+                    this.Logger.FieldValidationFailedFieldRequired(
+                        field.WorkItem.Id,
+                        field.ReferenceName);
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    internal class ValueAssignmentToReadonlyFieldValueValidator : BaseFieldValueValidator
+    {
+        internal ValueAssignmentToReadonlyFieldValueValidator(ILogEvents logger)
+            : base(logger)
+        {
+        }
+
+        public override bool ValidateFieldValue(Field field, object value)
+        {
+            if (value != null)
+            {
+                if (!field.IsEditable)
+                {
+                    this.Logger.FieldValidationFailedFieldNotEditable(
+                        field.WorkItem.Id,
+                        field.ReferenceName,
+                        value);
+
                     return false;
                 }
             }
@@ -113,23 +157,34 @@ namespace Aggregator.Core.Extensions
 
     internal class InvalidValueFieldValueValidator : BaseFieldValueValidator
     {
+        internal InvalidValueFieldValueValidator(ILogEvents logger)
+            : base(logger)
+        {
+        }
+
         public override bool ValidateFieldValue(Field field, object value)
         {
             if (value != null && field.IsLimitedToAllowedValues)
             {
+                bool valid = true;
                 if (field.HasAllowedValuesList && !field.FieldDefinition.IsIdentity)
                 {
-                    if (!((IList)field.FieldDefinition.AllowedValues).Contains(value))
-                    {
-                        return false;
-                    }
+                    valid &= ((IList)field.FieldDefinition.AllowedValues).Contains(value);
+
                 }
                 else if (field.HasAllowedValuesList && field.FieldDefinition.IsIdentity)
                 {
-                    if (!((IList)field.FieldDefinition.IdentityFieldAllowedValues).Contains(value))
-                    {
-                        return false;
-                    }
+                    valid &= ((IList)field.FieldDefinition.IdentityFieldAllowedValues).Contains(value);
+                }
+
+                if (valid)
+                {
+                    this.Logger.FieldValidationFailedValueNotAllowed(
+                            field.WorkItem.Id,
+                            field.ReferenceName,
+                            value);
+
+                    return false;
                 }
             }
 
@@ -139,13 +194,24 @@ namespace Aggregator.Core.Extensions
 
     internal class IncorrectDataTypeFieldValidator : BaseFieldValueValidator
     {
+        internal IncorrectDataTypeFieldValidator(ILogEvents logger)
+            : base(logger)
+        {
+        }
+
         public override bool ValidateFieldValue(Field field, object value)
         {
             if (value != null)
             {
                 if (value.GetType() != field.FieldDefinition.SystemType)
                 {
-                    // Log warning to raise issue.
+                    this.Logger.FieldValidationFailedInvalidDataType(
+                        field.WorkItem.Id,
+                        field.ReferenceName,
+                        field.FieldDefinition.SystemType,
+                        value.GetType(),
+                        value);
+
                     return false;
                 }
             }

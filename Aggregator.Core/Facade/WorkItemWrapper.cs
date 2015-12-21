@@ -83,7 +83,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new FieldCollectionWrapper(this.workItem.Fields);
+                return new FieldCollectionWrapper(this.workItem.Fields, this.Logger);
             }
         }
 

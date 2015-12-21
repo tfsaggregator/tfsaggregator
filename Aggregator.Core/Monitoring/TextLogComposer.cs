@@ -415,6 +415,26 @@ namespace Aggregator.Core.Monitoring
             this.logger.Log(LogLevel.Error, "Error in policy file: templateScope requires name or typeId attribute");
         }
 
+        public void FieldValidationFailedInvalidDataType(int id, string referenceName, Type systemType, Type valueType, object value)
+        {
+            this.logger.Log(LogLevel.Warning, "Invalid value assigned to: {0}/{1}. Expected type: {2}, but received: {3} ({4}).", id, referenceName, systemType, valueType, value);
+        }
+
+        public void FieldValidationFailedValueNotAllowed(int id, string referenceName, object value)
+        {
+            this.logger.Log(LogLevel.Warning, "Invalid value assigned to: {0}/{1}, it is not in the allowed list. Value: {2}.", id, referenceName, value);
+        }
+
+        public void FieldValidationFailedFieldNotEditable(int id, string referenceName, object value)
+        {
+            this.logger.Log(LogLevel.Warning, "Invalid value assigned to: {0}/{1}, it is not editable. Value: {2}.", id, referenceName, value);
+        }
+
+        public void FieldValidationFailedFieldRequired(int id, string referenceName)
+        {
+            this.logger.Log(LogLevel.Warning, "Invalid value assigned to: {0}/{1}, it is required.", id, referenceName);
+        }
+
         public void PolicyShouldHaveAScope(string name)
         {
             this.logger.Log(LogLevel.Warning, "Policy {0} has no Scope: it will apply to any incoming requests", name);

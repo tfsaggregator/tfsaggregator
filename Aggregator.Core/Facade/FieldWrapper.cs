@@ -2,6 +2,7 @@
 using System.Globalization;
 
 using Aggregator.Core.Interfaces;
+using Aggregator.Core.Monitoring;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
@@ -11,7 +12,7 @@ namespace Aggregator.Core.Facade
     {
         private readonly Field tfsField;
 
-        public FieldWrapper(Field field)
+        public FieldWrapper(Field field, ILogEvents logger)
         {
             this.tfsField = field;
         }
