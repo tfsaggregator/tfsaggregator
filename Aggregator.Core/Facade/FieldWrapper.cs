@@ -45,6 +45,14 @@ namespace Aggregator.Core.Facade
             }
         }
 
+        internal Field TfsField
+        {
+            get
+            {
+                return this.tfsField;
+            }
+        }
+
         public FieldStatus Status
         {
             get { return this.tfsField.Status; }
