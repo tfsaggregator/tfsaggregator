@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Xml;
 
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
@@ -93,6 +94,30 @@ namespace Aggregator.Core.Facade
             }
 
             return this.MakeNewWorkItem(workItemTypeName, inSameProjectAs[CoreFieldReferenceNames.TeamProject] as string);
+        }
+
+        public IEnumerable<string> GetGlobalList(string globalListName)
+        {
+            //TODO this.logger.ReadingGlobalList(this.workItemStore.TeamProjectCollection.Name, globalListName);
+
+            // get Global Lists from TFS collection
+            var sourceGL = this.workItemStore.ExportGlobalLists();
+            return ParseGlobalList(sourceGL, globalListName);
+        }
+
+        // HACK public to allow Unit Testing
+        public static IEnumerable<string> ParseGlobalList(XmlDocument sourceGL, string globalListName)
+        {
+            var ns = new XmlNamespaceManager(sourceGL.NameTable);
+            ns.AddNamespace("gl", "http://schemas.microsoft.com/VisualStudio/2005/workitemtracking/globallists");
+
+            string xpath = string.Format("/gl:GLOBALLISTS/GLOBALLIST[@name='{0}']/LISTITEM/@value", globalListName);
+            var nodes = sourceGL.SelectNodes(xpath, ns);
+
+            foreach (XmlAttribute node in nodes)
+            {
+                yield return node.Value;
+            }
         }
 
         public void Dispose()

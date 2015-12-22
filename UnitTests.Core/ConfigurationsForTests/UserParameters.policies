@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+
+    <runtime>
+        <logging level="Diagnostic"/>
+    </runtime>
+
+    <!-- Smart replace -->
+    <rule name="UserParameters">
+        <![CDATA[
+        var paramGlobalList = store.GetGlobalList("Aggregator - UserParameters");
+        var userParams = paramGlobalList.ToDictionary(s => s.Split('=')[0], s => s.Split('=')[1]);
+        
+        string oldText = self["Title"].ToString();
+
+        string regex = @"\{(?<paramName>\w+)\}(?:\([^\)]+\))?";
+        string newText = System.Text.RegularExpressions.Regex.Replace(
+              oldText,
+              regex,
+              (System.Text.RegularExpressions.Match m) =>
+              {
+                  string paramName = m.Groups["paramName"].Value;
+                  return string.Format("{{{0}}}({1})", paramName, userParams[paramName]);
+              },
+              System.Text.RegularExpressions.RegexOptions.Singleline);
+              
+        self["Title"] = newText;
+        ]]>
+    </rule>
+
+    <policy name="DefaultPolicy">
+        <collectionScope collections="*" />
+        <ruleRef name="UserParameters" />
+    </policy>
+
+</AggregatorConfiguration>

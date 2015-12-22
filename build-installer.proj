@@ -13,7 +13,8 @@
     <!-- Local builds get v0, AppVeyor replace with proper value -->
     <BuildVersion Condition=" '$(BuildVersion)' == '' ">0.0.2-local</BuildVersion>
     <!-- HACK -->
-    <GitExe>C:\Program Files (x86)\Git\bin\git.exe</GitExe>
+    <GitExe Condition="'$(CI)' != 'True'">C:\Program Files (x86)\Git\bin\git.exe</GitExe>
+    <GitExe Condition="'$(CI)' == 'True'">git</GitExe>
     <!-- skip process steps by setting False -->
     <BuildSolution>True</BuildSolution>
     <CollectFiles>True</CollectFiles>
