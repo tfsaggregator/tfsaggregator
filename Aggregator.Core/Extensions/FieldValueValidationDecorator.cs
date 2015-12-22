@@ -160,10 +160,12 @@ namespace Aggregator.Core.Extensions
                 {
                     valid &= ((IList)field.FieldDefinition.AllowedValues).Contains(value);
                 }
+#if TFS2015 || TFS2015u1
                 else if (field.HasAllowedValuesList && field.FieldDefinition.IsIdentity)
                 {
                     valid &= ((IList)field.FieldDefinition.IdentityFieldAllowedValues).Contains(value);
                 }
+#endif
 
                 if (valid)
                 {
