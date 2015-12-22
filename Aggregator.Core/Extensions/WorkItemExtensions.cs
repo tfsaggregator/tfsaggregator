@@ -3,6 +3,8 @@ using System.Text;
 
 using Aggregator.Core.Interfaces;
 
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
+
 namespace Aggregator.Core.Extensions
 {
     public static class WorkItemExtensions
@@ -16,9 +18,9 @@ namespace Aggregator.Core.Extensions
             }
             else
             {
-                foreach (string s in wi.Validate().Cast<string>())
+                foreach (Field s in wi.Validate().Cast<Field>())
                 {
-                    sb.AppendLine(s);
+                    sb.AppendLine(s.ReferenceName);
                 }
             }
 
