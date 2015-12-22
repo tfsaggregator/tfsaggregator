@@ -54,9 +54,11 @@ namespace Aggregator.Core.Facade
 
         private IField ApplyDoubleFix(Field field)
         {
-            IField wrappedField = new FieldWrapper(field, this.logger);
-            IField fixedField = new DoubleFixFieldDecorator(wrappedField, this.logger);
-            return fixedField;
+            IFieldExposed wrappedField = new FieldWrapper(field, this.logger);
+            wrappedField = new DoubleFixFieldDecorator(wrappedField, this.logger);
+            wrappedField = new FieldValueValidationDecorator(wrappedField, this.logger);
+
+            return wrappedField;
         }
     }
 }

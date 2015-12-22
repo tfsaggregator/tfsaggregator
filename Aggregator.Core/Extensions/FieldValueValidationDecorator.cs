@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 
 using Aggregator.Core.Facade;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
+using Microsoft.VisualStudio.Services.IdentityPicker;
 
 namespace Aggregator.Core.Extensions
 {
     public class FieldValueValidationDecorator : IField
     {
-        private readonly FieldWrapper decoratedField;
+        private readonly IFieldExposed decoratedField;
 
         private readonly ICollection<BaseFieldValueValidator> validators;
 
-        public FieldValueValidationDecorator(FieldWrapper decoratedField, ILogEvents logger)
+        public FieldValueValidationDecorator(IFieldExposed decoratedField, ILogEvents logger)
         {
             this.decoratedField = decoratedField;
 
@@ -156,12 +156,20 @@ namespace Aggregator.Core.Extensions
             if (value != null && field.IsLimitedToAllowedValues)
             {
                 bool valid = true;
-                if (field.HasAllowedValuesList && !field.FieldDefinition.IsIdentity)
+                bool hasAllowedvalues = field.HasAllowedValuesList;
+
+#if TFS2015 || TFS2015u1
+                bool isIdentity = field.FieldDefinition.IsIdentity;
+#else
+                bool isIdentity = false;
+#endif
+
+                if (hasAllowedvalues && !isIdentity)
                 {
                     valid &= ((IList)field.FieldDefinition.AllowedValues).Contains(value);
                 }
 #if TFS2015 || TFS2015u1
-                else if (field.HasAllowedValuesList && field.FieldDefinition.IsIdentity)
+                else if (hasAllowedvalues && isIdentity)
                 {
                     valid &= ((IList)field.FieldDefinition.IdentityFieldAllowedValues).Contains(value);
                 }

@@ -115,6 +115,7 @@
     <Compile Include="Extensions\FieldValueValidationDecorator.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
     <Compile Include="Facade\RevisionWrapper.cs" />
+    <Compile Include="Interfaces\IFieldExposed.cs" />
     <Compile Include="Interfaces\IProcessTemplateVersion.cs" />
     <Compile Include="Interfaces\IRevision.cs" />
     <Compile Include="Interfaces\IWorkItemExposed.cs" />

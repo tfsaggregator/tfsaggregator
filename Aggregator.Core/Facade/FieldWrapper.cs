@@ -8,7 +8,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
 {
-    public class FieldWrapper : IField
+    public class FieldWrapper : IFieldExposed
     {
         private readonly Field tfsField;
 
@@ -46,7 +46,7 @@ namespace Aggregator.Core.Facade
             }
         }
 
-        internal Field TfsField
+        public Field TfsField
         {
             get
             {

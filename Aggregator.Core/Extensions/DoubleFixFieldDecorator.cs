@@ -8,11 +8,11 @@ using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Extensions
 {
-    public class DoubleFixFieldDecorator : IField
+    public class DoubleFixFieldDecorator : IFieldExposed
     {
-        private readonly IField decoratedField;
+        private readonly IFieldExposed decoratedField;
 
-        public DoubleFixFieldDecorator(IField decoratedField, ILogEvents logger)
+        public DoubleFixFieldDecorator(IFieldExposed decoratedField, ILogEvents logger)
         {
             this.decoratedField = decoratedField;
         }
@@ -83,6 +83,14 @@ namespace Aggregator.Core.Extensions
             get
             {
                 return this.decoratedField.DataType;
+            }
+        }
+
+        public Field TfsField
+        {
+            get
+            {
+                return this.decoratedField.TfsField;
             }
         }
     }
