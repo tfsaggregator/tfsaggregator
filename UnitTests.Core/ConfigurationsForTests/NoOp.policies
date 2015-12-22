@@ -7,7 +7,7 @@
 
     <!-- Do nothing -->
     <rule name="Noop" appliesTo="Task">
-        return 42;
+        self["System.AssignedTo"] = "jhouwing@xpirit.com";
     </rule>
 
     <policy name="DefaultPolicy">

@@ -7,7 +7,6 @@ using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using Microsoft.VisualStudio.Services.IdentityPicker;
 
 namespace Aggregator.Core.Extensions
 {
