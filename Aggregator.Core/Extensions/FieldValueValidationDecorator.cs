@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Services.IdentityPicker;
 
 namespace Aggregator.Core.Extensions
 {
-    public class FieldValueValidationDecorator : IField
+    public class FieldValueValidationDecorator : IFieldExposed
     {
         private readonly IFieldExposed decoratedField;
 
@@ -87,6 +87,14 @@ namespace Aggregator.Core.Extensions
             get
             {
                 return this.decoratedField.DataType;
+            }
+        }
+
+        public Field TfsField
+        {
+            get
+            {
+                return this.decoratedField.TfsField;
             }
         }
     }
