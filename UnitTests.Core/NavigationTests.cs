@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Aggregator.Core.Configuration;
+using Aggregator.Core.Context;
 using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
@@ -98,11 +100,18 @@ return searchResult;
         [TestMethod]
         public void TransitionState_InProgress_to_Done_succeeded()
         {
+            var logger = new DebugEventLogger();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
-            repository.Logger = Substitute.For<ILogEvents>();
-            var workItem = new WorkItemMock(repository, null);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 42;
             workItem.TypeName = "Task";
+            workItem.Type = new WorkItemTypeMock() { Name = "Task" };
             workItem.Fields["State"].Value = "In Progress";
             repository.SetWorkItems(new[] { workItem });
             string targetState = "Done";
@@ -116,9 +125,15 @@ return searchResult;
         [TestMethod]
         public void TransitionState_New_to_Done_succeeded_via_InProgress()
         {
+            var logger = new DebugEventLogger();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
-            repository.Logger = Substitute.For<ILogEvents>();
-            var workItem = new WorkItemMock(repository, null);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
             {
                 Name = "Task",
@@ -126,7 +141,7 @@ return searchResult;
             };
             workItem.Id = 42;
             workItem.Type = workItemType;
-            workItem.TypeName = workItemType.Name;
+
             FieldMock mockedField = new FieldMock(workItem, "State");
             workItem.Fields[mockedField.Name] = mockedField;
             mockedField.OriginalValue = string.Empty;
@@ -144,9 +159,15 @@ return searchResult;
         [TestMethod]
         public void TransitionState_to_non_existing()
         {
+            var logger = new DebugEventLogger();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
-            repository.Logger = Substitute.For<ILogEvents>();
-            var workItem = new WorkItemMock(repository, null);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
             {
                 Name = "Task",
@@ -175,13 +196,20 @@ return searchResult;
         [TestMethod]
         public void TransitionStateCSharp_New_to_Done_succeeded_via_InProgress()
         {
+            var logger = new DebugEventLogger();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
+            var repository = new WorkItemRepositoryMock();
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
             string script = @"
 self.TransitionToState(""Done"", ""script test"");
 ";
-            var repository = new WorkItemRepositoryMock();
-            var logger = Substitute.For<ILogEvents>();
+
             repository.Logger = logger;
-            var workItem = new WorkItemMock(repository, null);
+            var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
             {
                 Name = "Task",
