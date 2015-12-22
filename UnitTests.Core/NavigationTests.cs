@@ -23,20 +23,26 @@ namespace UnitTests.Core
     {
         private static WorkItemRepositoryMock MakeRepository(out IWorkItem startPoint)
         {
+            var logger = Substitute.For<ILogEvents>();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
 
-            var grandParent = new WorkItemMock(repository, null);
+            var grandParent = new WorkItemMock(repository, runtime);
             grandParent.Id = 1;
             grandParent.TypeName = "Feature";
 
-            var parent = new WorkItemMock(repository, null);
+            var parent = new WorkItemMock(repository, runtime);
             parent.Id = 2;
             parent.TypeName = "Use Case";
 
-            var firstChild = new WorkItemMock(repository, null);
+            var firstChild = new WorkItemMock(repository, runtime);
             firstChild.Id = 3;
             firstChild.TypeName = "Task";
-            var secondChild = new WorkItemMock(repository, null);
+            var secondChild = new WorkItemMock(repository, runtime);
             secondChild.Id = 4;
             secondChild.TypeName = "Task";
 

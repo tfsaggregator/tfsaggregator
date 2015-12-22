@@ -17,13 +17,20 @@ namespace UnitTests.Core
     {
         private WorkItemRepositoryMock MakeRepositoryMock()
         {
+            var logger = Substitute.For<ILogEvents>();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
-            var parent = new WorkItemMock(repository, null);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var parent = new WorkItemMock(repository, runtime);
             parent.Id = 1;
             parent.TypeName = "Use Case";
             parent["Title"] = "UC";
 
-            var child = new WorkItemMock(repository, null);
+            var child = new WorkItemMock(repository, runtime);
             child.Id = 2;
             child.TypeName = "Task";
             child["Title"] = "TSK";
@@ -98,17 +105,19 @@ namespace UnitTests.Core
         {
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("RulesAndPolicy.policies", logger);
-            var repository = new WorkItemRepositoryMock();
-            var workItem = new WorkItemMock(repository, null);
-            workItem.Id = 1;
-            workItem.TypeName = "Bug";
-            workItem["Title"] = "My bug";
-            repository.SetWorkItems(new[] { workItem });
+            var repository = this.MakeRepositoryMock();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection2");
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var workItem = new WorkItemMock(repository, runtime);
+            workItem.Id = 1;
+            workItem.TypeName = "Bug";
+            workItem["Title"] = "My bug";
+            repository.SetWorkItems(new[] { workItem });
+
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
