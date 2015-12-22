@@ -23,18 +23,18 @@ namespace UnitTests.Core
         {
             var repository = new WorkItemRepositoryMock();
 
-            var grandParent = new WorkItemMock(repository);
+            var grandParent = new WorkItemMock(repository, null);
             grandParent.Id = 1;
             grandParent.TypeName = "Feature";
 
-            var parent = new WorkItemMock(repository);
+            var parent = new WorkItemMock(repository, null);
             parent.Id = 2;
             parent.TypeName = "Use Case";
 
-            var firstChild = new WorkItemMock(repository);
+            var firstChild = new WorkItemMock(repository, null);
             firstChild.Id = 3;
             firstChild.TypeName = "Task";
-            var secondChild = new WorkItemMock(repository);
+            var secondChild = new WorkItemMock(repository, null);
             secondChild.Id = 4;
             secondChild.TypeName = "Task";
 
@@ -100,7 +100,7 @@ return searchResult;
         {
             var repository = new WorkItemRepositoryMock();
             repository.Logger = Substitute.For<ILogEvents>();
-            var workItem = new WorkItemMock(repository);
+            var workItem = new WorkItemMock(repository, null);
             workItem.Id = 42;
             workItem.TypeName = "Task";
             workItem.Fields["State"].Value = "In Progress";
@@ -118,7 +118,7 @@ return searchResult;
         {
             var repository = new WorkItemRepositoryMock();
             repository.Logger = Substitute.For<ILogEvents>();
-            var workItem = new WorkItemMock(repository);
+            var workItem = new WorkItemMock(repository, null);
             var workItemType = new WorkItemTypeMock()
             {
                 Name = "Task",
@@ -146,7 +146,7 @@ return searchResult;
         {
             var repository = new WorkItemRepositoryMock();
             repository.Logger = Substitute.For<ILogEvents>();
-            var workItem = new WorkItemMock(repository);
+            var workItem = new WorkItemMock(repository, null);
             var workItemType = new WorkItemTypeMock()
             {
                 Name = "Task",
@@ -181,7 +181,7 @@ self.TransitionToState(""Done"", ""script test"");
             var repository = new WorkItemRepositoryMock();
             var logger = Substitute.For<ILogEvents>();
             repository.Logger = logger;
-            var workItem = new WorkItemMock(repository);
+            var workItem = new WorkItemMock(repository, null);
             var workItemType = new WorkItemTypeMock()
             {
                 Name = "Task",

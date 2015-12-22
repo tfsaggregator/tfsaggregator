@@ -108,7 +108,7 @@ $self.Fields[""x""].Value = 33
 return $self.Fields[""z""].Value ";
 
             var repository = new WorkItemRepositoryMock();
-            var workItem = new WorkItemMock(repository);
+            var workItem = new WorkItemMock(repository, null);
 
             workItem.Fields["z"].Value = 42;
             workItem.Fields["x"].Value = 0;
@@ -142,7 +142,7 @@ return $self.Fields[""z""].Value ";
             string script = @" return $self.Id ";
 
             var repository = new WorkItemRepositoryMock();
-            var workItem = new WorkItemMock(repository);
+            var workItem = new WorkItemMock(repository, null);
 
             workItem.Id = 1;
 

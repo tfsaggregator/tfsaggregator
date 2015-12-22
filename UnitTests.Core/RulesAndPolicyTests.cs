@@ -18,12 +18,12 @@ namespace UnitTests.Core
         private WorkItemRepositoryMock MakeRepositoryMock()
         {
             var repository = new WorkItemRepositoryMock();
-            var parent = new WorkItemMock(repository);
+            var parent = new WorkItemMock(repository, null);
             parent.Id = 1;
             parent.TypeName = "Use Case";
             parent["Title"] = "UC";
 
-            var child = new WorkItemMock(repository);
+            var child = new WorkItemMock(repository, null);
             child.Id = 2;
             child.TypeName = "Task";
             child["Title"] = "TSK";
@@ -98,7 +98,7 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("RulesAndPolicy.policies", logger);
             var repository = new WorkItemRepositoryMock();
-            var workItem = new WorkItemMock(repository);
+            var workItem = new WorkItemMock(repository, null);
             workItem.Id = 1;
             workItem.TypeName = "Bug";
             workItem["Title"] = "My bug";

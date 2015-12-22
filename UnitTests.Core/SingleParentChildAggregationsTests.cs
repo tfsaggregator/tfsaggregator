@@ -145,13 +145,13 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("Rollup.policies", logger);
             var alternateRepository = new WorkItemRepositoryMock();
 
-            var grandParent = new WorkItemMock(alternateRepository);
+            var grandParent = new WorkItemMock(alternateRepository, null);
             grandParent.Id = 1;
             grandParent.TypeName = "Feature";
             grandParent["Dev Estimate"] = 0.0D;
             grandParent["Test Estimate"] = 0.0D;
 
-            var parent = new WorkItemMock(alternateRepository);
+            var parent = new WorkItemMock(alternateRepository, null);
             parent.Id = 2;
             parent.TypeName = "Use Case";
             parent.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 1, alternateRepository));
@@ -159,7 +159,7 @@ namespace UnitTests.Core
             parent["Total Work Remaining"] = 3.0D;
             parent["Total Estimate"] = 4.0D;
 
-            var child = new WorkItemMock(alternateRepository);
+            var child = new WorkItemMock(alternateRepository, null);
             child.Id = 3;
             child.TypeName = "Task";
             child.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 2, alternateRepository));
@@ -202,13 +202,13 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("Rollup.policies", logger);
             var alternateRepository = new WorkItemRepositoryMock();
 
-            var grandParent = new WorkItemMock(alternateRepository);
+            var grandParent = new WorkItemMock(alternateRepository, null);
             grandParent.Id = 1;
             grandParent.TypeName = "Feature";
             grandParent["Dev Estimate"] = null;
             grandParent["Test Estimate"] = null;
 
-            var parent = new WorkItemMock(alternateRepository);
+            var parent = new WorkItemMock(alternateRepository, null);
             parent.Id = 2;
             parent.TypeName = "Use Case";
             parent.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 1, alternateRepository));
@@ -216,7 +216,7 @@ namespace UnitTests.Core
             parent["Total Work Remaining"] = 3.0D;
             parent["Total Estimate"] = 4.0D;
 
-            var child = new WorkItemMock(alternateRepository);
+            var child = new WorkItemMock(alternateRepository, null);
             child.Id = 3;
             child.TypeName = "Task";
             child.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 2, alternateRepository));

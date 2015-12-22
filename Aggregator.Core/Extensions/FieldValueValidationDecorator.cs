@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+using Aggregator.Core.Context;
 using Aggregator.Core.Facade;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
@@ -16,16 +17,16 @@ namespace Aggregator.Core.Extensions
 
         private readonly ICollection<BaseFieldValueValidator> validators;
 
-        public FieldValueValidationDecorator(IFieldExposed decoratedField, ILogEvents logger)
+        public FieldValueValidationDecorator(IFieldExposed decoratedField, IRuntimeContext context)
         {
             this.decoratedField = decoratedField;
 
             this.validators = new BaseFieldValueValidator[]
             {
-                new IncorrectDataTypeFieldValidator(logger),
-                new NullAssignmentToRequiredFieldValueValidator(logger),
-                new InvalidValueFieldValueValidator(logger),
-                new ValueAssignmentToReadonlyFieldValueValidator(logger)
+                new IncorrectDataTypeFieldValidator(context),
+                new NullAssignmentToRequiredFieldValueValidator(context),
+                new InvalidValueFieldValueValidator(context),
+                new ValueAssignmentToReadonlyFieldValueValidator(context)
             };
         }
 
@@ -98,14 +99,16 @@ namespace Aggregator.Core.Extensions
         }
     }
 
-
     internal abstract class BaseFieldValueValidator
     {
         protected ILogEvents Logger { get; private set; }
 
-        internal BaseFieldValueValidator(ILogEvents logger)
+        protected IRuntimeContext Context { get; private set; }
+
+        internal BaseFieldValueValidator(IRuntimeContext context)
         {
-            this.Logger = logger;
+            this.Logger = context.Logger;
+            this.Context = context;
         }
 
         public abstract bool ValidateFieldValue(Field field, object value);
@@ -113,8 +116,8 @@ namespace Aggregator.Core.Extensions
 
     internal class NullAssignmentToRequiredFieldValueValidator : BaseFieldValueValidator
     {
-        internal NullAssignmentToRequiredFieldValueValidator(ILogEvents logger)
-            : base(logger)
+        internal NullAssignmentToRequiredFieldValueValidator(IRuntimeContext context)
+            : base(context)
         {
         }
 
@@ -133,8 +136,8 @@ namespace Aggregator.Core.Extensions
 
     internal class ValueAssignmentToReadonlyFieldValueValidator : BaseFieldValueValidator
     {
-        internal ValueAssignmentToReadonlyFieldValueValidator(ILogEvents logger)
-            : base(logger)
+        internal ValueAssignmentToReadonlyFieldValueValidator(IRuntimeContext context)
+            : base(context)
         {
         }
 
@@ -153,8 +156,8 @@ namespace Aggregator.Core.Extensions
 
     internal class InvalidValueFieldValueValidator : BaseFieldValueValidator
     {
-        internal InvalidValueFieldValueValidator(ILogEvents logger)
-            : base(logger)
+        internal InvalidValueFieldValueValidator(IRuntimeContext context)
+            : base(context)
         {
         }
 
@@ -199,8 +202,8 @@ namespace Aggregator.Core.Extensions
 
     internal class IncorrectDataTypeFieldValidator : BaseFieldValueValidator
     {
-        internal IncorrectDataTypeFieldValidator(ILogEvents logger)
-            : base(logger)
+        internal IncorrectDataTypeFieldValidator(IRuntimeContext context)
+            : base(context)
         {
         }
 

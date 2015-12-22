@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
+using Aggregator.Core.Context;
 using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
@@ -15,16 +16,18 @@ namespace Aggregator.Core.Facade
     {
         private readonly FieldCollection fields;
         private readonly ILogEvents logger;
+        private readonly IRuntimeContext context;
 
         public FieldCollectionWrapper(FieldCollection fieldCollection)
         {
             this.fields = fieldCollection;
         }
 
-        public FieldCollectionWrapper(FieldCollection fieldCollection, ILogEvents logger) 
+        public FieldCollectionWrapper(FieldCollection fieldCollection, IRuntimeContext context)
             : this(fieldCollection)
         {
-            this.logger = logger;
+            this.context = context;
+            this.logger = context.Logger;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("SonarQube", "S3237:\"value\" parameters should be used", Justification = "Available for mock testing only")]
@@ -54,9 +57,13 @@ namespace Aggregator.Core.Facade
 
         private IField ApplyDoubleFix(Field field)
         {
-            IFieldExposed wrappedField = new FieldWrapper(field, this.logger);
-            wrappedField = new DoubleFixFieldDecorator(wrappedField, this.logger);
-            wrappedField = new FieldValueValidationDecorator(wrappedField, this.logger);
+            IFieldExposed wrappedField = new FieldWrapper(field, this.context);
+            wrappedField = new DoubleFixFieldDecorator(wrappedField, this.context);
+
+            if (this.context.Settings.Debug)
+            {
+                wrappedField = new FieldValueValidationDecorator(wrappedField, this.context);
+            }
 
             return wrappedField;
         }

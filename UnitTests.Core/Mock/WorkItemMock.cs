@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using Aggregator.Core;
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Navigation;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
@@ -13,8 +14,8 @@ namespace UnitTests.Core.Mock
     {
         private readonly FieldCollectionMock fields;
 
-        public WorkItemMock(WorkItemRepositoryMock store)
-            : base(store, store.Logger)
+        public WorkItemMock(IWorkItemRepository repository, IRuntimeContext context)
+            : base(context)
         {
             this.fields = new FieldCollectionMock(this);
             this.IsDirty = false;

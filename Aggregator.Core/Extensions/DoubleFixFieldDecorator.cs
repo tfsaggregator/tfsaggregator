@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
 
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
-using Aggregator.Core.Monitoring;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
@@ -12,7 +12,7 @@ namespace Aggregator.Core.Extensions
     {
         private readonly IFieldExposed decoratedField;
 
-        public DoubleFixFieldDecorator(IFieldExposed decoratedField, ILogEvents logger)
+        public DoubleFixFieldDecorator(IFieldExposed decoratedField, IRuntimeContext context)
         {
             this.decoratedField = decoratedField;
         }
