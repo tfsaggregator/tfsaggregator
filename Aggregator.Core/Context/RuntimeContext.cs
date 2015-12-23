@@ -68,6 +68,7 @@ namespace Aggregator.Core.Context
 
                 // as it changes at each invocation, must be set again here
                 runtime.RequestContext = requestContext;
+                runtime.workItemRepository = null;
             }
 
             return runtime.Clone() as RuntimeContext;
