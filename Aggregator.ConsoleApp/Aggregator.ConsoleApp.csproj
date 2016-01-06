@@ -119,6 +119,7 @@
     </Compile>
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="ConsoleTextLogger.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Notification.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

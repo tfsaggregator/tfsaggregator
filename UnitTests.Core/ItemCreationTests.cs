@@ -43,7 +43,6 @@ namespace UnitTests.Core
 
             repository.SetWorkItems(new[] { parent, child });
 
-            
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();

@@ -102,8 +102,6 @@ namespace Aggregator.Core.Facade
 
         public IEnumerable<string> GetGlobalList(string globalListName)
         {
-            // TODO this.logger.ReadingGlobalList(this.workItemStore.TeamProjectCollection.Name, globalListName);
-
             // get Global Lists from TFS collection
             var sourceGL = this.workItemStore.ExportGlobalLists();
             return ParseGlobalList(sourceGL, globalListName);

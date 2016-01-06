@@ -9,7 +9,7 @@ using Aggregator.Core.Monitoring;
 
 namespace UnitTests.Core.Mock
 {
-    internal class RuntimeContextMock : IRuntimeContext
+    internal class RuntimeContextMock : IRuntimeContext, IDisposable
     {
         public object Clone()
         {
@@ -36,5 +36,19 @@ namespace UnitTests.Core.Mock
         }
 
         public RateLimiter RateLimiter { get; }
+
+        protected void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                (this.RequestContext as IDisposable)?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

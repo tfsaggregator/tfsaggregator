@@ -237,6 +237,11 @@ namespace Aggregator.Core.Facade
             }
         }
 
+        public void AddHyperlink(string destination)
+        {
+            this.AddHyperlink(destination, string.Empty);
+        }
+
         public void AddHyperlink(string destination, string comment = "")
         {
             var link = new Hyperlink(destination);
