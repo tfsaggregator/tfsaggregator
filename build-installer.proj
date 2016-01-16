@@ -53,6 +53,8 @@
       <bin Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\*.exe" Exclude="*.vshost.exe" />
       <!-- Exclude non-redistributable assemblies -->
       <bin Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\**\*.dll" Exclude="*.Server.*" />
+      <!-- HACK this unmanaged library is not picked up automatically via references -->
+      <bin Include="$(MSBuildProjectDirectory)\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\lib\native\x86\Microsoft.WITDataStore32.dll" />
       <bin Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\**\*.pdb" Exclude="*.Server.*" />
       <bin Include="$(MSBuildProjectDirectory)\Aggregator.ServerPlugin\bin\$(CurrentFlavor)\*.dll" Exclude="*.Server.*" />
       <bin Include="$(MSBuildProjectDirectory)\Aggregator.ServerPlugin\bin\$(CurrentFlavor)\*.pdb" Exclude="*.Server.*" />
