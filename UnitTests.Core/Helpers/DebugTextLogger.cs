@@ -1,4 +1,6 @@
-﻿using Aggregator.Core.Monitoring;
+﻿// make sure we get traces on all configurations
+#define DEBUG
+using Aggregator.Core.Monitoring;
 
 namespace UnitTests.Core
 {
@@ -18,6 +20,11 @@ namespace UnitTests.Core
             string message = args != null ? string.Format(format, args: args) : format;
             string levelAsString = level.ToString();
             System.Diagnostics.Debug.WriteLine(message, levelAsString);
+        }
+
+        public void UserLog(LogLevel level, string ruleName, string message)
+        {
+            this.Log(level, "{0}: {1}", ruleName, message);
         }
     }
 }

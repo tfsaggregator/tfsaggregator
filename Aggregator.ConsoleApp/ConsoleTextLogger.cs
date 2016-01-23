@@ -53,6 +53,11 @@ namespace Aggregator.ConsoleApp
             }
         }
 
+        public void UserLog(LogLevel level, string ruleName, string message)
+        {
+            this.Log(level, "{0}: {1}", ruleName, message);
+        }
+
         internal static ConsoleColor MapColor(LogLevel level)
         {
             switch (level)

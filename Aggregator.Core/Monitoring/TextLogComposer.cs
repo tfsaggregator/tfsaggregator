@@ -370,7 +370,7 @@ namespace Aggregator.Core.Monitoring
 
         public void ScriptLog(LogLevel level, string ruleName, string message)
         {
-            this.logger.Log(level, "{0}: {1}", ruleName, message);
+            this.logger.UserLog(level, ruleName, message);
         }
 
         public void NoPolicesApply()
