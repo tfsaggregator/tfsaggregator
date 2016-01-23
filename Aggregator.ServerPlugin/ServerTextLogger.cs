@@ -11,6 +11,7 @@ namespace Aggregator.ServerPlugin
     internal class ServerTextLogger : ITextLogger
     {
         private readonly Stopwatch clock = new Stopwatch();
+        private readonly TraceSource traceSource = new TraceSource("TfsAggregator.ServerPlugin", SourceLevels.Information);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServerTextLogger"/> class.
@@ -47,6 +48,10 @@ namespace Aggregator.ServerPlugin
             try
             {
                 string message = args != null ? string.Format(format, args: args) : format;
+                int id = System.Math.Abs(format.GetHashCode()) % 65000;
+
+                this.traceSource.TraceEvent(
+                    ConvertToTraceEventType(level), id, format, args: args);
 
                 // default trace use OutputDebugString but requires a single call
                 const int LogLevelMaximumStringLength = 11; // Len(Information)
@@ -57,19 +62,15 @@ namespace Aggregator.ServerPlugin
                     string.Empty.PadLeft(LogLevelMaximumStringLength - levelAsString.Length),
                     message);
 
-                Debug.WriteLine(formattedMessage);
-
-                EventLogEntryType eventLevel = ConvertToEventLogEntryType(level);
-
-                Microsoft.TeamFoundation.Framework.Server.TeamFoundationApplicationCore.Log(
-                    message, 0, eventLevel);
+                DebugOutput.WriteLine(formattedMessage);
 
                 if (level <= LogLevel.Warning)
                 {
                     EventLog.WriteEntry(
                         "TFSAggregator",
                         message,
-                        eventLevel);
+                        ConvertToEventLogEntryType(level),
+                        id);
                 }
             }
             finally
@@ -99,6 +100,30 @@ namespace Aggregator.ServerPlugin
                 case LogLevel.Diagnostic:
                 default:
                     return EventLogEntryType.Information;
+            }
+        }
+
+        /// <summary>
+        /// converts a <see cref="LogLevel"/> to an <see cref="EventLogEntryType"/>
+        /// </summary>
+        /// <param name="level">LogLevel to convert</param>
+        /// <returns>EventLogEntryType that corresponds with the LogLevel</returns>
+        public static TraceEventType ConvertToTraceEventType(LogLevel level)
+        {
+            switch (level)
+            {
+                case LogLevel.Critical:
+                    return TraceEventType.Critical;
+                case LogLevel.Error:
+                    return TraceEventType.Error;
+                case LogLevel.Warning:
+                    return TraceEventType.Warning;
+                case LogLevel.Information:
+                    return TraceEventType.Information;
+                case LogLevel.Verbose:
+                case LogLevel.Diagnostic:
+                default:
+                    return TraceEventType.Verbose;
             }
         }
     }
