@@ -25,33 +25,6 @@ Example Uses
  - Update the "Work Remaining" on a Sprint with the sum of all the "Work Remaining" of its grandchildren (i.e. tasks of the PBIs and Bugs in the Sprint).
  - Sum up totals on a single work item (i.e. Dev Estimate + Test Estimate = Total Estimate)
 
-
-Setup & install
-================================================
-
-The latest [Install](https://github.com/tfsaggregator/tfsaggregator/releases) package contains the full details to correctly setup Aggregator. The general process is:
-
- 1. Download and extract the binaries from the latest release
- 2. Create `TFSAggregator2.ServerPlugin.policies` (or rename one of the existing samples to get started) and change the example settings to your actual settings.
- 3. Test your policy using the command line tool.
- 4. Copy `TFSAggregator2.*.dll` and `TFSAggregator2.ServerPlugin.policies` to the plugin location on the Application Tier of your TFS Servers
-
-That is all. TFS will detect that a file was copied in and will load it in.
-
-
-
-
-Migrating from v1
-================================================
-If you used TFS Aggregator in the past, [here](https://github.com/tfsaggregator/tfsaggregator/wiki/Upgrade-from-v1) are the instructions on switching from older versions.
-
-If you're looking for the latest version of V1 (including a large number of fixes and security updates), you can still find it [here](https://github.com/tfsaggregator/tfsaggregator/tree/v1.0.1). 
-
-**Note**: we won't provide any further support on this old version. But if you have a large investment in the old-style rules, it may provide you a better, stabler version until you're ready to move to V2. 
-
-**Note**: You can run both V1 and V2 side-by-side on the same TFS system, you will have to be extra careful not to create infinite loops though.
-
-
 Documentation
 ================================================
 
