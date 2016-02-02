@@ -8,54 +8,84 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
+    <!-- HACK hard-coded versions -->
+    <!-- TODO generate version specific snippets -->
     <Feature Id="ProductFeature" Title="TFS Aggregator" Level="1">
-      <!-- HACK hard-coded versions -->
-      <!-- TODO generate these snippets -->
-      <?if $(var.Supports2013) = "True" ?>
-      <Feature Id='Components2013' Level='1'>
-        <ComponentGroupRef Id="ClientComponents2013"/>
-        <ComponentGroupRef Id="ServerComponents1_2013"/>
-        <ComponentGroupRef Id="ServerComponents1d_2013"/>
-        <ComponentGroupRef Id="ServerComponents2_2013"/>
-        <ComponentGroupRef Id="ServerComponents2d_2013"/>
-        <Condition Level="0">
-          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2013"]]>
-        </Condition>
+      
+      <Feature Id="ClientFeature" Title="Client test app" Level='1'>
+        <?if $(var.Supports2013) = "True" ?>
+        <Feature Id='Client2013Feature' Title="Client test app for TFS 2013.5" Level='1'>
+          <ComponentGroupRef Id="ClientComponents2013"/>
+          <Condition Level="0">
+            <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2013"]]>
+          </Condition>
+        </Feature>
+        <?endif ?>
+        <?if $(var.Supports2015) = "True" ?>
+        <Feature Id='Client2015Feature' Title="Client test app for TFS 2015 RTM" Level='1'>
+          <ComponentGroupRef Id="ClientComponents2015"/>
+          <Condition Level="0">
+            <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015"]]>
+          </Condition>
+        </Feature>
+        <?endif ?>
+        <?if $(var.Supports2015u1) = "True" ?>
+        <Feature Id='Client2015.1Feature' Title="Client test app for TFS 2015.1" Level='1'>
+          <ComponentGroupRef Id="ClientComponents2015.1"/>
+          <Condition Level="0">
+            <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015.1"]]>
+          </Condition>
+        </Feature>
+        <?endif ?>
       </Feature>
-      <?endif ?>
-      <?if $(var.Supports2015) = "True" ?>
-      <Feature Id='Components2015' Level='1'>
-        <ComponentGroupRef Id="ClientComponents2015"/>
-        <ComponentGroupRef Id="ServerComponents1_2015"/>
-        <ComponentGroupRef Id="ServerComponents1d_2015"/>
-        <ComponentGroupRef Id="ServerComponents2_2015"/>
-        <ComponentGroupRef Id="ServerComponents2d_2015"/>
-        <Condition Level="0">
-          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015"]]>
-        </Condition>
+
+      <Feature Id="ServerFeature" Title="Server plugin" Level='1'>
+        <?if $(var.Supports2013) = "True" ?>
+        <Feature Id='Server2013Feature' Title="Server plugin for TFS 2013.5" Level='1'>
+          <ComponentGroupRef Id="NeutralServerComponents" />
+          <ComponentGroupRef Id="ServerComponents1_2013"/>
+          <ComponentGroupRef Id="ServerComponents1d_2013"/>
+          <ComponentGroupRef Id="ServerComponents2_2013"/>
+          <ComponentGroupRef Id="ServerComponents2d_2013"/>
+          <Condition Level="0">
+            <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2013"]]>
+          </Condition>
+        </Feature>
+        <?endif ?>
+        <?if $(var.Supports2015) = "True" ?>
+        <Feature Id='Server2015Feature' Title="Server plugin for TFS 2015 RTM" Level='1'>
+          <ComponentGroupRef Id="NeutralServerComponents" />
+          <ComponentGroupRef Id="ServerComponents1_2015"/>
+          <ComponentGroupRef Id="ServerComponents1d_2015"/>
+          <ComponentGroupRef Id="ServerComponents2_2015"/>
+          <ComponentGroupRef Id="ServerComponents2d_2015"/>
+          <Condition Level="0">
+            <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015"]]>
+          </Condition>
+        </Feature>
+        <?endif ?>
+        <?if $(var.Supports2015u1) = "True" ?>
+        <Feature Id='Server2015.1Feature' Title="Server plugin for TFS 2015.1" Level='1'>
+          <ComponentGroupRef Id="NeutralServerComponents" />
+          <ComponentGroupRef Id="ServerComponents1_2015.1"/>
+          <ComponentGroupRef Id="ServerComponents1d_2015.1"/>
+          <ComponentGroupRef Id="ServerComponents2_2015.1"/>
+          <ComponentGroupRef Id="ServerComponents2d_2015.1"/>
+          <Condition Level="0">
+            <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015.1"]]>
+          </Condition>
+        </Feature>
+        <?endif ?>
       </Feature>
-      <?endif ?>
-      <?if $(var.Supports2015u1) = "True" ?>
-      <Feature Id='Components2015.1' Level='1'>
-        <ComponentGroupRef Id="ClientComponents2015.1"/>
-        <ComponentGroupRef Id="ServerComponents1_2015.1"/>
-        <ComponentGroupRef Id="ServerComponents1d_2015.1"/>
-        <ComponentGroupRef Id="ServerComponents2_2015.1"/>
-        <ComponentGroupRef Id="ServerComponents2d_2015.1"/>
-        <Condition Level="0">
-          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015.1"]]>
-        </Condition>
-      </Feature>
-      <?endif ?>
-      <Feature Id='NeutralFeature' Level='1'>
-        <ComponentGroupRef Id="NeutralServerComponents" />
+      
+      <Feature Id='NeutralFeature' Title="Documentation and samples" Level='1'>
         <ComponentGroupRef Id="RootComponents" />
         <ComponentGroupRef Id="SampleComponents" />
         <ComponentGroupRef Id="DocumentationComponents" />
       </Feature>
     </Feature>
 
-    <UIRef Id="WixUI_Minimal" />
+    <UIRef Id="WixUI_FeatureTree" />
     <WixVariable Id="WixUILicenseRtf" Value="LICENSE-2.0.rtf" />
     <WixVariable Id="WixUIBannerBmp" Value="AggregatorBanner.Bmp"/>
     <WixVariable Id="WixUIDialogBmp" Value="AggregatorDialog.Bmp"/>
