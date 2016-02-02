@@ -11,64 +11,52 @@
     <!-- HACK hard-coded versions -->
     <!-- TODO generate version specific snippets -->
       
-    <Feature Id="ClientFeature" Title="Client test application" Level='1'>
-      <?if $(var.Supports2013) = "True" ?>
-      <Feature Id='Client2013Feature' Title="Client for TFS 2013.5" Level='1'>
+    <Feature Id="ClientFeature" Title="Client test application" Level='1' AllowAdvertise='no' Display='expand' >
+      <Feature Id='Client2013Feature' Title="Client for TFS 2013.5" Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2013"/>
-        <Condition Level="0">
+        <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2013"]]>
         </Condition>
       </Feature>
-      <?endif ?>
-      <?if $(var.Supports2015) = "True" ?>
-      <Feature Id='Client2015Feature' Title="Client for TFS 2015 RTM" Level='1'>
+      <Feature Id='Client2015Feature' Title="Client for TFS 2015 RTM" Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2015"/>
-        <Condition Level="0">
+        <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015"]]>
         </Condition>
       </Feature>
-      <?endif ?>
-      <?if $(var.Supports2015u1) = "True" ?>
-      <Feature Id='Client2015.1Feature' Title="Client for TFS 2015.1" Level='1'>
+      <Feature Id='Client2015.1Feature' Title="Client for TFS 2015.1" Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2015.1"/>
-        <Condition Level="0">
+        <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015.1"]]>
         </Condition>
       </Feature>
-      <?endif ?>
     </Feature>
 
-    <Feature Id="ServerFeature" Title="Server plugin" Level='1'>
-      <?if $(var.Supports2013) = "True" ?>
-      <Feature Id='Server2013Feature' Title="Plugin for TFS 2013.5" Level='1'>
+    <Feature Id="ServerFeature" Title="Server plugin" Level='1' AllowAdvertise='no' Display='expand' >
+      <Feature Id='Server2013Feature' Title="Plugin for TFS 2013.5" Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="NeutralServerComponents" />
         <ComponentGroupRef Id="ServerComponents2013"/>
-        <Condition Level="0">
+        <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2013"]]>
         </Condition>
       </Feature>
-      <?endif ?>
-      <?if $(var.Supports2015) = "True" ?>
-      <Feature Id='Server2015Feature' Title="Plugin for TFS 2015 RTM" Level='1'>
+      <Feature Id='Server2015Feature' Title="Plugin for TFS 2015 RTM" Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="NeutralServerComponents" />
         <ComponentGroupRef Id="ServerComponents2015"/>
-        <Condition Level="0">
+        <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015"]]>
         </Condition>
       </Feature>
-      <?endif ?>
-      <?if $(var.Supports2015u1) = "True" ?>
-      <Feature Id='Server2015.1Feature' Title="Plugin for TFS 2015.1" Level='1'>
+      <Feature Id='Server2015.1Feature' Title="Plugin for TFS 2015.1" Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="NeutralServerComponents" />
         <ComponentGroupRef Id="ServerComponents2015.1"/>
-        <Condition Level="0">
+        <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015.1"]]>
         </Condition>
       </Feature>
-      <?endif ?>
     </Feature>
       
-    <Feature Id='NeutralFeature' Title="Documentation and samples" Level='1'>
+    <Feature Id='NeutralFeature' Title="Documentation and samples" Level='1' AllowAdvertise='no'>
       <ComponentGroupRef Id="NeutralComponents" />
     </Feature>
 

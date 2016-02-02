@@ -26,19 +26,18 @@
     <SuppressIces>ICE30</SuppressIces>
     <!-- hard-coded -->
     <_CollectDirs>ClientBinDir2013=$(CollectDir)\2013\cliBin;ClientBinDir2015=$(CollectDir)\2015\cliBin;ClientBinDir2015.1=$(CollectDir)\2015.1\cliBin;ServerBinDir2013=$(CollectDir)\2013\srvBin;ServerBinDir2015=$(CollectDir)\2015\srvBin;ServerBinDir2015.1=$(CollectDir)\2015.1\srvBin;NeutralDir=$(NeutralDir)\</_CollectDirs>
-    <_Supports>Supports2013=$(Supports2013);Supports2015=$(Supports2015);Supports2015u1=$(Supports2015u1);</_Supports>
-    <DefineConstants>SolutionDir=$(SolutionDir);$(_Supports);$(_CollectDirs)</DefineConstants>
+    <DefineConstants>SolutionDir=$(SolutionDir);$(_CollectDirs)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
     <Compile Include="obj\$(Configuration)\_neutral.wxs" />
     <!-- hard-coded -->
-    <Compile Include="obj\$(Configuration)\_cliBin_2013.wxs" Condition=" '$(Supports2013)' == 'True' " />
-    <Compile Include="obj\$(Configuration)\_srvBin_2013.wxs" Condition=" '$(Supports2013)' == 'True' " />
-    <Compile Include="obj\$(Configuration)\_cliBin_2015.wxs" Condition=" '$(Supports2015)' == 'True' " />
-    <Compile Include="obj\$(Configuration)\_srvBin_2015.wxs" Condition=" '$(Supports2015)' == 'True' " />
-    <Compile Include="obj\$(Configuration)\_cliBin_2015.1.wxs" Condition=" '$(Supports2015u1)' == 'True' " />
-    <Compile Include="obj\$(Configuration)\_srvBin_2015.1.wxs" Condition=" '$(Supports2015u1)' == 'True' " />
+    <Compile Include="obj\$(Configuration)\_cliBin_2013.wxs" />
+    <Compile Include="obj\$(Configuration)\_srvBin_2013.wxs" />
+    <Compile Include="obj\$(Configuration)\_cliBin_2015.wxs" />
+    <Compile Include="obj\$(Configuration)\_srvBin_2015.wxs" />
+    <Compile Include="obj\$(Configuration)\_cliBin_2015.1.wxs" />
+    <Compile Include="obj\$(Configuration)\_srvBin_2015.1.wxs" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUtilExtension">
