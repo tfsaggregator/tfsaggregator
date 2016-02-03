@@ -26,7 +26,7 @@
     <SuppressIces>ICE30</SuppressIces>
     <!-- hard-coded -->
     <_CollectDirs>ClientBinDir2013=$(CollectDir)\2013\cliBin;ClientBinDir2015=$(CollectDir)\2015\cliBin;ClientBinDir2015.1=$(CollectDir)\2015.1\cliBin;ServerBinDir2013=$(CollectDir)\2013\srvBin;ServerBinDir2015=$(CollectDir)\2015\srvBin;ServerBinDir2015.1=$(CollectDir)\2015.1\srvBin;NeutralDir=$(NeutralDir)\</_CollectDirs>
-    <DefineConstants>SolutionDir=$(SolutionDir);$(_CollectDirs)</DefineConstants>
+    <DefineConstants>SolutionDir=$(SolutionDir);$(_CollectDirs);BuildVersion=$(BuildVersion)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />

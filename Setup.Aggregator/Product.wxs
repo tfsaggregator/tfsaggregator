@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   
-  <Product Id="*" Name="TFS Aggregator" Language="1033" Version="2.0.0.0" Manufacturer="TFS Aggregator Team" UpgradeCode="1c6958f9-0865-449d-abd9-71b4600ff1f0">
+  <Product Id="*" Name="TFS Aggregator" Language="1033" Version="$(var.BuildVersion)" Manufacturer="TFS Aggregator Team" UpgradeCode="1c6958f9-0865-449d-abd9-71b4600ff1f0">
     <Package InstallerVersion="400" Compressed="yes" InstallScope="perMachine" Platform="x64"/>
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />

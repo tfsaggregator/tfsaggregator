@@ -22,7 +22,7 @@
     <NeutralDir>$(CollectDir)\Neutral</NeutralDir>
     <WikiUrl>https://github.com/tfsaggregator/tfsaggregator.wiki.git</WikiUrl>
     <!-- Local builds get v0, AppVeyor replace with proper value -->
-    <BuildVersion Condition=" '$(BuildVersion)' == '' ">0.2.1-local</BuildVersion>
+    <BuildVersion Condition=" '$(BuildVersion)' == '' ">0.2.1</BuildVersion>
     <!-- Defaults to global install -->
     <GitExe>git</GitExe>
     <!-- skip process steps by setting False -->
@@ -162,11 +162,10 @@
 
 
   <Target Name="BuildMSI" Condition="$(BuildMSI)">
-    <!-- HACK produce fake heat files to be overwritten -->
 
     <!-- default target => build MSI -->
     <MSBuild Projects="$(MSBuildProjectDirectory)\Setup.Aggregator\Setup.Aggregator.wixproj"
-             Properties="@(TfsVersion -> 'Supports%(Alt)=True');OutputName=TFSAggregator-$(BuildVersion)-$(Configuration);Configuration=$(Configuration);CollectDir=$(CollectDir);NeutralDir=$(NeutralDir);SolutionDir=$(MSBuildProjectDirectory)" />
+             Properties="@(TfsVersion -> 'Supports%(Alt)=True');OutputName=TFSAggregator-$(BuildVersion)-$(Configuration);Configuration=$(Configuration);CollectDir=$(CollectDir);NeutralDir=$(NeutralDir);SolutionDir=$(MSBuildProjectDirectory);BuildVersion=$(BuildVersion)" />
   </Target>
 
 
