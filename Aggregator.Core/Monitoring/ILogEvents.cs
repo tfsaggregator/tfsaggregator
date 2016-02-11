@@ -84,7 +84,7 @@ namespace Aggregator.Core.Monitoring
 
         void WorkItemRepositoryBuilt(Uri uri, IdentityDescriptor toImpersonate);
 
-        void TemplateScopeConfigurationRequiresAtLeastNameOrType();
+        void TemplateScopeConfigurationRequiresAtLeastName();
 
         void FieldValidationFailedInvalidDataType(int id, string referenceName, Type systemType, Type valueType, object value);
 
