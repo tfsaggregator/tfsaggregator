@@ -66,7 +66,8 @@ namespace Aggregator.Core.Facade
         {
             ILocationService service = this.context.GetService<ILocationService>();
 
-            return service.GetSelfReferenceUri(this.context, service.GetDefaultAccessMapping(this.context));
+            string url = service.GetSelfReferenceUrl(this.context, service.GetDefaultAccessMapping(this.context));
+            return new Uri(url, UriKind.Absolute);
         }
 
         public IProjectProperty[] GetProjectProperties(Uri projectUri)
@@ -87,50 +88,6 @@ namespace Aggregator.Core.Facade
             var ics = this.context.GetService<ICommonStructureService>();
             Guid guid = ics.GetProject(this.context, projectUri).ToProjectReference().Id;
             return new ArtifactSpec(ArtifactKinds.ProcessTemplate, guid.ToByteArray(), 0);
-        }
-
-        public IProcessTemplateVersion GetCurrentProjectProcessVersion(Uri projectUri)
-        {
-            return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CurrentVersion);
-        }
-
-        public IProcessTemplateVersion GetCreationProjectProcessVersion(Uri projectUri)
-        {
-            return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CreationVersion);
-        }
-
-        private IProcessTemplateVersion GetProjectProcessVersion(string projectUri, string versionPropertyName)
-        {
-            ArtifactSpec processTemplateVersionSpec = this.GetProcessTemplateVersionSpec(projectUri);
-
-#if TFS2015
-            ProcessTemplateVersion unknown = null;
-#elif TFS2013
-            ProcessTemplateVersion unknown = ProcessTemplateVersion.Unknown;
-#else
-#error Define TFS version!
-#endif
-            ProcessTemplateVersion result = unknown;
-
-            using (TeamFoundationDataReader reader = this.context.GetService<TeamFoundationPropertyService>().GetProperties(this.context, processTemplateVersionSpec, new string[] { versionPropertyName }))
-            {
-                foreach (ArtifactPropertyValue value2 in reader.Cast<ArtifactPropertyValue>())
-                {
-                    foreach (PropertyValue value3 in value2.PropertyValues)
-                    {
-                        result =
-                            TeamFoundationSerializationUtility.Deserialize<ProcessTemplateVersion>(
-                                value3.Value as string);
-                        break;
-                    }
-
-                    break;
-                }
-            }
-
-            return result == unknown
-                ? new ProcessTemplateVersionWrapper() { TypeId = Guid.Empty, Major = 0, Minor = 0 }
-                : new ProcessTemplateVersionWrapper() { TypeId = result.TypeId, Major = result.Major, Minor = result.Minor };
         }
 
         public IdentityDescriptor GetIdentityToImpersonate()
@@ -154,7 +111,9 @@ namespace Aggregator.Core.Facade
         private Uri GetCollectionUriFromContext(IVssRequestContext requestContext)
         {
             ILocationService service = requestContext.GetService<ILocationService>();
-            return service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));
+
+            string url = service.GetSelfReferenceUrl(requestContext, service.GetDefaultAccessMapping(requestContext));
+            return new Uri(url, UriKind.Absolute);
         }
 
         public void Dispose()
