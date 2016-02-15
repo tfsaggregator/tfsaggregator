@@ -88,16 +88,18 @@
       </ItemGroup>
     </When>
 
-    <When Condition="'$(TfsVersion)' == '14.0' Or '$(TfsVersion)' == '14.1'">
+    <When Condition="'$(TfsVersion)' == '14.0' Or '$(TfsVersion)' == '14.1' Or '$(TfsVersion)' == '14.2'">
       <PropertyGroup>
         <DefineConstants Condition="'$(TfsVersion)' == '14.0'">$(DefineConstants);TFS2015</DefineConstants>
         <DefineConstants Condition="'$(TfsVersion)' == '14.1'">$(DefineConstants);TFS2015u1;TFS2015</DefineConstants>
+        <DefineConstants Condition="'$(TfsVersion)' == '14.2'">$(DefineConstants);TFS2015u2;TFS2015u1;TFS2015</DefineConstants>
         
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
         <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)\Application Tier\Web Services\bin</ServerAssemblies>
         <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '14.0'">..\References\2015</ServerAssemblies>
         <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '14.1'">..\References\2015.1</ServerAssemblies>
+        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '14.2'">..\References\2015.2</ServerAssemblies>
       </PropertyGroup>
 
       <ItemGroup>

@@ -2,6 +2,7 @@
 using System.Linq;
 
 using Aggregator.Core.Interfaces;
+using Aggregator.Core.Extensions;
 
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Framework.Client;
@@ -66,8 +67,7 @@ namespace Aggregator.Core.Facade
         {
             ILocationService service = this.context.GetService<ILocationService>();
 
-            string url = service.GetSelfReferenceUrl(this.context, service.GetDefaultAccessMapping(this.context));
-            return new Uri(url, UriKind.Absolute);
+            return service.GetSelfReferenceUri(this.context, service.GetDefaultAccessMapping(this.context));
         }
 
         public IProjectProperty[] GetProjectProperties(Uri projectUri)
@@ -81,13 +81,6 @@ namespace Aggregator.Core.Facade
             ics.GetProjectProperties(this.context, projectUri.ToString(), out projectName, out projectState, out projectProperties);
 
             return projectProperties.Select(p => (IProjectProperty)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
-        }
-
-        private ArtifactSpec GetProcessTemplateVersionSpec(string projectUri)
-        {
-            var ics = this.context.GetService<ICommonStructureService>();
-            Guid guid = ics.GetProject(this.context, projectUri).ToProjectReference().Id;
-            return new ArtifactSpec(ArtifactKinds.ProcessTemplate, guid.ToByteArray(), 0);
         }
 
         public IdentityDescriptor GetIdentityToImpersonate()
@@ -112,8 +105,7 @@ namespace Aggregator.Core.Facade
         {
             ILocationService service = requestContext.GetService<ILocationService>();
 
-            string url = service.GetSelfReferenceUrl(requestContext, service.GetDefaultAccessMapping(requestContext));
-            return new Uri(url, UriKind.Absolute);
+            return service.GetSelfReferenceUri(requestContext, service.GetDefaultAccessMapping(requestContext));
         }
 
         public void Dispose()
