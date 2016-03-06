@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25008.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.Core", "Aggregator.Core\Aggregator.Core.csproj", "{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}"
 EndProject
@@ -92,6 +92,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FilesToInstall", "FilesToIn
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests.Plugin", "IntegrationTests.Plugin\IntegrationTests.Plugin.csproj", "{5B18FFED-96EB-4772-960E-375362AA6060}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2015.1", "2015.1", "{62159E5E-940C-4B19-8859-4CF1BBDCA2E5}"
+	ProjectSection(SolutionItems) = preProject
+		References\2015.1\PLACEHOLDER.txt = References\2015.1\PLACEHOLDER.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2015.2", "2015.2", "{4AB78AF9-73DE-4353-AA18-DC6102320316}"
+	ProjectSection(SolutionItems) = preProject
+		References\2015.2\PLACEHOLDER.txt = References\2015.2\PLACEHOLDER.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -360,5 +370,7 @@ Global
 		{CB1029ED-AFCB-492F-961B-5AF813F52625} = {B1913F70-5A32-4EAE-BDD2-0C46295656A6}
 		{EAB2B1DE-FCBF-49F0-9BB8-E29F709E4002} = {E56DE6FC-74A4-4865-BFAD-8F330BC5618F}
 		{61340591-23E3-4B33-9E23-8669CBC235A9} = {E56DE6FC-74A4-4865-BFAD-8F330BC5618F}
+		{62159E5E-940C-4B19-8859-4CF1BBDCA2E5} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
+		{4AB78AF9-73DE-4353-AA18-DC6102320316} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
 	EndGlobalSection
 EndGlobal
