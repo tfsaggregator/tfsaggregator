@@ -7,21 +7,25 @@
     [assembly: AssemblyConfiguration("Debug [TFS 2013.5]")]
 #elif TFS2015
     [assembly: AssemblyConfiguration("Debug [TFS 2015.0]")]
-    #elif TFS2015u1
+#elif TFS2015u1
     [assembly: AssemblyConfiguration("Debug [TFS 2015.1]")]
-    #endif
+#elif TFS2015u2
+    [assembly: AssemblyConfiguration("Debug [TFS 2015.2]")]
+#endif
 #else
-    #if TFS2013
+#if TFS2013
     [assembly: AssemblyConfiguration("Release [TFS 2013.5]")]
-    #elif TFS2015
+#elif TFS2015
     [assembly: AssemblyConfiguration("Release [TFS 2015.0]")]
-    #elif TFS2015u1
+#elif TFS2015u1
     [assembly: AssemblyConfiguration("Release [TFS 2015.1]")]
-    #endif
+#elif TFS2015u2
+    [assembly: AssemblyConfiguration("Release [TFS 2015.2]")]
+#endif
 #endif
 [assembly: AssemblyCompany("TFS Aggregator Team")]
 [assembly: AssemblyProduct("TFS Aggregator")]
-[assembly: AssemblyCopyright("Copyright (c) TFS Aggregator Team 2015")]
+[assembly: AssemblyCopyright("Copyright (c) TFS Aggregator Team 2015-16")]
 [assembly: AssemblyTrademark("")]
 
 // Version information for an assembly consists of the following four values:
