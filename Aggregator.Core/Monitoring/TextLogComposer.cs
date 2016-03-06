@@ -410,7 +410,7 @@ namespace Aggregator.Core.Monitoring
             }
         }
 
-        public void TemplateScopeConfigurationRequiresAtLeastNameOrType()
+        public void TemplateScopeConfigurationRequiresAtLeastName()
         {
             this.logger.Log(LogLevel.Error, "Error in policy file: templateScope requires name or typeId attribute");
         }

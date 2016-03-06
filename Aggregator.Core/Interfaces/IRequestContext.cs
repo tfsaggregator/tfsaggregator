@@ -15,10 +15,6 @@ namespace Aggregator.Core.Interfaces
 
         IProjectProperty[] GetProjectProperties(Uri teamProjectUri);
 
-        IProcessTemplateVersion GetCurrentProjectProcessVersion(Uri projectUri);
-
-        IProcessTemplateVersion GetCreationProjectProcessVersion(Uri projectUri);
-
         Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor GetIdentityToImpersonate();
 
         INotification Notification { get; }
