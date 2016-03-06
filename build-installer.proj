@@ -47,6 +47,9 @@
     <TfsVersion Include="2015.1" >
       <Alt>2015u1</Alt>
     </TfsVersion>
+    <TfsVersion Include="2015.2" >
+      <Alt>2015u2</Alt>
+    </TfsVersion>
   </ItemGroup>
 
 
