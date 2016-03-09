@@ -171,9 +171,13 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                // works even on a new workitem with no revisions...
-                return new RevisionWrapper(
-                    this.workItem.Revisions[this.workItem.Revisions.Count - 1]);
+                // Revision starts at 1, so Revision-1 is last and Revision-2 is next-to-last
+                int lastRevisionNumber = this.workItem.Revision - 2;
+                if (lastRevisionNumber < 0)
+                {
+                    lastRevisionNumber = 0;
+                }
+                return new RevisionWrapper(this.workItem.Revisions[lastRevisionNumber]);
             }
         }
 
