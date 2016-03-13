@@ -199,7 +199,7 @@ namespace Aggregator.Core.Facade
             {
                 int targetRevision = this.workItem.Revision + 1;
 
-                if (targetRevision <= this.workItem.Revisions.Count + 1)
+                if (targetRevision >= this.workItem.Revisions.Count + 1)
                 {
                     targetRevision = this.workItem.Revisions.Count - 1;
                 }
