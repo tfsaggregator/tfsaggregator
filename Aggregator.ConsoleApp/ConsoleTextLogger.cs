@@ -35,12 +35,14 @@ namespace Aggregator.ConsoleApp
                 const int LogLevelMaximumStringLength = 11; // Len(Information)
                 string levelAsString = level.ToString();
 
+#pragma warning disable S3220 // Method calls should not resolve ambiguously to overloads with "params"
                 Console.Write(
                     "[{0}]{1} {2:00}.{3:000} ",
                     levelAsString,
                     string.Empty.PadLeft(LogLevelMaximumStringLength - levelAsString.Length),
                     this.clock.ElapsedMilliseconds / 1000,
                     this.clock.ElapsedMilliseconds % 1000);
+#pragma warning restore S3220 // Method calls should not resolve ambiguously to overloads with "params"
 
                 Console.WriteLine(message);
 
