@@ -185,23 +185,17 @@ namespace Aggregator.Core.Configuration
                             case "templateScope":
                                 {
                                     string templateName = (element.Attribute("name") ?? nullAttribute).Value;
-                                    string templateId = (element.Attribute("typeId") ?? nullAttribute).Value;
-                                    string minVersion = (element.Attribute("minVersion") ?? nullAttribute).Value;
-                                    string maxVersion = (element.Attribute("maxVersion") ?? nullAttribute).Value;
 
                                     // check for proper attribute combo (cannot be done in XSD)
-                                    if (string.IsNullOrWhiteSpace(templateName) && string.IsNullOrWhiteSpace(templateId))
+                                    if (string.IsNullOrWhiteSpace(templateName))
                                     {
-                                        this.logger.TemplateScopeConfigurationRequiresAtLeastNameOrType();
+                                        this.logger.TemplateScopeConfigurationRequiresAtLeastName();
                                     }
                                     else
                                     {
                                         scope.Add(new TemplateScope()
                                         {
-                                            TemplateName = templateName,
-                                            TemplateTypeId = templateId,
-                                            MinVersion = minVersion,
-                                            MaxVersion = maxVersion
+                                            TemplateName = templateName
                                         });
                                     }
 

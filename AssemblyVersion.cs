@@ -1,16 +1,31 @@
 ﻿using System.Reflection;
 
-// General Information about an assembly is controlled through the following
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
+// To read Configuration use this Powershell snippet
+// [System.Reflection.Assembly]::LoadFile("path-to-assembly-file").GetCustomAttributesData() | ?{ $_.AttributeType -eq [System.Reflection.AssemblyConfigurationAttribute] } | select ConstructorArguments
 #if DEBUG
-[assembly: AssemblyConfiguration("Debug")]
+#if TFS2013
+    [assembly: AssemblyConfiguration("Debug [TFS 2013.5]")]
+#elif TFS2015
+    [assembly: AssemblyConfiguration("Debug [TFS 2015.0]")]
+#elif TFS2015u1
+    [assembly: AssemblyConfiguration("Debug [TFS 2015.1]")]
+#elif TFS2015u2
+    [assembly: AssemblyConfiguration("Debug [TFS 2015.2]")]
+#endif
 #else
-[assembly: AssemblyConfiguration("Release")]
+#if TFS2013
+    [assembly: AssemblyConfiguration("Release [TFS 2013.5]")]
+#elif TFS2015
+    [assembly: AssemblyConfiguration("Release [TFS 2015.0]")]
+#elif TFS2015u1
+    [assembly: AssemblyConfiguration("Release [TFS 2015.1]")]
+#elif TFS2015u2
+    [assembly: AssemblyConfiguration("Release [TFS 2015.2]")]
+#endif
 #endif
 [assembly: AssemblyCompany("TFS Aggregator Team")]
 [assembly: AssemblyProduct("TFS Aggregator")]
-[assembly: AssemblyCopyright("Copyright (c) TFS Aggregator Team 2015")]
+[assembly: AssemblyCopyright("Copyright (c) TFS Aggregator Team 2015-16")]
 [assembly: AssemblyTrademark("")]
 
 // Version information for an assembly consists of the following four values:

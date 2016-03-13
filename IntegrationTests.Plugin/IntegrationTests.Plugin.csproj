@@ -62,7 +62,7 @@
     <TfsVersion>14.1</TfsVersion>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug-2015.1\</OutputPath>
-    <DefineConstants>CODE_ANALYSIS;DEBUG;TRACE;TFS2015</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <RunCodeAnalysis>true</RunCodeAnalysis>
@@ -73,7 +73,27 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2015.1|AnyCPU'">
     <TfsVersion>14.1</TfsVersion>
     <OutputPath>bin\Release-2015.1\</OutputPath>
-    <DefineConstants>TRACE;TFS2015</DefineConstants>
+    <DefineConstants>TRACE;</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2015.2|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug-2015.2\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2015.2|AnyCPU'">
+    <OutputPath>bin\Release-2015.2\</OutputPath>
+    <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -130,14 +150,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
-  <PropertyGroup>
-    <PostBuildEvent>IF NOT "$(CI)" == "True" (
-copy /Y $(SolutionDir)\Aggregator.ServerPlugin\bin\$(ConfigurationName)\TFSAggregator2.ServerPlugin.dll "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Plugins"
-copy /Y $(SolutionDir)\Aggregator.ServerPlugin\bin\$(ConfigurationName)\TFSAggregator2.ServerPlugin.pdb "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Plugins"
-copy /Y $(SolutionDir)\Aggregator.ServerPlugin\bin\$(ConfigurationName)\TFSAggregator2.Core.dll "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Plugins"
-copy /Y $(SolutionDir)\Aggregator.ServerPlugin\bin\$(ConfigurationName)\TFSAggregator2.Core.pdb "C:\Program Files\Microsoft Team Foundation Server 14.0\Application Tier\Web Services\bin\Plugins"
-)</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

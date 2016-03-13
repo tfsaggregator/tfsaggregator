@@ -165,22 +165,10 @@ namespace Aggregator.Core.Extensions
                 bool valid = true;
                 bool hasAllowedvalues = field.HasAllowedValuesList;
 
-#if TFS2015 || TFS2015u1
-                bool isIdentity = field.FieldDefinition.IsIdentity;
-#else
-                bool isIdentity = false;
-#endif
-
-                if (hasAllowedvalues && !isIdentity)
+                if (hasAllowedvalues)
                 {
                     valid &= ((IList)field.FieldDefinition.AllowedValues).Contains(value);
                 }
-#if TFS2015 || TFS2015u1
-                else if (hasAllowedvalues && isIdentity)
-                {
-                    valid &= ((IList)field.FieldDefinition.IdentityFieldAllowedValues).Contains(value);
-                }
-#endif
 
                 if (valid)
                 {
