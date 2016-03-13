@@ -37,7 +37,7 @@ namespace Aggregator.Core.Context
             Func<string> settingsPathGetter,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
+            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder)
         {
             string settingsPath = settingsPathGetter();
             string cacheKey = CacheKey + settingsPath;
@@ -68,6 +68,7 @@ namespace Aggregator.Core.Context
 
                 // as it changes at each invocation, must be set again here
                 runtime.RequestContext = requestContext;
+                runtime.workItemRepository = null;
             }
 
             return runtime.Clone() as RuntimeContext;
@@ -78,7 +79,7 @@ namespace Aggregator.Core.Context
             TFSAggregatorSettings settings,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
+            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder)
         {
             var runtime = new RuntimeContext();
 
@@ -144,9 +145,9 @@ namespace Aggregator.Core.Context
         }
 
         // isolate type constructor to facilitate Unit testing
-        private Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder;
+        private Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder;
 
-        public IWorkItemRepository GetWorkItemRepository()
+        protected virtual IWorkItemRepository CreateWorkItemRepository()
         {
             var uri = this.RequestContext.GetProjectCollectionUri();
 
@@ -156,9 +157,24 @@ namespace Aggregator.Core.Context
                 toImpersonate = this.RequestContext.GetIdentityToImpersonate();
             }
 
-            var newRepo = this.repoBuilder(uri, toImpersonate, this.Logger);
+            var newRepo = this.repoBuilder(uri, toImpersonate, this);
             this.Logger.WorkItemRepositoryBuilt(uri, toImpersonate);
             return newRepo;
+        }
+
+        private IWorkItemRepository workItemRepository;
+
+        public IWorkItemRepository WorkItemRepository
+        {
+            get
+            {
+                if (this.workItemRepository == null)
+                {
+                    this.workItemRepository = this.CreateWorkItemRepository();
+                }
+
+                return this.workItemRepository;
+            }
         }
 
         public object Clone()

@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml;
 
-using Aggregator.Core;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
@@ -39,7 +38,7 @@ namespace UnitTests.Core.Mock
 
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
         {
-            var newWorkItem = new WorkItemMock(this)
+            var newWorkItem = new WorkItemMock(this, new RuntimeContextMock())
             {
                 Id = 0, TypeName = workItemTypeName
             };

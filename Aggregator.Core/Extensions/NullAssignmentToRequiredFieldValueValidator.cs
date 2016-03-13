@@ -1,4 +1,4 @@
-using Aggregator.Core.Monitoring;
+﻿using Aggregator.Core.Context;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
@@ -6,8 +6,8 @@ namespace Aggregator.Core.Extensions
 {
     internal class NullAssignmentToRequiredFieldValueValidator : BaseFieldValueValidator
     {
-        internal NullAssignmentToRequiredFieldValueValidator(ILogEvents logger)
-            : base(logger)
+        internal NullAssignmentToRequiredFieldValueValidator(IRuntimeContext context)
+            : base(context)
         {
         }
 

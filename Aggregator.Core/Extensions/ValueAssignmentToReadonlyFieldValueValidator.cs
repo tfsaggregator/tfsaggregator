@@ -1,4 +1,4 @@
-﻿using Aggregator.Core.Monitoring;
+﻿using Aggregator.Core.Context;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
@@ -6,8 +6,8 @@ namespace Aggregator.Core.Extensions
 {
     internal class ValueAssignmentToReadonlyFieldValueValidator : BaseFieldValueValidator
     {
-        internal ValueAssignmentToReadonlyFieldValueValidator(ILogEvents logger)
-            : base(logger)
+        internal ValueAssignmentToReadonlyFieldValueValidator(IRuntimeContext context)
+            : base(context)
         {
         }
 

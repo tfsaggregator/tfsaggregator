@@ -1,4 +1,4 @@
-using Aggregator.Core.Monitoring;
+﻿using Aggregator.Core.Context;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
@@ -6,8 +6,8 @@ namespace Aggregator.Core.Extensions
 {
     internal class IncorrectDataTypeFieldValidator : BaseFieldValueValidator
     {
-        internal IncorrectDataTypeFieldValidator(ILogEvents logger)
-            : base(logger)
+        internal IncorrectDataTypeFieldValidator(IRuntimeContext context)
+            : base(context)
         {
         }
 

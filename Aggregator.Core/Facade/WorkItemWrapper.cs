@@ -16,10 +16,13 @@ namespace Aggregator.Core.Facade
     {
         private readonly WorkItem workItem;
 
-        public WorkItemWrapper(WorkItem workItem, IWorkItemRepository store, ILogEvents logger)
-            : base(store, logger)
+        private readonly IRuntimeContext context;
+
+        public WorkItemWrapper(WorkItem workItem, IRuntimeContext context)
+            : base(context)
         {
             this.workItem = workItem;
+            this.context = context;
         }
 
         public WorkItemType Type
@@ -83,7 +86,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new FieldCollectionWrapper(this.workItem.Fields, this.Logger);
+                return new FieldCollectionWrapper(this.workItem.Fields, this.context);
             }
         }
 
@@ -139,7 +142,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new WorkItemLinkCollectionWrapper(this.workItem.WorkItemLinks, this.Store, this.Logger);
+                return new WorkItemLinkCollectionWrapper(this.workItem.WorkItemLinks, this.context);
             }
         }
 
@@ -260,6 +263,11 @@ namespace Aggregator.Core.Facade
             {
                 this.Logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
             }
+        }
+
+        public void AddHyperlink(string destination)
+        {
+            this.AddHyperlink(destination, string.Empty);
         }
 
         public void AddHyperlink(string destination, string comment = "")

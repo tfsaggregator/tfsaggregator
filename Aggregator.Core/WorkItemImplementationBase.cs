@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
@@ -29,10 +30,10 @@ namespace Aggregator.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemImplementationBase"/> class.
         /// </summary>
-        protected WorkItemImplementationBase(IWorkItemRepository store, ILogEvents logger)
+        protected WorkItemImplementationBase(IRuntimeContext context)
         {
-            this.Store = store;
-            this.Logger = logger;
+            this.Store = context.WorkItemRepository;
+            this.Logger = context.Logger;
         }
 
         /// <summary>

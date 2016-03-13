@@ -37,7 +37,7 @@ namespace Aggregator.Core
             this.settings = runtime.Settings;
             this.limiter = runtime.RateLimiter;
 
-            this.store = runtime.GetWorkItemRepository();
+            this.store = runtime.WorkItemRepository;
             this.engine = runtime.GetEngine();
         }
 

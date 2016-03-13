@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml;
 
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
@@ -23,6 +24,8 @@ namespace Aggregator.Core.Facade
     {
         private readonly ILogEvents logger;
 
+        private readonly IRuntimeContext context;
+
         private readonly Dictionary<int, IWorkItem> loadedWorkItems = new Dictionary<int, IWorkItem>();
 
         private readonly List<IWorkItem> createdWorkItems = new List<IWorkItem>();
@@ -31,11 +34,12 @@ namespace Aggregator.Core.Facade
 
         private readonly TfsTeamProjectCollection tfs;
 
-        public WorkItemRepository(Uri tfsCollectionUri, IdentityDescriptor toImpersonate, ILogEvents logger)
+        public WorkItemRepository(Uri tfsCollectionUri, IdentityDescriptor toImpersonate, IRuntimeContext context)
         {
-            this.logger = logger;
+            this.logger = context.Logger;
+            this.context = context;
             this.tfs = new TfsTeamProjectCollection(tfsCollectionUri, toImpersonate);
-            this.workItemStore = (WorkItemStore)this.tfs.GetService(typeof(WorkItemStore));
+            this.workItemStore = this.tfs.GetService<WorkItemStore>();
         }
 
         public IWorkItem GetWorkItem(int workItemId)
@@ -43,7 +47,7 @@ namespace Aggregator.Core.Facade
             IWorkItem result;
             if (!this.loadedWorkItems.TryGetValue(workItemId, out result))
             {
-                result = new WorkItemWrapper(this.workItemStore.GetWorkItem(workItemId), this, this.logger);
+                result = new WorkItemWrapper(this.workItemStore.GetWorkItem(workItemId), this.context);
                 this.loadedWorkItems.Add(workItemId, result);
             }
 
@@ -81,7 +85,7 @@ namespace Aggregator.Core.Facade
             var targetType = this.workItemStore.Projects[projectName].WorkItemTypes[workItemTypeName];
             var target = new WorkItem(targetType);
 
-            IWorkItem justCreated = new WorkItemWrapper(target, this, this.logger);
+            IWorkItem justCreated = new WorkItemWrapper(target, this.context);
             this.createdWorkItems.Add(justCreated);
             return justCreated;
         }
@@ -98,8 +102,6 @@ namespace Aggregator.Core.Facade
 
         public IEnumerable<string> GetGlobalList(string globalListName)
         {
-            // TODO this.logger.ReadingGlobalList(this.workItemStore.TeamProjectCollection.Name, globalListName);
-
             // get Global Lists from TFS collection
             var sourceGL = this.workItemStore.ExportGlobalLists();
             return ParseGlobalList(sourceGL, globalListName);

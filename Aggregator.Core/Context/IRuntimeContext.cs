@@ -21,7 +21,7 @@ namespace Aggregator.Core.Context
 
         ILogEvents Logger { get; }
 
-        IWorkItemRepository GetWorkItemRepository();
+        IWorkItemRepository WorkItemRepository { get; }
 
         ScriptEngine GetEngine();
 
