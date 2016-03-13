@@ -127,6 +127,22 @@ namespace UnitTests.Core.Mock
             }
         }
 
+        public IRevision PreviousRevision
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public IRevision NextRevision
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public bool ShouldLimit(RateLimiter limiter)
         {
             return false;

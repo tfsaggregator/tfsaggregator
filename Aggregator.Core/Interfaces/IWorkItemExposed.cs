@@ -20,6 +20,16 @@ namespace Aggregator.Core.Interfaces
 
         IRevision LastRevision { get; }
 
+        IRevision PreviousRevision
+        {
+            get;
+        }
+
+        IRevision NextRevision
+        {
+            get;
+        }
+
         bool IsValid();
 
         object this[string name] { get; set; }

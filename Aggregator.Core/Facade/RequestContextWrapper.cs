@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-using Aggregator.Core.Interfaces;
 using Aggregator.Core.Extensions;
+using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Framework.Client;

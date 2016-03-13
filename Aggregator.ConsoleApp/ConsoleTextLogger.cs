@@ -5,7 +5,6 @@ using Aggregator.Core.Monitoring;
 
 namespace Aggregator.ConsoleApp
 {
-
     internal class ConsoleTextLogger : ITextLogger
     {
         private readonly Stopwatch clock = new Stopwatch();

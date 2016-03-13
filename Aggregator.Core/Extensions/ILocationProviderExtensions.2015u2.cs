@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.TeamFoundation.Framework.Server;
+
 using Aggregator.Core.Extensions;
-using Microsoft.VisualStudio.Services.Location.Server;
+
+using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.Server.Core.Location;
+using Microsoft.VisualStudio.Services.Location.Server;
 
 namespace Aggregator.Core.Extensions
 {

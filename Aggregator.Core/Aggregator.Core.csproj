@@ -131,9 +131,14 @@
     <Compile Include="Configuration\ScopeMatchResult.cs" />
     <Compile Include="Configuration\TemplateScope.cs" />
     <Compile Include="Configuration\WorkItemTypeScope.cs" />
+    <Compile Include="Extensions\BaseFieldValueValidator.cs" />
     <Compile Include="Extensions\DoubleFixFieldDecorator.cs" />
     <Compile Include="Extensions\FieldValueValidationDecorator.cs" />
     <Compile Include="Extensions\ILocationProviderExtensions.2015u2.cs" />
+    <Compile Include="Extensions\IncorrectDataTypeFieldValidator.cs" />
+    <Compile Include="Extensions\InvalidValueFieldValueValidator.cs" />
+    <Compile Include="Extensions\NullAssignmentToRequiredFieldValueValidator.cs" />
+    <Compile Include="Extensions\ValueAssignmentToReadonlyFieldValueValidator.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
     <Compile Include="Facade\RevisionWrapper.cs" />
     <Compile Include="Interfaces\IFieldExposed.cs" />

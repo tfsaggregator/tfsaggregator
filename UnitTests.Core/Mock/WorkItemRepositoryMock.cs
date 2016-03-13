@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Xml;
 
 using Aggregator.Core;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System.Xml;
 
 namespace UnitTests.Core.Mock
 {

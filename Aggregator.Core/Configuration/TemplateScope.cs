@@ -38,7 +38,7 @@ namespace Aggregator.Core.Configuration
         {
             var res = new ScopeMatchResult();
 
-            IProjectProperty templateNameProperty = GetTemplateInfo(currentRequestContext, currentNotification); ;
+            IProjectProperty templateNameProperty = GetTemplateInfo(currentRequestContext, currentNotification);
 
             string processTemplateDescription = string.Format(
                 "{0}",
