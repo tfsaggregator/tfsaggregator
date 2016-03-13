@@ -63,8 +63,7 @@ namespace Aggregator.Core.Facade
         {
             ILocationService service = this.context.GetService<ILocationService>();
 
-            string url = service.GetSelfReferenceUrl(this.context, service.GetDefaultAccessMapping(this.context));
-            return new Uri(url, UriKind.Absolute);
+            return service.GetSelfReferenceUri(this.context, service.GetDefaultAccessMapping(this.context));
         }
 
         public IProjectProperty[] GetProjectProperties(Uri projectUri)
