@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-using Aggregator.Core.Interfaces;
 using Aggregator.Core.Extensions;
+using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Framework.Client;
@@ -15,7 +15,6 @@ using Microsoft.TeamFoundation.WorkItemTracking.Server;
 using Microsoft.VisualStudio.Services.Location.Server;
 #endif
 
-using ArtifactPropertyValue = Microsoft.TeamFoundation.Framework.Server.ArtifactPropertyValue;
 #if TFS2015 || TFS2015u1
 using ILocationService = Microsoft.VisualStudio.Services.Location.Server.ILocationService;
 #elif TFS2013
@@ -29,9 +28,6 @@ using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.IVssRequest
 #else
 using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext;
 #endif
-
-using ArtifactSpec = Microsoft.TeamFoundation.Framework.Server.ArtifactSpec;
-using PropertyValue = Microsoft.TeamFoundation.Framework.Server.PropertyValue;
 
 namespace Aggregator.Core.Facade
 {
@@ -95,7 +91,7 @@ namespace Aggregator.Core.Facade
 
             Microsoft.TeamFoundation.Framework.Client.TeamFoundationIdentity identity =
                 identityManagementService.ReadIdentities(
-                    new Guid[] { new Guid(this.Notification.ChangerTeamFoundationId) },
+                    new[] { new Guid(this.Notification.ChangerTeamFoundationId) },
                     MembershipQuery.None).FirstOrDefault();
 
             return identity?.Descriptor;

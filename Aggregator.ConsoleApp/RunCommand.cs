@@ -84,8 +84,8 @@ namespace Aggregator.ConsoleApp
                 () => this.PolicyFile,
                 context,
                 logger,
-                (collectionUri, toImpersonate, logEvents) =>
-                    new Core.Facade.WorkItemRepository(collectionUri, toImpersonate, logEvents));
+                (collectionUri, toImpersonate, runtimeContext) =>
+                    new Core.Facade.WorkItemRepository(collectionUri, toImpersonate as Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, runtimeContext));
 
             if (!string.IsNullOrWhiteSpace(this.LogLevelName))
             {

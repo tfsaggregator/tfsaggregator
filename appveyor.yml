@@ -12,6 +12,7 @@ configuration:
   - Debug
   - Release
 environment:
+  installerVersion: 2.1.$(APPVEYOR_BUILD_NUMBER)
   containerURL:
     secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3x3eawhSGYVzFy4Pap0dOGw==
   referenceFolder: References
@@ -50,7 +51,7 @@ test:
   assemblies:
     - UnitTests.Core.dll
 after_test:
-  - msbuild build-installer.proj /p:Configuration=%CONFIGURATION% /p:SourceBranch=%APPVEYOR_REPO_BRANCH% /p:BuildVersion=%APPVEYOR_BUILD_VERSION%
+  - msbuild build-installer.proj /p:Configuration=%CONFIGURATION% /p:SourceBranch=%APPVEYOR_REPO_BRANCH% /p:BuildVersion=%installerVersion%
 artifacts:
   - path: '*.zip'
   - path: '**\*.msi'

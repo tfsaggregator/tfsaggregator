@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
+using Aggregator.Core.Context;
 using Aggregator.Core.Facade;
 using Aggregator.Core.Interfaces;
-using Aggregator.Core.Monitoring;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
@@ -16,16 +15,16 @@ namespace Aggregator.Core.Extensions
 
         private readonly ICollection<BaseFieldValueValidator> validators;
 
-        public FieldValueValidationDecorator(IFieldExposed decoratedField, ILogEvents logger)
+        public FieldValueValidationDecorator(IFieldExposed decoratedField, IRuntimeContext context)
         {
             this.decoratedField = decoratedField;
 
             this.validators = new BaseFieldValueValidator[]
             {
-                new IncorrectDataTypeFieldValidator(logger),
-                new NullAssignmentToRequiredFieldValueValidator(logger),
-                new InvalidValueFieldValueValidator(logger),
-                new ValueAssignmentToReadonlyFieldValueValidator(logger)
+                new IncorrectDataTypeFieldValidator(context),
+                new NullAssignmentToRequiredFieldValueValidator(context),
+                new InvalidValueFieldValueValidator(context),
+                new ValueAssignmentToReadonlyFieldValueValidator(context)
             };
         }
 
@@ -95,118 +94,6 @@ namespace Aggregator.Core.Extensions
             {
                 return this.decoratedField.TfsField;
             }
-        }
-    }
-
-
-    internal abstract class BaseFieldValueValidator
-    {
-        protected ILogEvents Logger { get; private set; }
-
-        internal BaseFieldValueValidator(ILogEvents logger)
-        {
-            this.Logger = logger;
-        }
-
-        public abstract bool ValidateFieldValue(Field field, object value);
-    }
-
-    internal class NullAssignmentToRequiredFieldValueValidator : BaseFieldValueValidator
-    {
-        internal NullAssignmentToRequiredFieldValueValidator(ILogEvents logger)
-            : base(logger)
-        {
-        }
-
-        public override bool ValidateFieldValue(Field field, object value)
-        {
-            if (value == null && field.IsRequired)
-            {
-                this.Logger.FieldValidationFailedFieldRequired(field.WorkItem.Id, field.ReferenceName);
-
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-    internal class ValueAssignmentToReadonlyFieldValueValidator : BaseFieldValueValidator
-    {
-        internal ValueAssignmentToReadonlyFieldValueValidator(ILogEvents logger)
-            : base(logger)
-        {
-        }
-
-        public override bool ValidateFieldValue(Field field, object value)
-        {
-            if (value != null && !field.IsEditable)
-            {
-                this.Logger.FieldValidationFailedFieldNotEditable(field.WorkItem.Id, field.ReferenceName, value);
-
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-    internal class InvalidValueFieldValueValidator : BaseFieldValueValidator
-    {
-        internal InvalidValueFieldValueValidator(ILogEvents logger)
-            : base(logger)
-        {
-        }
-
-        public override bool ValidateFieldValue(Field field, object value)
-        {
-            if (value != null && field.IsLimitedToAllowedValues)
-            {
-                bool valid = true;
-                bool hasAllowedvalues = field.HasAllowedValuesList;
-
-                if (hasAllowedvalues)
-                {
-                    valid &= ((IList)field.FieldDefinition.AllowedValues).Contains(value);
-                }
-
-                if (valid)
-                {
-                    this.Logger.FieldValidationFailedValueNotAllowed(
-                            field.WorkItem.Id,
-                            field.ReferenceName,
-                            value);
-
-                    return false;
-                }
-            }
-
-            return true;
-        }
-    }
-
-    internal class IncorrectDataTypeFieldValidator : BaseFieldValueValidator
-    {
-        internal IncorrectDataTypeFieldValidator(ILogEvents logger)
-            : base(logger)
-        {
-        }
-
-        public override bool ValidateFieldValue(Field field, object value)
-        {
-            if (value != null && value.GetType() != field.FieldDefinition.SystemType)
-            {
-                this.Logger.FieldValidationFailedInvalidDataType(
-                    field.WorkItem.Id,
-                    field.ReferenceName,
-                    field.FieldDefinition.SystemType,
-                    value.GetType(),
-                    value);
-
-                return false;
-            }
-
-            return true;
         }
     }
 }
