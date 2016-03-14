@@ -163,7 +163,7 @@ namespace Aggregator.Core.Context
                 initData = this.Settings.PersonalToken;
             }
 
-            var newRepo = this.repoBuilder(uri, toImpersonate, this);
+            var newRepo = this.repoBuilder(uri, initData, this);
             this.Logger.WorkItemRepositoryBuilt(uri, toImpersonate);
             return newRepo;
         }
