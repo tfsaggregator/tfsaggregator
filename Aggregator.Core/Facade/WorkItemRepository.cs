@@ -34,7 +34,27 @@ namespace Aggregator.Core.Facade
         public WorkItemRepository(Uri tfsCollectionUri, IdentityDescriptor toImpersonate, ILogEvents logger)
         {
             this.logger = logger;
+
             this.tfs = new TfsTeamProjectCollection(tfsCollectionUri, toImpersonate);
+            this.tfs.Authenticate();
+
+            this.workItemStore = (WorkItemStore)this.tfs.GetService(typeof(WorkItemStore));
+        }
+
+        public WorkItemRepository(Uri tfsCollectionUri, string personalToken, ILogEvents logger)
+        {
+            this.logger = logger;
+
+            // username is not important, we use it to identify ourselves to callee
+            var tfsCred = new TfsClientCredentials(
+                new BasicAuthCredential(
+                    new System.Net.NetworkCredential(
+                        "tfsaggregator2-webhooks", personalToken)));
+            tfsCred.AllowInteractive = false;
+
+            this.tfs = new TfsTeamProjectCollection(tfsCollectionUri, tfsCred);
+            this.tfs.Authenticate();
+
             this.workItemStore = (WorkItemStore)this.tfs.GetService(typeof(WorkItemStore));
         }
 

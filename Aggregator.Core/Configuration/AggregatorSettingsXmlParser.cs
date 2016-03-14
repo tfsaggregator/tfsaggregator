@@ -148,6 +148,8 @@ namespace Aggregator.Core.Configuration
                     doc.Root.Element("runtime")?.Element("authentication") : null;
                 this.instance.AutoImpersonate = authenticationNode != null
                     && bool.Parse(authenticationNode.Attribute("autoImpersonate").Value);
+                this.instance.PersonalToken =
+                    authenticationNode?.Attribute("personalToken").Value ?? "personal-token-is-missing";
 
                 var scriptNode = doc.Root.Element("runtime") != null ?
                     doc.Root.Element("runtime")?.Element("script") : null;

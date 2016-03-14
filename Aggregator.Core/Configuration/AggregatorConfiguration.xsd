@@ -51,6 +51,7 @@
               <xs:element minOccurs="0" maxOccurs="1" name="authentication">
                 <xs:complexType>
                   <xs:attribute name="autoImpersonate" type="xs:boolean" use="optional" default="false" />
+                  <xs:attribute name="personalToken" type="xs:string" use="optional" default="false" />
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
