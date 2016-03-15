@@ -45,6 +45,8 @@ namespace Aggregator.WebHooks.Controllers
                         break;
                     case "workitem.restored":
                         goto case "workitem.created";
+                    case "workitem.deleted":
+                        goto case "workitem.created";
                     default:
                         throw new InvalidOperationException("Unsupported eventType " + this.EventType);
                 }//switch
@@ -71,6 +73,9 @@ namespace Aggregator.WebHooks.Controllers
                     ProcessEvent(request);
                     break;
                 case "workitem.restored":
+                    ProcessEvent(request);
+                    break;
+                case "workitem.deleted":
                     ProcessEvent(request);
                     break;
                 default:

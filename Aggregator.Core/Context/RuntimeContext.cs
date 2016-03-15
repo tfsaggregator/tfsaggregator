@@ -164,6 +164,7 @@ namespace Aggregator.Core.Context
             }
 
             var newRepo = this.repoBuilder(uri, initData, this);
+            // TODO change call to be more precise without revelating secrets
             this.Logger.WorkItemRepositoryBuilt(uri, toImpersonate);
             return newRepo;
         }

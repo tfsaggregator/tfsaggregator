@@ -32,7 +32,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug-2015</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -89,7 +89,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2015.2|AnyCPU'">
     <TfsVersion>14.2</TfsVersion>
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\Debug-2015.2\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -147,6 +147,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Microsoft.WITDataStore32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -174,7 +177,7 @@
     <Content Include="apiapp.json" />
     <None Include="app.config" />
     <Content Include="App_Data\HelloWorld.policies" />
-    <Content Include="README.md" />
+    <None Include="README.md" />
     <Content Include="Metadata\deploymentTemplates\apiappconfig.azureresource.json" />
     <None Include="Properties\PublishProfiles\AggregatorWebHooks-GiuliovDev.pubxml" />
     <None Include="Web.Debug.config">
