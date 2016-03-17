@@ -66,3 +66,21 @@ Alternative to Personal tokens is implementing OAuth
 https://vsooauthclientsample.codeplex.com/
 https://www.visualstudio.com/en-us/integrate/get-started/auth/oauth
 http://almsports.net/visual-studio-online-extensibility-oauth/1525/
+
+
+# Design
+
+Configuration on-prem is bound to an Instance with Policies mapping Rules to Collections and Projects
+
+In VSTS there will be an Organization grouping multiple Accounts, an Account limited to a single Collection
+(see [this post](https://blogs.msdn.microsoft.com/visualstudioalm/2016/01/11/how-we-plan-to-enable-creating-multiple-collections-per-account/))
+
+The way RuntimeContext and TFSAggregatorSettings are designed can work in this scenario,
+by having a configuration/policy file per Organization/tenant.
+
+The problem is `System.Runtime.Caching.Cache` with Azure Storage: we cannot use local file system in web apps.
+[This post](http://benfoster.io/blog/monitoring-files-in-azure-blob-storage) shows how to extend the cache to 'monitor' Azure Blob Storage.
+Ideal for us, but looking for a more turnkey solution.
+
+[Best practices for private config data and connection strings in configuration in ASP.NET and Azure](http://www.hanselman.com/blog/BestPracticesForPrivateConfigDataAndConnectionStringsInConfigurationInASPNETAndAzure.aspx)
+
