@@ -98,6 +98,14 @@ namespace Aggregator.Core.Facade
             }
         }
 
+        public Uri Uri
+        {
+            get
+            {
+                return this.workItem.Uri;
+            }
+        }
+
         public bool IsValid()
         {
             return this.workItem.IsValid();
