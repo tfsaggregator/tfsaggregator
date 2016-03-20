@@ -3,7 +3,9 @@ branches:
   only:
     - master
     - develop
-    - wix-setup
+    - /feature/*
+    - /release/*
+    - /hotfix/*
 skip_tags: true
 os:
   - Visual Studio 2015
