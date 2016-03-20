@@ -23,7 +23,7 @@
     assembly_file_version: "2.1.{build}"
     assembly_informational_version: "{version}"
   before_build:
-    - ps: GetReferenceFromContainer.ps1
+    - ps: ./GetReferenceFromContainer.ps1
     - nuget restore
   cache:
     - '%referenceFolder% -> appveyor.yml'
@@ -60,11 +60,11 @@
   assembly_info:
     patch: true
     file: AssemblyVersion.cs
-    assembly_version: "2.1.{build}"
-    assembly_file_version: "2.1.{build}"
+    assembly_version: "2.1.0"
+    assembly_file_version: "2.1.0"
     assembly_informational_version: "{version}"
   before_build:
-    - ps: GetReferenceFromContainer.ps1
+    - ps: ./GetReferenceFromContainer.ps1
     - nuget restore
   cache:
     - '%referenceFolder% -> appveyor.yml'
