@@ -73,7 +73,7 @@ namespace Aggregator.ConsoleApp
             return projectProperties.Select(p => (IProjectProperty)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
         }
 
-        public IdentityDescriptor GetIdentityToImpersonate()
+        public IdentityDescriptor GetIdentityToImpersonate(Uri projectCollectionUrl)
         {
             // makes no sense impersonation in command line tool... for now
             return null;

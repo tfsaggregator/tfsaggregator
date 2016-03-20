@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Caching;
 
 using Aggregator.Core.Configuration;
+using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
@@ -149,12 +150,13 @@ namespace Aggregator.Core.Context
 
         protected virtual IWorkItemRepository CreateWorkItemRepository()
         {
-            var uri = this.RequestContext.GetProjectCollectionUri();
+            var requestUri = this.RequestContext.GetProjectCollectionUri();
+            var uri = requestUri.ApplyServerSetting(this);
 
             Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor toImpersonate = null;
             if (this.Settings.AutoImpersonate)
             {
-                toImpersonate = this.RequestContext.GetIdentityToImpersonate();
+                toImpersonate = this.RequestContext.GetIdentityToImpersonate(uri);
             }
 
             var newRepo = this.repoBuilder(uri, toImpersonate, this);
