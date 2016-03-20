@@ -26,7 +26,8 @@
     - ps: ./GetReferenceFromContainer.ps1
     - nuget restore
   cache:
-    - '%referenceFolder% -> appveyor.yml'
+    - '%referenceFolder% -> GetReferenceFromContainer.ps1'
+    - packages -> **\packages.config
   build:
     project: TFS-Aggregator-2.sln
     # MSBuild verbosity level: quiet|minimal|normal|detailed
@@ -67,7 +68,8 @@
     - ps: ./GetReferenceFromContainer.ps1
     - nuget restore
   cache:
-    - '%referenceFolder% -> appveyor.yml'
+    - '%referenceFolder% -> GetReferenceFromContainer.ps1'
+    - packages -> **\packages.config
   build:
     project: TFS-Aggregator-2.sln
     # MSBuild verbosity level: quiet|minimal|normal|detailed
