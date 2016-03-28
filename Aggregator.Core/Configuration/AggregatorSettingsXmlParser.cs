@@ -85,6 +85,12 @@ namespace Aggregator.Core.Configuration
                 }
             }
 
+            /// <summary>
+            /// Simple hash to detect configuration changes
+            /// </summary>
+            /// <param name="doc">Configuration XML document.</param>
+            /// <param name="timestamp">Last time the document has been changed.</param>
+            /// <returns>Hexadecimal string represting hash value</returns>
             private string ComputeHash(XDocument doc, DateTime timestamp)
             {
                 using (var stream = new System.IO.MemoryStream())
@@ -153,6 +159,13 @@ namespace Aggregator.Core.Configuration
                     doc.Root.Element("runtime")?.Element("script") : null;
 
                 this.instance.ScriptLanguage = scriptNode?.Attribute("language").Value ?? "C#";
+
+                var serverNode = doc.Root.Element("runtime") != null ?
+                    doc.Root.Element("runtime")?.Element("server") : null;
+                string baseUrl = serverNode?.Attribute("baseUrl").Value;
+                this.instance.ServerBaseUrl = string.IsNullOrWhiteSpace(baseUrl)
+                    ? null
+                    : new Uri(new Uri(baseUrl).GetLeftPart(UriPartial.Authority));
             }
 
             private List<Policy> ParsePoliciesSection(XDocument doc, Dictionary<string, Rule> rules)

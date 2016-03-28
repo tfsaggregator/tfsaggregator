@@ -134,6 +134,7 @@
     <Compile Include="Extensions\BaseFieldValueValidator.cs" />
     <Compile Include="Extensions\DoubleFixFieldDecorator.cs" />
     <Compile Include="Extensions\FieldValueValidationDecorator.cs" />
+    <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Extensions\LocationServiceExtensions.cs" />
     <Compile Include="Extensions\IncorrectDataTypeFieldValidator.cs" />
     <Compile Include="Extensions\InvalidValueFieldValueValidator.cs" />
