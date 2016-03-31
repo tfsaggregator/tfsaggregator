@@ -2,8 +2,8 @@
 - branches:
     only:
       - master
-      - /release/*
-      - /hotfix/*
+      - /release\/.*/
+      - /hotfix\/.*/
   skip_tags: true
   configuration:
     - Debug
@@ -46,7 +46,7 @@
 - branches:
     only:
       - develop
-      - /feature/*
+      - /feature\/.*/
   skip_tags: true
   configuration:
     - Debug
