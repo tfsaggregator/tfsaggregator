@@ -1,53 +1,79 @@
-version: 2.0.{build}-{branch}
-branches:
-  only:
-    - master
-    - develop
-    - wix-setup
-skip_tags: true
-os:
+## Main build
+- branches:
+    only:
+      - master
+      - /release/*
+      - /hotfix/*
+  skip_tags: true
+  configuration:
+    - Debug
+    - Release
+  version: 2.1.{build}-{branch}
+  os:
   - Visual Studio 2015
-configuration:
-  # build both flavors
-  - Debug
-  - Release
-environment:
-  containerURL:
-    secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3x3eawhSGYVzFy4Pap0dOGw==
-  referenceFolder: References
-install:
-  # get referenced DLL files from container
-  - ps: $containerList = "$env:TEMP\references.xml"
-  - ps: $flavor = '2013'
-  - ps: Invoke-RestMethod -Uri "$env:containerURL$flavor`?restype=container&comp=list" -OutFile $containerList
-  - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
-  - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL$flavor/$file" -OutFile "$env:referenceFolder\$($flavor.Replace('-','.'))\$file" }
-  - ps: $flavor = '2015'
-  - ps: Invoke-RestMethod -Uri "$env:containerURL$flavor`?restype=container&comp=list" -OutFile $containerList
-  - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
-  - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL$flavor/$file" -OutFile "$env:referenceFolder\$($flavor.Replace('-','.'))\$file" }
-  - ps: $flavor = '2015-1'
-  - ps: Invoke-RestMethod -Uri "$env:containerURL$flavor`?restype=container&comp=list" -OutFile $containerList
-  - ps: $files = Select-Xml -XPath "//Name" -Path $containerList | foreach { $_.Node.InnerText }
-  - ps: foreach ($file in $files) { Invoke-RestMethod -Uri "$env:containerURL$flavor/$file" -OutFile "$env:referenceFolder\$($flavor.Replace('-','.'))\$file" }
-assembly_info:
-  patch: true
-  file: AssemblyVersion.cs
-  assembly_version: "2.0.{build}"
-  assembly_file_version: "2.0.{build}"
-  assembly_informational_version: "{version}"
-before_build:
-  - nuget restore
-build:
-  project: TFS-Aggregator-2.sln
-  # MSBuild verbosity level: quiet|minimal|normal|detailed
-  verbosity: minimal
-test:
-  assemblies:
-    - UnitTests.Core.dll
-after_test:
-  - msbuild build-installer.proj /p:Configuration=%CONFIGURATION% /p:SourceBranch=%APPVEYOR_REPO_BRANCH% /p:BuildVersion=%APPVEYOR_BUILD_VERSION%
-artifacts:
-  - path: '*.zip'
-  - path: '**\*.msi'
-    name: MSI
+  environment:
+    installerVersion: 2.1.$(APPVEYOR_BUILD_NUMBER)
+    containerURL:
+      secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3x3eawhSGYVzFy4Pap0dOGw==
+    referenceFolder: References
+  assembly_info:
+    patch: true
+    file: AssemblyVersion.cs
+    assembly_version: "2.1.{build}"
+    assembly_file_version: "2.1.{build}"
+    assembly_informational_version: "{version}"
+  before_build:
+    - ps: ./GetReferenceFromContainer.ps1
+    - nuget restore
+  cache:
+    - '%referenceFolder% -> GetReferenceFromContainer.ps1'
+    - packages -> **\packages.config
+  build:
+    project: TFS-Aggregator-2.sln
+    # MSBuild verbosity level: quiet|minimal|normal|detailed
+    verbosity: minimal
+  test:
+    assemblies:
+      - UnitTests.Core.dll
+  after_test:
+    - msbuild build-installer.proj /p:Configuration=%CONFIGURATION% /p:SourceBranch=%APPVEYOR_REPO_BRANCH% /p:BuildVersion=%installerVersion%
+  artifacts:
+    - path: '*.zip'
+    - path: '**\*.msi'
+      name: MSI
+
+## CI build
+- branches:
+    only:
+      - develop
+      - /feature/*
+  skip_tags: true
+  configuration:
+    - Debug
+  version: 2.1.{build}-{branch}
+  os:
+  - Visual Studio 2015
+  environment:
+    installerVersion: 2.1.$(APPVEYOR_BUILD_NUMBER)
+    containerURL:
+      secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3x3eawhSGYVzFy4Pap0dOGw==
+    referenceFolder: References
+  assembly_info:
+    patch: true
+    file: AssemblyVersion.cs
+    assembly_version: "2.1.0"
+    assembly_file_version: "2.1.0"
+    assembly_informational_version: "{version}"
+  before_build:
+    - ps: ./GetReferenceFromContainer.ps1
+    - nuget restore
+  cache:
+    - '%referenceFolder% -> GetReferenceFromContainer.ps1'
+    - packages -> **\packages.config
+  build:
+    project: TFS-Aggregator-2.sln
+    # MSBuild verbosity level: quiet|minimal|normal|detailed
+    verbosity: minimal
+  test:
+    assemblies:
+      - UnitTests.Core.dll
