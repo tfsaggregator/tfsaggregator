@@ -15,19 +15,12 @@ namespace Aggregator.Core.Facade
     public class FieldCollectionWrapper : IFieldCollection
     {
         private readonly FieldCollection fields;
-        private readonly ILogEvents logger;
         private readonly IRuntimeContext context;
 
-        public FieldCollectionWrapper(FieldCollection fieldCollection)
+        public FieldCollectionWrapper(FieldCollection fieldCollection, IRuntimeContext context)
         {
             this.fields = fieldCollection;
-        }
-
-        public FieldCollectionWrapper(FieldCollection fieldCollection, IRuntimeContext context)
-            : this(fieldCollection)
-        {
             this.context = context;
-            this.logger = context.Logger;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("SonarQube", "S3237:\"value\" parameters should be used", Justification = "Available for mock testing only")]

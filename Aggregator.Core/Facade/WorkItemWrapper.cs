@@ -174,7 +174,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new RevisionWrapper(this.workItem.Revisions[this.workItem.Revisions.Count - 1]);
+                return new RevisionWrapper(this.workItem.Revisions[this.workItem.Revisions.Count - 1], this.context);
             }
         }
 
@@ -189,7 +189,7 @@ namespace Aggregator.Core.Facade
                     targetRevision = 1;
                 }
 
-                return new RevisionWrapper(this.workItem.Revisions[targetRevision - 1]);
+                return new RevisionWrapper(this.workItem.Revisions[targetRevision - 1], this.context);
             }
         }
 
@@ -204,7 +204,7 @@ namespace Aggregator.Core.Facade
                     targetRevision = this.workItem.Revisions.Count - 1;
                 }
 
-                return new RevisionWrapper(this.workItem.Revisions[targetRevision]);
+                return new RevisionWrapper(this.workItem.Revisions[targetRevision], this.context);
             }
         }
 

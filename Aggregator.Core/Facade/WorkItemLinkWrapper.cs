@@ -8,13 +8,11 @@ namespace Aggregator.Core.Facade
 {
     internal class WorkItemLinkWrapper : IWorkItemLink
     {
-        private readonly ILogEvents logger;
         private readonly WorkItemLink link;
         private readonly IWorkItemRepository store;
 
         public WorkItemLinkWrapper(WorkItemLink link, IRuntimeContext context)
         {
-            this.logger = context.Logger;
             this.link = link;
             this.store = context.WorkItemRepository;
         }
