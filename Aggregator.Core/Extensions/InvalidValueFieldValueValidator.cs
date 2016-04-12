@@ -37,7 +37,7 @@ namespace Aggregator.Core.Extensions
                 }
 #endif
 
-                if (valid)
+                if (!valid)
                 {
                     this.Logger.FieldValidationFailedValueNotAllowed(
                         field.WorkItem.Id,
