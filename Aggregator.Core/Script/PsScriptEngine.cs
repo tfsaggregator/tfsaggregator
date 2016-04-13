@@ -18,9 +18,12 @@ namespace Aggregator.Core
         {
         }
 
-        public override bool Load(string scriptName, string script)
+        public override bool Load(Script.ScriptSourceElement sourceElement)
         {
-            this.scripts.Add(scriptName, script);
+            if (sourceElement.Type != Script.ScriptSourceElementType.Rule)
+                return false;
+
+            this.scripts.Add(sourceElement.Name, sourceElement.SourceCode);
             return true;
         }
 

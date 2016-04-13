@@ -173,14 +173,14 @@ namespace Aggregator.Core.Script
 
         private CompilerResults compilerResult;
 
-        public override bool Load(string scriptName, string script)
+        public override bool Load(Script.ScriptSourceElement sourceElement)
         {
-            string code = this.WrapScript(scriptName, script);
+            string code = this.WrapScript(sourceElement.Name, sourceElement.SourceCode);
 
-            bool passed = this.SyntaxChecking(scriptName, code);
+            bool passed = this.SyntaxChecking(sourceElement.Name, code);
             if (passed)
             {
-                this.sourceCode.Add(scriptName, code);
+                this.sourceCode.Add(sourceElement.Name, code);
             }
 
             return passed;

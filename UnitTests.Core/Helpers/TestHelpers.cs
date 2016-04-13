@@ -11,7 +11,7 @@ namespace UnitTests.Core
     using Aggregator.Core.Configuration;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+    using Aggregator.Core.Script;
     internal static class TestHelpers
     {
         public static string LoadTextFromEmbeddedResource(string resourceName)
@@ -40,7 +40,12 @@ namespace UnitTests.Core
 
         public static void LoadAndRun(this ScriptEngine engine, string scriptName, string script, IWorkItem workItem, IWorkItemRepository store)
         {
-            engine.Load(scriptName, script);
+            var scriptElem = new ScriptSourceElement() {
+                Type = ScriptSourceElementType.Rule,
+                Name = scriptName,
+                SourceCode = script
+            };
+            engine.Load(scriptElem);
             engine.LoadCompleted();
             engine.Run(scriptName, workItem, store);
         }

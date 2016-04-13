@@ -17,6 +17,7 @@ using NSubstitute;
 using UnitTests.Core.Mock;
 
 using Debugger = System.Diagnostics.Debugger;
+using Aggregator.Core.Script;
 
 namespace UnitTests.Core
 {
@@ -274,17 +275,27 @@ Return CInt(array.Average())
         [TestCategory("CSharpScript")]
         public void Catch_CSharp_rule_compile_error()
         {
-            string good_script = @"
+            var good_script = new ScriptSourceElement()
+            {
+                Name = "good",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
 logger.Log(""Test"");
-";
-            string bad_script = @"
+"
+            };
+            var bad_script = new ScriptSourceElement()
+            {
+                Name = "bad",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
 loger.Log(""Test"");
-";
+"
+            };
             var logger = Substitute.For<ILogEvents>();
             var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
 
-            engine.Load("good", good_script);
-            engine.Load("bad", bad_script);
+            engine.Load(good_script);
+            engine.Load(bad_script);
             engine.LoadCompleted();
 
             logger.Received().ScriptHasError("bad", 2, 1, "CS0103", "The name 'loger' does not exist in the current context");
@@ -294,17 +305,28 @@ loger.Log(""Test"");
         [TestCategory("VBNetScript")]
         public void Catch_VBNet_rule_compile_error()
         {
-            string good_script = @"
-logger.Log(""Test"")
-";
-            string bad_script = @"
-loger.Log(""Test"")
-";
+            var good_script = new ScriptSourceElement()
+            {
+                Name = "good",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
+logger.Log(""Test"");
+"
+            };
+            var bad_script = new ScriptSourceElement()
+            {
+                Name = "bad",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
+loger.Log(""Test"");
+"
+            };
+
             var logger = Substitute.For<ILogEvents>();
             var engine = new VBNetScriptEngine(logger, Debugger.IsAttached);
 
-            engine.Load("good", good_script);
-            engine.Load("bad", bad_script);
+            engine.Load(good_script);
+            engine.Load(bad_script);
             engine.LoadCompleted();
 
             logger.Received().ScriptHasError("bad", 2, 0, "BC30451", "'loger' is not declared. It may be inaccessible due to its protection level.");

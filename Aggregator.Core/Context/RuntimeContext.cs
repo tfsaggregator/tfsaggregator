@@ -134,12 +134,17 @@ namespace Aggregator.Core.Context
             {
                 System.Diagnostics.Debug.WriteLine("Cache empty for thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
                 this.cachedEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug);
-                foreach (var rule in this.Settings.Rules)
-                {
-                    this.cachedEngine.Load(rule.Name, rule.Script);
-                }
-
-                this.cachedEngine.LoadCompleted();
+                var sourceElements = this.Settings.Rules.ToList().ConvertAll(
+                    (rule) =>
+                    {
+                        return new Script.ScriptSourceElement()
+                        {
+                            Name = rule.Name,
+                            Type = Script.ScriptSourceElementType.Rule,
+                            SourceCode = rule.Script
+                        };
+                    });
+                this.cachedEngine.Load(sourceElements);
             }
 
             return this.cachedEngine;
