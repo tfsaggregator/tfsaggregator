@@ -45,8 +45,7 @@ namespace UnitTests.Core
                 Name = scriptName,
                 SourceCode = script
             };
-            engine.Load(scriptElem);
-            engine.LoadCompleted();
+            engine.Load(new ScriptSourceElement[] { scriptElem });
             engine.Run(scriptName, workItem, store);
         }
     }

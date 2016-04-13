@@ -294,9 +294,7 @@ loger.Log(""Test"");
             var logger = Substitute.For<ILogEvents>();
             var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
 
-            engine.Load(good_script);
-            engine.Load(bad_script);
-            engine.LoadCompleted();
+            engine.Load(new ScriptSourceElement[] { good_script, bad_script });
 
             logger.Received().ScriptHasError("bad", 2, 1, "CS0103", "The name 'loger' does not exist in the current context");
         }
@@ -321,13 +319,10 @@ logger.Log(""Test"");
 loger.Log(""Test"");
 "
             };
-
             var logger = Substitute.For<ILogEvents>();
             var engine = new VBNetScriptEngine(logger, Debugger.IsAttached);
 
-            engine.Load(good_script);
-            engine.Load(bad_script);
-            engine.LoadCompleted();
+            engine.Load(new ScriptSourceElement[] { good_script, bad_script });
 
             logger.Received().ScriptHasError("bad", 2, 0, "BC30451", "'loger' is not declared. It may be inaccessible due to its protection level.");
         }

@@ -27,13 +27,13 @@ namespace Aggregator.Core
         /// <param name="sourceElements">The script source code element.</param>
         /// <returns>true if succeeded</returns>
         /// <remarks>An engine may pre-process/compile the script at this time to get better performances.</remarks>
-        public abstract bool Load(Script.ScriptSourceElement sourceElement);
+        internal abstract bool Load(Script.ScriptSourceElement sourceElement);
 
         /// <summary>
         /// Informs the engine that all script has been loaded.
         /// </summary>
         /// <returns>true when succeeded</returns>
-        public abstract bool LoadCompleted();
+        internal abstract bool LoadCompleted();
 
         /// <summary>
         /// Runs the  script specified by <paramref name="scriptName" />.
@@ -51,7 +51,7 @@ namespace Aggregator.Core
             return engine;
         }
 
-        internal void Load(IEnumerable<Script.ScriptSourceElement> sourceElements)
+        public void Load(IEnumerable<Script.ScriptSourceElement> sourceElements)
         {
             foreach (var element in sourceElements)
             {

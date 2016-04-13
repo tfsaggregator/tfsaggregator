@@ -18,7 +18,7 @@ namespace Aggregator.Core
         {
         }
 
-        public override bool Load(Script.ScriptSourceElement sourceElement)
+        internal override bool Load(Script.ScriptSourceElement sourceElement)
         {
             if (sourceElement.Type != Script.ScriptSourceElementType.Rule)
                 return false;
@@ -27,7 +27,7 @@ namespace Aggregator.Core
             return true;
         }
 
-        public override bool LoadCompleted()
+        internal override bool LoadCompleted()
         {
             return true;
         }

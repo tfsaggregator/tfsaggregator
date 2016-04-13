@@ -173,7 +173,7 @@ namespace Aggregator.Core.Script
 
         private CompilerResults compilerResult;
 
-        public override bool Load(Script.ScriptSourceElement sourceElement)
+        internal override bool Load(Script.ScriptSourceElement sourceElement)
         {
             string code = this.WrapScript(sourceElement.Name, sourceElement.SourceCode);
 
@@ -186,7 +186,7 @@ namespace Aggregator.Core.Script
             return passed;
         }
 
-        public override bool LoadCompleted()
+        internal override bool LoadCompleted()
         {
             try
             {
