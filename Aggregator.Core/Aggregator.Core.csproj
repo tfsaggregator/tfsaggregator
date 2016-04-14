@@ -124,10 +124,13 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Configuration\AggregatorSettingsXmlParser.cs" />
+    <Compile Include="Configuration\ScriptElement.cs" />
     <Compile Include="Configuration\CollectionScope.cs" />
     <Compile Include="Configuration\HasFieldsScope.cs" />
     <Compile Include="Configuration\ProjectScope.cs" />
     <Compile Include="Configuration\RateLimit.cs" />
+    <Compile Include="Configuration\Function.cs" />
+    <Compile Include="Configuration\Snippet.cs" />
     <Compile Include="Configuration\ScopeMatchResult.cs" />
     <Compile Include="Configuration\TemplateScope.cs" />
     <Compile Include="Configuration\WorkItemTypeScope.cs" />

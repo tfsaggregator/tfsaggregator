@@ -22,20 +22,6 @@ namespace Aggregator.Core
         }
 
         /// <summary>
-        /// Register the script source code element.
-        /// </summary>
-        /// <param name="sourceElements">The script source code element.</param>
-        /// <returns>true if succeeded</returns>
-        /// <remarks>An engine may pre-process/compile the script at this time to get better performances.</remarks>
-        internal abstract bool Load(Script.ScriptSourceElement sourceElement);
-
-        /// <summary>
-        /// Informs the engine that all script has been loaded.
-        /// </summary>
-        /// <returns>true when succeeded</returns>
-        internal abstract bool LoadCompleted();
-
-        /// <summary>
         /// Runs the  script specified by <paramref name="scriptName" />.
         /// </summary>
         /// <param name="scriptName">Name of the script.</param>
@@ -51,14 +37,7 @@ namespace Aggregator.Core
             return engine;
         }
 
-        public void Load(IEnumerable<Script.ScriptSourceElement> sourceElements)
-        {
-            foreach (var element in sourceElements)
-            {
-                this.Load(element);
-            }
-            this.LoadCompleted();
-        }
+        public abstract void Load(IEnumerable<Script.ScriptSourceElement> sourceElements);
 
         private static Type GetScriptEngineType(string scriptLanguage)
         {

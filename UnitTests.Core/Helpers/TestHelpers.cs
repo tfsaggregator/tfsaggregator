@@ -40,7 +40,8 @@ namespace UnitTests.Core
 
         public static void LoadAndRun(this ScriptEngine engine, string scriptName, string script, IWorkItem workItem, IWorkItemRepository store)
         {
-            var scriptElem = new ScriptSourceElement() {
+            var scriptElem = new ScriptSourceElement()
+            {
                 Type = ScriptSourceElementType.Rule,
                 Name = scriptName,
                 SourceCode = script

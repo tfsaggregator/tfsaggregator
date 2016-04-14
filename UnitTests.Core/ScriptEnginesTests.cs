@@ -347,5 +347,56 @@ logger.Log(LogLevel.Warning, ""Unexpected work item state!"");
             logger.Received().ScriptLogger.Log(LogLevel.Verbose, "test", "Hello, World from Task #1!");
             logger.Received().ScriptLogger.Log(LogLevel.Warning, "test", "Unexpected work item state!");
         }
+
+        [TestMethod]
+        [TestCategory("CSharpScript")]
+        public void Can_CSharp_rule_use_snippet_and_function()
+        {
+            // Arrange
+            var snippet1 = new ScriptSourceElement()
+            {
+                Name = "MySnippet",
+                Type = ScriptSourceElementType.Snippet,
+                SourceCode = @"
+logger.Log(""This is MySnippet code."");
+"
+            };
+            var function1 = new ScriptSourceElement()
+            {
+                Name = null,
+                Type = ScriptSourceElementType.Function,
+                SourceCode = @"
+int MyFunc() { return 42; }
+"
+            };
+            var rule1 = new ScriptSourceElement()
+            {
+                Name = "rule1",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
+${MySnippet}
+logger.Log(""Hello, World from {1} #{0}!"", self.Id, self.TypeName);
+logger.Log(""MyFunc returns {0}."", MyFunc());
+"
+            };
+
+            var logger = Substitute.For<ILogEvents>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            engine.Load(new ScriptSourceElement[] { rule1, function1, snippet1 });
+
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            workItem.Id.Returns(1);
+            workItem.TypeName.Returns("Task");
+            repository.GetWorkItem(1).Returns(workItem);
+
+            // Act
+            engine.Run(rule1.Name, workItem, repository);
+
+            // Assert
+            logger.Received().ScriptLogger.Log(LogLevel.Verbose, rule1.Name, "This is MySnippet code.");
+            logger.Received().ScriptLogger.Log(LogLevel.Verbose, rule1.Name, "Hello, World from Task #1!");
+            logger.Received().ScriptLogger.Log(LogLevel.Verbose, rule1.Name, "MyFunc returns 42.");
+        }
     }
 }
