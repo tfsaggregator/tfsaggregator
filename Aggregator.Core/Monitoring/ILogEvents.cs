@@ -93,5 +93,8 @@ namespace Aggregator.Core.Monitoring
         void FieldValidationFailedFieldNotEditable(int id, string referenceName, object value);
 
         void FieldValidationFailedFieldRequired(int id, string referenceName);
+
+
+        void FieldValidationFailedAssignmentToHistory(int id);
     }
 }

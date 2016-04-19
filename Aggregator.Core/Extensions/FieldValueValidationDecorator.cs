@@ -24,7 +24,8 @@ namespace Aggregator.Core.Extensions
                 new IncorrectDataTypeFieldValidator(context),
                 new NullAssignmentToRequiredFieldValueValidator(context),
                 new InvalidValueFieldValueValidator(context),
-                new ValueAssignmentToReadonlyFieldValueValidator(context)
+                new ValueAssignmentToReadonlyFieldValueValidator(context),
+                new ValueAssignmentToHistoryFieldValidator(context)
             };
         }
 
