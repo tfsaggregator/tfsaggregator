@@ -139,6 +139,7 @@
     <Compile Include="Extensions\IncorrectDataTypeFieldValidator.cs" />
     <Compile Include="Extensions\InvalidValueFieldValueValidator.cs" />
     <Compile Include="Extensions\NullAssignmentToRequiredFieldValueValidator.cs" />
+    <Compile Include="Extensions\ValueAssignmentToHistoryFieldValidator.cs" />
     <Compile Include="Extensions\ValueAssignmentToReadonlyFieldValueValidator.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
     <Compile Include="Facade\RevisionWrapper.cs" />
