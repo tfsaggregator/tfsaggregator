@@ -33,7 +33,8 @@ namespace UnitTests.Core
 
             var grandParent = new WorkItemMock(repository, runtime);
             grandParent.Id = 1;
-            grandParent.TypeName = "Feature";
+            grandParent.TypeName = "Requirement";
+            grandParent["Microsoft.VSTS.Scheduling.RemainingWork"] = 2.0;
 
             var parent = new WorkItemMock(repository, runtime);
             parent.Id = 2;
@@ -46,6 +47,15 @@ namespace UnitTests.Core
             secondChild.Id = 4;
             secondChild.TypeName = "Task";
 
+            var tc1 = new WorkItemMock(repository, runtime);
+            tc1.Id = 21;
+            tc1.TypeName = "Test Case";
+            tc1["Microsoft.VSTS.Scheduling.RemainingWork"] = 10.0;
+            var tc2 = new WorkItemMock(repository, runtime);
+            tc2.Id = 22;
+            tc2.TypeName = "Test Case";
+            tc2["Microsoft.VSTS.Scheduling.RemainingWork"] = 30.0;
+
             firstChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
             secondChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
             parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, repository));
@@ -54,7 +64,16 @@ namespace UnitTests.Core
             parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, firstChild.Id, repository));
             parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, secondChild.Id, repository));
 
-            repository.SetWorkItems(new[] { grandParent, parent, firstChild, secondChild });
+            // Tested By
+            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc1.Id, repository));
+            // Tests
+            tc1.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
+            // Tested By
+            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc2.Id, repository));
+            // Tests
+            tc2.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
+
+            repository.SetWorkItems(new[] { grandParent, parent, firstChild, secondChild, tc1, tc2 });
 
             startPoint = grandParent;
             return repository;
@@ -101,6 +120,30 @@ return searchResult;
             expected.Levels = 2;
             expected.LinkType = "*";
             logger.Received().ResultsFromScriptRun("test", expected);
+        }
+
+        [TestMethod]
+        public void FluentNavigation_FollowingLinks_two_times()
+        {
+            string script = @"
+var requirements = self.FollowingLinks(""Microsoft.VSTS.Common.TestedBy-Reverse"");
+foreach(var req in requirements) {
+  logger.Log(""Requirement #{0}"", req.Id);
+  var testCases = req.FollowingLinks(""Microsoft.VSTS.Common.TestedBy-Forward"");
+  double remaining = testCases.Sum(tc => tc.GetField(""Microsoft.VSTS.Scheduling.RemainingWork"", 0.0));
+  req[""Custom.RemainingWork""] = req.GetField(""Microsoft.VSTS.Scheduling.RemainingWork"", 0.0) + remaining;
+}
+";
+            IWorkItem startPoint;
+            var repository = MakeRepository(out startPoint);
+            var logger = new DebugEventLogger();
+            repository.Logger = logger;
+            var tc2 = repository.GetWorkItem(22);
+
+            var engine = new CSharpScriptEngine(logger, true);
+            engine.LoadAndRun("test", script, tc2, repository);
+
+            Assert.AreEqual(42.0, startPoint["Custom.RemainingWork"]);
         }
 
         [TestMethod]
