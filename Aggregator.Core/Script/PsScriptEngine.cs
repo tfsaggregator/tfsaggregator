@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Management.Automation.Runspaces;
 
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
+using Aggregator.Core.Script;
 
 namespace Aggregator.Core
 {
@@ -18,15 +20,16 @@ namespace Aggregator.Core
         {
         }
 
-        public override bool Load(string scriptName, string script)
+        public override void Load(IEnumerable<ScriptSourceElement> sourceElements)
         {
-            this.scripts.Add(scriptName, script);
-            return true;
-        }
+            foreach (var sourceElement in sourceElements)
+            {
+                // TODO log something
+                if (sourceElement.Type != Script.ScriptSourceElementType.Rule)
+                    continue;
 
-        public override bool LoadCompleted()
-        {
-            return true;
+                this.scripts.Add(sourceElement.Name, sourceElement.SourceCode);
+            }
         }
 
         public override void Run(string scriptName, IWorkItem workItem, IWorkItemRepository store)

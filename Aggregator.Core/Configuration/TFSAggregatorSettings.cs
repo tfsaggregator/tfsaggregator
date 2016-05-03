@@ -56,6 +56,10 @@ namespace Aggregator.Core.Configuration
 
         public string Hash { get; private set; }
 
+        public IEnumerable<Snippet> Snippets { get; private set; }
+
+        public IEnumerable<Function> Functions { get; private set; }
+
         public IEnumerable<Rule> Rules { get; private set; }
 
         public IEnumerable<Policy> Policies { get; private set; }

@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
+using System.Text;
 
 namespace Aggregator.Core.Script
 {
@@ -34,7 +35,7 @@ namespace Aggregator.Core.Script
         /// </summary>
         protected abstract int LinesOfCodeBeforeScript { get; }
 
-        protected abstract string WrapScript(string scriptName, string script);
+        protected abstract string WrapScript(string scriptName, string script, string functions);
 
         private string[] GetAssemblyReferences()
         {
@@ -173,20 +174,52 @@ namespace Aggregator.Core.Script
 
         private CompilerResults compilerResult;
 
-        public override bool Load(string scriptName, string script)
+        // a simpler pattern is , this one matches .Net identifiers
+        private readonly Regex regex = new Regex(
+            @"\${(?<name>[A-Za-z_]\w*)}",
+            //@"\${(?<name>[_\p{L}\p{Nl}][\p{L}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]*)}",
+            RegexOptions.ExplicitCapture);
+
+        private string ReplaceMacros(string source, Dictionary<string, string> macros)
         {
-            string code = this.WrapScript(scriptName, script);
-
-            bool passed = this.SyntaxChecking(scriptName, code);
-            if (passed)
-            {
-                this.sourceCode.Add(scriptName, code);
-            }
-
-            return passed;
+            return this.regex.Replace(source, (Match m) => { return macros[m.Groups["name"].Value]; });
         }
 
-        public override bool LoadCompleted()
+        public override void Load(IEnumerable<Script.ScriptSourceElement> sourceElements)
+        {
+            this.sourceCode.Clear();
+            this.GenerateSource(sourceElements);
+            this.BuildAssembly();
+        }
+
+        private void GenerateSource(IEnumerable<ScriptSourceElement> sourceElements)
+        {
+            var snippets = sourceElements.Where(e => e.Type == ScriptSourceElementType.Snippet).ToDictionary((e) => e.Name, (e) => e.SourceCode);
+
+            var functionsBuilder = new StringBuilder();
+            foreach (var funcElement in sourceElements.Where(e => e.Type == ScriptSourceElementType.Function))
+            {
+                functionsBuilder.Append(funcElement.SourceCode);
+                functionsBuilder.AppendLine();
+            }
+
+            string functionsCode = functionsBuilder.ToString();
+
+            foreach (var ruleElement in sourceElements.Where((e) => e.Type == ScriptSourceElementType.Rule))
+            {
+                string ruleCode = this.ReplaceMacros(ruleElement.SourceCode, snippets);
+
+                string code = this.WrapScript(ruleElement.Name, ruleCode, functionsCode);
+
+                bool passed = this.SyntaxChecking(ruleElement.Name, code);
+                if (passed)
+                {
+                    this.sourceCode.Add(ruleElement.Name, code);
+                }
+            }
+        }
+
+        protected bool BuildAssembly()
         {
             try
             {

@@ -4,7 +4,8 @@ using Aggregator.Core.Monitoring;
 namespace Aggregator.Core
 {
     using System;
-
+    using Context;
+    using System.Collections.Generic;
     /// <summary>
     /// Base class for scripting language engines.
     /// </summary>
@@ -21,21 +22,6 @@ namespace Aggregator.Core
         }
 
         /// <summary>
-        /// Register the specified <paramref name="script"/> under <paramref name="name"/>.
-        /// </summary>
-        /// <param name="scriptName">Name of the script.</param>
-        /// <param name="script">The script source code.</param>
-        /// <returns>true if succeeded</returns>
-        /// <remarks>An engine may pre-process/compile the script at this time to get better performances.</remarks>
-        public abstract bool Load(string scriptName, string script);
-
-        /// <summary>
-        /// Informs the engine that all script has been loaded.
-        /// </summary>
-        /// <returns>true when succeeded</returns>
-        public abstract bool LoadCompleted();
-
-        /// <summary>
         /// Runs the  script specified by <paramref name="scriptName" />.
         /// </summary>
         /// <param name="scriptName">Name of the script.</param>
@@ -50,6 +36,8 @@ namespace Aggregator.Core
             ScriptEngine engine = ctor.Invoke(new object[] { logger, debug }) as ScriptEngine;
             return engine;
         }
+
+        public abstract void Load(IEnumerable<Script.ScriptSourceElement> sourceElements);
 
         private static Type GetScriptEngineType(string scriptLanguage)
         {

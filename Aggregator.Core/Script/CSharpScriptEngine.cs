@@ -23,7 +23,7 @@ namespace Aggregator.Core
             }
         }
 
-        protected override string WrapScript(string scriptName, string script)
+        protected override string WrapScript(string scriptName, string script, string functions)
         {
             return "namespace " + this.Namespace + @"
 {
@@ -43,6 +43,7 @@ namespace Aggregator.Core
 " + script + @"
       return null;
     }
+" + functions + @"
   }
 }
 ";

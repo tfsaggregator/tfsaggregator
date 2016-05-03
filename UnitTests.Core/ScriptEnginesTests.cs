@@ -17,6 +17,7 @@ using NSubstitute;
 using UnitTests.Core.Mock;
 
 using Debugger = System.Diagnostics.Debugger;
+using Aggregator.Core.Script;
 
 namespace UnitTests.Core
 {
@@ -274,18 +275,26 @@ Return CInt(array.Average())
         [TestCategory("CSharpScript")]
         public void Catch_CSharp_rule_compile_error()
         {
-            string good_script = @"
+            var good_script = new ScriptSourceElement()
+            {
+                Name = "good",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
 logger.Log(""Test"");
-";
-            string bad_script = @"
+"
+            };
+            var bad_script = new ScriptSourceElement()
+            {
+                Name = "bad",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
 loger.Log(""Test"");
-";
+"
+            };
             var logger = Substitute.For<ILogEvents>();
             var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
 
-            engine.Load("good", good_script);
-            engine.Load("bad", bad_script);
-            engine.LoadCompleted();
+            engine.Load(new ScriptSourceElement[] { good_script, bad_script });
 
             logger.Received().ScriptHasError("bad", 2, 1, "CS0103", "The name 'loger' does not exist in the current context");
         }
@@ -294,18 +303,26 @@ loger.Log(""Test"");
         [TestCategory("VBNetScript")]
         public void Catch_VBNet_rule_compile_error()
         {
-            string good_script = @"
-logger.Log(""Test"")
-";
-            string bad_script = @"
-loger.Log(""Test"")
-";
+            var good_script = new ScriptSourceElement()
+            {
+                Name = "good",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
+logger.Log(""Test"");
+"
+            };
+            var bad_script = new ScriptSourceElement()
+            {
+                Name = "bad",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
+loger.Log(""Test"");
+"
+            };
             var logger = Substitute.For<ILogEvents>();
             var engine = new VBNetScriptEngine(logger, Debugger.IsAttached);
 
-            engine.Load("good", good_script);
-            engine.Load("bad", bad_script);
-            engine.LoadCompleted();
+            engine.Load(new ScriptSourceElement[] { good_script, bad_script });
 
             logger.Received().ScriptHasError("bad", 2, 0, "BC30451", "'loger' is not declared. It may be inaccessible due to its protection level.");
         }
@@ -329,6 +346,57 @@ logger.Log(LogLevel.Warning, ""Unexpected work item state!"");
 
             logger.Received().ScriptLogger.Log(LogLevel.Verbose, "test", "Hello, World from Task #1!");
             logger.Received().ScriptLogger.Log(LogLevel.Warning, "test", "Unexpected work item state!");
+        }
+
+        [TestMethod]
+        [TestCategory("CSharpScript")]
+        public void Can_CSharp_rule_use_snippet_and_function()
+        {
+            // Arrange
+            var snippet1 = new ScriptSourceElement()
+            {
+                Name = "MySnippet",
+                Type = ScriptSourceElementType.Snippet,
+                SourceCode = @"
+logger.Log(""This is MySnippet code."");
+"
+            };
+            var function1 = new ScriptSourceElement()
+            {
+                Name = null,
+                Type = ScriptSourceElementType.Function,
+                SourceCode = @"
+int MyFunc() { return 42; }
+"
+            };
+            var rule1 = new ScriptSourceElement()
+            {
+                Name = "rule1",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
+${MySnippet}
+logger.Log(""Hello, World from {1} #{0}!"", self.Id, self.TypeName);
+logger.Log(""MyFunc returns {0}."", MyFunc());
+"
+            };
+
+            var logger = Substitute.For<ILogEvents>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            engine.Load(new ScriptSourceElement[] { rule1, function1, snippet1 });
+
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            workItem.Id.Returns(1);
+            workItem.TypeName.Returns("Task");
+            repository.GetWorkItem(1).Returns(workItem);
+
+            // Act
+            engine.Run(rule1.Name, workItem, repository);
+
+            // Assert
+            logger.Received().ScriptLogger.Log(LogLevel.Verbose, rule1.Name, "This is MySnippet code.");
+            logger.Received().ScriptLogger.Log(LogLevel.Verbose, rule1.Name, "Hello, World from Task #1!");
+            logger.Received().ScriptLogger.Log(LogLevel.Verbose, rule1.Name, "MyFunc returns 42.");
         }
     }
 }

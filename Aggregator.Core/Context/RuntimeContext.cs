@@ -134,15 +134,52 @@ namespace Aggregator.Core.Context
             {
                 System.Diagnostics.Debug.WriteLine("Cache empty for thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
                 this.cachedEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug);
-                foreach (var rule in this.Settings.Rules)
-                {
-                    this.cachedEngine.Load(rule.Name, rule.Script);
-                }
 
-                this.cachedEngine.LoadCompleted();
+                List<Script.ScriptSourceElement> sourceElements = this.GetSourceElements();
+
+                this.cachedEngine.Load(sourceElements);
             }
 
             return this.cachedEngine;
+        }
+
+        private List<Script.ScriptSourceElement> GetSourceElements()
+        {
+            var sourceElements = new List<Script.ScriptSourceElement>();
+            var snippetElements = this.Settings.Snippets.ToList().ConvertAll(
+                (snippet) =>
+                {
+                    return new Script.ScriptSourceElement()
+                    {
+                        Name = snippet.Name,
+                        Type = Script.ScriptSourceElementType.Snippet,
+                        SourceCode = snippet.Script
+                    };
+                });
+            sourceElements.AddRange(snippetElements);
+            var ruleElements = this.Settings.Rules.ToList().ConvertAll(
+                (rule) =>
+                {
+                    return new Script.ScriptSourceElement()
+                    {
+                        Name = rule.Name,
+                        Type = Script.ScriptSourceElementType.Rule,
+                        SourceCode = rule.Script
+                    };
+                });
+            sourceElements.AddRange(ruleElements);
+            var functionElements = this.Settings.Functions.ToList().ConvertAll(
+                (function) =>
+                {
+                    return new Script.ScriptSourceElement()
+                    {
+                        Name = string.Empty,
+                        Type = Script.ScriptSourceElementType.Function,
+                        SourceCode = function.Script
+                    };
+                });
+            sourceElements.AddRange(functionElements);
+            return sourceElements;
         }
 
         // isolate type constructor to facilitate Unit testing

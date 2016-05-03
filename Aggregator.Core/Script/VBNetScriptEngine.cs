@@ -21,7 +21,7 @@ namespace Aggregator.Core
             }
         }
 
-        protected override string WrapScript(string scriptName, string script)
+        protected override string WrapScript(string scriptName, string script, string functions)
         {
             return @"
 Imports Microsoft.TeamFoundation.WorkItemTracking.Client
@@ -41,6 +41,7 @@ Namespace " + this.Namespace + @"
 " + script + @"
       Return Nothing
     End Function
+" + functions + @"
   End Class
 End Namespace
 ";
