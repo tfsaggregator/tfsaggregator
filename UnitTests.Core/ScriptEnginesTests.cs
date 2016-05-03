@@ -107,15 +107,21 @@ return self(""z"")
 $self.Fields[""x""].Value = 33
 return $self.Fields[""z""].Value ";
 
+            var logger = Substitute.For<ILogEvents>();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
-            var workItem = new WorkItemMock(repository);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var workItem = new WorkItemMock(repository, runtime);
 
             workItem.Fields["z"].Value = 42;
             workItem.Fields["x"].Value = 0;
             workItem.Id = 1;
 
             repository.SetWorkItems(new[] { workItem });
-            var logger = Substitute.For<ILogEvents>();
 
             Assert.IsNotNull(repository.GetWorkItem(1));
 
@@ -141,13 +147,19 @@ return $self.Fields[""z""].Value ";
         {
             string script = @" return $self.Id ";
 
+            var logger = Substitute.For<ILogEvents>();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
-            var workItem = new WorkItemMock(repository);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var workItem = new WorkItemMock(repository, runtime);
 
             workItem.Id = 1;
 
             repository.SetWorkItems(new[] { workItem });
-            var logger = Substitute.For<ILogEvents>();
 
             Assert.IsNotNull(repository.GetWorkItem(1));
 
@@ -185,7 +197,7 @@ return $self.Fields[""z""].Value ";
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
             }
         }

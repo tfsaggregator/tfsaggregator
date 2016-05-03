@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
@@ -16,20 +17,23 @@ namespace Aggregator.Core.Facade
 
         private readonly IWorkItemRepository store;
 
+        private readonly IRuntimeContext context;
+
         private readonly WorkItemLinkCollection workItemLinkCollection;
 
-        public WorkItemLinkCollectionWrapper(WorkItemLinkCollection workItemLinkCollection, IWorkItemRepository store, ILogEvents logger)
+        public WorkItemLinkCollectionWrapper(WorkItemLinkCollection workItemLinkCollection, IRuntimeContext context)
         {
-            this.logger = logger;
+            this.logger = context.Logger;
             this.workItemLinkCollection = workItemLinkCollection;
-            this.store = store;
+            this.store = context.WorkItemRepository;
+            this.context = context;
         }
 
         public IEnumerator<IWorkItemLink> GetEnumerator()
         {
             foreach (WorkItemLink item in this.workItemLinkCollection.Cast<WorkItemLink>())
             {
-                yield return new WorkItemLinkWrapper(item, this.store, this.logger);
+                yield return new WorkItemLinkWrapper(item, this.context);
             }
         }
 

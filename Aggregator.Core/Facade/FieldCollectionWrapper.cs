@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
+using Aggregator.Core.Context;
 using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
-
+using Aggregator.Core.Monitoring;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
@@ -14,10 +15,12 @@ namespace Aggregator.Core.Facade
     public class FieldCollectionWrapper : IFieldCollection
     {
         private readonly FieldCollection fields;
+        private readonly IRuntimeContext context;
 
-        public FieldCollectionWrapper(FieldCollection fieldCollection)
+        public FieldCollectionWrapper(FieldCollection fieldCollection, IRuntimeContext context)
         {
             this.fields = fieldCollection;
+            this.context = context;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("SonarQube", "S3237:\"value\" parameters should be used", Justification = "Available for mock testing only")]
@@ -47,9 +50,15 @@ namespace Aggregator.Core.Facade
 
         private IField ApplyDoubleFix(Field field)
         {
-            IField wrappedField = new FieldWrapper(field);
-            IField fixedField = new DoubleFixFieldDecorator(wrappedField);
-            return fixedField;
+            IFieldExposed wrappedField = new FieldWrapper(field, this.context);
+            wrappedField = new DoubleFixFieldDecorator(wrappedField, this.context);
+
+            if (this.context.Settings.Debug)
+            {
+                wrappedField = new FieldValueValidationDecorator(wrappedField, this.context);
+            }
+
+            return wrappedField;
         }
     }
 }

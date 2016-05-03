@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\System.Runtime.InteropServices.Analyzers.1.0.1\build\System.Runtime.InteropServices.Analyzers.props" Condition="Exists('..\packages\System.Runtime.InteropServices.Analyzers.1.0.1\build\System.Runtime.InteropServices.Analyzers.props')" />
+  <Import Project="..\packages\System.Runtime.Analyzers.1.0.1\build\System.Runtime.Analyzers.props" Condition="Exists('..\packages\System.Runtime.Analyzers.1.0.1\build\System.Runtime.Analyzers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -63,10 +65,10 @@
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2015.1|AnyCPU'">
-    <TfsVersion>14.0</TfsVersion>
+    <TfsVersion>14.1</TfsVersion>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug-2015.1\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;TFS2015</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -75,9 +77,32 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2015.1|AnyCPU'">
-    <TfsVersion>14.0</TfsVersion>
+    <TfsVersion>14.1</TfsVersion>
     <OutputPath>bin\Release-2015.1\</OutputPath>
-    <DefineConstants>TRACE;TFS2015</DefineConstants>
+    <DefineConstants>TRACE;</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2015.2|AnyCPU'">
+    <TfsVersion>14.2</TfsVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug-2015.2\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2015.2|AnyCPU'">
+    <TfsVersion>14.2</TfsVersion>
+    <OutputPath>bin\Release-2015.2\</OutputPath>
+    <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -90,8 +115,9 @@
     <ApplicationIcon>TfsAggregator.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ManyConsole">
-      <HintPath>..\packages\ManyConsole.0.4.2.17\lib\ManyConsole.dll</HintPath>
+    <Reference Include="ManyConsole, Version=0.4.2.18, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ManyConsole.0.4.2.18\lib\ManyConsole.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NDesk.Options">
       <HintPath>..\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
@@ -116,6 +142,7 @@
     </Compile>
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="ConsoleTextLogger.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Notification.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -137,10 +164,21 @@
     <Content Include="TfsAggregator.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\SonarLint.1.4.0\analyzers\dotnet\SonarLint.dll" />
+    <Analyzer Include="..\packages\Desktop.Analyzers.1.1.0\analyzers\dotnet\cs\Desktop.Analyzers.dll" />
+    <Analyzer Include="..\packages\Desktop.Analyzers.1.1.0\analyzers\dotnet\cs\Desktop.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.AnalyzerPowerPack.1.1.0\analyzers\dotnet\cs\Microsoft.AnalyzerPowerPack.Common.dll" />
+    <Analyzer Include="..\packages\Microsoft.AnalyzerPowerPack.1.1.0\analyzers\dotnet\cs\Microsoft.AnalyzerPowerPack.CSharp.dll" />
+    <Analyzer Include="..\packages\SonarLint.1.6.0\analyzers\SonarLint.CSharp.dll" />
+    <Analyzer Include="..\packages\SonarLint.1.6.0\analyzers\SonarLint.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta015\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta015\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta015\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <Analyzer Include="..\packages\System.Runtime.Analyzers.1.0.1\analyzers\dotnet\cs\System.Runtime.Analyzers.dll" />
+    <Analyzer Include="..\packages\System.Runtime.Analyzers.1.0.1\analyzers\dotnet\cs\System.Runtime.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\System.Runtime.InteropServices.Analyzers.1.0.1\analyzers\dotnet\cs\System.Runtime.InteropServices.Analyzers.dll" />
+    <Analyzer Include="..\packages\System.Runtime.InteropServices.Analyzers.1.0.1\analyzers\dotnet\cs\System.Runtime.InteropServices.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\System.Security.Cryptography.Hashing.Algorithms.Analyzers.1.1.0\analyzers\dotnet\cs\System.Security.Cryptography.Hashing.Algorithms.Analyzers.dll" />
+    <Analyzer Include="..\packages\System.Security.Cryptography.Hashing.Algorithms.Analyzers.1.1.0\analyzers\dotnet\cs\System.Security.Cryptography.Hashing.Algorithms.CSharp.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\StyleCop.Analyzers.1.0.0-beta015\build\StyleCop.Analyzers.targets" Condition="Exists('..\packages\StyleCop.Analyzers.1.0.0-beta015\build\StyleCop.Analyzers.targets')" />
@@ -149,6 +187,8 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\StyleCop.Analyzers.1.0.0-beta015\build\StyleCop.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Analyzers.1.0.0-beta015\build\StyleCop.Analyzers.targets'))" />
+    <Error Condition="!Exists('..\packages\System.Runtime.Analyzers.1.0.1\build\System.Runtime.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Runtime.Analyzers.1.0.1\build\System.Runtime.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\System.Runtime.InteropServices.Analyzers.1.0.1\build\System.Runtime.InteropServices.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Runtime.InteropServices.Analyzers.1.0.1\build\System.Runtime.InteropServices.Analyzers.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

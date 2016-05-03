@@ -16,10 +16,13 @@ namespace Aggregator.Core.Facade
     {
         private readonly WorkItem workItem;
 
-        public WorkItemWrapper(WorkItem workItem, IWorkItemRepository store, ILogEvents logger)
-            : base(store, logger)
+        private readonly IRuntimeContext context;
+
+        public WorkItemWrapper(WorkItem workItem, IRuntimeContext context)
+            : base(context)
         {
             this.workItem = workItem;
+            this.context = context;
         }
 
         public WorkItemType Type
@@ -83,7 +86,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new FieldCollectionWrapper(this.workItem.Fields);
+                return new FieldCollectionWrapper(this.workItem.Fields, this.context);
             }
         }
 
@@ -139,7 +142,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new WorkItemLinkCollectionWrapper(this.workItem.WorkItemLinks, this.Store, this.Logger);
+                return new WorkItemLinkCollectionWrapper(this.workItem.WorkItemLinks, this.context);
             }
         }
 
@@ -171,9 +174,37 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                // works even on a new workitem with no revisions...
-                return new RevisionWrapper(
-                    this.workItem.Revisions[this.workItem.Revisions.Count - 1]);
+                return new RevisionWrapper(this.workItem.Revisions[this.workItem.Revisions.Count - 1], this.context);
+            }
+        }
+
+        public IRevision PreviousRevision
+        {
+            get
+            {
+                int targetRevision = this.workItem.Revision - 1;
+
+                if (targetRevision <= 1)
+                {
+                    targetRevision = 1;
+                }
+
+                return new RevisionWrapper(this.workItem.Revisions[targetRevision - 1], this.context);
+            }
+        }
+
+        public IRevision NextRevision
+        {
+            get
+            {
+                int targetRevision = this.workItem.Revision + 1;
+
+                if (targetRevision >= this.workItem.Revisions.Count + 1)
+                {
+                    targetRevision = this.workItem.Revisions.Count - 1;
+                }
+
+                return new RevisionWrapper(this.workItem.Revisions[targetRevision], this.context);
             }
         }
 
@@ -232,6 +263,11 @@ namespace Aggregator.Core.Facade
             {
                 this.Logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
             }
+        }
+
+        public void AddHyperlink(string destination)
+        {
+            this.AddHyperlink(destination, string.Empty);
         }
 
         public void AddHyperlink(string destination, string comment = "")

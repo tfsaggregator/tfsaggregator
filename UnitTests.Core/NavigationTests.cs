@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Aggregator.Core.Configuration;
+using Aggregator.Core.Context;
 using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
@@ -21,22 +23,38 @@ namespace UnitTests.Core
     {
         private static WorkItemRepositoryMock MakeRepository(out IWorkItem startPoint)
         {
+            var logger = Substitute.For<ILogEvents>();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
 
-            var grandParent = new WorkItemMock(repository);
+            var grandParent = new WorkItemMock(repository, runtime);
             grandParent.Id = 1;
-            grandParent.TypeName = "Feature";
+            grandParent.TypeName = "Requirement";
+            grandParent["Microsoft.VSTS.Scheduling.RemainingWork"] = 2.0;
 
-            var parent = new WorkItemMock(repository);
+            var parent = new WorkItemMock(repository, runtime);
             parent.Id = 2;
             parent.TypeName = "Use Case";
 
-            var firstChild = new WorkItemMock(repository);
+            var firstChild = new WorkItemMock(repository, runtime);
             firstChild.Id = 3;
             firstChild.TypeName = "Task";
-            var secondChild = new WorkItemMock(repository);
+            var secondChild = new WorkItemMock(repository, runtime);
             secondChild.Id = 4;
             secondChild.TypeName = "Task";
+
+            var tc1 = new WorkItemMock(repository, runtime);
+            tc1.Id = 21;
+            tc1.TypeName = "Test Case";
+            tc1["Microsoft.VSTS.Scheduling.RemainingWork"] = 10.0;
+            var tc2 = new WorkItemMock(repository, runtime);
+            tc2.Id = 22;
+            tc2.TypeName = "Test Case";
+            tc2["Microsoft.VSTS.Scheduling.RemainingWork"] = 30.0;
 
             firstChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
             secondChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
@@ -46,7 +64,16 @@ namespace UnitTests.Core
             parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, firstChild.Id, repository));
             parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, secondChild.Id, repository));
 
-            repository.SetWorkItems(new[] { grandParent, parent, firstChild, secondChild });
+            // Tested By
+            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc1.Id, repository));
+            // Tests
+            tc1.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
+            // Tested By
+            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc2.Id, repository));
+            // Tests
+            tc2.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
+
+            repository.SetWorkItems(new[] { grandParent, parent, firstChild, secondChild, tc1, tc2 });
 
             startPoint = grandParent;
             return repository;
@@ -96,13 +123,44 @@ return searchResult;
         }
 
         [TestMethod]
+        public void FluentNavigation_FollowingLinks_two_times()
+        {
+            string script = @"
+var requirements = self.FollowingLinks(""Microsoft.VSTS.Common.TestedBy-Reverse"");
+foreach(var req in requirements) {
+  logger.Log(""Requirement #{0}"", req.Id);
+  var testCases = req.FollowingLinks(""Microsoft.VSTS.Common.TestedBy-Forward"");
+  double remaining = testCases.Sum(tc => tc.GetField(""Microsoft.VSTS.Scheduling.RemainingWork"", 0.0));
+  req[""Custom.RemainingWork""] = req.GetField(""Microsoft.VSTS.Scheduling.RemainingWork"", 0.0) + remaining;
+}
+";
+            IWorkItem startPoint;
+            var repository = MakeRepository(out startPoint);
+            var logger = new DebugEventLogger();
+            repository.Logger = logger;
+            var tc2 = repository.GetWorkItem(22);
+
+            var engine = new CSharpScriptEngine(logger, true);
+            engine.LoadAndRun("test", script, tc2, repository);
+
+            Assert.AreEqual(42.0, startPoint["Custom.RemainingWork"]);
+        }
+
+        [TestMethod]
         public void TransitionState_InProgress_to_Done_succeeded()
         {
+            var logger = new DebugEventLogger();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
-            repository.Logger = Substitute.For<ILogEvents>();
-            var workItem = new WorkItemMock(repository);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 42;
             workItem.TypeName = "Task";
+            workItem.Type = new WorkItemTypeMock() { Name = "Task" };
             workItem.Fields["State"].Value = "In Progress";
             repository.SetWorkItems(new[] { workItem });
             string targetState = "Done";
@@ -116,9 +174,15 @@ return searchResult;
         [TestMethod]
         public void TransitionState_New_to_Done_succeeded_via_InProgress()
         {
+            var logger = new DebugEventLogger();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
-            repository.Logger = Substitute.For<ILogEvents>();
-            var workItem = new WorkItemMock(repository);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
             {
                 Name = "Task",
@@ -126,7 +190,7 @@ return searchResult;
             };
             workItem.Id = 42;
             workItem.Type = workItemType;
-            workItem.TypeName = workItemType.Name;
+
             FieldMock mockedField = new FieldMock(workItem, "State");
             workItem.Fields[mockedField.Name] = mockedField;
             mockedField.OriginalValue = string.Empty;
@@ -144,9 +208,15 @@ return searchResult;
         [TestMethod]
         public void TransitionState_to_non_existing()
         {
+            var logger = new DebugEventLogger();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
-            repository.Logger = Substitute.For<ILogEvents>();
-            var workItem = new WorkItemMock(repository);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
             {
                 Name = "Task",
@@ -175,13 +245,20 @@ return searchResult;
         [TestMethod]
         public void TransitionStateCSharp_New_to_Done_succeeded_via_InProgress()
         {
+            var logger = new DebugEventLogger();
+            var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
+            var repository = new WorkItemRepositoryMock();
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
             string script = @"
 self.TransitionToState(""Done"", ""script test"");
 ";
-            var repository = new WorkItemRepositoryMock();
-            var logger = Substitute.For<ILogEvents>();
+
             repository.Logger = logger;
-            var workItem = new WorkItemMock(repository);
+            var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
             {
                 Name = "Task",

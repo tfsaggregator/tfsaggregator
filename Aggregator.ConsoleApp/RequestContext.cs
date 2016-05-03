@@ -73,44 +73,7 @@ namespace Aggregator.ConsoleApp
             return projectProperties.Select(p => (IProjectProperty)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
         }
 
-        public IProcessTemplateVersion GetCurrentProjectProcessVersion(Uri projectUri)
-        {
-            return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CurrentVersion);
-        }
-
-        public IProcessTemplateVersion GetCreationProjectProcessVersion(Uri projectUri)
-        {
-            return this.GetProjectProcessVersion(projectUri.AbsoluteUri, ProcessTemplateVersionPropertyNames.CreationVersion);
-        }
-
-        private IProcessTemplateVersion GetProjectProcessVersion(string projectUri, string versionPropertyName)
-        {
-            var context = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(this.teamProjectCollectionUrl));
-            var ics = context.GetService<ICommonStructureService4>();
-
-            string projectName;
-            string projectState;
-
-            int templateId = 0;
-            ProjectProperty[] projectProperties = null;
-
-            ics.GetProjectProperties(projectUri, out projectName, out projectState, out templateId, out projectProperties);
-
-            string rawVersion =
-                projectProperties.FirstOrDefault(p => p.Name == versionPropertyName)?.Value;
-
-            if (rawVersion == null)
-            {
-                return new ProcessTemplateVersionWrapper() { TypeId = Guid.Empty, Major = 0, Minor = 0 };
-            }
-            else
-            {
-                var result = TeamFoundationSerializationUtility.Deserialize<ProcessTemplateVersion>(rawVersion);
-                return new ProcessTemplateVersionWrapper() { TypeId = result.TypeId, Major = result.Major, Minor = result.Minor };
-            }
-        }
-
-        public IdentityDescriptor GetIdentityToImpersonate()
+        public IdentityDescriptor GetIdentityToImpersonate(Uri projectCollectionUrl)
         {
             // makes no sense impersonation in command line tool... for now
             return null;

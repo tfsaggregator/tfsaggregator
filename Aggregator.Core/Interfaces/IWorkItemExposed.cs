@@ -20,6 +20,16 @@ namespace Aggregator.Core.Interfaces
 
         IRevision LastRevision { get; }
 
+        IRevision PreviousRevision
+        {
+            get;
+        }
+
+        IRevision NextRevision
+        {
+            get;
+        }
+
         bool IsValid();
 
         object this[string name] { get; set; }
@@ -42,7 +52,9 @@ namespace Aggregator.Core.Interfaces
         // links management
         void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName);
 
-        void AddHyperlink(string destination, string comment = "");
+        void AddHyperlink(string destination);
+
+        void AddHyperlink(string destination, string message);
 
         // state helpers; must be on interface to work on WorkItemLazyReference
         void TransitionToState(string state, string comment);

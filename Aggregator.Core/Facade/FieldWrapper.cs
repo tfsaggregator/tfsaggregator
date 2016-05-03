@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Globalization;
 
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Facade
 {
-    public class FieldWrapper : IField
+    public class FieldWrapper : IFieldExposed
     {
         private readonly Field tfsField;
 
-        public FieldWrapper(Field field)
+        public FieldWrapper(Field field, IRuntimeContext context)
         {
             this.tfsField = field;
         }
@@ -42,6 +42,14 @@ namespace Aggregator.Core.Facade
             set
             {
                 this.tfsField.Value = value;
+            }
+        }
+
+        public Field TfsField
+        {
+            get
+            {
+                return this.tfsField;
             }
         }
 

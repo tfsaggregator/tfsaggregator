@@ -83,7 +83,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 this.workItem.Received().Save();
                 Assert.AreEqual(3.0D, this.workItem.Fields["Estimated Work"].Value);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
@@ -107,7 +107,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 this.workItem.Received().Save();
                 Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
@@ -131,7 +131,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 this.workItem.Received().Save();
                 Assert.AreEqual(3.0D, this.workItem["Estimated Work"]);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
@@ -145,13 +145,19 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("Rollup.policies", logger);
             var alternateRepository = new WorkItemRepositoryMock();
 
-            var grandParent = new WorkItemMock(alternateRepository);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            context.CollectionName.Returns("Collection1");
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, r) => alternateRepository);
+
+            var grandParent = new WorkItemMock(alternateRepository, runtime);
             grandParent.Id = 1;
             grandParent.TypeName = "Feature";
             grandParent["Dev Estimate"] = 0.0D;
             grandParent["Test Estimate"] = 0.0D;
 
-            var parent = new WorkItemMock(alternateRepository);
+            var parent = new WorkItemMock(alternateRepository, runtime);
             parent.Id = 2;
             parent.TypeName = "Use Case";
             parent.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 1, alternateRepository));
@@ -159,7 +165,7 @@ namespace UnitTests.Core
             parent["Total Work Remaining"] = 3.0D;
             parent["Total Estimate"] = 4.0D;
 
-            var child = new WorkItemMock(alternateRepository);
+            var child = new WorkItemMock(alternateRepository, runtime);
             child.Id = 3;
             child.TypeName = "Task";
             child.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 2, alternateRepository));
@@ -174,10 +180,6 @@ namespace UnitTests.Core
             parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, alternateRepository));
             alternateRepository.SetWorkItems(new[] { grandParent, parent, child });
 
-            var context = Substitute.For<IRequestContext>();
-            context.GetProjectCollectionUri().Returns(
-                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -185,7 +187,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.IsFalse(child.InternalWasSaveCalled);
                 Assert.IsTrue(parent.InternalWasSaveCalled);
                 Assert.IsFalse(grandParent.InternalWasSaveCalled);
@@ -202,13 +204,18 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("Rollup.policies", logger);
             var alternateRepository = new WorkItemRepositoryMock();
 
-            var grandParent = new WorkItemMock(alternateRepository);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository);
+
+            var grandParent = new WorkItemMock(alternateRepository, runtime);
             grandParent.Id = 1;
             grandParent.TypeName = "Feature";
             grandParent["Dev Estimate"] = null;
             grandParent["Test Estimate"] = null;
 
-            var parent = new WorkItemMock(alternateRepository);
+            var parent = new WorkItemMock(alternateRepository, runtime);
             parent.Id = 2;
             parent.TypeName = "Use Case";
             parent.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 1, alternateRepository));
@@ -216,7 +223,7 @@ namespace UnitTests.Core
             parent["Total Work Remaining"] = 3.0D;
             parent["Total Estimate"] = 4.0D;
 
-            var child = new WorkItemMock(alternateRepository);
+            var child = new WorkItemMock(alternateRepository, runtime);
             child.Id = 3;
             child.TypeName = "Task";
             child.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 2, alternateRepository));
@@ -231,10 +238,6 @@ namespace UnitTests.Core
             parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, alternateRepository));
             alternateRepository.SetWorkItems(new[] { grandParent, parent, child });
 
-            var context = Substitute.For<IRequestContext>();
-            context.GetProjectCollectionUri().Returns(
-                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -242,7 +245,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.IsFalse(child.InternalWasSaveCalled);
                 Assert.IsTrue(parent.InternalWasSaveCalled);
                 Assert.IsFalse(grandParent.InternalWasSaveCalled);

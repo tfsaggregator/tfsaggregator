@@ -6,7 +6,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace UnitTests.Core.Mock
 {
-    internal class FieldMock : IField
+    internal class FieldMock : IFieldExposed
     {
         private readonly WorkItemMock workItemMock;
 
@@ -52,6 +52,14 @@ namespace UnitTests.Core.Mock
             set
             {
                 this.dataType = value;
+            }
+        }
+
+        public Field TfsField
+        {
+            get
+            {
+                return null;
             }
         }
     }

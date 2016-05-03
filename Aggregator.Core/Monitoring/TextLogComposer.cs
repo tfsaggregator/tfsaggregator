@@ -370,7 +370,7 @@ namespace Aggregator.Core.Monitoring
 
         public void ScriptLog(LogLevel level, string ruleName, string message)
         {
-            this.logger.Log(level, "{0}: {1}", ruleName, message);
+            this.logger.UserLog(level, ruleName, message);
         }
 
         public void NoPolicesApply()
@@ -410,9 +410,34 @@ namespace Aggregator.Core.Monitoring
             }
         }
 
-        public void TemplateScopeConfigurationRequiresAtLeastNameOrType()
+        public void TemplateScopeConfigurationRequiresAtLeastName()
         {
             this.logger.Log(LogLevel.Error, "Error in policy file: templateScope requires name or typeId attribute");
+        }
+
+        public void FieldValidationFailedInvalidDataType(int id, string referenceName, Type systemType, Type valueType, object value)
+        {
+            this.logger.Log(LogLevel.Warning, "Invalid value assigned to: {0}/{1}. Expected type: {2}, but received: {3} ({4}).", id, referenceName, systemType, valueType, value);
+        }
+
+        public void FieldValidationFailedValueNotAllowed(int id, string referenceName, object value)
+        {
+            this.logger.Log(LogLevel.Warning, "Invalid value assigned to: {0}/{1}, it is not in the allowed list. Value: {2}.", id, referenceName, value);
+        }
+
+        public void FieldValidationFailedFieldNotEditable(int id, string referenceName, object value)
+        {
+            this.logger.Log(LogLevel.Warning, "Invalid value assigned to: {0}/{1}, it is not editable. Value: {2}.", id, referenceName, value);
+        }
+
+        public void FieldValidationFailedFieldRequired(int id, string referenceName)
+        {
+            this.logger.Log(LogLevel.Warning, "Invalid value assigned to: {0}/{1}, it is required.", id, referenceName);
+        }
+
+        public void FieldValidationFailedAssignmentToHistory(int id)
+        {
+            this.logger.Log(LogLevel.Warning, "Assignment to history field: {0}/System.History, use 'workitem.History = \"value\"' instead.", id);
         }
 
         public void PolicyShouldHaveAScope(string name)

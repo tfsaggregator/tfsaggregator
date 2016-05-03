@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Caching;
 
 using Aggregator.Core.Configuration;
+using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
@@ -16,7 +17,9 @@ namespace Aggregator.Core.Context
     public class RuntimeContext : IRuntimeContext
     {
         private const string CacheKey = "runtime:";
+#pragma warning disable CA2213 // Disposable fields should be disposed
         private static readonly MemoryCache Cache = new MemoryCache("TFSAggregator2");
+#pragma warning restore CA2213 // Disposable fields should be disposed
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RuntimeContext"/> class.
@@ -35,7 +38,7 @@ namespace Aggregator.Core.Context
             Func<string> settingsPathGetter,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
+            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder)
         {
             string settingsPath = settingsPathGetter();
             string cacheKey = CacheKey + settingsPath;
@@ -66,6 +69,7 @@ namespace Aggregator.Core.Context
 
                 // as it changes at each invocation, must be set again here
                 runtime.RequestContext = requestContext;
+                runtime.workItemRepository = null;
             }
 
             return runtime.Clone() as RuntimeContext;
@@ -76,7 +80,7 @@ namespace Aggregator.Core.Context
             TFSAggregatorSettings settings,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder)
+            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder)
         {
             var runtime = new RuntimeContext();
 
@@ -142,21 +146,37 @@ namespace Aggregator.Core.Context
         }
 
         // isolate type constructor to facilitate Unit testing
-        private Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, ILogEvents, IWorkItemRepository> repoBuilder;
+        private Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder;
 
-        public IWorkItemRepository GetWorkItemRepository()
+        protected virtual IWorkItemRepository CreateWorkItemRepository()
         {
-            var uri = this.RequestContext.GetProjectCollectionUri();
+            var requestUri = this.RequestContext.GetProjectCollectionUri();
+            var uri = requestUri.ApplyServerSetting(this);
 
             Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor toImpersonate = null;
             if (this.Settings.AutoImpersonate)
             {
-                toImpersonate = this.RequestContext.GetIdentityToImpersonate();
+                toImpersonate = this.RequestContext.GetIdentityToImpersonate(uri);
             }
 
-            var newRepo = this.repoBuilder(uri, toImpersonate, this.Logger);
+            var newRepo = this.repoBuilder(uri, toImpersonate, this);
             this.Logger.WorkItemRepositoryBuilt(uri, toImpersonate);
             return newRepo;
+        }
+
+        private IWorkItemRepository workItemRepository;
+
+        public IWorkItemRepository WorkItemRepository
+        {
+            get
+            {
+                if (this.workItemRepository == null)
+                {
+                    this.workItemRepository = this.CreateWorkItemRepository();
+                }
+
+                return this.workItemRepository;
+            }
         }
 
         public object Clone()

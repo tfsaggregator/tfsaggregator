@@ -1,11 +1,10 @@
-﻿namespace Aggregator.ConsoleApp
+﻿using System;
+using System.Diagnostics;
+
+using Aggregator.Core.Monitoring;
+
+namespace Aggregator.ConsoleApp
 {
-    using System;
-    using System.Diagnostics;
-
-    using Core;
-    using Core.Monitoring;
-
     internal class ConsoleTextLogger : ITextLogger
     {
         private readonly Stopwatch clock = new Stopwatch();
@@ -36,12 +35,14 @@
                 const int LogLevelMaximumStringLength = 11; // Len(Information)
                 string levelAsString = level.ToString();
 
+#pragma warning disable S3220 // Method calls should not resolve ambiguously to overloads with "params"
                 Console.Write(
                     "[{0}]{1} {2:00}.{3:000} ",
                     levelAsString,
                     string.Empty.PadLeft(LogLevelMaximumStringLength - levelAsString.Length),
                     this.clock.ElapsedMilliseconds / 1000,
                     this.clock.ElapsedMilliseconds % 1000);
+#pragma warning restore S3220 // Method calls should not resolve ambiguously to overloads with "params"
 
                 Console.WriteLine(message);
 
@@ -51,6 +52,11 @@
             {
                 this.clock.Start();
             }
+        }
+
+        public void UserLog(LogLevel level, string ruleName, string message)
+        {
+            this.Log(level, "{0}: {1}", ruleName, message);
         }
 
         internal static ConsoleColor MapColor(LogLevel level)

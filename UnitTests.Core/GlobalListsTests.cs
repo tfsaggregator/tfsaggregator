@@ -36,19 +36,20 @@ namespace UnitTests.Core
             var logger = new DebugEventLogger();
             var settings = TestHelpers.LoadConfigFromResourceFile("UserParameters.policies", logger);
 
-            var repository = new WorkItemRepositoryMock();
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
 
-            var workItem = new WorkItemMock(repository);
+            var repository = new WorkItemRepositoryMock();
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 1;
             workItem.TypeName = "Use Case";
             workItem["Title"] = "The car shall have a maximum speed of {myParameter} mph.";
 
             repository.SetWorkItems(new[] { workItem });
 
-            var context = Substitute.For<IRequestContext>();
-            context.GetProjectCollectionUri().Returns(
-                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -56,7 +57,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.IsTrue(workItem.InternalWasSaveCalled);
                 Assert.AreEqual("The car shall have a maximum speed of {myParameter}(30) mph.", workItem.Fields["Title"].Value);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
@@ -71,17 +72,18 @@ namespace UnitTests.Core
 
             var repository = new WorkItemRepositoryMock();
 
-            var workItem = new WorkItemMock(repository);
+            var context = Substitute.For<IRequestContext>();
+            context.GetProjectCollectionUri().Returns(
+                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+
+            var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 1;
             workItem.TypeName = "Use Case";
             workItem["Title"] = "The car shall have a maximum speed of {myParameter}(25) mph.";
 
             repository.SetWorkItems(new[] { workItem });
 
-            var context = Substitute.For<IRequestContext>();
-            context.GetProjectCollectionUri().Returns(
-                new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -89,7 +91,7 @@ namespace UnitTests.Core
 
                 var result = processor.ProcessEvent(context, notification);
 
-                Assert.AreEqual(0, result.ExceptionProperties.Count());
+                Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.IsTrue(workItem.InternalWasSaveCalled);
                 Assert.AreEqual("The car shall have a maximum speed of {myParameter}(30) mph.", workItem.Fields["Title"].Value);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);

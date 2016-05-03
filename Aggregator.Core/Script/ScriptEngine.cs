@@ -14,7 +14,7 @@ namespace Aggregator.Core
 
         protected bool Debug { get; }
 
-        public ScriptEngine(ILogEvents logger, bool debug)
+        protected ScriptEngine(ILogEvents logger, bool debug)
         {
             this.Logger = logger;
             this.Debug = debug;
