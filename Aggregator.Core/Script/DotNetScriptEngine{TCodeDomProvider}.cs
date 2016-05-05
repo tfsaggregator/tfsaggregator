@@ -25,8 +25,8 @@ namespace Aggregator.Core.Script
         [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", Justification = "Reviewed.")]
         protected readonly string ClassPrefix = "Script_";
 
-        protected DotNetScriptEngine(ILogEvents logger, bool debug)
-            : base(logger, debug)
+        protected DotNetScriptEngine(ILogEvents logger, bool debug, IScriptLibrary library)
+            : base(logger, debug, library)
         {
         }
 
@@ -153,11 +153,11 @@ namespace Aggregator.Core.Script
                 return;
             }
 
-            System.Diagnostics.Debug.WriteLine("*** about to execute {0}", scriptName, null);
+            //System.Diagnostics.Debug.WriteLine("*** about to execute {0}", scriptName, null);
             this.Logger.ScriptLogger.RuleName = scriptName;
 
             // Lets run our script and display its results
-            object result = scriptObject.RunScript(self, store, this.Logger.ScriptLogger);
+            object result = scriptObject.RunScript(self, store, this.Logger.ScriptLogger, this.Library);
             this.Logger.ResultsFromScriptRun(scriptName, result);
         }
 

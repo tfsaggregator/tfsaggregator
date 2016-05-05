@@ -53,6 +53,14 @@ namespace Aggregator.ConsoleApp
 
         public int CurrentWorkItemId { get; set; }
 
+        public IVssRequestContext VssContext
+        {
+            get
+            {
+                throw new NotImplementedException("Cannot emulate IVssRequestContext in client application");
+            }
+        }
+
         public string GetProjectName(Uri projectUri)
         {
             return this.teamProjectName;

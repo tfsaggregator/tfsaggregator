@@ -111,8 +111,8 @@ return searchResult;
             var repository = MakeRepository(out startPoint);
             var logger = Substitute.For<ILogEvents>();
             repository.Logger = logger;
-
-            var engine = new CSharpScriptEngine(logger, false);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, false, library);
             engine.LoadAndRun("test", script, startPoint, repository);
 
             var expected = new FluentQuery(startPoint);
@@ -140,7 +140,8 @@ foreach(var req in requirements) {
             repository.Logger = logger;
             var tc2 = repository.GetWorkItem(22);
 
-            var engine = new CSharpScriptEngine(logger, true);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, true, library);
             engine.LoadAndRun("test", script, tc2, repository);
 
             Assert.AreEqual(42.0, startPoint["Custom.RemainingWork"]);
@@ -276,7 +277,8 @@ self.TransitionToState(""Done"", ""script test"");
 
             repository.SetWorkItems(new[] { workItem });
 
-            var engine = new CSharpScriptEngine(logger, false);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, false, library);
             engine.LoadAndRun("test", script, workItem, repository);
 
             Assert.AreEqual("Done", workItem.Fields["State"].Value);

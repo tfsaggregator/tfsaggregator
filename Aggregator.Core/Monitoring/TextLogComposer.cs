@@ -444,5 +444,10 @@ namespace Aggregator.Core.Monitoring
         {
             this.logger.Log(LogLevel.Warning, "Policy {0} has no Scope: it will apply to any incoming requests", name);
         }
+
+        public void LibrarySendMail(string from, string to, string subject, string body)
+        {
+            this.logger.Log(LogLevel.Verbose, "ScriptLibrary.SendMail( from:='{0}', to:='{1}', subject:='{2}', body:='{3}' )", from, to, subject, body.Truncate(20));
+        }
     }
 }

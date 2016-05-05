@@ -10,8 +10,8 @@ namespace Aggregator.Core
 
     public class CSharpScriptEngine : DotNetScriptEngine<CSharpCodeProvider>
     {
-        public CSharpScriptEngine(ILogEvents logger, bool debug)
-            : base(logger, debug)
+        public CSharpScriptEngine(ILogEvents logger, bool debug, IScriptLibrary library)
+            : base(logger, debug, library)
         {
         }
 
@@ -38,7 +38,7 @@ namespace Aggregator.Core
 
   public class " + this.ClassPrefix + scriptName + @" : Aggregator.Core.Script.IDotNetScript
   {
-    public object RunScript(Aggregator.Core.Interfaces.IWorkItemExposed self, Aggregator.Core.Interfaces.IWorkItemRepositoryExposed store, Aggregator.Core.Monitoring.IRuleLogger logger)
+    public object RunScript(IWorkItemExposed self, IWorkItemRepositoryExposed store, IRuleLogger logger, IScriptLibrary Library)
     {
 " + script + @"
       return null;

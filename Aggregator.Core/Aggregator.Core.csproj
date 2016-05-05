@@ -158,6 +158,8 @@
     <Compile Include="Monitoring\LogLevel.cs" />
     <Compile Include="Monitoring\RuleLogger.cs" />
     <Compile Include="RateLimiter.cs" />
+    <Compile Include="Interfaces\IScriptLibrary.cs" />
+    <Compile Include="Facade\ScriptLibrary.cs" />
     <Compile Include="Script\DotNetScriptEngine{TCodeDomProvider}.cs" />
     <Compile Include="Script\IDotNetScript.cs" />
     <Compile Include="Script\ScriptSourceElement.cs" />

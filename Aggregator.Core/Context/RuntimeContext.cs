@@ -133,7 +133,9 @@ namespace Aggregator.Core.Context
             if (this.cachedEngine == null)
             {
                 System.Diagnostics.Debug.WriteLine("Cache empty for thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
-                this.cachedEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug);
+                // HACK remove Facade dependency
+                IScriptLibrary library = new Facade.ScriptLibrary(this);
+                this.cachedEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug, library);
 
                 List<Script.ScriptSourceElement> sourceElements = this.GetSourceElements();
 
