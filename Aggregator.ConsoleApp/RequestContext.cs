@@ -13,6 +13,12 @@ using Microsoft.TeamFoundation.Server;
 using Microsoft.TeamFoundation.Server.Core;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
+#if TFS2015u1
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.IVssRequestContext;
+#else
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext;
+#endif
+
 namespace Aggregator.ConsoleApp
 {
     public class RequestContext : IRequestContext
