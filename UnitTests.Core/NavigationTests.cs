@@ -26,10 +26,11 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
 
             var grandParent = new WorkItemMock(repository, runtime);
             grandParent.Id = 1;
@@ -153,10 +154,11 @@ foreach(var req in requirements) {
             var logger = new DebugEventLogger();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 42;
@@ -178,10 +180,11 @@ foreach(var req in requirements) {
             var logger = new DebugEventLogger();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
@@ -212,10 +215,11 @@ foreach(var req in requirements) {
             var logger = new DebugEventLogger();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
@@ -249,10 +253,11 @@ foreach(var req in requirements) {
             var logger = new DebugEventLogger();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
 
             string script = @"
 self.TransitionToState(""Done"", ""script test"");

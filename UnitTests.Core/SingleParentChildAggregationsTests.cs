@@ -72,10 +72,11 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem.policies", logger);
             var alternateRepository = this.SetupFakeRepository();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository, scriptLibraryBuilder);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -96,10 +97,11 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItem-Short.policies", logger);
             var alternateRepository = this.SetupFakeRepository_Short();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository, scriptLibraryBuilder);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -120,10 +122,11 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("SumFieldsOnSingleWorkItemVB.policies", logger);
             var alternateRepository = this.SetupFakeRepository_Short();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository, scriptLibraryBuilder);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -144,12 +147,13 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("Rollup.policies", logger);
             var alternateRepository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
 
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection1");
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, r) => alternateRepository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, r) => alternateRepository, scriptLibraryBuilder);
 
             var grandParent = new WorkItemMock(alternateRepository, runtime);
             grandParent.Id = 1;
@@ -203,11 +207,12 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("Rollup.policies", logger);
             var alternateRepository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
 
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => alternateRepository, scriptLibraryBuilder);
 
             var grandParent = new WorkItemMock(alternateRepository, runtime);
             grandParent.Id = 1;

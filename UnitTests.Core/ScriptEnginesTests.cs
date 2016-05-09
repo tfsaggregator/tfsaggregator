@@ -114,10 +114,11 @@ return $self.Fields[""z""].Value ";
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
 
@@ -155,10 +156,11 @@ return $self.Fields[""z""].Value ";
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
 
@@ -187,11 +189,12 @@ return $self.Fields[""z""].Value ";
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("NoOp.policies", logger);
             var repository = Substitute.For<IWorkItemRepository>();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var workItem = Substitute.For<IWorkItem>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -417,11 +420,10 @@ logger.Log(""MyFunc returns {0}."", MyFunc());
         public void Library_SendMail_succeeds()
         {
             string script = @"
-string from = ""aggregator@example.com"";
 string to = ""test@example.com"";
 string subject = ""Test from Rule"";
 string body = ""It worked!"";
-Library.SendMail(from, to, subject, body);
+Library.SendMail(to, subject, body);
 ";
             var repository = Substitute.For<IWorkItemRepository>();
             var workItem = Substitute.For<IWorkItem>();
@@ -433,11 +435,10 @@ Library.SendMail(from, to, subject, body);
             var engine = new CSharpScriptEngine(logger, Debugger.IsAttached, library);
             engine.LoadAndRun("test", script, workItem, repository);
 
-            string from = "aggregator@example.com";
             string to = "test@example.com";
             string subject = "Test from Rule";
             string body = "It worked!";
-            library.Received().SendMail(from, to, subject, body);
+            library.Received().SendMail(to, subject, body);
         }
     }
 }

@@ -85,7 +85,8 @@ namespace Aggregator.ConsoleApp
                 context,
                 logger,
                 (collectionUri, toImpersonate, runtimeContext) =>
-                    new Core.Facade.WorkItemRepository(collectionUri, toImpersonate, runtimeContext));
+                    new Core.Facade.WorkItemRepository(collectionUri, toImpersonate, runtimeContext),
+                (it) => new Core.Script.ScriptLibrary(it));
 
             if (!string.IsNullOrWhiteSpace(this.LogLevelName))
             {
