@@ -65,7 +65,9 @@ namespace TFSAggregator.TfsSpecific
                 context,
                 logger,
                 (collectionUri, toImpersonate, runtimeContext) =>
-                    new WorkItemRepository(collectionUri, toImpersonate, runtimeContext));
+                    new WorkItemRepository(collectionUri, toImpersonate, runtimeContext),
+                (it) => new ScriptLibrary(it)
+                );
 
             if (runtime.HasErrors)
             {

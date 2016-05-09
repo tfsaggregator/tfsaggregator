@@ -38,7 +38,8 @@ namespace Aggregator.Core.Context
             Func<string> settingsPathGetter,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder)
+            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder,
+            Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder)
         {
             string settingsPath = settingsPathGetter();
             string cacheKey = CacheKey + settingsPath;
@@ -50,7 +51,7 @@ namespace Aggregator.Core.Context
                 logger.LoadingConfiguration(settingsPath);
 
                 var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
-                runtime = MakeRuntimeContext(settingsPath, settings, requestContext, logger, repoBuilder);
+                runtime = MakeRuntimeContext(settingsPath, settings, requestContext, logger, repoBuilder, scriptLibraryBuilder);
 
                 if (!runtime.HasErrors)
                 {
@@ -80,7 +81,8 @@ namespace Aggregator.Core.Context
             TFSAggregatorSettings settings,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder)
+            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder,
+            Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder)
         {
             var runtime = new RuntimeContext();
 
@@ -91,6 +93,7 @@ namespace Aggregator.Core.Context
             runtime.RateLimiter = new RateLimiter(runtime);
             logger.MinimumLogLevel = runtime.Settings?.LogLevel ?? LogLevel.Normal;
             runtime.repoBuilder = repoBuilder;
+            runtime.scriptLibraryBuilder = scriptLibraryBuilder;
 
             runtime.HasErrors = settings == null;
             return runtime;
@@ -126,6 +129,7 @@ namespace Aggregator.Core.Context
 
         public ILogEvents Logger { get; private set; }
 
+        private Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder;
         private ScriptEngine cachedEngine = null;
 
         public ScriptEngine GetEngine()
@@ -133,8 +137,7 @@ namespace Aggregator.Core.Context
             if (this.cachedEngine == null)
             {
                 System.Diagnostics.Debug.WriteLine("Cache empty for thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
-                // HACK remove Facade dependency
-                IScriptLibrary library = new Facade.ScriptLibrary(this);
+                IScriptLibrary library = this.scriptLibraryBuilder(this);
                 this.cachedEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug, library);
 
                 List<Script.ScriptSourceElement> sourceElements = this.GetSourceElements();
