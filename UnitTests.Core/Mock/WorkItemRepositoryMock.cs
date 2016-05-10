@@ -91,5 +91,30 @@ namespace UnitTests.Core.Mock
         {
             get { return new ReadOnlyCollection<IWorkItem>(this.createdWorkItems); }
         }
+
+        public ReadOnlyCollection<IWorkItemLinkType> WorkItemLinkTypes
+        {
+            get
+            {
+                var result = new List<IWorkItemLinkType>();
+                result.Add(new WorkItemLinkTypeMock()
+                {
+                    ReferenceName = "System.LinkTypes.Hierarchy",
+                    ForwardEndName = "Child",
+                    ForwardEndImmutableName = "System.LinkTypes.Hierarchy-Forward",
+                    ReverseEndName = "Parent",
+                    ReverseEndImmutableName = "System.LinkTypes.Hierarchy-Reverse"
+                });
+                result.Add(new WorkItemLinkTypeMock()
+                {
+                    ReferenceName = "Microsoft.VSTS.Common.TestedBy",
+                    ForwardEndName = "Tested By",
+                    ForwardEndImmutableName = "Microsoft.VSTS.Common.TestedBy-Forward",
+                    ReverseEndName = "Tests",
+                    ReverseEndImmutableName = "Microsoft.VSTS.Common.TestedBy-Reverse"
+                });
+                return new ReadOnlyCollection<IWorkItemLinkType>(result);
+            }
+        }
     }
 }

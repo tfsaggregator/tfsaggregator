@@ -71,6 +71,19 @@ namespace Aggregator.Core.Facade
             }
         }
 
+        public ReadOnlyCollection<IWorkItemLinkType> WorkItemLinkTypes
+        {
+            get
+            {
+                var result = new List<IWorkItemLinkType>();
+                foreach (var linkType in this.workItemStore.WorkItemLinkTypes)
+                {
+                    result.Add(new WorkItemLinkTypeWrapper(linkType));
+                }
+                return new ReadOnlyCollection<IWorkItemLinkType>(result);
+            }
+        }
+
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
         {
             if (string.IsNullOrWhiteSpace(projectName))

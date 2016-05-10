@@ -11,5 +11,7 @@ namespace Aggregator.Core.Interfaces
         ReadOnlyCollection<IWorkItem> LoadedWorkItems { get; }
 
         ReadOnlyCollection<IWorkItem> CreatedWorkItems { get; }
+
+        ReadOnlyCollection<IWorkItemLinkType> WorkItemLinkTypes { get; }
     }
 }

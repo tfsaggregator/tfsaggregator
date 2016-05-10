@@ -142,7 +142,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new WorkItemLinkCollectionWrapper(this.workItem.WorkItemLinks, this.context);
+                return new WorkItemLinkCollectionWrapper(this.workItem, this.workItem.WorkItemLinks, this.context);
             }
         }
 
@@ -253,16 +253,7 @@ namespace Aggregator.Core.Facade
 
             var relationship = new WorkItemLink(destLinkType, this.Id, destination.Id);
 
-            // check it does not exist already
-            if (!this.workItem.WorkItemLinks.Contains(relationship))
-            {
-                this.Logger.AddingWorkItemLink(this.Id, destLinkType, destination.Id);
-                this.workItem.WorkItemLinks.Add(relationship);
-            }
-            else
-            {
-                this.Logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
-            }
+            this.WorkItemLinks.Add(new WorkItemLinkWrapper(relationship, this.context));
         }
 
         public void AddHyperlink(string destination)

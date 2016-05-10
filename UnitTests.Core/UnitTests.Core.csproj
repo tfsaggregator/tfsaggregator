@@ -143,6 +143,7 @@
     <Compile Include="Helpers\DebugEventLogger.cs" />
     <Compile Include="GlobalListsTests.cs" />
     <Compile Include="Mock\RuntimeContextMock.cs" />
+    <Compile Include="Mock\WorkItemLinkTypeMock.cs" />
     <Compile Include="RulesAndPolicyTests.cs" />
     <Compile Include="ItemCreationTests.cs" />
     <Compile Include="Mock\WorkItemLinkCollectionMock.cs" />

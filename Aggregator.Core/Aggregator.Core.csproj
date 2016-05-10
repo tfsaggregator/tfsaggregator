@@ -145,6 +145,8 @@
     <Compile Include="Extensions\NullAssignmentToRequiredFieldValueValidator.cs" />
     <Compile Include="Extensions\ValueAssignmentToHistoryFieldValidator.cs" />
     <Compile Include="Extensions\ValueAssignmentToReadonlyFieldValueValidator.cs" />
+    <Compile Include="Facade\WorkItemLinkTypeWrapper.cs" />
+    <Compile Include="Interfaces\IWorkItemLinkType.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
     <Compile Include="Facade\RevisionWrapper.cs" />
     <Compile Include="GlobalSuppressions.cs" />
