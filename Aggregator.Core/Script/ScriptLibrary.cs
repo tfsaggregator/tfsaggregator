@@ -17,6 +17,11 @@ namespace Aggregator.Core.Script
             this.logger = context.Logger;
         }
 
+        public string GetEmailAddress(string userName, string defaultValue)
+        {
+            return defaultValue;
+        }
+
         public void SendMail(string to, string subject, string body)
         {
             string from = "tfsaggregator@example.com";

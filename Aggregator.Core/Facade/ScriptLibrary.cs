@@ -37,5 +37,40 @@ namespace Aggregator.Core.Facade
                 mailService.Send(vssContext, message);
             }
         }
+
+        // Get Email Address from TFS Account or Display Name
+        // source: https://paulselles.wordpress.com/2014/03/24/tfs-api-tfs-user-email-address-lookup-and-reverse-lookup/
+        public string GetEmailAddress(string userName, string defaultValue)
+        {
+            using (var teamProjectCollection = new TfsTeamProjectCollection(this.connectionInfo.ProjectCollectionUri, this.connectionInfo.Impersonate))
+            {
+                var identityManagementService = teamProjectCollection.GetService<IIdentityManagementService>();
+
+                TeamFoundationIdentity identity = identityManagementService.ReadIdentity(
+                    IdentitySearchFactor.AccountName,
+                    userName,
+                    MembershipQuery.None,
+                    ReadIdentityOptions.ExtendedProperties);
+                // if not found try again using DisplayName
+                identity = identity ?? identityManagementService.ReadIdentity(
+                    IdentitySearchFactor.DisplayName,
+                    userName,
+                    MembershipQuery.None,
+                    ReadIdentityOptions.ExtendedProperties);
+
+                if (identity == null)
+                {
+                    return defaultValue;
+                }
+
+                // pick first non-null value
+                string mailAddress = identity.GetAttribute("Mail", null);
+                mailAddress = string.IsNullOrWhiteSpace(mailAddress) ?
+                    identity.GetAttribute("ConfirmedNotificationAddress", defaultValue)
+                    : mailAddress;
+
+                return mailAddress;
+            }
+        }
     }
 }
