@@ -26,5 +26,7 @@ namespace Aggregator.Core.Context
         ScriptEngine GetEngine();
 
         RateLimiter RateLimiter { get; }
+
+        ConnectionInfo GetConnectionInfo();
     }
 }

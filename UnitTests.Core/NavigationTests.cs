@@ -30,7 +30,7 @@ namespace UnitTests.Core
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var grandParent = new WorkItemMock(repository, runtime);
             grandParent.Id = 1;
@@ -158,7 +158,7 @@ foreach(var req in requirements) {
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 42;
@@ -184,7 +184,7 @@ foreach(var req in requirements) {
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
@@ -219,7 +219,7 @@ foreach(var req in requirements) {
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
@@ -257,7 +257,7 @@ foreach(var req in requirements) {
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             string script = @"
 self.TransitionToState(""Done"", ""script test"");

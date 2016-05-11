@@ -24,7 +24,7 @@ namespace UnitTests.Core
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var parent = new WorkItemMock(repository, runtime);
             parent.Id = 1;
@@ -53,7 +53,7 @@ namespace UnitTests.Core
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection1");
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             using (var processor = new EventProcessor(runtime))
             {
@@ -84,7 +84,7 @@ namespace UnitTests.Core
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection2");
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -114,7 +114,7 @@ namespace UnitTests.Core
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection2");
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 1;

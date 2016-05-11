@@ -118,7 +118,7 @@ return $self.Fields[""z""].Value ";
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
 
@@ -160,7 +160,7 @@ return $self.Fields[""z""].Value ";
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
 
@@ -194,7 +194,7 @@ return $self.Fields[""z""].Value ";
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();

@@ -42,7 +42,7 @@ namespace UnitTests.Core
 
             var repository = new WorkItemRepositoryMock();
             System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 1;
@@ -77,7 +77,7 @@ namespace UnitTests.Core
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 1;

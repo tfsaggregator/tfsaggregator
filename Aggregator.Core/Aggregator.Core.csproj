@@ -124,6 +124,7 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Configuration\AggregatorSettingsXmlParser.cs" />
+    <Compile Include="Configuration\ConnectionInfo.cs" />
     <Compile Include="Configuration\ScriptElement.cs" />
     <Compile Include="Configuration\CollectionScope.cs" />
     <Compile Include="Configuration\HasFieldsScope.cs" />

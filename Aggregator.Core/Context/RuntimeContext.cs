@@ -38,7 +38,7 @@ namespace Aggregator.Core.Context
             Func<string> settingsPathGetter,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder,
+            Func<IRuntimeContext, IWorkItemRepository> repoBuilder,
             Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder)
         {
             string settingsPath = settingsPathGetter();
@@ -81,7 +81,7 @@ namespace Aggregator.Core.Context
             TFSAggregatorSettings settings,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder,
+            Func<IRuntimeContext, IWorkItemRepository> repoBuilder,
             Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder)
         {
             var runtime = new RuntimeContext();
@@ -187,10 +187,7 @@ namespace Aggregator.Core.Context
             return sourceElements;
         }
 
-        // isolate type constructor to facilitate Unit testing
-        private Func<Uri, Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor, IRuntimeContext, IWorkItemRepository> repoBuilder;
-
-        protected virtual IWorkItemRepository CreateWorkItemRepository()
+        public ConnectionInfo GetConnectionInfo()
         {
             var requestUri = this.RequestContext.GetProjectCollectionUri();
             var uri = requestUri.ApplyServerSetting(this);
@@ -201,8 +198,17 @@ namespace Aggregator.Core.Context
                 toImpersonate = this.RequestContext.GetIdentityToImpersonate(uri);
             }
 
-            var newRepo = this.repoBuilder(uri, toImpersonate, this);
-            this.Logger.WorkItemRepositoryBuilt(uri, toImpersonate);
+            return new ConnectionInfo(uri, toImpersonate);
+        }
+
+        // isolate type constructor to facilitate Unit testing
+        private Func<IRuntimeContext, IWorkItemRepository> repoBuilder;
+
+        protected virtual IWorkItemRepository CreateWorkItemRepository()
+        {
+            var newRepo = this.repoBuilder(this);
+            var ci = this.GetConnectionInfo();
+            this.Logger.WorkItemRepositoryBuilt(ci.ProjectCollectionUri, ci.Impersonate);
             return newRepo;
         }
 

@@ -1,17 +1,23 @@
-﻿using Aggregator.Core.Context;
+﻿using Aggregator.Core.Configuration;
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
+using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.Framework.Client;
+using Microsoft.TeamFoundation.Framework.Common;
 using Microsoft.TeamFoundation.Framework.Server;
 
 namespace Aggregator.Core.Facade
 {
     public class ScriptLibrary : IScriptLibrary
     {
-        private ILogEvents logger;
-        private IRequestContext requestContext;
+        private readonly ILogEvents logger;
+        private readonly IRequestContext requestContext;
+        private readonly ConnectionInfo connectionInfo;
 
         public ScriptLibrary(IRuntimeContext context)
         {
+            this.connectionInfo = context.GetConnectionInfo();
             this.requestContext = context.RequestContext;
             this.logger = context.Logger;
         }

@@ -50,5 +50,10 @@ namespace UnitTests.Core.Mock
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        public ConnectionInfo GetConnectionInfo()
+        {
+            return new ConnectionInfo(new Uri("http://localhost:8080/tfs/DefaultCollection"), null);
+        }
     }
 }

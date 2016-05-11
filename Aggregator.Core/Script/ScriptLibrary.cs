@@ -1,4 +1,5 @@
-﻿using Aggregator.Core.Context;
+﻿using System;
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 using Microsoft.TeamFoundation.Framework.Server;
@@ -7,8 +8,8 @@ namespace Aggregator.Core.Script
 {
     public class ScriptLibrary : IScriptLibrary
     {
-        private ILogEvents logger;
-        private IRequestContext requestContext;
+        private readonly ILogEvents logger;
+        private readonly IRequestContext requestContext;
 
         public ScriptLibrary(IRuntimeContext context)
         {
