@@ -53,15 +53,7 @@ namespace Aggregator.Core
                 throw new ArgumentNullException(nameof(relation));
             }
 
-            foreach (var link in this.WorkItemLinks)
-            {
-                if (string.Equals(relation, link.LinkTypeEndImmutableName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return this.WorkItemLinks.Filter(relation).Any();
         }
 
         /// <summary>

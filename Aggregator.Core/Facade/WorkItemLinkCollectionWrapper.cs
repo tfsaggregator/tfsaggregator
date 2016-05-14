@@ -81,10 +81,15 @@ namespace Aggregator.Core.Facade
             var workItemLinkType = this.store.WorkItemLinkTypes.FirstOrDefault(
                     t => new string[] { t.ReferenceName, t.ForwardEndImmutableName, t.ForwardEndName, t.ReverseEndImmutableName, t.ReverseEndName }
                         .Contains(linkTypeName, StringComparer.OrdinalIgnoreCase));
+            if (workItemLinkType == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(linkTypeName));
+            }
 
             foreach (WorkItemLink link in this.workItemLinkCollection.Cast<WorkItemLink>())
             {
-                if (link.LinkTypeEnd.ImmutableName == workItemLinkType.ForwardEndImmutableName)
+                if (link.LinkTypeEnd.ImmutableName == workItemLinkType.ForwardEndImmutableName
+                    || link.LinkTypeEnd.ImmutableName == workItemLinkType.ReverseEndImmutableName)
                 {
                     yield return new WorkItemLinkWrapper(link, this.context);
                 }

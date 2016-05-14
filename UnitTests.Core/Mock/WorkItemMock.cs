@@ -13,11 +13,13 @@ namespace UnitTests.Core.Mock
     internal class WorkItemMock : WorkItemImplementationBase, IWorkItem
     {
         private readonly FieldCollectionMock fields;
+        private readonly WorkItemLinkCollectionMock workItemLinks;
 
         public WorkItemMock(IWorkItemRepository repository, IRuntimeContext context)
             : base(context)
         {
             this.fields = new FieldCollectionMock(this);
+            this.workItemLinks = new WorkItemLinkCollectionMock(repository);
             this.IsDirty = false;
         }
 
@@ -94,8 +96,6 @@ namespace UnitTests.Core.Mock
         {
             return new ArrayList();
         }
-
-        private readonly WorkItemLinkCollectionMock workItemLinks = new WorkItemLinkCollectionMock();
 
         public override IWorkItemLinkCollection WorkItemLinks
         {

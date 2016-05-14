@@ -6,7 +6,7 @@ namespace Aggregator.Core.Facade
 {
     internal class WorkItemLinkTypeWrapper : IWorkItemLinkType
     {
-        private WorkItemLinkType linkType;
+        private readonly WorkItemLinkType linkType;
 
         public WorkItemLinkTypeWrapper(WorkItemLinkType linkType)
         {

@@ -28,7 +28,8 @@ namespace UnitTests.Core.Mock
             return justLoaded;
         }
 
-        internal void SetWorkItems(IEnumerable<IWorkItem> items)
+        //internal void SetWorkItems(IEnumerable<IWorkItem> items)
+        internal void SetWorkItems(IEnumerable<WorkItemMock> items)
         {
             this.workItems = new List<IWorkItem>(items);
 
