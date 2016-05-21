@@ -21,6 +21,9 @@ namespace UnitTests.Core.Mock
 
         public ILogEvents Logger { get; set; }
 
+        // mock only
+        public Aggregator.Core.Context.RuntimeContext RuntimeContext { get; set; }
+
         public IWorkItem GetWorkItem(int workItemId)
         {
             IWorkItem justLoaded = this.workItems.SingleOrDefault(wi => wi.Id == workItemId);
@@ -39,7 +42,7 @@ namespace UnitTests.Core.Mock
 
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
         {
-            var newWorkItem = new WorkItemMock(this, new RuntimeContextMock())
+            var newWorkItem = new WorkItemMock(this, this.RuntimeContext)
             {
                 Id = 0, TypeName = workItemTypeName
             };

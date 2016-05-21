@@ -29,5 +29,10 @@ namespace UnitTests.Core.Mock
         {
             get; set;
         }
+
+        public override string ToString()
+        {
+            return string.Format("LinkType {0}", this.ReferenceName);
+        }
     }
 }

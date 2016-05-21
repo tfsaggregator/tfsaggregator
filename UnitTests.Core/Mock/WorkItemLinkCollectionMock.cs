@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-
-using Aggregator.Core.Interfaces;
 using System.Linq;
+using Aggregator.Core.Interfaces;
 
 namespace UnitTests.Core.Mock
 {
-    internal class WorkItemLinkCollectionMock : IWorkItemLinkCollection
+    internal class WorkItemLinkCollectionMock : IWorkItemLinkCollection 
     {
         private readonly List<IWorkItemLink> links = new List<IWorkItemLink>();
         private readonly IWorkItemRepository store;
@@ -17,9 +16,28 @@ namespace UnitTests.Core.Mock
             this.store = repository;
         }
 
+        private class WorkItemLinkComparer : IEqualityComparer<IWorkItemLink>
+        {
+            public bool Equals(IWorkItemLink x, IWorkItemLink y)
+            {
+                return x.LinkTypeEndImmutableName == y.LinkTypeEndImmutableName
+                    && x.TargetId == y.TargetId;
+            }
+
+            public int GetHashCode(IWorkItemLink obj)
+            {
+                unchecked
+                {
+                    int hashCode = obj.LinkTypeEndImmutableName?.GetHashCode() ?? 0;
+                    hashCode = (hashCode * 397) ^ obj.TargetId;
+                    return hashCode;
+                }
+            }
+        }
+
         public bool Contains(IWorkItemLink link)
         {
-            return this.links.Contains(link);
+            return this.links.Contains(link, new WorkItemLinkComparer());
         }
 
         public void Add(IWorkItemLink link)

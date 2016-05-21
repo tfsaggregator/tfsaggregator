@@ -142,6 +142,7 @@
     <Compile Include="Helpers\DebugTextLogger.cs" />
     <Compile Include="Helpers\DebugEventLogger.cs" />
     <Compile Include="GlobalListsTests.cs" />
+    <Compile Include="ItemDestroyTests.cs" />
     <Compile Include="Mock\RuntimeContextMock.cs" />
     <Compile Include="Mock\WorkItemLinkTypeMock.cs" />
     <Compile Include="RulesAndPolicyTests.cs" />
@@ -186,6 +187,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ConfigurationsForTests\UserParameters.policies">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigurationsForTests\DeleteObjects.policies">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />

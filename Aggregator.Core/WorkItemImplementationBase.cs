@@ -5,6 +5,7 @@ using System.Linq;
 using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
+using Aggregator.Core.Extensions;
 
 namespace Aggregator.Core
 {
@@ -101,5 +102,62 @@ namespace Aggregator.Core
                 }
             }
         }
+
+        private IWorkItemLinkType GetLinkTypeFromName(string linkTypeName)
+        {
+            // HACK this method works with directional Links... who knows if breaks with other link types
+            IWorkItemLinkType workItemLinkType = this.Store.WorkItemLinkTypes
+                .FirstOrDefault(
+                    t => new string[] { t.ForwardEndImmutableName, t.ForwardEndName, t.ReverseEndImmutableName, t.ReverseEndName }
+                        .Contains(linkTypeName, StringComparer.OrdinalIgnoreCase));
+
+            if (workItemLinkType == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(linkTypeName));
+            }
+
+            return workItemLinkType;
+        }
+
+
+        protected bool DoAddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            bool anyChange = false;
+
+            IWorkItemLinkType workItemLinkType = this.GetLinkTypeFromName(linkTypeName);
+
+            Tuple<IWorkItemLink, IWorkItemLink> newLinks =
+                workItemLinkType.IsForward(linkTypeName)
+                    ? this.MakeLinks(workItemLinkType, this as IWorkItemExposed, destination)
+                    : this.MakeLinks(workItemLinkType, destination, this as IWorkItemExposed);
+
+            if (!destination.WorkItemLinks.Contains(newLinks.Item1))
+            {
+                destination.WorkItemLinks.Add(newLinks.Item1);
+                anyChange = true;
+            }
+            if (!this.WorkItemLinks.Contains(newLinks.Item2))
+            {
+                this.WorkItemLinks.Add(newLinks.Item2);
+                anyChange = true;
+            }
+
+            return anyChange;
+        }
+
+        protected bool DoRemoveWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            IWorkItemLinkType workItemLinkType = this.GetLinkTypeFromName(linkTypeName);
+            var linksToRemove = this.WorkItemLinks
+                .Where(
+                    l => l.TargetId == destination.Id
+                        && (l.LinkTypeEndImmutableName == workItemLinkType.ForwardEndImmutableName
+                            || l.LinkTypeEndImmutableName == workItemLinkType.ReverseEndImmutableName))
+                .ToList();
+            linksToRemove.ForEach(l => this.WorkItemLinks.Remove(l));
+            return linksToRemove.Any();
+        }
+
+        public abstract Tuple<IWorkItemLink, IWorkItemLink> MakeLinks(IWorkItemLinkType workItemLinkType, IWorkItemExposed source, IWorkItemExposed destination);
     }
 }
