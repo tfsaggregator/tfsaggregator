@@ -224,12 +224,10 @@ namespace Aggregator.Core.Facade
             this.DoAddWorkItemLink(destination, linkTypeName);
         }
 
-        public override Tuple<IWorkItemLink, IWorkItemLink> MakeLinks(IWorkItemLinkType workItemLinkType, IWorkItemExposed source, IWorkItemExposed destination)
+        public override IWorkItemLink MakeLink(IWorkItemLinkType workItemLinkType, IWorkItemExposed source, IWorkItemExposed destination)
         {
             var fwd = this.workItem.Store.WorkItemLinkTypes.First(t => t.ForwardEnd.ImmutableName == workItemLinkType.ForwardEndImmutableName);
-            return new Tuple<IWorkItemLink, IWorkItemLink>(
-                new WorkItemLinkWrapper(new WorkItemLink(fwd.ForwardEnd, source.Id, destination.Id), this.context),
-                new WorkItemLinkWrapper(new WorkItemLink(fwd.ReverseEnd, destination.Id, source.Id), this.context));
+            return new WorkItemLinkWrapper(new WorkItemLink(fwd.ForwardEnd, source.Id, destination.Id), this.context);
         }
 
         public void RemoveWorkItemLink(IWorkItemExposed destination, string linkTypeName)

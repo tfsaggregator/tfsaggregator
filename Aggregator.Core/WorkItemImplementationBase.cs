@@ -126,19 +126,13 @@ namespace Aggregator.Core
 
             IWorkItemLinkType workItemLinkType = this.GetLinkTypeFromName(linkTypeName);
 
-            Tuple<IWorkItemLink, IWorkItemLink> newLinks =
-                workItemLinkType.IsForward(linkTypeName)
-                    ? this.MakeLinks(workItemLinkType, this as IWorkItemExposed, destination)
-                    : this.MakeLinks(workItemLinkType, destination, this as IWorkItemExposed);
+            IWorkItemLink newLink = workItemLinkType.IsForward(linkTypeName)
+                ? this.MakeLink(workItemLinkType, this as IWorkItemExposed, destination)
+                : this.MakeLink(workItemLinkType, destination, this as IWorkItemExposed);
 
-            if (!destination.WorkItemLinks.Contains(newLinks.Item1))
+            if (!destination.WorkItemLinks.Contains(newLink))
             {
-                destination.WorkItemLinks.Add(newLinks.Item1);
-                anyChange = true;
-            }
-            if (!this.WorkItemLinks.Contains(newLinks.Item2))
-            {
-                this.WorkItemLinks.Add(newLinks.Item2);
+                destination.WorkItemLinks.Add(newLink);
                 anyChange = true;
             }
 
@@ -158,6 +152,6 @@ namespace Aggregator.Core
             return linksToRemove.Any();
         }
 
-        public abstract Tuple<IWorkItemLink, IWorkItemLink> MakeLinks(IWorkItemLinkType workItemLinkType, IWorkItemExposed source, IWorkItemExposed destination);
+        public abstract IWorkItemLink MakeLink(IWorkItemLinkType workItemLinkType, IWorkItemExposed source, IWorkItemExposed destination);
     }
 }
