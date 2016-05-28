@@ -149,5 +149,15 @@ namespace Aggregator.Core.Facade
                 this.tfs?.Dispose();
             }
         }
+
+        public IEnumerable<IWorkItem> QueryWorkItems(string wiqlQuery)
+        {
+            var query = new Query(this.workItemStore, wiqlQuery);
+
+            foreach (WorkItem wi in query.RunQuery())
+            {
+                yield return new WorkItemWrapper(wi, this.context);
+            }
+        }
     }
 }

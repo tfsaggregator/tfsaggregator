@@ -86,6 +86,11 @@ namespace UnitTests.Core.Mock
             return Aggregator.Core.Facade.WorkItemRepository.ParseGlobalList(sourceGL, globalListName);
         }
 
+        public IEnumerable<IWorkItem> QueryWorkItems(string wiqlQuery)
+        {
+            throw new NotImplementedException();
+        }
+
         public ReadOnlyCollection<IWorkItem> LoadedWorkItems
         {
             get { return new ReadOnlyCollection<IWorkItem>(this.loadedWorkItems); }
