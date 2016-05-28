@@ -156,7 +156,9 @@ namespace Aggregator.Core.Facade
 
             foreach (WorkItem wi in query.RunQuery())
             {
-                yield return new WorkItemWrapper(wi, this.context);
+                var wrapper = new WorkItemWrapper(wi, this.context);
+                this.loadedWorkItems.Add(wi.Id, wrapper);
+                yield return wrapper;
             }
         }
     }
