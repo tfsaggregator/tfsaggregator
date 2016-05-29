@@ -80,6 +80,7 @@ namespace Aggregator.Core.Facade
                 {
                     result.Add(new WorkItemLinkTypeWrapper(linkType));
                 }
+
                 return new ReadOnlyCollection<IWorkItemLinkType>(result);
             }
         }
@@ -154,7 +155,9 @@ namespace Aggregator.Core.Facade
         {
             var query = new Query(this.workItemStore, wiqlQuery);
 
+#pragma warning disable S3217 // "Explicit" conversions of "foreach" loops should not be used
             foreach (WorkItem wi in query.RunQuery())
+#pragma warning restore S3217 // "Explicit" conversions of "foreach" loops should not be used
             {
                 var wrapper = new WorkItemWrapper(wi, this.context);
                 this.loadedWorkItems.Add(wi.Id, wrapper);

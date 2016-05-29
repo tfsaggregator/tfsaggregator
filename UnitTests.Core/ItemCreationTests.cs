@@ -116,8 +116,7 @@ namespace UnitTests.Core
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
-            // just this time...
-            repository.RuntimeContext = runtime;
+            repository.RuntimeContext = runtime; // just this time...
 
             var parent = new WorkItemMock(repository, runtime);
             parent.Id = 1;

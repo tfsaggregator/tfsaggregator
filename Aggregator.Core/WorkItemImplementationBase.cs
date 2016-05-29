@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Aggregator.Core.Context;
+using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
-using Aggregator.Core.Extensions;
 
 namespace Aggregator.Core
 {
@@ -118,7 +117,6 @@ namespace Aggregator.Core
 
             return workItemLinkType;
         }
-
 
         protected bool DoAddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
         {

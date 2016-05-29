@@ -6,7 +6,7 @@ using Aggregator.Core.Interfaces;
 
 namespace UnitTests.Core.Mock
 {
-    internal class WorkItemLinkCollectionMock : IWorkItemLinkCollection 
+    internal class WorkItemLinkCollectionMock : IWorkItemLinkCollection
     {
         private readonly List<IWorkItemLink> links = new List<IWorkItemLink>();
         private readonly IWorkItemRepository store;

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
 using Aggregator.Core;
 using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Navigation;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using System.Linq;
 
 namespace UnitTests.Core.Mock
 {
