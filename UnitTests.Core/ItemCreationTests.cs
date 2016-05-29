@@ -55,7 +55,6 @@ namespace UnitTests.Core
                 Assert.IsTrue(child.InternalWasSaveCalled);
                 Assert.IsTrue(parent.InternalWasSaveCalled);
                 Assert.AreEqual(1, parent.WorkItemLinks.Count());
-                Assert.AreEqual(1, child.WorkItemLinks.Count());
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
             }
         }

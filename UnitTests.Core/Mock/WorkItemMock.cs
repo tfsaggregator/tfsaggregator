@@ -168,11 +168,9 @@ namespace UnitTests.Core.Mock
             ((WorkItemMock)destination).IsDirty = anyChange;
         }
 
-        public override Tuple<IWorkItemLink, IWorkItemLink> MakeLinks(IWorkItemLinkType workItemLinkType, IWorkItemExposed source, IWorkItemExposed destination)
+        public override IWorkItemLink MakeLink(IWorkItemLinkType workItemLinkType, IWorkItemExposed source, IWorkItemExposed destination)
         {
-            return new Tuple<IWorkItemLink, IWorkItemLink>(
-                new WorkItemLinkMock(workItemLinkType.ForwardEndImmutableName, destination.Id, this.Store),
-                new WorkItemLinkMock(workItemLinkType.ReverseEndImmutableName, source.Id, this.Store));
+            return new WorkItemLinkMock(workItemLinkType.ForwardEndImmutableName, destination.Id, this.Store);
         }
 
         public void RemoveWorkItemLink(IWorkItemExposed destination, string linkTypeName)
