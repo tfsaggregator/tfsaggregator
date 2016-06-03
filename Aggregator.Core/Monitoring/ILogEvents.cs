@@ -94,7 +94,8 @@ namespace Aggregator.Core.Monitoring
 
         void FieldValidationFailedFieldRequired(int id, string referenceName);
 
-
         void FieldValidationFailedAssignmentToHistory(int id);
+
+        void LibrarySendMail(string from, string to, string subject, string body);
     }
 }

@@ -15,8 +15,8 @@ namespace Aggregator.Core
     {
         private readonly Dictionary<string, string> scripts = new Dictionary<string, string>();
 
-        public PsScriptEngine(ILogEvents logger, bool debug)
-            : base(logger, debug)
+        public PsScriptEngine(ILogEvents logger, bool debug, IScriptLibrary library)
+            : base(logger, debug, library)
         {
         }
 
@@ -44,6 +44,7 @@ namespace Aggregator.Core
                 runspace.SessionStateProxy.SetVariable("self", workItem);
                 runspace.SessionStateProxy.SetVariable("store", store);
                 runspace.SessionStateProxy.SetVariable("logger", this.Logger.ScriptLogger);
+                runspace.SessionStateProxy.SetVariable("Library", this.Library);
 
                 Pipeline pipeline = runspace.CreatePipeline();
                 pipeline.Commands.AddScript(script);
