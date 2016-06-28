@@ -1,17 +1,15 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using Aggregator.Core;
+using Aggregator.Core.Configuration;
+using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
+using Aggregator.Core.Script;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTests.Core
 {
-    using System;
-    using System.IO;
-    using System.Reflection;
-
-    using Aggregator.Core;
-    using Aggregator.Core.Configuration;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Aggregator.Core.Script;
     internal static class TestHelpers
     {
         public static string LoadTextFromEmbeddedResource(string resourceName)

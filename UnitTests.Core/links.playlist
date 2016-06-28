@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="UnitTests.Core.ItemCreationTests.WorkItemLink_addExisting_noop" /><Add Test="UnitTests.Core.ItemDestroyTests.WorkItemLink_RemoveExisting_succeeds" /><Add Test="UnitTests.Core.ItemCreationTests.WorkItemLink_addNew_succeeds" /></Playlist>

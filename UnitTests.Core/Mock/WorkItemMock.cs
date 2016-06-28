@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
 using Aggregator.Core;
 using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
@@ -13,11 +13,13 @@ namespace UnitTests.Core.Mock
     internal class WorkItemMock : WorkItemImplementationBase, IWorkItem
     {
         private readonly FieldCollectionMock fields;
+        private readonly WorkItemLinkCollectionMock workItemLinks;
 
         public WorkItemMock(IWorkItemRepository repository, IRuntimeContext context)
             : base(context)
         {
             this.fields = new FieldCollectionMock(this);
+            this.workItemLinks = new WorkItemLinkCollectionMock(repository);
             this.IsDirty = false;
         }
 
@@ -95,8 +97,6 @@ namespace UnitTests.Core.Mock
             return new ArrayList();
         }
 
-        private readonly WorkItemLinkCollectionMock workItemLinks = new WorkItemLinkCollectionMock();
-
         public override IWorkItemLinkCollection WorkItemLinks
         {
             get { return this.workItemLinks; }
@@ -162,15 +162,26 @@ namespace UnitTests.Core.Mock
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
         {
-            // HACK: should use the code in wrapper...
-            var relationship = new WorkItemLinkMock(linkTypeName, destination.Id, this.Store);
+            bool anyChange = this.DoAddWorkItemLink(destination, linkTypeName);
+            this.IsDirty = anyChange;
+            ((WorkItemMock)destination).IsDirty = anyChange;
+        }
 
-            // check it does not exist already
-            if (!this.workItemLinks.Contains(relationship))
-            {
-                this.workItemLinks.Add(relationship);
-                this.IsDirty = true;
-            }
+        public override IWorkItemLink MakeLink(IWorkItemLinkType workItemLinkType, IWorkItemExposed source, IWorkItemExposed destination)
+        {
+            return new WorkItemLinkMock(workItemLinkType.ForwardEndImmutableName, destination.Id, this.Store);
+        }
+
+        public void RemoveWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            bool anyChange = this.DoRemoveWorkItemLink(destination, linkTypeName);
+            this.IsDirty = anyChange;
+            ((WorkItemMock)destination).IsDirty = anyChange;
+        }
+
+        public void RemoveWorkItemLinks(string linkTypeName)
+        {
+            throw new NotImplementedException();
         }
 
         public void AddHyperlink(string destination)
@@ -181,6 +192,11 @@ namespace UnitTests.Core.Mock
         public void AddHyperlink(string destination, string comment)
         {
             throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("WI #{0} [{1}]{2}", this.Id, this.TypeName, this.IsDirty ? "*" : string.Empty);
         }
     }
 }

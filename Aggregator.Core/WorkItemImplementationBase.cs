@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Aggregator.Core.Context;
+using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
@@ -53,15 +53,7 @@ namespace Aggregator.Core
                 throw new ArgumentNullException(nameof(relation));
             }
 
-            foreach (var link in this.WorkItemLinks)
-            {
-                if (string.Equals(relation, link.LinkTypeEndImmutableName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return this.WorkItemLinks.Filter(relation).Any();
         }
 
         /// <summary>
@@ -109,5 +101,55 @@ namespace Aggregator.Core
                 }
             }
         }
+
+        private IWorkItemLinkType GetLinkTypeFromName(string linkTypeName)
+        {
+            // HACK this method works with directional Links... who knows if breaks with other link types
+            IWorkItemLinkType workItemLinkType = this.Store.WorkItemLinkTypes
+                .FirstOrDefault(
+                    t => new string[] { t.ForwardEndImmutableName, t.ForwardEndName, t.ReverseEndImmutableName, t.ReverseEndName }
+                        .Contains(linkTypeName, StringComparer.OrdinalIgnoreCase));
+
+            if (workItemLinkType == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(linkTypeName));
+            }
+
+            return workItemLinkType;
+        }
+
+        protected bool DoAddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            bool anyChange = false;
+
+            IWorkItemLinkType workItemLinkType = this.GetLinkTypeFromName(linkTypeName);
+
+            IWorkItemLink newLink = workItemLinkType.IsForward(linkTypeName)
+                ? this.MakeLink(workItemLinkType, this as IWorkItemExposed, destination)
+                : this.MakeLink(workItemLinkType, destination, this as IWorkItemExposed);
+
+            if (!destination.WorkItemLinks.Contains(newLink))
+            {
+                destination.WorkItemLinks.Add(newLink);
+                anyChange = true;
+            }
+
+            return anyChange;
+        }
+
+        protected bool DoRemoveWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            IWorkItemLinkType workItemLinkType = this.GetLinkTypeFromName(linkTypeName);
+            var linksToRemove = this.WorkItemLinks
+                .Where(
+                    l => l.TargetId == destination.Id
+                        && (l.LinkTypeEndImmutableName == workItemLinkType.ForwardEndImmutableName
+                            || l.LinkTypeEndImmutableName == workItemLinkType.ReverseEndImmutableName))
+                .ToList();
+            linksToRemove.ForEach(l => this.WorkItemLinks.Remove(l));
+            return linksToRemove.Any();
+        }
+
+        public abstract IWorkItemLink MakeLink(IWorkItemLinkType workItemLinkType, IWorkItemExposed source, IWorkItemExposed destination);
     }
 }

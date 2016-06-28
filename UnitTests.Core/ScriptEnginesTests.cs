@@ -3,21 +3,16 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Management.Automation;
-
 using Aggregator.Core;
 using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
-
+using Aggregator.Core.Script;
 using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using NSubstitute;
-
 using UnitTests.Core.Mock;
-
 using Debugger = System.Diagnostics.Debugger;
-using Aggregator.Core.Script;
 
 namespace UnitTests.Core
 {
@@ -68,7 +63,7 @@ return self[""z""];
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
             var library = Substitute.For<IScriptLibrary>();
-            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached,library);
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached, library);
             engine.LoadAndRun("test", script, workItem, repository);
 
             Assert.AreEqual(33, workItem["x"]);
@@ -223,7 +218,7 @@ logger.Log(""Test"");
             var logger = Substitute.For<ILogEvents>();
             logger.ScriptLogger = Substitute.For<IRuleLogger>();
             var library = Substitute.For<IScriptLibrary>();
-            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached,library);
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached, library);
             engine.LoadAndRun("test", script, workItem, repository);
             logger.ScriptLogger.Received().Log("Test");
         }

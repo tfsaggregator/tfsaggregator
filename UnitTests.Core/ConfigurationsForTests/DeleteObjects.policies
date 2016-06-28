@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+
+    <runtime>
+        <logging level="Diagnostic"/>
+    </runtime>
+
+    <!-- Links -->
+    <rule name="RemoveLink"
+          appliesTo="Task">
+        <![CDATA[
+        self.RemoveWorkItemLink(self.Parent, WorkItemImplementationBase.ParentRelationship);
+        ]]>
+    </rule>
+
+    <policy name="DefaultPolicy">
+        <collectionScope collections="*" />
+        <ruleRef name="RemoveLink" />
+    </policy>
+
+</AggregatorConfiguration>

@@ -142,7 +142,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new WorkItemLinkCollectionWrapper(this.workItem.WorkItemLinks, this.context);
+                return new WorkItemLinkCollectionWrapper(this.workItem, this.workItem.WorkItemLinks, this.context);
             }
         }
 
@@ -221,48 +221,23 @@ namespace Aggregator.Core.Facade
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
         {
-            IEnumerable<WorkItemLinkType> availableLinkTypes = this.workItem.Store.WorkItemLinkTypes;
-            this.AddWorkItemLink(destination, linkTypeName, availableLinkTypes);
+            this.DoAddWorkItemLink(destination, linkTypeName);
         }
 
-        internal void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName, IEnumerable<WorkItemLinkType> availableLinkTypes)
+        public override IWorkItemLink MakeLink(IWorkItemLinkType workItemLinkType, IWorkItemExposed source, IWorkItemExposed destination)
         {
-            WorkItemLinkType workItemLinkType = availableLinkTypes
-                .FirstOrDefault(
-                    t => new string[] { t.ForwardEnd.ImmutableName, t.ForwardEnd.Name, t.ReverseEnd.ImmutableName, t.ReverseEnd.Name }
-                        .Contains(linkTypeName, StringComparer.OrdinalIgnoreCase));
+            var fwd = this.workItem.Store.WorkItemLinkTypes.First(t => t.ForwardEnd.ImmutableName == workItemLinkType.ForwardEndImmutableName);
+            return new WorkItemLinkWrapper(new WorkItemLink(fwd.ForwardEnd, source.Id, destination.Id), this.context);
+        }
 
-            if (workItemLinkType == null)
-            {
-                throw new ArgumentOutOfRangeException(nameof(linkTypeName));
-            }
+        public void RemoveWorkItemLink(IWorkItemExposed destination, string linkTypeName)
+        {
+            this.DoRemoveWorkItemLink(destination, linkTypeName);
+        }
 
-            WorkItemLinkTypeEnd destLinkType;
-#pragma warning disable S3240
-            if (
-                new string[] { workItemLinkType.ForwardEnd.ImmutableName, workItemLinkType.ForwardEnd.Name }
-                    .Contains(linkTypeName, StringComparer.OrdinalIgnoreCase))
-            {
-                destLinkType = workItemLinkType.ForwardEnd;
-            }
-            else
-            {
-                destLinkType = workItemLinkType.ReverseEnd;
-            }
-#pragma warning restore S3240
-
-            var relationship = new WorkItemLink(destLinkType, this.Id, destination.Id);
-
-            // check it does not exist already
-            if (!this.workItem.WorkItemLinks.Contains(relationship))
-            {
-                this.Logger.AddingWorkItemLink(this.Id, destLinkType, destination.Id);
-                this.workItem.WorkItemLinks.Add(relationship);
-            }
-            else
-            {
-                this.Logger.WorkItemLinkAlreadyExists(this.Id, destLinkType, destination.Id);
-            }
+        public void RemoveWorkItemLinks(string linkTypeName)
+        {
+            throw new NotImplementedException();
         }
 
         public void AddHyperlink(string destination)

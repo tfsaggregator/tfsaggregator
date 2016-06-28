@@ -71,6 +71,20 @@ namespace Aggregator.Core.Facade
             }
         }
 
+        public ReadOnlyCollection<IWorkItemLinkType> WorkItemLinkTypes
+        {
+            get
+            {
+                var result = new List<IWorkItemLinkType>();
+                foreach (var linkType in this.workItemStore.WorkItemLinkTypes)
+                {
+                    result.Add(new WorkItemLinkTypeWrapper(linkType));
+                }
+
+                return new ReadOnlyCollection<IWorkItemLinkType>(result);
+            }
+        }
+
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
         {
             if (string.IsNullOrWhiteSpace(projectName))
@@ -134,6 +148,20 @@ namespace Aggregator.Core.Facade
             if (disposing)
             {
                 this.tfs?.Dispose();
+            }
+        }
+
+        public IEnumerable<IWorkItem> QueryWorkItems(string wiqlQuery)
+        {
+            var query = new Query(this.workItemStore, wiqlQuery);
+
+#pragma warning disable S3217 // "Explicit" conversions of "foreach" loops should not be used
+            foreach (WorkItem wi in query.RunQuery())
+#pragma warning restore S3217 // "Explicit" conversions of "foreach" loops should not be used
+            {
+                var wrapper = new WorkItemWrapper(wi, this.context);
+                this.loadedWorkItems.Add(wi.Id, wrapper);
+                yield return wrapper;
             }
         }
     }

@@ -349,6 +349,26 @@ namespace Aggregator.Core.Monitoring
                 destId);
         }
 
+        public void RemovingWorkItemLink(int id, WorkItemLinkTypeEnd forwardEnd, int targetId)
+        {
+            this.logger.Log(
+                LogLevel.Information,
+                "Removing work item link '{1}' from #{0} to #{2}",
+                id,
+                forwardEnd,
+                targetId);
+        }
+
+        public void WorkItemLinkDoesNotExists(int id, WorkItemLinkTypeEnd forwardEnd, int targetId)
+        {
+            this.logger.Log(
+                LogLevel.Warning,
+                "Work item link '{1}' from #{0} to #{2} does not exists",
+                id,
+                forwardEnd,
+                targetId);
+        }
+
         public void AddingHyperlink(int id, string destination, string comment)
         {
             this.logger.Log(

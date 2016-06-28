@@ -21,6 +21,9 @@ namespace UnitTests.Core.Mock
 
         public ILogEvents Logger { get; set; }
 
+        // mock only
+        public Aggregator.Core.Context.RuntimeContext RuntimeContext { get; set; }
+
         public IWorkItem GetWorkItem(int workItemId)
         {
             IWorkItem justLoaded = this.workItems.SingleOrDefault(wi => wi.Id == workItemId);
@@ -28,7 +31,8 @@ namespace UnitTests.Core.Mock
             return justLoaded;
         }
 
-        internal void SetWorkItems(IEnumerable<IWorkItem> items)
+        // TODO consider internal void SetWorkItems(IEnumerable<IWorkItem> items)
+        internal void SetWorkItems(IEnumerable<WorkItemMock> items)
         {
             this.workItems = new List<IWorkItem>(items);
 
@@ -38,7 +42,7 @@ namespace UnitTests.Core.Mock
 
         public IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName)
         {
-            var newWorkItem = new WorkItemMock(this, new RuntimeContextMock())
+            var newWorkItem = new WorkItemMock(this, this.RuntimeContext)
             {
                 Id = 0, TypeName = workItemTypeName
             };
@@ -82,6 +86,11 @@ namespace UnitTests.Core.Mock
             return Aggregator.Core.Facade.WorkItemRepository.ParseGlobalList(sourceGL, globalListName);
         }
 
+        public IEnumerable<IWorkItem> QueryWorkItems(string wiqlQuery)
+        {
+            throw new NotImplementedException();
+        }
+
         public ReadOnlyCollection<IWorkItem> LoadedWorkItems
         {
             get { return new ReadOnlyCollection<IWorkItem>(this.loadedWorkItems); }
@@ -90,6 +99,31 @@ namespace UnitTests.Core.Mock
         public ReadOnlyCollection<IWorkItem> CreatedWorkItems
         {
             get { return new ReadOnlyCollection<IWorkItem>(this.createdWorkItems); }
+        }
+
+        public ReadOnlyCollection<IWorkItemLinkType> WorkItemLinkTypes
+        {
+            get
+            {
+                var result = new List<IWorkItemLinkType>();
+                result.Add(new WorkItemLinkTypeMock()
+                {
+                    ReferenceName = "System.LinkTypes.Hierarchy",
+                    ForwardEndName = "Child",
+                    ForwardEndImmutableName = "System.LinkTypes.Hierarchy-Forward",
+                    ReverseEndName = "Parent",
+                    ReverseEndImmutableName = "System.LinkTypes.Hierarchy-Reverse"
+                });
+                result.Add(new WorkItemLinkTypeMock()
+                {
+                    ReferenceName = "Microsoft.VSTS.Common.TestedBy",
+                    ForwardEndName = "Tested By",
+                    ForwardEndImmutableName = "Microsoft.VSTS.Common.TestedBy-Forward",
+                    ReverseEndName = "Tests",
+                    ReverseEndImmutableName = "Microsoft.VSTS.Common.TestedBy-Reverse"
+                });
+                return new ReadOnlyCollection<IWorkItemLinkType>(result);
+            }
         }
     }
 }

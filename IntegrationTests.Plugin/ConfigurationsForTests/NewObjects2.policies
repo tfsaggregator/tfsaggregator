@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+
+  <runtime debug="true">
+    <logging level="Diagnostic"/>
+    <authentication autoImpersonate="true" />
+  </runtime>
+
+  <function>
+    <![CDATA[
+        const string generatedTitle = "Task auto-generated for ";
+        
+        bool IsGeneratedByRule(IWorkItemExposed workItem)
+        {
+            string title = (string)workItem["System.Title"];
+            return title.StartsWith(generatedTitle);
+        }
+    ]]>
+  </function>
+
+  <rule name="LinkDanglingTaskToUserStory" appliesTo="Task">
+    <![CDATA[
+        if (! IsGeneratedByRule(self)) {
+            string project = (string)self["System.TeamProject"];
+            string wiqlQuery = "SELECT Id,Title FROM WorkItems WHERE [System.TeamProject] = '"+ project + "' AND [System.WorkItemType] = 'User Story'";
+            var parent = store.QueryWorkItems(wiqlQuery).FirstOrDefault();
+            if (parent != null) {
+                self.AddWorkItemLink(parent, WorkItemImplementationBase.ParentRelationship);
+            } else {
+                logger.Log("Parent workitem not found!");
+            }
+        }
+        ]]>
+  </rule>
+
+  <rule name="NewTask" appliesTo="Bug">
+    <![CDATA[
+        var parent = self; // alias to increase readability
+        if (!parent.HasChildren())
+        {
+            string project = (string)parent["System.TeamProject"];
+            var child = store.MakeNewWorkItem(project, "Task");
+            child["Title"] = generatedTitle + parent["Title"];
+        } else {
+            logger.Log(LogLevel.Verbose, "Bug #{0} has enough children.", parent.Id);
+        }
+        ]]>
+  </rule>
+
+  <rule name="LinkNewTask2Bug" appliesTo="Task">
+    <![CDATA[
+        if (IsGeneratedByRule(self)) {
+        
+            var child = self; // alias to increase readability
+            if (!child.HasParent())
+            {
+                string childTitle = (string)child["System.Title"];
+                string project = (string)child["System.TeamProject"];
+                string parentTitle = childTitle.Replace(generatedTitle, "");
+            
+                string wiqlQuery = "SELECT Id,Title FROM WorkItems WHERE [System.TeamProject] = '"+ project + "' AND [System.WorkItemType] = 'Bug' AND [System.Title] = '" + parentTitle + "'";
+                var parent = store.QueryWorkItems(wiqlQuery).FirstOrDefault();
+                if (parent != null) {
+                    child.AddWorkItemLink(parent, WorkItemImplementationBase.ParentRelationship);
+                } else {
+                    logger.Log("Parent Bug not found!");
+                }
+            } else {
+                logger.Log(LogLevel.Verbose, "Task #{0} already has a parent Bug.", child.Id);
+            }
+        }
+        ]]>
+  </rule>
+
+  <policy name="DefaultPolicy">
+    <collectionScope collections="*" />
+    <ruleRef name="NewLink" />
+    <ruleRef name="NewTask" />
+    <ruleRef name="LinkNewTask2Bug" />
+  </policy>
+
+</AggregatorConfiguration>

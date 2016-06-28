@@ -164,24 +164,23 @@ namespace UnitTests.Core
             var parent = new WorkItemMock(alternateRepository, runtime);
             parent.Id = 2;
             parent.TypeName = "Use Case";
-            parent.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 1, alternateRepository));
-            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 2, alternateRepository));
             parent["Total Work Remaining"] = 3.0D;
             parent["Total Estimate"] = 4.0D;
 
             var child = new WorkItemMock(alternateRepository, runtime);
             child.Id = 3;
             child.TypeName = "Task";
-            child.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 2, alternateRepository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 3, alternateRepository));
             child["Estimated Dev Work"] = 10.0D;
             child["Estimated Test Work"] = 20.0D;
             child["Remaining Dev Work"] = 1.0D;
             child["Remaining Test Work"] = 2.0D;
             child["Finish Date"] = new DateTime(2015, 1, 1);
 
-            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, alternateRepository));
+            grandParent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, parent.Id, alternateRepository));
             parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, alternateRepository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, child.Id, alternateRepository));
+            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, alternateRepository));
+
             alternateRepository.SetWorkItems(new[] { grandParent, parent, child });
 
             using (var processor = new EventProcessor(runtime))
@@ -223,16 +222,16 @@ namespace UnitTests.Core
             var parent = new WorkItemMock(alternateRepository, runtime);
             parent.Id = 2;
             parent.TypeName = "Use Case";
-            parent.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 1, alternateRepository));
-            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 2, alternateRepository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, 1, alternateRepository));
+            grandParent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, 2, alternateRepository));
             parent["Total Work Remaining"] = 3.0D;
             parent["Total Estimate"] = 4.0D;
 
             var child = new WorkItemMock(alternateRepository, runtime);
             child.Id = 3;
             child.TypeName = "Task";
-            child.WorkItemLinks.Add(new WorkItemLinkMock("Parent", 2, alternateRepository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock("Child", 3, alternateRepository));
+            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, 2, alternateRepository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, 3, alternateRepository));
             child["Estimated Dev Work"] = 10.0D;
             child["Estimated Test Work"] = 20.0D;
             child["Remaining Dev Work"] = null;

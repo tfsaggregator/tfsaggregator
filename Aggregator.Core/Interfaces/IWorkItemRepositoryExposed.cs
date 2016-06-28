@@ -9,6 +9,8 @@ namespace Aggregator.Core.Interfaces
     {
         IWorkItem GetWorkItem(int workItemId);
 
+        IEnumerable<IWorkItem> QueryWorkItems(string wiqlQuery);
+
         IWorkItem MakeNewWorkItem(string projectName, string workItemTypeName);
 
         IWorkItem MakeNewWorkItem(IWorkItem inSameProjectAs, string workItemTypeName);

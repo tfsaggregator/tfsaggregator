@@ -53,6 +53,8 @@ namespace UnitTests.Core
 
                 Assert.AreEqual(0, result.ExceptionProperties.Count);
                 Assert.IsTrue(child.InternalWasSaveCalled);
+                Assert.IsTrue(parent.InternalWasSaveCalled);
+                Assert.AreEqual(1, parent.WorkItemLinks.Count());
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
             }
         }
@@ -82,6 +84,7 @@ namespace UnitTests.Core
             child["Title"] = "TSK";
 
             child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
+            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, child.Id, repository));
             repository.SetWorkItems(new[] { parent, child });
 
             using (var processor = new EventProcessor(runtime))
@@ -92,6 +95,8 @@ namespace UnitTests.Core
                 var result = processor.ProcessEvent(context, notification);
 
                 Assert.AreEqual(0, result.ExceptionProperties.Count);
+                Assert.AreEqual(1, parent.WorkItemLinks.Count());
+                Assert.AreEqual(1, child.WorkItemLinks.Count());
                 Assert.IsFalse(child.InternalWasSaveCalled);
                 Assert.IsFalse(parent.InternalWasSaveCalled);
                 Assert.AreEqual(EventNotificationStatus.ActionPermitted, result.NotificationStatus);
@@ -111,6 +116,7 @@ namespace UnitTests.Core
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
+            repository.RuntimeContext = runtime; // just this time...
 
             var parent = new WorkItemMock(repository, runtime);
             parent.Id = 1;

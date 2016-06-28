@@ -138,6 +138,8 @@
     <Compile Include="Extensions\BaseFieldValueValidator.cs" />
     <Compile Include="Extensions\DoubleFixFieldDecorator.cs" />
     <Compile Include="Extensions\FieldValueValidationDecorator.cs" />
+    <Compile Include="Extensions\IWorkItemLinkCollectionExtensions.cs" />
+    <Compile Include="Extensions\IWorkItemLinkTypeExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Extensions\LocationServiceExtensions.cs" />
     <Compile Include="Extensions\IncorrectDataTypeFieldValidator.cs" />
@@ -145,6 +147,8 @@
     <Compile Include="Extensions\NullAssignmentToRequiredFieldValueValidator.cs" />
     <Compile Include="Extensions\ValueAssignmentToHistoryFieldValidator.cs" />
     <Compile Include="Extensions\ValueAssignmentToReadonlyFieldValueValidator.cs" />
+    <Compile Include="Facade\WorkItemLinkTypeWrapper.cs" />
+    <Compile Include="Interfaces\IWorkItemLinkType.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
     <Compile Include="Facade\RevisionWrapper.cs" />
     <Compile Include="GlobalSuppressions.cs" />

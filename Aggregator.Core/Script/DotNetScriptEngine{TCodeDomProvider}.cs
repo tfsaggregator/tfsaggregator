@@ -5,11 +5,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
-
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
-using System.Text;
 
 namespace Aggregator.Core.Script
 {
@@ -153,7 +152,6 @@ namespace Aggregator.Core.Script
                 return;
             }
 
-            //System.Diagnostics.Debug.WriteLine("*** about to execute {0}", scriptName, null);
             this.Logger.ScriptLogger.RuleName = scriptName;
 
             // Lets run our script and display its results
@@ -174,10 +172,10 @@ namespace Aggregator.Core.Script
 
         private CompilerResults compilerResult;
 
-        // a simpler pattern is , this one matches .Net identifiers
+        // matches .Net identifiers
+        // alternate expression could be @"\${(?<name>[_\p{L}\p{Nl}][\p{L}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]*)}",
         private readonly Regex regex = new Regex(
             @"\${(?<name>[A-Za-z_]\w*)}",
-            //@"\${(?<name>[_\p{L}\p{Nl}][\p{L}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]*)}",
             RegexOptions.ExplicitCapture);
 
         private string ReplaceMacros(string source, Dictionary<string, string> macros)

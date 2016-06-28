@@ -8,7 +8,7 @@ namespace Aggregator.Core.Interfaces
     /// <summary>
     /// This interface is visible to scripts.
     /// </summary>
-    public interface IWorkItemExposed
+    public interface IWorkItemExposed : IWorkItemImplementation
     {
         IFieldCollection Fields { get; }
 
@@ -51,6 +51,10 @@ namespace Aggregator.Core.Interfaces
 
         // links management
         void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName);
+
+        void RemoveWorkItemLink(IWorkItemExposed destination, string linkTypeName);
+
+        void RemoveWorkItemLinks(string linkTypeName);
 
         void AddHyperlink(string destination);
 

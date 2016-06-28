@@ -1,11 +1,11 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using Aggregator.Core.Context;
+using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
 namespace Aggregator.Core
 {
-    using System;
-    using Context;
-    using System.Collections.Generic;
     /// <summary>
     /// Base class for scripting language engines.
     /// </summary>
