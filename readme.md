@@ -5,8 +5,9 @@
 This server side plugin for TFS 2013 update 2, TFS 2015 RTM and Update 1, 2 and 3 enables dynamic calculation of field values in TFS and more.
 (For example: Dev work + Test Work = Total Work).
 
-## What's new in v2
+## What's new in v2.1
 
+ * Support for TFS 2015.2 and TFS 2015.2.1
  * A 'real' Scripting language (C#, VB, Powershell)
  * Scoping allows select which rules apply to which Team Project
  * Enhanced filtering to trigger rules when conditions are met
