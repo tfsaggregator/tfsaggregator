@@ -1,5 +1,6 @@
 ﻿using System;
-using Microsoft.TeamFoundation.Framework.Client;
+
+using AuthenticationToken = Aggregator.Core.Facade.WorkItemRepository.AuthenticationToken;
 
 namespace Aggregator.Core.Configuration
 {
@@ -7,12 +8,12 @@ namespace Aggregator.Core.Configuration
     {
         public Uri ProjectCollectionUri { get; private set; }
 
-        public IdentityDescriptor Impersonate { get; private set; }
+        public AuthenticationToken Token { get; private set; }
 
-        public ConnectionInfo(Uri uri, IdentityDescriptor toImpersonate)
+        public ConnectionInfo(Uri uri, AuthenticationToken token)
         {
             this.ProjectCollectionUri = uri;
-            this.Impersonate = toImpersonate;
+            this.Token = token;
         }
     }
 }

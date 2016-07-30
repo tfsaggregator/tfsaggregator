@@ -4,6 +4,7 @@ using System.Management.Automation;
 using System.Runtime.Caching;
 using System.Xml.Schema;
 using Aggregator.Core.Configuration;
+using Aggregator.Core.Facade;
 using Aggregator.Core.Interfaces;
 using Microsoft.TeamFoundation.Framework.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
@@ -82,7 +83,7 @@ namespace Aggregator.Core.Monitoring
 
         void RuleScopeMatchResult(RuleScope scope, ScopeMatchResult result);
 
-        void WorkItemRepositoryBuilt(Uri uri, IdentityDescriptor toImpersonate);
+        void WorkItemRepositoryBuilt(Uri uri, WorkItemRepository.AuthenticationToken token);
 
         void TemplateScopeConfigurationRequiresAtLeastName();
 

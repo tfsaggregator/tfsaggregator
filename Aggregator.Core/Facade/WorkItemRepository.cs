@@ -12,15 +12,13 @@ using Aggregator.Core.Monitoring;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
-using IdentityDescriptor = Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor;
-
 namespace Aggregator.Core.Facade
 {
     /// <summary>
     /// Singleton used to access TFS Data.  This keeps us from connecting each and every time we get an update.
     /// Keeps track of all WorkItems pulled in memory that should be saved later.
     /// </summary>
-    public class WorkItemRepository : IWorkItemRepository, IDisposable
+    public partial class WorkItemRepository : IWorkItemRepository, IDisposable
     {
         private readonly ILogEvents logger;
 
@@ -39,25 +37,8 @@ namespace Aggregator.Core.Facade
             this.logger = context.Logger;
             this.context = context;
             var ci = context.GetConnectionInfo();
-            this.tfs = new TfsTeamProjectCollection(ci.ProjectCollectionUri, ci.Impersonate);
-            this.workItemStore = this.tfs.GetService<WorkItemStore>();
-        }
-
-        public WorkItemRepository(Uri tfsCollectionUri, string personalToken, IRuntimeContext context)
-        {
-            this.logger = context.Logger;
-            this.context = context;
-
-            // username is not important, we use it to identify ourselves to callee
-            var tfsCred = new TfsClientCredentials(
-                new BasicAuthCredential(
-                    new System.Net.NetworkCredential(
-                        "tfsaggregator2-webhooks", personalToken)));
-            tfsCred.AllowInteractive = false;
-
-            this.tfs = new TfsTeamProjectCollection(tfsCollectionUri, tfsCred);
+            this.tfs = ci.Token.GetCollection(ci.ProjectCollectionUri);
             this.tfs.Authenticate();
-
             this.workItemStore = this.tfs.GetService<WorkItemStore>();
         }
 

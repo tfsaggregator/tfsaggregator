@@ -158,7 +158,9 @@ namespace Aggregator.Core.Configuration
                 this.instance.AutoImpersonate = authenticationNode != null
                     && bool.Parse(authenticationNode.Attribute("autoImpersonate").Value);
                 this.instance.PersonalToken =
-                    authenticationNode?.Attribute("personalToken").Value ?? "personal-token-is-missing";
+                    authenticationNode?.Attribute("personalToken")?.Value;
+                this.instance.BasicUsername = authenticationNode?.Attribute("username")?.Value;
+                this.instance.BasicPassword = authenticationNode?.Attribute("password")?.Value;
 
                 var scriptNode = doc.Root.Element("runtime") != null ?
                     doc.Root.Element("runtime")?.Element("script") : null;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Caching;
 
 using Aggregator.Core.Configuration;
+using Aggregator.Core.Facade;
 using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
@@ -192,18 +193,26 @@ namespace Aggregator.Core.Context
             var requestUri = this.RequestContext.GetProjectCollectionUri();
             var uri = requestUri.ApplyServerSetting(this);
 
-            object initData = null;
-            Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor toImpersonate = null;
-            if (this.Settings.AutoImpersonate)
-            {
-                toImpersonate = this.RequestContext.GetIdentityToImpersonate(uri);
-            }
+            // get credentials for connecting to TFS/VSTS from configuration
+            WorkItemRepository.AuthenticationToken token = new WorkItemRepository.WindowsIntegratedAuthenticationToken();
+
             if (!string.IsNullOrWhiteSpace(this.Settings.PersonalToken))
             {
-                initData = this.Settings.PersonalToken;
+                token = new WorkItemRepository.PersonalAuthenticationToken(this.Settings.PersonalToken);
+            }
+            else if (!string.IsNullOrWhiteSpace(this.Settings.BasicUsername))
+            {
+                token = new WorkItemRepository.BasicAuthenticationToken(
+                    this.Settings.BasicUsername,
+                    this.Settings.BasicPassword);
+            }
+            else if (this.Settings.AutoImpersonate)
+            {
+                token = new WorkItemRepository.ImpersonateAuthenticationToken(
+                    this.RequestContext.GetIdentityToImpersonate(uri));
             }
 
-            return new ConnectionInfo(uri, toImpersonate);
+            return new ConnectionInfo(uri, token);
         }
 
         // isolate type constructor to facilitate Unit testing
@@ -211,9 +220,12 @@ namespace Aggregator.Core.Context
 
         protected virtual IWorkItemRepository CreateWorkItemRepository()
         {
+            var requestUri = this.RequestContext.GetProjectCollectionUri();
+            var uri = requestUri.ApplyServerSetting(this);
+
             var newRepo = this.repoBuilder(this);
             var ci = this.GetConnectionInfo();
-            this.Logger.WorkItemRepositoryBuilt(ci.ProjectCollectionUri, ci.Impersonate);
+            this.Logger.WorkItemRepositoryBuilt(uri, ci.Token);
             return newRepo;
         }
 

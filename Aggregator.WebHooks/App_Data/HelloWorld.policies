@@ -5,7 +5,10 @@
     <rateLimiting interval="00:00:01.0" changes="5" />
     <logging level="Diagnostic" />
     <script language="C#" />
+    <!--
+    <authentication username="**DOMAIN**\**user**" password="***" />
     <authentication personalToken="**put-personal-token-here**" />
+    -->
   </runtime>
 
   <rule name="HelloWorldRule" hasFields="Title"><![CDATA[

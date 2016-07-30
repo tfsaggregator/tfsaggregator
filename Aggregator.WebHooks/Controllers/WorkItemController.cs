@@ -6,6 +6,7 @@ using Aggregator.WebHooks.Utils;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -17,83 +18,114 @@ namespace Aggregator.WebHooks.Controllers
     {
         internal class WorkItemRequest
         {
+            // pseudo-data
+            internal bool IsValid
+            {
+                get
+                {
+                    return string.IsNullOrWhiteSpace(this.Error);
+                }
+            }
+            internal string Error { get; private set; }
+            // real data
             internal string EventId { get; private set; }
             internal string EventType { get; private set; }
+            internal string AccountId { get; private set; }
+            public string CollectionId { get; private set; }
             internal int WorkItemId { get; private set; }
             internal string TeamProject { get; private set; }
             internal string TfsCollectionUri { get; private set; }
 
-            internal WorkItemRequest(JObject payload)
+            private WorkItemRequest()
             {
-                this.EventType = (string)payload["eventType"];
-                this.EventId = (string)payload["id"];
+                this.Error = string.Empty;
+            }
 
-                string fullUrl; // work
-                switch (this.EventType)
+            static internal WorkItemRequest Parse(JObject payload)
+            {
+                var result = new WorkItemRequest();
+
+                if (payload.Property("eventType") == null)
                 {
-                    case "workitem.created":
-                        this.WorkItemId = (int)payload["resource"]["id"];
-                        this.TeamProject = (string)payload["resource"]["fields"]["System.TeamProject"];
-                        fullUrl = (string)payload["resource"]["url"];
-                        this.TfsCollectionUri = fullUrl.Substring(0, fullUrl.IndexOf("_apis"));
-                        break;
-                    case "workitem.updated":
-                        this.WorkItemId = (int)payload["resource"]["id"];
-                        this.TeamProject = (string)payload["resource"]["revision"]["fields"]["System.TeamProject"];
-                        fullUrl = (string)payload["resource"]["url"];
-                        this.TfsCollectionUri = fullUrl.Substring(0, fullUrl.IndexOf("_apis"));
-                        break;
-                    case "workitem.restored":
-                        goto case "workitem.created";
-                    case "workitem.deleted":
-                        goto case "workitem.created";
-                    default:
-                        throw new InvalidOperationException("Unsupported eventType " + this.EventType);
-                }//switch
+                    result.Error = $"Could not determine event type for message: {payload}";
+                }
+                else
+                {
+                    result.EventType = (string)payload["eventType"];
+                    result.EventId = (string)payload["id"];
 
+                    // TODO in the future we will use also the Organization level
+                    if (payload.Property("resourceContainers") == null)
+                    {
+                        // bloody Test button
+                        result.Error = $"Test button generates bad messages: do not use with this service.";
+                    }
+                    else
+                    {
+                        // VSTS sprint 100 or so introduced the Account, but TFS 2015.3 stil lacks it
+                        if (payload.SelectToken("resourceContainers.account") == null)
+                        {
+                            result.CollectionId = (string)payload["resourceContainers"]["collection"]["id"];
+                        }
+                        else
+                        {
+                            result.AccountId = (string)payload["resourceContainers"]["account"]["id"];
+                        }
+                    }
+
+                    result.WorkItemId = (int)payload["resource"]["workItemId"];
+                    string fullUrl = (string)payload["resource"]["url"];
+                    result.TfsCollectionUri = fullUrl.Substring(0, fullUrl.IndexOf("_apis"));
+
+                    switch (result.EventType)
+                    {
+                        case "workitem.created":
+                            result.TeamProject = (string)payload["resource"]["fields"]["System.TeamProject"];
+                            break;
+                        case "workitem.updated":
+                            result.TeamProject = (string)payload["resource"]["revision"]["fields"]["System.TeamProject"];
+                            break;
+                        case "workitem.restored":
+                            result.TeamProject = (string)payload["resource"]["fields"]["System.TeamProject"];
+                            break;
+                        case "workitem.deleted":
+                            result.TeamProject = (string)payload["resource"]["fields"]["System.TeamProject"];
+                            break;
+                        default:
+                            result.Error = $"Unsupported eventType {result.EventType}";
+                            break;
+                    }//switch
+
+                }//if
+                return result;
             }
         }
 
+        public HttpResponseMessage Get()
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StringContent($"Hello from TFSAggregator2webHooks @{Environment.MachineName}");
+            return response;
+        }
 
+        // TODO async
         public HttpResponseMessage Post([FromBody]JObject payload)
         {
-            if (payload.Property("eventType") == null)
+            var request = WorkItemRequest.Parse(payload);
+
+            if (!request.IsValid)
             {
-                Log("Could not determine event type for message: {0}", payload);
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                Log(request.Error);
+                return new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = request.Error };
             }
 
-            var request = new WorkItemRequest(payload);
-            switch (request.EventType)
-            {
-                case "workitem.created":
-                    ProcessEvent(request);
-                    break;
-                case "workitem.updated":
-                    ProcessEvent(request);
-                    break;
-                case "workitem.restored":
-                    ProcessEvent(request);
-                    break;
-                case "workitem.deleted":
-                    ProcessEvent(request);
-                    break;
-                default:
-                    Log("Unexpected event type {1} for message: {0}", payload, request.EventType);
-                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
-            }//switch
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
-        }
-
-        private int ProcessEvent(WorkItemRequest request)
-        {
-            //HACK
-            string policyFile = "~/App_Data/HelloWorld.policies";
+            string policyFilePath = System.Configuration.ConfigurationManager.AppSettings["policyFilePath"];
+            // macro expansion to permit multi-tenants
+            string policyFile = policyFilePath.WithVar(request);
 
             // cache requires absolute path
             policyFile = System.Web.Hosting.HostingEnvironment.MapPath(policyFile);
-            var ok = System.IO.File.Exists(policyFile);
+            Debug.Assert(System.IO.File.Exists(policyFile));
 
             // need a logger to show errors in config file (Catch 22)
             var logger = new AspNetEventLogger(request.EventId, LogLevel.Normal);
@@ -103,11 +135,11 @@ namespace Aggregator.WebHooks.Controllers
                 () => policyFile,
                 context,
                 logger,
-                (collectionUri, personalToken, logEvents) =>
-                    new Core.Facade.WorkItemRepository(collectionUri, (string)personalToken, logEvents));
+                (runtimeContext) => new Core.Facade.WorkItemRepository(runtimeContext),
+                (runtimeContext) => new Core.Script.ScriptLibrary(runtimeContext));
             if (runtime.HasErrors)
             {
-                return 3;
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError) { ReasonPhrase = runtime.Errors.Current };
             }
 
             using (EventProcessor eventProcessor = new EventProcessor(runtime))
@@ -121,24 +153,27 @@ namespace Aggregator.WebHooks.Controllers
                     var result = eventProcessor.ProcessEvent(context, notification);
                     logger.ProcessingCompleted(result);
 
-                    return result.StatusCode;
+                    if (result.StatusCode == 0)
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.OK);
+                    }
+                    else
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.InternalServerError) { ReasonPhrase = result.StatusMessage };
+                    }
                 }
                 catch (Exception e)
                 {
                     logger.ProcessEventException(e);
-                    return 1;
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError) { ReasonPhrase = e.Message };
                 }//try
             }//using
         }
 
-        private void Log(string v, JObject payload, string eventType)
+        private void Log(string message)
         {
-            //TODO Trace
-        }
-
-        private void Log(string v, JObject payload)
-        {
-            //TODO Trace
+            //HACK: need something better
+            Trace.WriteLine(message);
         }
     }
 }

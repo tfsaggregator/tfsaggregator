@@ -56,6 +56,10 @@ namespace Aggregator.Core.Configuration
 
         public string PersonalToken { get; private set; }
 
+        public string BasicPassword { get; private set; }
+
+        public string BasicUsername { get; private set; }
+
         public string Hash { get; private set; }
 
         public IEnumerable<Snippet> Snippets { get; private set; }

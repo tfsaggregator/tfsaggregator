@@ -51,6 +51,14 @@ namespace Aggregator.Models
 
         public int CurrentWorkItemId { get; set; }
 
+        public IVssRequestContext VssContext
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public string GetProjectName(Uri projectUri)
         {
             // no need to compute from URI
@@ -63,7 +71,7 @@ namespace Aggregator.Models
             throw new NotImplementedException();
         }
 
-        public IdentityDescriptor GetIdentityToImpersonate()
+        public IdentityDescriptor GetIdentityToImpersonate(Uri projectCollectionUrl)
         {
             // makes no sense impersonation in WebHook, and it is not called anyway
             return null;

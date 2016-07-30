@@ -153,6 +153,7 @@
     <Compile Include="Extensions\NullAssignmentToRequiredFieldValueValidator.cs" />
     <Compile Include="Extensions\ValueAssignmentToHistoryFieldValidator.cs" />
     <Compile Include="Extensions\ValueAssignmentToReadonlyFieldValueValidator.cs" />
+    <Compile Include="Facade\AuthenticationToken.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
     <Compile Include="Facade\RevisionWrapper.cs" />
     <Compile Include="GlobalSuppressions.cs" />

@@ -8,6 +8,7 @@ using System.Runtime.Caching;
 using System.Xml.Schema;
 using Aggregator.Core.Configuration;
 using Aggregator.Core.Extensions;
+using Aggregator.Core.Facade;
 using Aggregator.Core.Interfaces;
 using Microsoft.TeamFoundation.Framework.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
@@ -398,16 +399,9 @@ namespace Aggregator.Core.Monitoring
                 result.Arguments);
         }
 
-        public void WorkItemRepositoryBuilt(Uri uri, IdentityDescriptor toImpersonate)
+        public void WorkItemRepositoryBuilt(Uri uri, WorkItemRepository.AuthenticationToken token)
         {
-            if (toImpersonate != null)
-            {
-                this.logger.Log(LogLevel.Verbose, "Built a new Work Item Repository for {0} as {1}", uri, toImpersonate);
-            }
-            else
-            {
-                this.logger.Log(LogLevel.Diagnostic, "Built a new Work Item Repository for {0}", uri);
-            }
+            this.logger.Log(LogLevel.Diagnostic, "Built a new Work Item Repository for {0} using a {1}", uri, token);
         }
 
         public void TemplateScopeConfigurationRequiresAtLeastName()

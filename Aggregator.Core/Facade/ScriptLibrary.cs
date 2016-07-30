@@ -42,7 +42,7 @@ namespace Aggregator.Core.Facade
         // source: https://paulselles.wordpress.com/2014/03/24/tfs-api-tfs-user-email-address-lookup-and-reverse-lookup/
         public string GetEmailAddress(string userName, string defaultValue)
         {
-            using (var teamProjectCollection = new TfsTeamProjectCollection(this.connectionInfo.ProjectCollectionUri, this.connectionInfo.Impersonate))
+            using (var teamProjectCollection = this.connectionInfo.Token.GetCollection(this.connectionInfo.ProjectCollectionUri))
             {
                 var identityManagementService = teamProjectCollection.GetService<IIdentityManagementService>();
 

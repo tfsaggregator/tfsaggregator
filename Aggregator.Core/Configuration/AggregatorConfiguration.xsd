@@ -51,7 +51,9 @@
               <xs:element minOccurs="0" maxOccurs="1" name="authentication">
                 <xs:complexType>
                   <xs:attribute name="autoImpersonate" type="xs:boolean" use="optional" default="false" />
-                  <xs:attribute name="personalToken" type="xs:string" use="optional" default="false" />
+                  <xs:attribute name="personalToken" type="xs:string" use="optional" />
+                  <xs:attribute name="username" type="xs:string" use="optional" />
+                  <xs:attribute name="password" type="xs:string" use="optional" />
                 </xs:complexType>
               </xs:element>
               <xs:element minOccurs="0" maxOccurs="1" name="server">
