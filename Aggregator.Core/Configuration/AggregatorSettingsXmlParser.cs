@@ -49,6 +49,9 @@ namespace Aggregator.Core.Configuration
                 // XML Schema has done lot of checking and set defaults, no need to recheck later, just manage missing pieces
                 this.ParseRuntimeSection(doc);
 
+                this.instance.Snippets = this.ParseSnippetsSection(doc);
+                this.instance.Functions = this.ParseFunctionsSection(doc);
+
                 Dictionary<string, Rule> rules = this.ParseRulesSection(doc);
 
                 List<Policy> policies = this.ParsePoliciesSection(doc, rules);
@@ -85,6 +88,12 @@ namespace Aggregator.Core.Configuration
                 }
             }
 
+            /// <summary>
+            /// Simple hash to detect configuration changes
+            /// </summary>
+            /// <param name="doc">Configuration XML document.</param>
+            /// <param name="timestamp">Last time the document has been changed.</param>
+            /// <returns>Hexadecimal string represting hash value</returns>
             private string ComputeHash(XDocument doc, DateTime timestamp)
             {
                 using (var stream = new System.IO.MemoryStream())
@@ -155,6 +164,13 @@ namespace Aggregator.Core.Configuration
                     doc.Root.Element("runtime")?.Element("script") : null;
 
                 this.instance.ScriptLanguage = scriptNode?.Attribute("language").Value ?? "C#";
+
+                var serverNode = doc.Root.Element("runtime") != null ?
+                    doc.Root.Element("runtime")?.Element("server") : null;
+                string baseUrl = serverNode?.Attribute("baseUrl").Value;
+                this.instance.ServerBaseUrl = string.IsNullOrWhiteSpace(baseUrl)
+                    ? null
+                    : new Uri(new Uri(baseUrl).GetLeftPart(UriPartial.Authority));
             }
 
             private List<Policy> ParsePoliciesSection(XDocument doc, Dictionary<string, Rule> rules)
@@ -236,6 +252,37 @@ namespace Aggregator.Core.Configuration
                 }
 
                 return policies;
+            }
+
+            private List<Snippet> ParseSnippetsSection(XDocument doc)
+            {
+                var snippets = new List<Snippet>();
+                foreach (var snippetElem in doc.Root.Elements("snippet"))
+                {
+                    var snippet = new Snippet()
+                    {
+                        Name = snippetElem.Attribute("name").Value,
+                        Script = snippetElem.Value
+                    };
+                    snippets.Add(snippet);
+                }
+
+                return snippets;
+            }
+
+            private IList<Function> ParseFunctionsSection(XDocument doc)
+            {
+                var functions = new List<Function>();
+                foreach (var functionElem in doc.Root.Elements("function"))
+                {
+                    var function = new Function();
+
+                    function.Script = functionElem.Value;
+
+                    functions.Add(function);
+                }
+
+                return functions;
             }
 
             private Dictionary<string, Rule> ParseRulesSection(XDocument doc)

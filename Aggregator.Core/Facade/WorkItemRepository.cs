@@ -34,13 +34,12 @@ namespace Aggregator.Core.Facade
 
         private readonly TfsTeamProjectCollection tfs;
 
-        public WorkItemRepository(Uri tfsCollectionUri, IdentityDescriptor toImpersonate, IRuntimeContext context)
+        public WorkItemRepository(IRuntimeContext context)
         {
             this.logger = context.Logger;
             this.context = context;
-            this.tfs = new TfsTeamProjectCollection(tfsCollectionUri, toImpersonate);
-            this.tfs.Authenticate();
-
+            var ci = context.GetConnectionInfo();
+            this.tfs = new TfsTeamProjectCollection(ci.ProjectCollectionUri, ci.Impersonate);
             this.workItemStore = this.tfs.GetService<WorkItemStore>();
         }
 

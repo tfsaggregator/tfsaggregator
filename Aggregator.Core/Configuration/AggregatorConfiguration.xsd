@@ -54,8 +54,33 @@
                   <xs:attribute name="personalToken" type="xs:string" use="optional" default="false" />
                 </xs:complexType>
               </xs:element>
+              <xs:element minOccurs="0" maxOccurs="1" name="server">
+                <xs:complexType>
+                  <xs:attribute name="baseUrl" type="xs:string" use="optional" />
+                </xs:complexType>
+              </xs:element>
             </xs:sequence>
             <xs:attribute name="debug" type="xs:boolean" use="optional" default="false" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="snippet">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:ID" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+          <xs:unique name="uniqueSnippetName">
+            <xs:selector xpath="./snippet"/>
+            <xs:field xpath="name"/>
+          </xs:unique>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="function">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string"/>
+            </xs:simpleContent>
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="1" maxOccurs="unbounded" name="rule">

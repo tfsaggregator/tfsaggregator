@@ -5,6 +5,6 @@ namespace Aggregator.Core.Script
 {
     public interface IDotNetScript
     {
-        object RunScript(IWorkItemExposed self, IWorkItemRepositoryExposed store, IRuleLogger scriptLogger);
+        object RunScript(IWorkItemExposed self, IWorkItemRepositoryExposed store, IRuleLogger scriptLogger, IScriptLibrary library);
     }
 }

@@ -35,7 +35,7 @@ namespace UnitTests.Core
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
-            var runtime = RuntimeContext.GetContext(() => path, context, logger, null);
+            var runtime = RuntimeContext.GetContext(() => path, context, logger, null, null);
 
             var level = runtime.Settings.LogLevel;
 
@@ -49,8 +49,8 @@ namespace UnitTests.Core
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
-            var runtime1 = RuntimeContext.GetContext(() => path, context, logger, null);
-            var runtime2 = RuntimeContext.GetContext(() => path, context, logger, null);
+            var runtime1 = RuntimeContext.GetContext(() => path, context, logger, null, null);
+            var runtime2 = RuntimeContext.GetContext(() => path, context, logger, null, null);
 
             Assert.AreEqual(runtime1.Hash, runtime2.Hash);
         }
@@ -65,13 +65,13 @@ namespace UnitTests.Core
 
             var logger = Substitute.For<ILogEvents>();
             var context = Substitute.For<IRequestContext>();
-            var runtime1 = RuntimeContext.GetContext(() => destPath, context, logger, null);
+            var runtime1 = RuntimeContext.GetContext(() => destPath, context, logger, null, null);
 
             File.Copy(sourcePath, destPath, true);
 
             Pause(); // this delay is necessary for the file change to be sensed
 
-            var runtime2 = RuntimeContext.GetContext(() => destPath, context, logger, null);
+            var runtime2 = RuntimeContext.GetContext(() => destPath, context, logger, null, null);
 
             Assert.AreNotEqual(runtime1.Hash, runtime2.Hash);
         }

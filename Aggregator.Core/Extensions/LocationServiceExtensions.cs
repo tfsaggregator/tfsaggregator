@@ -1,6 +1,5 @@
 ﻿#if TFS2015u2
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.VisualStudio.Services.Location;

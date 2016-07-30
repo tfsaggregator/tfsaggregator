@@ -13,6 +13,12 @@ using Microsoft.TeamFoundation.Server;
 using Microsoft.TeamFoundation.Server.Core;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
+#if TFS2015u1
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.IVssRequestContext;
+#else
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext;
+#endif
+
 namespace Aggregator.ConsoleApp
 {
     public class RequestContext : IRequestContext
@@ -53,6 +59,14 @@ namespace Aggregator.ConsoleApp
 
         public int CurrentWorkItemId { get; set; }
 
+        public IVssRequestContext VssContext
+        {
+            get
+            {
+                throw new NotImplementedException("Cannot emulate IVssRequestContext in client application");
+            }
+        }
+
         public string GetProjectName(Uri projectUri)
         {
             return this.teamProjectName;
@@ -73,7 +87,7 @@ namespace Aggregator.ConsoleApp
             return projectProperties.Select(p => (IProjectProperty)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
         }
 
-        public IdentityDescriptor GetIdentityToImpersonate()
+        public IdentityDescriptor GetIdentityToImpersonate(Uri projectCollectionUrl)
         {
             // makes no sense impersonation in command line tool... for now
             return null;

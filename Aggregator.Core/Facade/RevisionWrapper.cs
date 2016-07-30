@@ -1,5 +1,6 @@
 ﻿using System;
 
+using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
@@ -10,9 +11,12 @@ namespace Aggregator.Core.Facade
     {
         private readonly Revision revision;
 
-        public RevisionWrapper(Revision revision)
+        private readonly IRuntimeContext context;
+
+        public RevisionWrapper(Revision revision, IRuntimeContext context)
         {
             this.revision = revision;
+            this.context = context;
         }
 
         public object this[string name]
@@ -27,7 +31,7 @@ namespace Aggregator.Core.Facade
         {
             get
             {
-                return new FieldCollectionWrapper(this.revision.Fields);
+                return new FieldCollectionWrapper(this.revision.Fields, this.context);
             }
         }
 

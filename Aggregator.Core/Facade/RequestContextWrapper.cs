@@ -52,6 +52,14 @@ namespace Aggregator.Core.Facade
             private set;
         }
 
+        public IVssRequestContext VssContext
+        {
+            get
+            {
+                return this.context;
+            }
+        }
+
         public string GetProjectName(Uri teamProjectUri)
         {
             var ics = this.context.GetService<ICommonStructureService>();
@@ -61,9 +69,7 @@ namespace Aggregator.Core.Facade
 
         public Uri GetProjectCollectionUri()
         {
-            ILocationService service = this.context.GetService<ILocationService>();
-
-            return service.GetSelfReferenceUri(this.context, service.GetDefaultAccessMapping(this.context));
+            return this.GetCollectionUriFromContext(this.context);
         }
 
         public IProjectProperty[] GetProjectProperties(Uri projectUri)
@@ -79,11 +85,9 @@ namespace Aggregator.Core.Facade
             return projectProperties.Select(p => (IProjectProperty)new ProjectPropertyWrapper() { Name = p.Name, Value = p.Value }).ToArray();
         }
 
-        public IdentityDescriptor GetIdentityToImpersonate()
+        public IdentityDescriptor GetIdentityToImpersonate(Uri projectCollectionUrl)
         {
-            Uri server = this.GetCollectionUriFromContext(this.context);
-
-            var configurationServer = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(server);
+            var configurationServer = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(projectCollectionUrl);
 
             // TODO: Find a way to read the identity from the server object model instead.
             IIdentityManagementService identityManagementService =

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Caching;
 
 using Aggregator.Core.Configuration;
+using Aggregator.Core.Extensions;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
@@ -37,7 +38,8 @@ namespace Aggregator.Core.Context
             Func<string> settingsPathGetter,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<Uri, object, IRuntimeContext, IWorkItemRepository> repoBuilder)
+            Func<IRuntimeContext, IWorkItemRepository> repoBuilder,
+            Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder)
         {
             string settingsPath = settingsPathGetter();
             string cacheKey = CacheKey + settingsPath;
@@ -49,7 +51,7 @@ namespace Aggregator.Core.Context
                 logger.LoadingConfiguration(settingsPath);
 
                 var settings = TFSAggregatorSettings.LoadFromFile(settingsPath, logger);
-                runtime = MakeRuntimeContext(settingsPath, settings, requestContext, logger, repoBuilder);
+                runtime = MakeRuntimeContext(settingsPath, settings, requestContext, logger, repoBuilder, scriptLibraryBuilder);
 
                 if (!runtime.HasErrors)
                 {
@@ -79,7 +81,8 @@ namespace Aggregator.Core.Context
             TFSAggregatorSettings settings,
             IRequestContext requestContext,
             ILogEvents logger,
-            Func<Uri, object, IRuntimeContext, IWorkItemRepository> repoBuilder)
+            Func<IRuntimeContext, IWorkItemRepository> repoBuilder,
+            Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder)
         {
             var runtime = new RuntimeContext();
 
@@ -90,6 +93,7 @@ namespace Aggregator.Core.Context
             runtime.RateLimiter = new RateLimiter(runtime);
             logger.MinimumLogLevel = runtime.Settings?.LogLevel ?? LogLevel.Normal;
             runtime.repoBuilder = repoBuilder;
+            runtime.scriptLibraryBuilder = scriptLibraryBuilder;
 
             runtime.HasErrors = settings == null;
             return runtime;
@@ -125,6 +129,7 @@ namespace Aggregator.Core.Context
 
         public ILogEvents Logger { get; private set; }
 
+        private Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder;
         private ScriptEngine cachedEngine = null;
 
         public ScriptEngine GetEngine()
@@ -132,40 +137,83 @@ namespace Aggregator.Core.Context
             if (this.cachedEngine == null)
             {
                 System.Diagnostics.Debug.WriteLine("Cache empty for thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
-                this.cachedEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug);
-                foreach (var rule in this.Settings.Rules)
-                {
-                    this.cachedEngine.Load(rule.Name, rule.Script);
-                }
+                IScriptLibrary library = this.scriptLibraryBuilder(this);
+                this.cachedEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug, library);
 
-                this.cachedEngine.LoadCompleted();
+                List<Script.ScriptSourceElement> sourceElements = this.GetSourceElements();
+
+                this.cachedEngine.Load(sourceElements);
             }
 
             return this.cachedEngine;
         }
 
-        // isolate type constructor to facilitate Unit testing
-        private Func<Uri, object, IRuntimeContext, IWorkItemRepository> repoBuilder;
-
-        protected virtual IWorkItemRepository CreateWorkItemRepository()
+        private List<Script.ScriptSourceElement> GetSourceElements()
         {
-            var uri = this.RequestContext.GetProjectCollectionUri();
+            var sourceElements = new List<Script.ScriptSourceElement>();
+            var snippetElements = this.Settings.Snippets.ToList().ConvertAll(
+                (snippet) =>
+                {
+                    return new Script.ScriptSourceElement()
+                    {
+                        Name = snippet.Name,
+                        Type = Script.ScriptSourceElementType.Snippet,
+                        SourceCode = snippet.Script
+                    };
+                });
+            sourceElements.AddRange(snippetElements);
+            var ruleElements = this.Settings.Rules.ToList().ConvertAll(
+                (rule) =>
+                {
+                    return new Script.ScriptSourceElement()
+                    {
+                        Name = rule.Name,
+                        Type = Script.ScriptSourceElementType.Rule,
+                        SourceCode = rule.Script
+                    };
+                });
+            sourceElements.AddRange(ruleElements);
+            var functionElements = this.Settings.Functions.ToList().ConvertAll(
+                (function) =>
+                {
+                    return new Script.ScriptSourceElement()
+                    {
+                        Name = string.Empty,
+                        Type = Script.ScriptSourceElementType.Function,
+                        SourceCode = function.Script
+                    };
+                });
+            sourceElements.AddRange(functionElements);
+            return sourceElements;
+        }
+
+        public ConnectionInfo GetConnectionInfo()
+        {
+            var requestUri = this.RequestContext.GetProjectCollectionUri();
+            var uri = requestUri.ApplyServerSetting(this);
 
             object initData = null;
             Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor toImpersonate = null;
             if (this.Settings.AutoImpersonate)
             {
-                toImpersonate = this.RequestContext.GetIdentityToImpersonate();
-                initData = toImpersonate;
+                toImpersonate = this.RequestContext.GetIdentityToImpersonate(uri);
             }
             if (!string.IsNullOrWhiteSpace(this.Settings.PersonalToken))
             {
                 initData = this.Settings.PersonalToken;
             }
 
-            var newRepo = this.repoBuilder(uri, initData, this);
-            // TODO change call to be more precise without revelating secrets
-            this.Logger.WorkItemRepositoryBuilt(uri, toImpersonate);
+            return new ConnectionInfo(uri, toImpersonate);
+        }
+
+        // isolate type constructor to facilitate Unit testing
+        private Func<IRuntimeContext, IWorkItemRepository> repoBuilder;
+
+        protected virtual IWorkItemRepository CreateWorkItemRepository()
+        {
+            var newRepo = this.repoBuilder(this);
+            var ci = this.GetConnectionInfo();
+            this.Logger.WorkItemRepositoryBuilt(ci.ProjectCollectionUri, ci.Impersonate);
             return newRepo;
         }
 

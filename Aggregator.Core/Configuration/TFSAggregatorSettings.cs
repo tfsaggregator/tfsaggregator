@@ -52,9 +52,15 @@ namespace Aggregator.Core.Configuration
 
         public bool AutoImpersonate { get; private set; }
 
+        public Uri ServerBaseUrl { get; private set; }
+
         public string PersonalToken { get; private set; }
 
         public string Hash { get; private set; }
+
+        public IEnumerable<Snippet> Snippets { get; private set; }
+
+        public IEnumerable<Function> Functions { get; private set; }
 
         public IEnumerable<Rule> Rules { get; private set; }
 

@@ -132,20 +132,26 @@
       <Link>AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Configuration\AggregatorSettingsXmlParser.cs" />
+    <Compile Include="Configuration\ConnectionInfo.cs" />
+    <Compile Include="Configuration\ScriptElement.cs" />
     <Compile Include="Configuration\CollectionScope.cs" />
     <Compile Include="Configuration\HasFieldsScope.cs" />
     <Compile Include="Configuration\ProjectScope.cs" />
     <Compile Include="Configuration\RateLimit.cs" />
+    <Compile Include="Configuration\Function.cs" />
+    <Compile Include="Configuration\Snippet.cs" />
     <Compile Include="Configuration\ScopeMatchResult.cs" />
     <Compile Include="Configuration\TemplateScope.cs" />
     <Compile Include="Configuration\WorkItemTypeScope.cs" />
     <Compile Include="Extensions\BaseFieldValueValidator.cs" />
     <Compile Include="Extensions\DoubleFixFieldDecorator.cs" />
     <Compile Include="Extensions\FieldValueValidationDecorator.cs" />
+    <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Extensions\LocationServiceExtensions.cs" />
     <Compile Include="Extensions\IncorrectDataTypeFieldValidator.cs" />
     <Compile Include="Extensions\InvalidValueFieldValueValidator.cs" />
     <Compile Include="Extensions\NullAssignmentToRequiredFieldValueValidator.cs" />
+    <Compile Include="Extensions\ValueAssignmentToHistoryFieldValidator.cs" />
     <Compile Include="Extensions\ValueAssignmentToReadonlyFieldValueValidator.cs" />
     <Compile Include="Facade\ProcessTemplateVersionWrapper.cs" />
     <Compile Include="Facade\RevisionWrapper.cs" />
@@ -161,8 +167,12 @@
     <Compile Include="Monitoring\LogLevel.cs" />
     <Compile Include="Monitoring\RuleLogger.cs" />
     <Compile Include="RateLimiter.cs" />
+    <Compile Include="Interfaces\IScriptLibrary.cs" />
+    <Compile Include="Facade\ScriptLibrary.cs" />
     <Compile Include="Script\DotNetScriptEngine{TCodeDomProvider}.cs" />
     <Compile Include="Script\IDotNetScript.cs" />
+    <Compile Include="Script\ScriptLibrary.cs" />
+    <Compile Include="Script\ScriptSourceElement.cs" />
     <Compile Include="WorkItemImplementationBase.cs" />
     <Compile Include="Configuration\Policy.cs" />
     <Compile Include="Configuration\Rule.cs" />

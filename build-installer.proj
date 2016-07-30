@@ -22,7 +22,7 @@
     <NeutralDir>$(CollectDir)\Neutral</NeutralDir>
     <WikiUrl>https://github.com/tfsaggregator/tfsaggregator.wiki.git</WikiUrl>
     <!-- Local builds get v0, AppVeyor replace with proper value -->
-    <BuildVersion Condition=" '$(BuildVersion)' == '' ">0.2.1</BuildVersion>
+    <BuildVersion Condition=" '$(BuildVersion)' == '' ">0.2.2</BuildVersion>
     <!-- Defaults to global install -->
     <GitExe>git</GitExe>
     <!-- skip process steps by setting False -->

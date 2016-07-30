@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Management.Automation.Runspaces;
 
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
+using Aggregator.Core.Script;
 
 namespace Aggregator.Core
 {
@@ -13,20 +15,21 @@ namespace Aggregator.Core
     {
         private readonly Dictionary<string, string> scripts = new Dictionary<string, string>();
 
-        public PsScriptEngine(ILogEvents logger, bool debug)
-            : base(logger, debug)
+        public PsScriptEngine(ILogEvents logger, bool debug, IScriptLibrary library)
+            : base(logger, debug, library)
         {
         }
 
-        public override bool Load(string scriptName, string script)
+        public override void Load(IEnumerable<ScriptSourceElement> sourceElements)
         {
-            this.scripts.Add(scriptName, script);
-            return true;
-        }
+            foreach (var sourceElement in sourceElements)
+            {
+                // TODO log something
+                if (sourceElement.Type != Script.ScriptSourceElementType.Rule)
+                    continue;
 
-        public override bool LoadCompleted()
-        {
-            return true;
+                this.scripts.Add(sourceElement.Name, sourceElement.SourceCode);
+            }
         }
 
         public override void Run(string scriptName, IWorkItem workItem, IWorkItemRepository store)
@@ -41,6 +44,7 @@ namespace Aggregator.Core
                 runspace.SessionStateProxy.SetVariable("self", workItem);
                 runspace.SessionStateProxy.SetVariable("store", store);
                 runspace.SessionStateProxy.SetVariable("logger", this.Logger.ScriptLogger);
+                runspace.SessionStateProxy.SetVariable("Library", this.Library);
 
                 Pipeline pipeline = runspace.CreatePipeline();
                 pipeline.Commands.AddScript(script);

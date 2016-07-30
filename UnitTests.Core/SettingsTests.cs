@@ -192,5 +192,26 @@ namespace UnitTests.Core
 
             Assert.AreEqual(settings.RateLimit?.Interval, TimeSpan.FromHours(1));
         }
+
+        [TestMethod]
+        public void Policy_ServerBaseUrl_succeed()
+        {
+            var logger = Substitute.For<ILogEvents>();
+
+            string config = @"
+<AggregatorConfiguration>
+    <runtime>
+        <server baseUrl = ""http://tfs.example.local:8080/"" />
+    </runtime>
+    <rule name='dummy' />
+    <policy name='dummy' >
+        <ruleRef name='dummy' />
+    </policy>
+</AggregatorConfiguration>";
+
+            var settings = TFSAggregatorSettings.LoadXml(config, logger);
+
+            Assert.AreEqual(settings.ServerBaseUrl, new Uri("http://tfs.example.local:8080/"));
+        }
     }
 }
