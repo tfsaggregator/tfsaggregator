@@ -41,7 +41,7 @@ namespace UnitTests.Core
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
 
             var repository = new WorkItemRepositoryMock();
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\GlobalList_UserParameterAddValue_Succeeded", settings, context, logger, (c, i, l) => repository);
 
             var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 1;
@@ -75,7 +75,7 @@ namespace UnitTests.Core
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\GlobalList_UserParameterReplaceExisting_Succeeded", settings, context, logger, (c, i, l) => repository);
 
             var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 1;

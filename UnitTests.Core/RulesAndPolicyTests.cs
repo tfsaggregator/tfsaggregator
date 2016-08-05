@@ -51,7 +51,7 @@ namespace UnitTests.Core
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection1");
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\RulesAndPolicy_SpecificCollection_TwoPoliciesTwoRulesApplies", settings, context, logger, (c, i, l) => repository);
 
             using (var processor = new EventProcessor(runtime))
             {
@@ -81,7 +81,7 @@ namespace UnitTests.Core
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection2");
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\RulesAndPolicy_GenericCollection_OnePoliciesOneRulesApplies", settings, context, logger, (c, i, l) => repository);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -110,7 +110,7 @@ namespace UnitTests.Core
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection2");
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\RulesAndPolicy_TypeFilter_OnePoliciesOneRulesApplies", settings, context, logger, (c, i, l) => repository);
 
             var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 1;
