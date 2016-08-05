@@ -5,6 +5,9 @@
 This server side plugin for TFS 2013 update 2, TFS 2015 RTM and Update 1, 2 and 3 enables dynamic calculation of field values in TFS and more.
 (For example: Dev work + Test Work = Total Work).
 
+## What's new in v2.1.1
+ * Fixes important bug causing very high CPU usage (see [#160](https://github.com/tfsaggregator/tfsaggregator/issues/160)).
+
 ## What's new in v2.1
 
  * Support for TFS 2015.2 and TFS 2015.2.1
@@ -25,6 +28,8 @@ Example Uses
  - Update the "Work Remaining" on a Bug, PBI, etc with the sum of all the Task's "Work Remaining".
  - Update the "Work Remaining" on a Sprint with the sum of all the "Work Remaining" of its grandchildren (i.e. tasks of the PBIs and Bugs in the Sprint).
  - Sum up totals on a single work item (i.e. Dev Estimate + Test Estimate = Total Estimate)
+ - Create new work items
+ - Create new work item links
 
 Documentation
 ================================================

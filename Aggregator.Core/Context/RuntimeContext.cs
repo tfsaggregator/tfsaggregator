@@ -66,13 +66,13 @@ namespace Aggregator.Core.Context
             else
             {
                 logger.UsingCachedConfiguration(settingsPath);
-
-                // as it changes at each invocation, must be set again here
-                runtime.RequestContext = requestContext;
-                runtime.workItemRepository = null;
             }
 
-            return runtime.Clone() as RuntimeContext;
+            runtime = runtime.Clone() as RuntimeContext;
+            // as it changes at each invocation, must be set again here
+            runtime.RequestContext = requestContext;
+            runtime.workItemRepository = null;
+            return runtime;
         }
 
         public static RuntimeContext MakeRuntimeContext(
@@ -126,23 +126,31 @@ namespace Aggregator.Core.Context
 
         public ILogEvents Logger { get; private set; }
 
-        private ScriptEngine cachedEngine = null;
-
         public ScriptEngine GetEngine()
         {
-            if (this.cachedEngine == null)
+            const string EngineCacheKey = "engine:";
+
+            string cacheKey = EngineCacheKey + this.SettingsPath;
+            var engine = (ScriptEngine)Cache.Get(cacheKey);
+            if (engine == null)
             {
-                System.Diagnostics.Debug.WriteLine("Cache empty for thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
-                this.cachedEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug);
+                System.Diagnostics.Debug.WriteLine("No cached engine for thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
+                engine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug);
                 foreach (var rule in this.Settings.Rules)
                 {
-                    this.cachedEngine.Load(rule.Name, rule.Script);
+                    engine.Load(rule.Name, rule.Script);
                 }
 
-                this.cachedEngine.LoadCompleted();
+                engine.LoadCompleted();
+
+                var itemPolicy = new CacheItemPolicy();
+                itemPolicy.Priority = CacheItemPriority.NotRemovable;
+                itemPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string>() { this.SettingsPath }));
+
+                Cache.Set(cacheKey, engine, itemPolicy);
             }
 
-            return this.cachedEngine;
+            return engine;
         }
 
         // isolate type constructor to facilitate Unit testing
