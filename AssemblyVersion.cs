@@ -3,24 +3,24 @@
 // To read Configuration use this Powershell snippet
 // [System.Reflection.Assembly]::LoadFile("path-to-assembly-file").GetCustomAttributesData() | ?{ $_.AttributeType -eq [System.Reflection.AssemblyConfigurationAttribute] } | select ConstructorArguments
 #if DEBUG
-#if TFS2013
-    [assembly: AssemblyConfiguration("Debug [TFS 2013.5]")]
-#elif TFS2015
-    [assembly: AssemblyConfiguration("Debug [TFS 2015.0]")]
+#if TFS2015u2
+    [assembly: AssemblyConfiguration("Debug [TFS 2015.2]")]
 #elif TFS2015u1
     [assembly: AssemblyConfiguration("Debug [TFS 2015.1]")]
-#elif TFS2015u2
-    [assembly: AssemblyConfiguration("Debug [TFS 2015.2]")]
+#elif TFS2015
+    [assembly: AssemblyConfiguration("Debug [TFS 2015.0]")]
+#elif TFS2013
+    [assembly: AssemblyConfiguration("Debug [TFS 2013.5]")]
 #endif
 #else
-#if TFS2013
-    [assembly: AssemblyConfiguration("Release [TFS 2013.5]")]
-#elif TFS2015
-    [assembly: AssemblyConfiguration("Release [TFS 2015.0]")]
+#if TFS2015u2
+    [assembly: AssemblyConfiguration("Release [TFS 2015.2]")]
 #elif TFS2015u1
     [assembly: AssemblyConfiguration("Release [TFS 2015.1]")]
-#elif TFS2015u2
-    [assembly: AssemblyConfiguration("Release [TFS 2015.2]")]
+#elif TFS2015
+    [assembly: AssemblyConfiguration("Release [TFS 2015.0]")]
+#elif TFS2013
+    [assembly: AssemblyConfiguration("Release [TFS 2013.5]")]
 #endif
 #endif
 [assembly: AssemblyCompany("TFS Aggregator Team")]
