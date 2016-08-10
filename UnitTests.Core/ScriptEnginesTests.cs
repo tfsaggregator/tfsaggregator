@@ -194,7 +194,7 @@ return $self.Fields[""z""].Value ";
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\Can_execute_a_Powershell_noop_rule", settings, context, logger, (c) => repository, scriptLibraryBuilder);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
