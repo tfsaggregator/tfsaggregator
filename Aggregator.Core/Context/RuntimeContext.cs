@@ -145,7 +145,6 @@ namespace Aggregator.Core.Context
                 List<Script.ScriptSourceElement> sourceElements = this.GetSourceElements();
 
                 engine.Load(sourceElements);
-                engine.LoadCompleted();
 
                 var itemPolicy = new CacheItemPolicy();
                 itemPolicy.Priority = CacheItemPriority.NotRemovable;
