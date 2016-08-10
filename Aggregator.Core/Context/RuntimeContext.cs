@@ -68,13 +68,13 @@ namespace Aggregator.Core.Context
             else
             {
                 logger.UsingCachedConfiguration(settingsPath);
-
-                // as it changes at each invocation, must be set again here
-                runtime.RequestContext = requestContext;
-                runtime.workItemRepository = null;
             }
 
-            return runtime.Clone() as RuntimeContext;
+            runtime = runtime.Clone() as RuntimeContext;
+            // as it changes at each invocation, must be set again here
+            runtime.RequestContext = requestContext;
+            runtime.workItemRepository = null;
+            return runtime;
         }
 
         public static RuntimeContext MakeRuntimeContext(
@@ -131,22 +131,30 @@ namespace Aggregator.Core.Context
         public ILogEvents Logger { get; private set; }
 
         private Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder;
-        private ScriptEngine cachedEngine = null;
-
         public ScriptEngine GetEngine()
         {
-            if (this.cachedEngine == null)
+            const string EngineCacheKey = "engine:";
+
+            string cacheKey = EngineCacheKey + this.SettingsPath;
+            var engine = (ScriptEngine)Cache.Get(cacheKey);
+            if (engine == null)
             {
-                System.Diagnostics.Debug.WriteLine("Cache empty for thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
+                System.Diagnostics.Debug.WriteLine("No cached engine for thread {0}", System.Threading.Thread.CurrentThread.ManagedThreadId);
                 IScriptLibrary library = this.scriptLibraryBuilder(this);
-                this.cachedEngine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug, library);
+                engine = ScriptEngine.MakeEngine(this.Settings.ScriptLanguage, this.Logger, this.Settings.Debug, library);
 
                 List<Script.ScriptSourceElement> sourceElements = this.GetSourceElements();
 
-                this.cachedEngine.Load(sourceElements);
+                engine.Load(sourceElements);
+
+                var itemPolicy = new CacheItemPolicy();
+                itemPolicy.Priority = CacheItemPriority.NotRemovable;
+                itemPolicy.ChangeMonitors.Add(new HostFileChangeMonitor(new List<string>() { this.SettingsPath }));
+
+                Cache.Set(cacheKey, engine, itemPolicy);
             }
 
-            return this.cachedEngine;
+            return engine;
         }
 
         private List<Script.ScriptSourceElement> GetSourceElements()

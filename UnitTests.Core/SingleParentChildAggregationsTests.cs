@@ -76,7 +76,7 @@ namespace UnitTests.Core
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => alternateRepository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\Should_aggregate_a_numeric_field", settings, context, logger, (c) => alternateRepository, scriptLibraryBuilder);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -101,7 +101,7 @@ namespace UnitTests.Core
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => alternateRepository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\Should_aggregate_a_numeric_field_short", settings, context, logger, (c) => alternateRepository, scriptLibraryBuilder);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -126,7 +126,7 @@ namespace UnitTests.Core
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => alternateRepository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\Should_aggregate_a_numeric_field_VB", settings, context, logger, (c) => alternateRepository, scriptLibraryBuilder);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -153,7 +153,7 @@ namespace UnitTests.Core
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
             context.CollectionName.Returns("Collection1");
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => alternateRepository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\Should_aggregate_to_parent", settings, context, logger, (c) => alternateRepository, scriptLibraryBuilder);
 
             var grandParent = new WorkItemMock(alternateRepository, runtime);
             grandParent.Id = 1;
@@ -212,7 +212,7 @@ namespace UnitTests.Core
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => alternateRepository, scriptLibraryBuilder);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\Should_aggregate_to_parent_should_handle_null", settings, context, logger, (c) => alternateRepository, scriptLibraryBuilder);
 
             var grandParent = new WorkItemMock(alternateRepository, runtime);
             grandParent.Id = 1;
