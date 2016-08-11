@@ -124,6 +124,7 @@
   
   <Target Name="CollectFiles" Condition="$(CollectFiles)">
 
+    <Message Importance="high" Text="-------------- Collecting '$(Configuration)' files --------------" />
     <!-- re-entrant call pattern -->
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CollectVersionSpecificFiles"
              Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity)" />
@@ -179,7 +180,7 @@
 
 
   <Target Name="BuildMSI" Condition="$(BuildMSI)">
-
+    <Message Importance="high" Text="-------------- Building $(Configuration) MSI --------------" />
     <!-- default target => build MSI -->
     <MSBuild Projects="$(MSBuildProjectDirectory)\Setup.Aggregator\Setup.Aggregator.wixproj"
              Properties="@(TfsVersion -> 'Supports%(Alt)=True');OutputName=TFSAggregator-$(BuildVersion)-$(Configuration);Configuration=$(Configuration);CollectDir=$(CollectDir);NeutralDir=$(NeutralDir);SolutionDir=$(MSBuildProjectDirectory);BuildVersion=$(BuildVersion)" />
@@ -187,7 +188,16 @@
 
 
 
-  <Target Name="Build" DependsOnTargets="BuildSolution;CollectFiles;BuildMSI">
+  <Target Name="PackageWebHooks">
+    <Message Importance="high" Text="-------------- Packaging $(Configuration) for WebDeploy --------------" />
+    <MSBuild Projects="$(MSBuildProjectDirectory)\Aggregator.WebHooks\Aggregator.WebHooks.csproj"
+             Targets="Build;Package"
+             Properties="Configuration=$(Configuration)-2015.2;BuildVersion=$(BuildVersion);PackageLocation=$(OutputPath)$(OutputName)-$(BuildVersion)-$(Configuration).zip" />
+  </Target>
+
+
+
+  <Target Name="Build" DependsOnTargets="BuildSolution;CollectFiles;BuildMSI;PackageWebHooks">
   </Target>
 
 
