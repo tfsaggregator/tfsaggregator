@@ -63,6 +63,7 @@ namespace Aggregator.WebHooks.Controllers
                 try
                 {
                     context.CurrentWorkItemId = request.WorkItemId;
+                    context.CurrentChangeType = request.ChangeType;
                     var notification = context.Notification;
 
                     logger.StartingProcessing(context, notification);

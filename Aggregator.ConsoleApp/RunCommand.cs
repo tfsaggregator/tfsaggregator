@@ -110,6 +110,8 @@ namespace Aggregator.ConsoleApp
                     while (workItemIds.Count > 0)
                     {
                         context.CurrentWorkItemId = workItemIds.Dequeue();
+                        // HACK should be from command line argument
+                        context.CurrentChangeType = Core.Interfaces.ChangeTypes.Change;
                         var notification = context.Notification;
 
                         logger.StartingProcessing(context, notification);

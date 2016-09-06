@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Aggregator.Core.Interfaces;
 
 namespace Aggregator.WebHooks.Models
 {
@@ -20,6 +21,8 @@ namespace Aggregator.WebHooks.Models
         // real data
         internal string EventId { get; private set; }
         internal string EventType { get; private set; }
+        // EventType property decoded
+        internal ChangeTypes ChangeType { get; private set; }
         internal string AccountId { get; private set; }
         public string CollectionId { get; private set; }
         internal int WorkItemId { get; private set; }
@@ -71,15 +74,19 @@ namespace Aggregator.WebHooks.Models
                 {
                     case "workitem.created":
                         result.TeamProject = (string)payload["resource"]["fields"]["System.TeamProject"];
+                        result.ChangeType = Core.Interfaces.ChangeTypes.New;
                         break;
                     case "workitem.updated":
                         result.TeamProject = (string)payload["resource"]["revision"]["fields"]["System.TeamProject"];
+                        result.ChangeType = Core.Interfaces.ChangeTypes.Change;
                         break;
                     case "workitem.restored":
                         result.TeamProject = (string)payload["resource"]["fields"]["System.TeamProject"];
+                        result.ChangeType = Core.Interfaces.ChangeTypes.Restore;
                         break;
                     case "workitem.deleted":
                         result.TeamProject = (string)payload["resource"]["fields"]["System.TeamProject"];
+                        result.ChangeType = Core.Interfaces.ChangeTypes.Delete;
                         break;
                     default:
                         result.Error = $"Unsupported eventType {result.EventType}";

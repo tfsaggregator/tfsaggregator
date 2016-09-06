@@ -53,11 +53,13 @@ namespace Aggregator.ConsoleApp
         {
             get
             {
-                return new Notification(this.CurrentWorkItemId, this.teamProjectCollectionUrl, this.teamProjectName);
+                return new Notification(this.CurrentWorkItemId, this.CurrentChangeType, this.teamProjectCollectionUrl, this.teamProjectName);
             }
         }
 
         public int CurrentWorkItemId { get; set; }
+
+        public ChangeTypes CurrentChangeType { get; set; }
 
         public IVssRequestContext VssContext
         {

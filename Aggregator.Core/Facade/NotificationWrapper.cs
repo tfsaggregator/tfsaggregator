@@ -1,4 +1,5 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System;
+using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.TeamFoundation.WorkItemTracking.Server;
@@ -15,6 +16,14 @@ namespace Aggregator.Core.Facade
         {
             this.notification = notification;
             this.eventArgs = eventArgs;
+        }
+
+        public Interfaces.ChangeTypes ChangeType
+        {
+            get
+            {
+                return (Interfaces.ChangeTypes)this.eventArgs.ChangeType;
+            }
         }
 
         public int WorkItemId

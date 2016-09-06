@@ -23,12 +23,15 @@ namespace Aggregator.Models
         /// <param name="projectName">
         /// The name of the project that holds this work item.
         /// </param>
-        public Notification(int workItemId, string teamProjectCollectionUrl, string projectName)
+        public Notification(int workItemId, ChangeTypes changeType, string teamProjectCollectionUrl, string projectName)
         {
             this.WorkItemId = workItemId;
+            this.ChangeType = changeType;
             //HACK
             this.ProjectUri = teamProjectCollectionUrl + "/" +projectName;
         }
+
+        public ChangeTypes ChangeType { get; private set; }
 
         /// <summary>
         /// WorkItemId of the work item to load and apply the policy on.

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Aggregator.Core.Interfaces;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Server;
@@ -22,15 +23,18 @@ namespace Aggregator.ConsoleApp
         /// <param name="projectName">
         /// The name of the project that holds this work item.
         /// </param>
-        public Notification(int workItemId, string teamProjectCollectionUrl, string projectName)
+        public Notification(int workItemId, ChangeTypes changeType, string teamProjectCollectionUrl, string projectName)
         {
             this.WorkItemId = workItemId;
+            this.ChangeType = changeType;
 
             var tpc = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new System.Uri(teamProjectCollectionUrl));
             var css = tpc.GetService<ICommonStructureService>();
             var pi = css.ListProjects().FirstOrDefault(p => p.Name == projectName);
             this.ProjectUri = pi.Uri;
         }
+
+        public ChangeTypes ChangeType { get; private set; }
 
         /// <summary>
         /// WorkItemId of the work item to load and apply the policy on.
