@@ -142,6 +142,7 @@
     <Compile Include="Configuration\Snippet.cs" />
     <Compile Include="Configuration\ScopeMatchResult.cs" />
     <Compile Include="Configuration\TemplateScope.cs" />
+    <Compile Include="Configuration\ChangeTypeScope.cs" />
     <Compile Include="Configuration\WorkItemTypeScope.cs" />
     <Compile Include="Extensions\BaseFieldValueValidator.cs" />
     <Compile Include="Extensions\DoubleFixFieldDecorator.cs" />

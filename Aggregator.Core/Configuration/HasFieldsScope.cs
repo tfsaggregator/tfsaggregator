@@ -17,7 +17,7 @@ namespace Aggregator.Core.Configuration
             }
         }
 
-        public override ScopeMatchResult Matches(IWorkItem item)
+        public override ScopeMatchResult Matches(IWorkItem item, INotification notification)
         {
             var res = new ScopeMatchResult();
 

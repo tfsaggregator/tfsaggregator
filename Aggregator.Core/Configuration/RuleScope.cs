@@ -19,6 +19,6 @@ namespace Aggregator.Core.Configuration
         /// </summary>
         /// <param name="item">The Work Item of the TFS event</param>
         /// <returns>True if the policy should trigger on this request.</returns>
-        public abstract ScopeMatchResult Matches(IWorkItem item);
+        public abstract ScopeMatchResult Matches(IWorkItem item, INotification notification);
     }
 }

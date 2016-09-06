@@ -309,6 +309,11 @@ namespace Aggregator.Core.Configuration
                         ruleScopes.Add(new HasFieldsScope() { FieldNames = ruleElem.Attribute("hasFields").Value.Split(ListSeparators) });
                     }
 
+                    if (ruleElem.Attribute("changes") != null)
+                    {
+                        ruleScopes.Add(new ChangeTypeScope() { ApplicableChanges = ruleElem.Attribute("changes").Value.Split(ListSeparators) });
+                    }
+
                     rule.Scope = ruleScopes.ToArray();
                     rule.Script = ruleElem.Value;
 

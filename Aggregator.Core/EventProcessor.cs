@@ -60,7 +60,7 @@ namespace Aggregator.Core
                 foreach (var policy in policies)
                 {
                     this.logger.ApplyingPolicy(policy.Name);
-                    this.ApplyRules(workItem, policy.Rules);
+                    this.ApplyRules(workItem, notification, policy.Rules);
                 }
 
                 this.SaveChangedWorkItems();
@@ -87,20 +87,20 @@ namespace Aggregator.Core
             }));
         }
 
-        private void ApplyRules(IWorkItem workItem, IEnumerable<Rule> rules)
+        private void ApplyRules(IWorkItem workItem, INotification notification, IEnumerable<Rule> rules)
         {
             foreach (var rule in rules)
             {
                 this.logger.ApplyingRule(rule.Name);
-                this.ApplyRule(rule, workItem);
+                this.ApplyRule(rule, workItem, notification);
             }
         }
 
-        private void ApplyRule(Rule rule, IWorkItem workItem)
+        private void ApplyRule(Rule rule, IWorkItem workItem, INotification notification)
         {
             if (rule.Scope.All(scope =>
             {
-                var result = scope.Matches(workItem);
+                var result = scope.Matches(workItem, notification);
                 this.logger.RuleScopeMatchResult(scope, result);
                 return result.Success;
             }))

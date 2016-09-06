@@ -92,6 +92,8 @@
                 <xs:attribute name="name" type="xs:ID" use="required" />
                 <xs:attribute name="appliesTo" type="xs:string" use="optional" />
                 <xs:attribute name="hasFields" type="xs:string" use="optional" />
+                <!-- must match Aggregator.Core.Interfaces.ChangeTypes i.e. Microsoft.TeamFoundation.WorkItemTracking.Server.ChangeTypes -->
+                <xs:attribute name="changes" type="xs:string" use="optional" default="New,Change,Delete,Restore" />
               </xs:extension>
             </xs:simpleContent>
           </xs:complexType>
