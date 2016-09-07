@@ -107,6 +107,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2016", "2016", "{7FD49A72-358A-4796-BA98-0DAD3B9392C9}"
 	ProjectSection(SolutionItems) = preProject
 		References\2016\packages.config = References\2016\packages.config
+		References\2016\PLACEHOLDER.txt = References\2016\PLACEHOLDER.txt
 	EndProjectSection
 EndProject
 Global
