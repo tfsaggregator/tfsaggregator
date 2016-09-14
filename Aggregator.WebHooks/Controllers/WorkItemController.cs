@@ -55,12 +55,13 @@ namespace Aggregator.WebHooks.Controllers
                 (runtimeContext) => new Core.Script.ScriptLibrary(runtimeContext));
             if (runtime.HasErrors)
             {
+                Log(runtime.Errors.Current);
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError) { ReasonPhrase = runtime.Errors.Current };
             }
 
-            using (EventProcessor eventProcessor = new EventProcessor(runtime))
+            try
             {
-                try
+                using (EventProcessor eventProcessor = new EventProcessor(runtime))
                 {
                     context.CurrentWorkItemId = request.WorkItemId;
                     context.CurrentChangeType = request.ChangeType;
@@ -78,13 +79,13 @@ namespace Aggregator.WebHooks.Controllers
                     {
                         return new HttpResponseMessage(HttpStatusCode.InternalServerError) { ReasonPhrase = result.StatusMessage };
                     }
-                }
-                catch (Exception e)
-                {
-                    logger.ProcessEventException(e);
-                    return new HttpResponseMessage(HttpStatusCode.InternalServerError) { ReasonPhrase = e.Message };
-                }//try
-            }//using
+                }//using
+            }
+            catch (Exception e)
+            {
+                logger.ProcessEventException(e);
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError) { ReasonPhrase = e.Message };
+            }//try
         }
 
         private void Log(string message)
