@@ -1,11 +1,10 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
 namespace Aggregator.Core
 {
-    using System;
-    using Context;
-    using System.Collections.Generic;
     /// <summary>
     /// Base class for scripting language engines.
     /// </summary>
@@ -56,10 +55,10 @@ namespace Aggregator.Core
                 case "POWERSHELL":
                     return typeof(PsScriptEngine);
 
-                default:
                 case "CS":
                 case "CSHARP":
                 case "C#":
+                default:
                     return typeof(CSharpScriptEngine);
             }
         }
