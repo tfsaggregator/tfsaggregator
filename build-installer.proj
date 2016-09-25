@@ -54,9 +54,23 @@
 
 
 
-  <Target Name="BuildSolution" Condition="$(BuildSolution)">
+  <Target Name="CleanSolution">
     <MSBuild Projects="$(MSBuildProjectDirectory)\TFS-Aggregator-2.sln"
+             Targets="Clean"
              Properties="Configuration=$(Configuration)-%(TfsVersion.Identity)" />
+  </Target>
+
+
+  <Target Name="BuildSolutionFlavor">
+    <Message Importance="high" Text="-------------- Building $(CurrentTfsVersion) flavor --------------" />
+    <MSBuild Projects="$(MSBuildProjectDirectory)\TFS-Aggregator-2.sln"
+             Properties="Configuration=$(CurrentFlavor)" />
+  </Target>
+
+  <Target Name="BuildSolution" Condition="$(BuildSolution)">
+    <!-- re-entrant call pattern -->
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="BuildSolutionFlavor"
+             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity)" />
   </Target>
 
 
@@ -174,6 +188,10 @@
 
 
   <Target Name="Build" DependsOnTargets="BuildSolution;CollectFiles;BuildMSI">
+  </Target>
+
+
+  <Target Name="Clean" DependsOnTargets="CleanSolution">
   </Target>
 
 
