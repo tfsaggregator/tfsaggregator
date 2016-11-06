@@ -70,6 +70,7 @@ namespace Aggregator.Core.Context
             }
 
             runtime = runtime.Clone() as RuntimeContext;
+
             // as it changes at each invocation, must be set again here
             runtime.RequestContext = requestContext;
             runtime.workItemRepository = null;
@@ -130,6 +131,7 @@ namespace Aggregator.Core.Context
         public ILogEvents Logger { get; private set; }
 
         private Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder;
+
         public ScriptEngine GetEngine()
         {
             const string EngineCacheKey = "engine:";
