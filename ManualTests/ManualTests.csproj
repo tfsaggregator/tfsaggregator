@@ -74,7 +74,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2016|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2017|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <TfsVersion>15.0</TfsVersion>
     <OutputPath>bin\Debug-2016\</OutputPath>
@@ -84,7 +84,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2016|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2017|AnyCPU'">
     <OutputPath>bin\Release-2016\</OutputPath>
     <TfsVersion>15.0</TfsVersion>
     <DefineConstants>TRACE;</DefineConstants>

@@ -184,3 +184,4 @@ References/*/*.dll
 _collect/
 wip.playlist
 IntegrationTests.Plugin/TfsAggregator2IntegrationTest.zip
+/.cr
