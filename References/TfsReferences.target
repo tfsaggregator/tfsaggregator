@@ -315,7 +315,7 @@
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\TeamFoundationServer\15.0@InstallPath)</TfsInstallationDirectory>
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\TeamFoundationServer\15.0@InstallPath)</TfsInstallationDirectory>
         <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)\Application Tier\Web Services\bin</ServerAssemblies>
-        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '15.0'">..\References\2016</ServerAssemblies>
+        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '15.0'">..\References\2017</ServerAssemblies>
       </PropertyGroup>
 
       <ItemGroup>
