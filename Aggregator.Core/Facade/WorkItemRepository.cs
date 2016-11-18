@@ -39,6 +39,7 @@ namespace Aggregator.Core.Facade
             this.logger = context.Logger;
             this.context = context;
             var ci = context.GetConnectionInfo();
+            this.logger.Connecting(ci);
             this.tfs = new TfsTeamProjectCollection(ci.ProjectCollectionUri, ci.Impersonate);
             this.workItemStore = this.tfs.GetService<WorkItemStore>();
         }
