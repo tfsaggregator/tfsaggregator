@@ -96,6 +96,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2015.1", "2015.1", "{62159E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2015.2", "2015.2", "{4AB78AF9-73DE-4353-AA18-DC6102320316}"
 	ProjectSection(SolutionItems) = preProject
+		References\2015.2\packages.config = References\2015.2\packages.config
 		References\2015.2\PLACEHOLDER.txt = References\2015.2\PLACEHOLDER.txt
 	EndProjectSection
 EndProject
