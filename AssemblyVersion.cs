@@ -3,7 +3,9 @@
 // To read Configuration use this Powershell snippet
 // [System.Reflection.Assembly]::LoadFile("path-to-assembly-file").GetCustomAttributesData() | ?{ $_.AttributeType -eq [System.Reflection.AssemblyConfigurationAttribute] } | select ConstructorArguments
 #if DEBUG
-#if TFS2015u2
+#if TFS2017
+    [assembly: AssemblyConfiguration("Debug [TFS 2017.0]")]
+#elif TFS2015u2
     [assembly: AssemblyConfiguration("Debug [TFS 2015.2]")]
 #elif TFS2015u1
     [assembly: AssemblyConfiguration("Debug [TFS 2015.1]")]
@@ -13,7 +15,9 @@
     [assembly: AssemblyConfiguration("Debug [TFS 2013.5]")]
 #endif
 #else
-#if TFS2015u2
+#if TFS2017
+    [assembly: AssemblyConfiguration("Release [TFS 2017.0]")]
+#elif TFS2015u2
     [assembly: AssemblyConfiguration("Release [TFS 2015.2]")]
 #elif TFS2015u1
     [assembly: AssemblyConfiguration("Release [TFS 2015.1]")]
