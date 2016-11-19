@@ -1,9 +1,12 @@
 
-[![Build status](https://ci.appveyor.com/api/projects/status/github/tfsaggregator/tfsaggregator?svg=true)](https://ci.appveyor.com/project/giuliov/tfsaggregator)
-[![Join the chat at https://gitter.im/tfsaggregator/tfsaggregator](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tfsaggregator/tfsaggregator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+![Develop Build status](https://tfsaggregator.visualstudio.com/_apis/public/build/definitions/2e747373-c780-4b2c-823d-98a3fd2b4e99/1/badge)
 
-This server side plugin for TFS 2013 update 2, TFS 2015 RTM and Update 1, 2 and 3 enables running custom script when Work Items change,
+This server side plugin, for TFS 2013 update 2 up to TFS 2017 RTM, enables running custom script when Work Items change,
 allowing dynamic calculation of field values in TFS and more. (For example: Dev work + Test Work = Total Work).
+
+## What's new in v2.2
+ * Support for TFS 2017
+ * **TODO**
 
 ## What's new in v2.1.1
  * Fixes important bug causing very high CPU usage (see [#160](https://github.com/tfsaggregator/tfsaggregator/issues/160)).
