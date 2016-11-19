@@ -108,7 +108,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2017|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <TfsVersion>15.0</TfsVersion>
-    <OutputPath>bin\Debug-2016\</OutputPath>
+    <OutputPath>bin\Debug-2017\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -116,7 +116,7 @@
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2017|AnyCPU'">
-    <OutputPath>bin\Release-2016\</OutputPath>
+    <OutputPath>bin\Release-2017\</OutputPath>
     <TfsVersion>15.0</TfsVersion>
     <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>
@@ -129,7 +129,8 @@
   <ItemGroup>
     <Reference Include="NSubstitute, Version=1.10.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
       <HintPath>..\packages\NSubstitute.1.10.0.0\lib\net45\NSubstitute.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

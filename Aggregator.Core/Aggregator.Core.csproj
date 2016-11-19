@@ -107,7 +107,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2017|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <TfsVersion>15.0</TfsVersion>
-    <OutputPath>bin\Debug-2016\</OutputPath>
+    <OutputPath>bin\Debug-2017\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -115,7 +115,7 @@
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2017|AnyCPU'">
-    <OutputPath>bin\Release-2016\</OutputPath>
+    <OutputPath>bin\Release-2017\</OutputPath>
     <TfsVersion>15.0</TfsVersion>
     <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>
