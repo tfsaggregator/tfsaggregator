@@ -82,7 +82,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeatTransforms", "HeatTrans
 	ProjectSection(SolutionItems) = preProject
 		Setup.Aggregator\T2013.xslt = Setup.Aggregator\T2013.xslt
 		Setup.Aggregator\T2015.1.xslt = Setup.Aggregator\T2015.1.xslt
+		Setup.Aggregator\T2015.2.xslt = Setup.Aggregator\T2015.2.xslt
 		Setup.Aggregator\T2015.xslt = Setup.Aggregator\T2015.xslt
+		Setup.Aggregator\T2017.xslt = Setup.Aggregator\T2017.xslt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FilesToInstall", "FilesToInstall", "{61340591-23E3-4B33-9E23-8669CBC235A9}"

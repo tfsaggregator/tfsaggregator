@@ -29,6 +29,7 @@
     <BuildSolution>True</BuildSolution>
     <CollectFiles>True</CollectFiles>
     <BuildMSI>True</BuildMSI>
+    <WiXProjectPropertiesFile>Setup.Aggregator\_clisrv.g.properties</WiXProjectPropertiesFile>
   </PropertyGroup>
 
   <!-- TFS versions supported 
@@ -49,6 +50,9 @@
     </TfsVersion>
     <TfsVersion Include="2015.2" >
       <Alt>2015u2</Alt>
+    </TfsVersion>
+    <TfsVersion Include="2017" >
+      <Alt>2017</Alt>
     </TfsVersion>
   </ItemGroup>
 
@@ -124,6 +128,7 @@
   
   <Target Name="CollectFiles" Condition="$(CollectFiles)">
 
+    <Message Importance="high" Text="-------------- Collecting '$(Configuration)' files --------------" />
     <!-- re-entrant call pattern -->
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CollectVersionSpecificFiles"
              Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity)" />
@@ -178,7 +183,64 @@
 
 
 
-  <Target Name="BuildMSI" Condition="$(BuildMSI)">
+  <Target Name="GenerateWiXProjectPropertiesFileContent1">
+    <ItemGroup>
+      <fileProp1 Include="   ClientBinDir$(CurrentTfsVersion)=%24(CollectDir)\$(CurrentTfsVersion)\cliBin%3B" />
+      <fileProp1 Include="   ServerBinDir$(CurrentTfsVersion)=%24(CollectDir)\$(CurrentTfsVersion)\srvBin%3B" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(WiXProjectPropertiesFile)"
+                      Lines="@(fileProp1)"
+                      Overwrite="false"
+                      Encoding="Unicode"/>
+  </Target>
+
+  <Target Name="GenerateWiXProjectPropertiesFileContent2">
+    <ItemGroup>
+      <fileProp2 Include='  &lt;Compile Include="obj\%24(Configuration)\_cliBin_$(CurrentTfsVersion).wxs" />' />
+      <fileProp2 Include='  &lt;Compile Include="obj\%24(Configuration)\_srvBin_$(CurrentTfsVersion).wxs" />' />
+    </ItemGroup>
+    <WriteLinesToFile File="$(WiXProjectPropertiesFile)"
+                      Lines="@(fileProp2)"
+                      Overwrite="false"
+                      Encoding="Unicode"/>
+  </Target>
+  
+  <Target Name="GenerateWiXProjectPropertiesFile">
+    <ItemGroup>
+      <WiXProjectPropertiesHeader Include='&lt;Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">' />
+      <WiXProjectPropertiesHeader Include=" &lt;PropertyGroup>"/>
+      <WiXProjectPropertiesHeader Include="  &lt;_CollectDirs>"/>
+      <WiXProjectPropertiesBreakr Include="  &lt;/_CollectDirs>"/>
+      <WiXProjectPropertiesBreakr Include=" &lt;/PropertyGroup>"/>
+      <WiXProjectPropertiesBreakr Include=" &lt;ItemGroup>"/>
+      <WiXProjectPropertiesFooter Include=" &lt;/ItemGroup>"/>
+      <WiXProjectPropertiesFooter Include="&lt;/Project>" />
+    </ItemGroup>
+    <!-- file header -->
+    <WriteLinesToFile File="$(WiXProjectPropertiesFile)"
+                      Lines="@(WiXProjectPropertiesHeader)"
+                      Overwrite="true"
+                      Encoding="Unicode"/>
+    <!-- re-entrant call pattern -->
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="GenerateWiXProjectPropertiesFileContent1"
+             Properties="CurrentTfsVersion=%(TfsVersion.Identity)" />
+    <!-- file mid -->
+    <WriteLinesToFile File="$(WiXProjectPropertiesFile)"
+                      Lines="@(WiXProjectPropertiesBreakr)"
+                      Overwrite="false"
+                      Encoding="Unicode"/>
+    <!-- re-entrant call pattern -->
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="GenerateWiXProjectPropertiesFileContent2"
+             Properties="CurrentTfsVersion=%(TfsVersion.Identity)" />
+    <!-- file footer -->
+    <WriteLinesToFile File="$(WiXProjectPropertiesFile)"
+                      Lines="@(WiXProjectPropertiesFooter)"
+                      Overwrite="false"
+                      Encoding="Unicode"/>
+  </Target>
+
+  <Target Name="BuildMSI" DependsOnTargets="GenerateWiXProjectPropertiesFile" Condition="$(BuildMSI)">
+    <Message Importance="high" Text="-------------- Building $(Configuration) MSI --------------" />
 
     <!-- default target => build MSI -->
     <MSBuild Projects="$(MSBuildProjectDirectory)\Setup.Aggregator\Setup.Aggregator.wixproj"

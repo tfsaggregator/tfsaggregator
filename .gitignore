@@ -185,3 +185,4 @@ _collect/
 wip.playlist
 IntegrationTests.Plugin/TfsAggregator2IntegrationTest.zip
 /.cr
+Setup.Aggregator/_clisrv.g.properties
