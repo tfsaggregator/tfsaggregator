@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.25909.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.Core", "Aggregator.Core\Aggregator.Core.csproj", "{FEA76835-61B3-4FC7-9D6F-50D39A7A8258}"
 EndProject
@@ -11,10 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Core", "UnitTests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B94443D9-A5EE-4114-9C4F-F5C6B5401731}"
 	ProjectSection(SolutionItems) = preProject
-		appveyor.yml = appveyor.yml
 		AssemblyVersion.cs = AssemblyVersion.cs
 		build-installer.proj = build-installer.proj
-		GetReferenceFromContainer.ps1 = GetReferenceFromContainer.ps1
 		TfsAggregator.ico = TfsAggregator.ico
 		tfsaggregator.svg = tfsaggregator.svg
 	EndProjectSection
@@ -66,11 +64,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2015", "2015", "{14D62C28-5
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManualTests", "ManualTests\ManualTests.csproj", "{9435D73C-6B29-463F-9B79-CD78E75FBA11}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2015.1", "2015.1", "{CB1029ED-AFCB-492F-961B-5AF813F52625}"
-	ProjectSection(SolutionItems) = preProject
-		References\2015.1\PLACEHOLDER.txt = References\2015.1\PLACEHOLDER.txt
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "installer", "installer", "{E56DE6FC-74A4-4865-BFAD-8F330BC5618F}"
 	ProjectSection(SolutionItems) = preProject
@@ -426,9 +419,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{17EF831E-EB65-431C-B398-4FED5CA44F98} = {B1913F70-5A32-4EAE-BDD2-0C46295656A6}
-		{79BBE553-2E3E-4D63-9369-4BDC30523FF1} = {B94443D9-A5EE-4114-9C4F-F5C6B5401731}
+		{79BBE553-2E3E-4D63-9369-4BDC30523FF1} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
 		{14D62C28-52D1-4267-A40A-80D31A5135CA} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
-		{CB1029ED-AFCB-492F-961B-5AF813F52625} = {B1913F70-5A32-4EAE-BDD2-0C46295656A6}
 		{EAB2B1DE-FCBF-49F0-9BB8-E29F709E4002} = {E56DE6FC-74A4-4865-BFAD-8F330BC5618F}
 		{61340591-23E3-4B33-9E23-8669CBC235A9} = {E56DE6FC-74A4-4865-BFAD-8F330BC5618F}
 		{62159E5E-940C-4B19-8859-4CF1BBDCA2E5} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
