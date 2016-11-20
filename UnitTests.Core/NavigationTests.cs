@@ -67,10 +67,13 @@ namespace UnitTests.Core
 
             // Tested By
             grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc1.Id, repository));
+
             // Tests
             tc1.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
+
             // Tested By
             grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc2.Id, repository));
+
             // Tests
             tc2.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
 

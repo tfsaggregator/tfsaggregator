@@ -443,5 +443,17 @@ namespace Aggregator.Core.Monitoring
         {
             this.logger.Log(LogLevel.Verbose, "ScriptLibrary.SendMail( from:='{0}', to:='{1}', subject:='{2}', body:='{3}' )", from, to, subject, body.Truncate(20));
         }
+
+        public void Connecting(ConnectionInfo ci)
+        {
+            if (ci.Impersonate != null)
+            {
+                this.logger.Log(LogLevel.Verbose, $"Connecting to {ci.ProjectCollectionUri} impersonating {ci.Impersonate.Identifier}, running as {Environment.UserName}");
+            }
+            else
+            {
+                this.logger.Log(LogLevel.Verbose, $"Connecting to {ci.ProjectCollectionUri} as {Environment.UserName}");
+            }
+        }
     }
 }

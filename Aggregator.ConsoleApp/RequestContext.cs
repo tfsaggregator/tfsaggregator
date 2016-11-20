@@ -81,8 +81,8 @@ namespace Aggregator.ConsoleApp
 
             string projectName;
             string projectState;
-            int templateId = 0;
-            ProjectProperty[] projectProperties = null;
+            int templateId;
+            ProjectProperty[] projectProperties;
 
             ics.GetProjectProperties(projectUri.ToString(), out projectName, out projectState, out templateId, out projectProperties);
 

@@ -26,7 +26,9 @@ namespace Aggregator.Core
             {
                 // TODO log something
                 if (sourceElement.Type != Script.ScriptSourceElementType.Rule)
+                {
                     continue;
+                }
 
                 this.scripts.Add(sourceElement.Name, sourceElement.SourceCode);
             }

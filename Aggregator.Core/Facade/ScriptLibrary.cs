@@ -51,6 +51,7 @@ namespace Aggregator.Core.Facade
                     userName,
                     MembershipQuery.None,
                     ReadIdentityOptions.ExtendedProperties);
+
                 // if not found try again using DisplayName
                 identity = identity ?? identityManagementService.ReadIdentity(
                     IdentitySearchFactor.DisplayName,

@@ -12,6 +12,8 @@ using Aggregator.Core.Monitoring;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
+using IdentityDescriptor = Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor;
+
 namespace Aggregator.Core.Facade
 {
     /// <summary>
@@ -37,6 +39,7 @@ namespace Aggregator.Core.Facade
             this.logger = context.Logger;
             this.context = context;
             var ci = context.GetConnectionInfo();
+            this.logger.Connecting(ci);
             this.tfs = ci.Token.GetCollection(ci.ProjectCollectionUri);
             this.tfs.Authenticate();
             this.workItemStore = this.tfs.GetService<WorkItemStore>();
