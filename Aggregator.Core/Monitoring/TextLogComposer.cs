@@ -446,9 +446,9 @@ namespace Aggregator.Core.Monitoring
 
         public void Connecting(ConnectionInfo ci)
         {
-            if (ci.Impersonate != null)
+            if (ci.Token != null)
             {
-                this.logger.Log(LogLevel.Verbose, $"Connecting to {ci.ProjectCollectionUri} impersonating {ci.Impersonate.Identifier}, running as {Environment.UserName}");
+                this.logger.Log(LogLevel.Verbose, $"Connecting to {ci.ProjectCollectionUri} impersonating {ci.Token}, running as {Environment.UserName}");
             }
             else
             {

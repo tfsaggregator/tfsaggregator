@@ -69,6 +69,11 @@ namespace Aggregator.Core.Facade
                 tfsCred.AllowInteractive = false;
                 return new TfsTeamProjectCollection(tfsCollectionUri, tfsCred);
             }
+
+            public override string ToString()
+            {
+                return $"{base.ToString()}({this.username})";
+            }
         }
 
         public class ImpersonateAuthenticationToken : AuthenticationToken
@@ -83,6 +88,11 @@ namespace Aggregator.Core.Facade
             public override TfsTeamProjectCollection GetCollection(Uri tfsCollectionUri)
             {
                 return new TfsTeamProjectCollection(tfsCollectionUri, this.identityDescriptor);
+            }
+
+            public override string ToString()
+            {
+                return $"{base.ToString()}({this.identityDescriptor.Identifier})";
             }
         }
     }
