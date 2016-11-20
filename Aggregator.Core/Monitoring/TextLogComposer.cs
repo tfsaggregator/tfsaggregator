@@ -455,5 +455,10 @@ namespace Aggregator.Core.Monitoring
                 this.logger.Log(LogLevel.Verbose, $"Connecting to {ci.ProjectCollectionUri} as {Environment.UserName}");
             }
         }
+
+        public void ReadingGlobalList(string collectionName, string globalListName)
+        {
+            this.logger.Log(LogLevel.Verbose, $"Reading GlobalList {globalListName} from {collectionName}");
+        }
     }
 }

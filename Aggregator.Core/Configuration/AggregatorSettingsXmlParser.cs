@@ -10,7 +10,9 @@ namespace Aggregator.Core.Configuration
     using System.Xml.Linq;
     using System.Xml.Schema;
 
+#pragma warning disable S101 // Types should be named in camel case
     public partial class TFSAggregatorSettings
+#pragma warning restore S101 // Types should be named in camel case
     {
         /// <summary>
         /// Populates a <see cref="TFSAggregatorSettings"/> instance parsing an <see cref="XDocument" />.
@@ -139,9 +141,11 @@ namespace Aggregator.Core.Configuration
                 var rateLimitElement = doc.Root.Element("runtime")?.Element("rateLimiting");
                 if (rateLimitElement != null)
                 {
-                    var rateLimit = new RateLimit();
-                    rateLimit.Changes = int.Parse(rateLimitElement.Attribute("changes").Value);
-                    rateLimit.Interval = TimeSpan.Parse(rateLimitElement.Attribute("interval").Value);
+                    var rateLimit = new RateLimit()
+                    {
+                        Changes = int.Parse(rateLimitElement.Attribute("changes").Value),
+                        Interval = TimeSpan.Parse(rateLimitElement.Attribute("interval").Value)
+                    };
                     this.instance.RateLimit = rateLimit;
                 }
                 else
@@ -277,9 +281,10 @@ namespace Aggregator.Core.Configuration
                 var functions = new List<Function>();
                 foreach (var functionElem in doc.Root.Elements("function"))
                 {
-                    var function = new Function();
-
-                    function.Script = functionElem.Value;
+                    var function = new Function()
+                    {
+                        Script = functionElem.Value
+                    };
 
                     functions.Add(function);
                 }

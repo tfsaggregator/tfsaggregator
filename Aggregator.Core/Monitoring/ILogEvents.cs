@@ -100,5 +100,7 @@ namespace Aggregator.Core.Monitoring
         void LibrarySendMail(string from, string to, string subject, string body);
 
         void Connecting(ConnectionInfo ci);
+
+        void ReadingGlobalList(string collectionName, string globalListName);
     }
 }

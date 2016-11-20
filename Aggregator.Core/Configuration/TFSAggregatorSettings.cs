@@ -10,11 +10,13 @@ namespace Aggregator.Core.Configuration
     using System.Xml.Linq;
     using System.Xml.Schema;
 
+#pragma warning disable S101 // Types should be named in camel case
     /// <summary>
     /// This class represents Core settings as properties
     /// </summary>
     /// <remarks>Marked partial to apply nested trick</remarks>
     public partial class TFSAggregatorSettings
+#pragma warning restore S101 // Types should be named in camel case
     {
         private static readonly char[] ListSeparators = new char[] { ',', ';' };
 

@@ -6,7 +6,9 @@ namespace Aggregator.Core
 {
     using Microsoft.VisualBasic;
 
+#pragma warning disable S101 // Types should be named in camel case
     public class VBNetScriptEngine : DotNetScriptEngine<VBCodeProvider>
+#pragma warning restore S101 // Types should be named in camel case
     {
         public VBNetScriptEngine(ILogEvents logger, bool debug, IScriptLibrary library)
             : base(logger, debug, library)
