@@ -1,10 +1,12 @@
-﻿using System;
-using Microsoft.TeamFoundation.Client;
-
-using IdentityDescriptor = Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor;
-
-namespace Aggregator.Core.Facade
+﻿namespace Aggregator.Core.Facade
 {
+    using System;
+    using Microsoft.TeamFoundation.Client;
+    using Microsoft.VisualStudio.Services.Common;
+    using IdentityDescriptor = Microsoft.TeamFoundation.Framework.Client.IdentityDescriptor;
+
+#pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
+
     public partial class WorkItemRepository
     {
         public abstract class AuthenticationToken
@@ -41,11 +43,18 @@ namespace Aggregator.Core.Facade
             public override TfsTeamProjectCollection GetCollection(Uri tfsCollectionUri)
             {
                 // username is not important, we use it to identify ourselves to callee
+#if TFS2017
+                var tfsCred = new VssCredentials(
+                    new VssBasicCredential(
+                        new System.Net.NetworkCredential(
+                            "tfsaggregator2-webhooks", this.personalToken)));
+#else
                 var tfsCred = new TfsClientCredentials(
                     new BasicAuthCredential(
                         new System.Net.NetworkCredential(
                             "tfsaggregator2-webhooks", this.personalToken)));
                 tfsCred.AllowInteractive = false;
+#endif
                 return new TfsTeamProjectCollection(tfsCollectionUri, tfsCred);
             }
         }
@@ -63,10 +72,16 @@ namespace Aggregator.Core.Facade
 
             public override TfsTeamProjectCollection GetCollection(Uri tfsCollectionUri)
             {
+#if TFS2017
+                var tfsCred = new VssCredentials(
+                    new VssBasicCredential(
+                        new System.Net.NetworkCredential(this.username, this.username)));
+#else
                 var tfsCred = new TfsClientCredentials(
                     new BasicAuthCredential(
                         new System.Net.NetworkCredential(this.username, this.username)));
                 tfsCred.AllowInteractive = false;
+#endif
                 return new TfsTeamProjectCollection(tfsCollectionUri, tfsCred);
             }
 
