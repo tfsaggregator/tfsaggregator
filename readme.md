@@ -5,6 +5,8 @@
 This server side plugin, for TFS 2013 update 2 up to TFS 2017 RTM, enables running custom script when Work Items change,
 allowing dynamic calculation of field values in TFS and more. (For example: Dev work + Test Work = Total Work).
 
+[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
+
 # Changelog
 
 ## What's new in v2.2
