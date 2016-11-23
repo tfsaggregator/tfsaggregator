@@ -4,7 +4,7 @@
 // [System.Reflection.Assembly]::LoadFile("path-to-assembly-file").GetCustomAttributesData() | ?{ $_.AttributeType -eq [System.Reflection.AssemblyConfigurationAttribute] } | select ConstructorArguments
 #if DEBUG
 #if TFS2017
-    [assembly: AssemblyConfiguration("Debug [TFS 2017.0]")]
+    [assembly: AssemblyConfiguration("Debug [TFS 2017.0 WebHooks]")]
 #elif TFS2015u2
     [assembly: AssemblyConfiguration("Debug [TFS 2015.2]")]
 #elif TFS2015u1
@@ -16,7 +16,7 @@
 #endif
 #else
 #if TFS2017
-    [assembly: AssemblyConfiguration("Release [TFS 2017.0]")]
+    [assembly: AssemblyConfiguration("Release [TFS 2017.0 WebHooks]")]
 #elif TFS2015u2
     [assembly: AssemblyConfiguration("Release [TFS 2015.2]")]
 #elif TFS2015u1

@@ -1,4 +1,0 @@
-@echo off
-set CONFIGURATION=%1
-set TARGETDIR=%2
-echo Deploy %CONFIGURATION% to %TARGETDIR%

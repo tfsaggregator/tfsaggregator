@@ -174,16 +174,11 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 # local
-References/*.dll
 *.GhostDoc.xml
 *.wit
 
 #Visual Studio Hoting process and cache
 .vs/
-References/*/*.dll
 _collect/
 wip.playlist
-IntegrationTests.Plugin/TfsAggregator2IntegrationTest.zip
-/Setup.Aggregator/Setup.Aggregator.sln
 /.cr
-Setup.Aggregator/_clisrv.g.properties

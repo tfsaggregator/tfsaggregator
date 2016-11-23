@@ -1,9 +1,0 @@
-Copy here the proper version of these TFS assemblies:
-
-Microsoft.TeamFoundation.Framework.Server.dll
-Microsoft.TeamFoundation.Server.Core.dll
-Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer.dll
-Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll
-Microsoft.TeamFoundation.WorkItemTracking.Server.dll
-
-The client object model assemblies are loaded from the NuGet package.
