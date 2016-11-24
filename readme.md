@@ -2,15 +2,18 @@
  ![Master Build status](https://tfsaggregator.visualstudio.com/_apis/public/build/definitions/2e747373-c780-4b2c-823d-98a3fd2b4e99/6/badge)
 ![Develop Build status](https://tfsaggregator.visualstudio.com/_apis/public/build/definitions/2e747373-c780-4b2c-823d-98a3fd2b4e99/1/badge)
 
-This server side plugin, for TFS 2013 update 2 up to TFS 2017 RTM, enables running custom script when Work Items change,
+This server side plugin, for VSTS, TFS 2013 update 2 up to TFS 2017 RTM, enables running custom script when Work Items change,
 allowing dynamic calculation of field values in TFS and more. (For example: Dev work + Test Work = Total Work).
-
-[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
 
 # Changelog
 
+## What's new in v2.3
+ * Support for Web Hooks and VSTS
+   [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
+   See the [Installation](INSTALL.md) instructions.
+
+
 ## What's new in v2.2
- * Support for TFS 2017
  * Support for TFS 2017
  * Macro snippets and Functions for Rules and make code more modular
  * Ability to specify server URL
