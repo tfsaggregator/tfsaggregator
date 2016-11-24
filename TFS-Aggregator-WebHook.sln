@@ -15,6 +15,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E0E7919C-5F01-45CC-A758-C3AF34F32F16}"
 	ProjectSection(SolutionItems) = preProject
 		CONTRIBUTING.md = CONTRIBUTING.md
+		Deploy-WebHooks.md = Deploy-WebHooks.md
 		LICENSE-2.0.txt = LICENSE-2.0.txt
 		README.md = README.md
 	EndProjectSection
@@ -37,6 +38,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.WebHooks", "Aggregator.WebHooks\Aggregator.WebHooks.csproj", "{E017A788-AAE8-4F29-B677-04E175ABF5FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "media", "media", "{A462E5C1-799D-482F-A252-949ED2DBDBD5}"
+	ProjectSection(SolutionItems) = preProject
+		media\2016-03-11_152451.png = media\2016-03-11_152451.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{8B9F0871-CF69-4497-AFF8-44ACFDF729BC}"
+	ProjectSection(SolutionItems) = preProject
+		azuredeploy.json = azuredeploy.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,5 +75,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A462E5C1-799D-482F-A252-949ED2DBDBD5} = {E0E7919C-5F01-45CC-A758-C3AF34F32F16}
 	EndGlobalSection
 EndGlobal

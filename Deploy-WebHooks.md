@@ -3,13 +3,15 @@
     * the account running Aggregator application pool must have proper permissions on the target TFS _or_ you set some credentials in the policy file
 2. Configure the policy
     * define the `policyFilePath` in `web.config` e.g. `<add key="policyFilePath" value="~/App_Data/{CollectionId}.policies" />`
-    you can use a static path if you use a single policy file, or use a request variable (see below)
+      you can use a static path if you use a single policy file, or use a request variable (see below)
     * prepare one or more policy files (see below the new features)
 3. Grant access to TFS/VSTS
     * For VSTS create a Personal Access Token and add it to the sample policy file (e.g. ![Create Personal Access Token screenshot](./media/2016-03-11_152451.png))
+	  > NOTE: this is per-account (User Profile/Security)
     * For TFS you can give permission to the account running the apppool (see https://github.com/tfsaggregator/tfsaggregator/wiki/Troubleshooting) or put the credential in the policy file
 4. Now you have to setup the caller, see https://www.visualstudio.com/en-us/get-started/integrate/service-hooks/webhooks-and-vso-vs
     * point the URL of WebHooks, e.g. `https://tfsaggregator.example.com/API/WorkItem`
+	  > NOTE: this is a per-project (Project/Admin)
 
 > NOTE the VSTS Test button sends a well-formed document, but some TFS versions not, so to real test you need to create/modify some work item
 
