@@ -15,7 +15,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E0E7919C-5F01-45CC-A758-C3AF34F32F16}"
 	ProjectSection(SolutionItems) = preProject
 		CONTRIBUTING.md = CONTRIBUTING.md
-		Deploy-WebHooks.md = Deploy-WebHooks.md
+		INSTALL.md = INSTALL.md
 		LICENSE-2.0.txt = LICENSE-2.0.txt
 		README.md = README.md
 	EndProjectSection
@@ -41,7 +41,31 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.WebHooks", "Aggr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "media", "media", "{A462E5C1-799D-482F-A252-949ED2DBDBD5}"
 	ProjectSection(SolutionItems) = preProject
-		media\2016-03-11_152451.png = media\2016-03-11_152451.png
+		media\0-error.png = media\0-error.png
+		media\0-PAT1.png = media\0-PAT1.png
+		media\0-PAT2.png = media\0-PAT2.png
+		media\1-deploy1.png = media\1-deploy1.png
+		media\1-deploy2.png = media\1-deploy2.png
+		media\1-deploy3.png = media\1-deploy3.png
+		media\1-deploy4-validate.png = media\1-deploy4-validate.png
+		media\1-deploy5-redeploy.png = media\1-deploy5-redeploy.png
+		media\2-config1.png = media\2-config1.png
+		media\2-config2.png = media\2-config2.png
+		media\2-config3.png = media\2-config3.png
+		media\2-config4.png = media\2-config4.png
+		media\2-config5.png = media\2-config5.png
+		media\3-log1.png = media\3-log1.png
+		media\3-log2.png = media\3-log2.png
+		media\3-log3.png = media\3-log3.png
+		media\4-hooks1.png = media\4-hooks1.png
+		media\4-hooks2.png = media\4-hooks2.png
+		media\4-hooks3.png = media\4-hooks3.png
+		media\4-hooks4.png = media\4-hooks4.png
+		media\4-hooks5.png = media\4-hooks5.png
+		media\4-hooks6.png = media\4-hooks6.png
+		media\4-hooks7.png = media\4-hooks7.png
+		media\5-test1.png = media\5-test1.png
+		media\5-test2.png = media\5-test2.png
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{8B9F0871-CF69-4497-AFF8-44ACFDF729BC}"

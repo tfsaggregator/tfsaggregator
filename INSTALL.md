@@ -49,7 +49,7 @@ You can check that the deploy worked, by opening a browser to the above URL appe
 
 
 
-# Configure the policy mapping
+# Edit `web.config` file
 
 To edit the deployed files, use Kudu console
 
@@ -58,6 +58,17 @@ To edit the deployed files, use Kudu console
 at the `https://`<name_chosen_in_previous_step>`scm.azurewebsites.net` URL. Navigate to `site\wwwroot` folder.
 
 ![](./media/2-config2.png)
+
+## Add users
+
+Add at least one user in the `Users` section
+```
+  <Users>
+    <add key="vsts" value="P@ssword1" />
+  </Users>
+```
+
+## Configure the policy mapping
 
 Define the `policyFilePath` in `web.config`; the default value is the static path of the sample policy.
 
@@ -140,7 +151,7 @@ Select the triggering event
 > * Delete
 > * Restore
 
-Insert the URL, e.g. `https://`<name_chosen_in_deploy_step>`.azurewebsites.net/api/workitem`
+Insert the URL, e.g. `https://`<name_chosen_in_deploy_step>`.azurewebsites.net/api/workitem` and one user listed in TFS Aggregator `web.config` file.
  
 ![](./media/4-hooks5.png)
 

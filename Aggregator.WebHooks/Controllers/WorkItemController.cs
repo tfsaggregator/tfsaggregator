@@ -4,6 +4,7 @@ using Aggregator.Core.Monitoring;
 using Aggregator.Models;
 using Aggregator.WebHooks.Models;
 using Aggregator.WebHooks.Utils;
+using BasicAuthentication.Filters;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace Aggregator.WebHooks.Controllers
         }
 
         // TODO async
+	    [IdentityBasicAuthentication] // Enable authentication via an ASP.NET Identity user name and password
+	    [Authorize] // Require some form of authentication
         public HttpResponseMessage Post([FromBody]JObject payload)
         {
             var request = WorkItemRequest.Parse(payload);
@@ -84,7 +87,10 @@ namespace Aggregator.WebHooks.Controllers
             catch (Exception e)
             {
                 logger.ProcessEventException(e);
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError) { ReasonPhrase = e.Message };
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(e.Message)
+                };
             }//try
         }
 

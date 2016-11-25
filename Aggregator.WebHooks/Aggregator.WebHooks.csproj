@@ -101,6 +101,11 @@
     </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\WorkItemController.cs" />
+    <Compile Include="BasicAuthentication\AddChallengeOnUnauthorizedResult.cs" />
+    <Compile Include="BasicAuthentication\AuthenticationFailureResult.cs" />
+    <Compile Include="BasicAuthentication\BasicAuthenticationAttribute.cs" />
+    <Compile Include="BasicAuthentication\HttpAuthenticationChallengeContextExtensions.cs" />
+    <Compile Include="BasicAuthentication\IdentityBasicAuthenticationAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
