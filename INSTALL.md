@@ -5,6 +5,7 @@ There are  three possible options to grant access. In most cases you will have t
 ## 1. Using a Personal Access Token
 
 a. Create a Personal Access Token ![Create Personal Access Token  screenshot](./media/0-PAT1.png)
+> Leave **All scopes** select; TFS Aggregator use the old Object Model (see [Authentication issue using Personal Access Token when all options of "Selected Scope" are selected](https://social.msdn.microsoft.com/Forums/vstudio/en-US/5564cb2b-4e46-4a41-b12c-bc50304c777b/authentication-issue-using-personal-access-token-when-all-options-of-selected-scope-are-selected?forum=TFService)).
 b. Capture Personal Access Token's value and store it for later ![Personal Access Token's value](./media/0-PAT2.png)
 
 > NOTE: this is per-account value you can use (User Profile/Security)
