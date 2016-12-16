@@ -89,7 +89,7 @@ namespace Aggregator.WebHooks.Controllers
                 logger.ProcessEventException(e);
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
-                    Content = new StringContent(e.Message)
+                    ReasonPhrase = e.Message
                 };
             }//try
         }
