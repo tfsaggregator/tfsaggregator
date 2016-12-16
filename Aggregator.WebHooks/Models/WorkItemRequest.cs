@@ -66,25 +66,28 @@ namespace Aggregator.WebHooks.Models
                     }
                 }
 
-                result.WorkItemId = (int)payload["resource"]["workItemId"];
                 string fullUrl = (string)payload["resource"]["url"];
                 result.TfsCollectionUri = fullUrl.Substring(0, fullUrl.IndexOf("_apis"));
 
                 switch (result.EventType)
                 {
                     case "workitem.created":
+                        result.WorkItemId = (int)payload["resource"]["id"];
                         result.TeamProject = (string)payload["resource"]["fields"]["System.TeamProject"];
                         result.ChangeType = Core.Interfaces.ChangeTypes.New;
                         break;
                     case "workitem.updated":
+                        result.WorkItemId = (int)payload["resource"]["workItemId"];
                         result.TeamProject = (string)payload["resource"]["revision"]["fields"]["System.TeamProject"];
                         result.ChangeType = Core.Interfaces.ChangeTypes.Change;
                         break;
                     case "workitem.restored":
+                        result.WorkItemId = (int)payload["resource"]["id"];
                         result.TeamProject = (string)payload["resource"]["fields"]["System.TeamProject"];
                         result.ChangeType = Core.Interfaces.ChangeTypes.Restore;
                         break;
                     case "workitem.deleted":
+                        result.WorkItemId = (int)payload["resource"]["id"];
                         result.TeamProject = (string)payload["resource"]["fields"]["System.TeamProject"];
                         result.ChangeType = Core.Interfaces.ChangeTypes.Delete;
                         break;
