@@ -71,6 +71,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{8B9F0871-CF69-4497-AFF8-44ACFDF729BC}"
 	ProjectSection(SolutionItems) = preProject
 		azuredeploy.json = azuredeploy.json
+		samples\Create-Subscriptions.ps1 = samples\Create-Subscriptions.ps1
+		samples\Delete-Subscriptions.ps1 = samples\Delete-Subscriptions.ps1
+		samples\Deploy-TfsAggregatorWebHooks.ps1 = samples\Deploy-TfsAggregatorWebHooks.ps1
+		samples\InstallData.ps1 = samples\InstallData.ps1
 	EndProjectSection
 EndProject
 Global
