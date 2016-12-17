@@ -1,3 +1,14 @@
+﻿Installing TFS Aggregator WebHooks is a six step process:
+
+ 1. [Grant access to VSTS/TFS](#Grant-access-to-VSTS-TFS)
+ 2. [Deploy TfsAggregator WebHooks web application](#Deploy-TfsAggregator-WebHooks-web-application)
+ 3. [Edit `web.config` file](#Edit-web.config-file)
+ 4. [Define the policy](#Define-the-policy)
+ 5. [Setup logging (optional)](#Setup-logging--optional-)
+ 6. [Setup the Web Hooks in TFS/VSTS](#Setup-the-Web-Hooks-in-TFS-VSTS)
+
+
+
 # Grant access to VSTS/TFS
 
 There are  three possible options to grant access. In most cases you will have to change the configuration later using the values collected in this step.
@@ -14,7 +25,7 @@ b. Capture Personal Access Token's value and store it for later ![Personal Acces
 instead of a PAT, you can give permission to the account running the Application Pool (see https://github.com/tfsaggregator/tfsaggregator/wiki/Troubleshooting)
 
 ## 3. [TFS only] Explicit credentials 
-or put username and password in clear text inside the policy file
+or put username and password in clear text in the `/AggregatorConfiguration/runtime/authentication` node of the policy file
 
 If you do not allow access expect a similar error
 ![Access denied](./media/0-error.png)
@@ -103,7 +114,7 @@ The `runtime/authentication` element accept two new options
  1. Explicit credentials
     `<authentication username="DOMAIN\user" password="***" />`
     not much secure, but handy for testing and some edge scenario
- 2. Personal Access Token
+ 2. Personal Access Token (obtained on step 1)
     `<authentication personalToken="***" />`
 
 
@@ -133,6 +144,24 @@ By opening the file you see a snapshot of log file's content.
 # Setup the Web Hooks in TFS/VSTS
 
 This is the last step: setup the caller, i.e. configure VSTS/TFS to invoke TFS Aggregator (see also [Web Hooks](https://www.visualstudio.com/en-us/docs/integrate/get-started/service-hooks/services/webhooks)).
+
+## Using Powershell
+
+In the `samples` folder you can find the `Create-Subscriptions.ps1` Powershell script to quickly setup the subscription.
+It requires six arguments and creates the subcription for create, update and restore events.
+
+| Argument            | Description                                             | Sample value |
+|---------------------|---------------------------------------------------------|-----------------------------------------------------------|
+| tfsURL              | TFS/VSTS base URL                                       | `https://me.visualstudio.com/`                            |
+| ProjectName         | TFS/VSTS project name                                   | `My Project`                                              |
+| PersonalAccessToken | Personal Access Token generated in step 1               | `jocxco3i7twydcif25bh7yysbodwnq4ppuannhro4yryfcbab4na`    |
+| aggregatorURL       | URL of TFS Aggregator WebHooks API                      | `https://mytfsaggregator.azurewebsites.net/api/workitem/` |
+| aggregatorUsername  | Username listed in TFS Aggregator WebHooks `web.config` | `user1`                                                   |
+| aggregatorPassword  | Password for the above                                  | `P@ssw0rd!`                                               |
+
+> The `workitem.deleted` fails with error `TF26198: The work item does not exist, or you do not have permission to access it.`
+
+## Manual configuration
 
 > NOTE: this is a per-project configuration (Project/Admin).
 
@@ -164,6 +193,9 @@ This is the result with a single hooked event.
 And after all four events are defined.
 ![Four service hooks, one per event](./media/4-hooks7.png)
 
+
+
+# Final testing
 
 At this point the configuration is complete and you can test, e.g. creating a new work item.
 
