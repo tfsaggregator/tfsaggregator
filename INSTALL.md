@@ -1,11 +1,11 @@
 ﻿Installing TFS Aggregator WebHooks is a six step process:
 
- 1. [Grant access to VSTS/TFS](#Grant-access-to-VSTS-TFS)
- 2. [Deploy TfsAggregator WebHooks web application](#Deploy-TfsAggregator-WebHooks-web-application)
- 3. [Edit `web.config` file](#Edit-web.config-file)
- 4. [Define the policy](#Define-the-policy)
- 5. [Setup logging (optional)](#Setup-logging--optional-)
- 6. [Setup the Web Hooks in TFS/VSTS](#Setup-the-Web-Hooks-in-TFS-VSTS)
+ 1. [Grant access to VSTS/TFS](#grant-access-to-vststfs)
+ 2. [Deploy TfsAggregator WebHooks web application](#deploy-tfsaggregator-webhooks-web-application)
+ 3. [Configure TFS Aggregator](#configure-tfs-aggregator)
+ 4. [Define the policy](#define-the-policy)
+ 5. [Setup logging (optional)](#setup-logging-optional)
+ 6. [Setup the Web Hooks in TFS/VSTS](#setup-the-web-hooks-in-tfsvsts)
 
 
 
@@ -61,22 +61,22 @@ You can check that the deploy worked, by opening a browser to the above URL appe
 
 
 
-# Edit `web.config` file
+# Configure TFS Aggregator
 
 To edit the deployed files, use Kudu console
 
 ![Kudu console](./media/2-config1.png)
 
-at the `https://`<name_chosen_in_previous_step>`scm.azurewebsites.net` URL. Navigate to `site\wwwroot` folder.
+at the `https://`<name_chosen_in_previous_step>`.scm.azurewebsites.net` URL. Navigate to `site\wwwroot` folder via **Debug console** menu.
 
 ![](./media/2-config2.png)
 
-## Add users
+## Add users to `web.config` file
 
 Add at least one user in the `Users` section
 ```
   <Users>
-    <add key="vsts" value="P@ssword1" />
+    <add key="vsts" value="P@ssw0rd!" />
   </Users>
 ```
 
@@ -102,10 +102,6 @@ Navigate to the `App_Data` folder to edit the policy files
 
 ![](./media/2-config4.png)
 
-In the policies you may have to set the credentials chosen in the first step, e.g. the PAT. 
-
-![Personal Access Token in Policy file](./media/2-config5.png)
-
 > The default HelloWorld policy works for any kind of work items.
 
 ## Specify Authentication in the policy
@@ -116,6 +112,10 @@ The `runtime/authentication` element accept two new options
     not much secure, but handy for testing and some edge scenario
  2. Personal Access Token (obtained on step 1)
     `<authentication personalToken="***" />`
+
+In the policies you may have to set the credentials chosen in the first step, e.g. the PAT. 
+
+![Personal Access Token in Policy file](./media/2-config5.png)
 
 
 
@@ -156,10 +156,11 @@ It requires six arguments and creates the subcription for create, update and res
 | ProjectName         | TFS/VSTS project name                                   | `My Project`                                              |
 | PersonalAccessToken | Personal Access Token generated in step 1               | `jocxco3i7twydcif25bh7yysbodwnq4ppuannhro4yryfcbab4na`    |
 | aggregatorURL       | URL of TFS Aggregator WebHooks API                      | `https://mytfsaggregator.azurewebsites.net/api/workitem/` |
-| aggregatorUsername  | Username listed in TFS Aggregator WebHooks `web.config` | `user1`                                                   |
+| aggregatorUsername  | Username listed in TFS Aggregator WebHooks `web.config` | `vsts`                                                    |
 | aggregatorPassword  | Password for the above                                  | `P@ssw0rd!`                                               |
 
 > The `workitem.deleted` fails with error `TF26198: The work item does not exist, or you do not have permission to access it.`
+> This is an issue with VSTS/TFS that we cannot solve.
 
 ## Manual configuration
 
