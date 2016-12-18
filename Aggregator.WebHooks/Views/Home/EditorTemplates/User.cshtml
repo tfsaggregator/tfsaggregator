@@ -1,0 +1,15 @@
+﻿@model Aggregator.WebHooks.Models.User
+
+<tr>
+    <td>
+        @Html.TextBoxFor(x => x.Username, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Username)
+    </td>
+    <td>
+        @Html.TextBoxFor(x => x.Password, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Password)
+    </td>
+    <td>
+        @Html.EditorFor(model => model.Remove)
+    </td>
+</tr>
