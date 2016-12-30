@@ -25,11 +25,12 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
 
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
 
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\WorkItemLink_addNew_succeeds", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\WorkItemLink_addNew_succeeds", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var parent = new WorkItemMock(repository, runtime);
             parent.Id = 1;
@@ -63,11 +64,12 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
 
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
 
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\WorkItemLink_addExisting_noop", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\WorkItemLink_addExisting_noop", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var parent = new WorkItemMock(repository, runtime);
             parent.Id = 1;
@@ -103,11 +105,12 @@ namespace UnitTests.Core
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
 
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
 
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\WorkItem_addNew_succeeds", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\WorkItem_addNew_succeeds", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var parent = new WorkItemMock(repository, runtime);
             parent.Id = 1;

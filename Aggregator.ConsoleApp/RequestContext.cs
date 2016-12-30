@@ -13,6 +13,12 @@ using Microsoft.TeamFoundation.Server;
 using Microsoft.TeamFoundation.Server.Core;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
+#if TFS2015u1
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.IVssRequestContext;
+#else
+using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext;
+#endif
+
 namespace Aggregator.ConsoleApp
 {
     public class RequestContext : IRequestContext
@@ -53,6 +59,14 @@ namespace Aggregator.ConsoleApp
 
         public int CurrentWorkItemId { get; set; }
 
+        public IVssRequestContext VssContext
+        {
+            get
+            {
+                throw new NotImplementedException("Cannot emulate IVssRequestContext in client application");
+            }
+        }
+
         public string GetProjectName(Uri projectUri)
         {
             return this.teamProjectName;
@@ -65,8 +79,8 @@ namespace Aggregator.ConsoleApp
 
             string projectName;
             string projectState;
-            int templateId = 0;
-            ProjectProperty[] projectProperties = null;
+            int templateId;
+            ProjectProperty[] projectProperties;
 
             ics.GetProjectProperties(projectUri.ToString(), out projectName, out projectState, out templateId, out projectProperties);
 

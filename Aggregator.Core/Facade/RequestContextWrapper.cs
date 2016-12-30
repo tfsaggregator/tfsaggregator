@@ -52,6 +52,14 @@ namespace Aggregator.Core.Facade
             private set;
         }
 
+        public IVssRequestContext VssContext
+        {
+            get
+            {
+                return this.context;
+            }
+        }
+
         public string GetProjectName(Uri teamProjectUri)
         {
             var ics = this.context.GetService<ICommonStructureService>();
@@ -70,7 +78,7 @@ namespace Aggregator.Core.Facade
             string projectName;
             string projectState;
 
-            CommonStructureProjectProperty[] projectProperties = null;
+            CommonStructureProjectProperty[] projectProperties;
 
             ics.GetProjectProperties(this.context, projectUri.ToString(), out projectName, out projectState, out projectProperties);
 

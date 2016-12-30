@@ -1,10 +1,10 @@
-﻿using Aggregator.Core.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
 
 namespace Aggregator.Core
 {
-    using System;
-
     /// <summary>
     /// Base class for scripting language engines.
     /// </summary>
@@ -14,26 +14,14 @@ namespace Aggregator.Core
 
         protected bool Debug { get; }
 
-        protected ScriptEngine(ILogEvents logger, bool debug)
+        protected IScriptLibrary Library { get; }
+
+        protected ScriptEngine(ILogEvents logger, bool debug, IScriptLibrary library)
         {
             this.Logger = logger;
             this.Debug = debug;
+            this.Library = library;
         }
-
-        /// <summary>
-        /// Register the specified <paramref name="script"/> under <paramref name="name"/>.
-        /// </summary>
-        /// <param name="scriptName">Name of the script.</param>
-        /// <param name="script">The script source code.</param>
-        /// <returns>true if succeeded</returns>
-        /// <remarks>An engine may pre-process/compile the script at this time to get better performances.</remarks>
-        public abstract bool Load(string scriptName, string script);
-
-        /// <summary>
-        /// Informs the engine that all script has been loaded.
-        /// </summary>
-        /// <returns>true when succeeded</returns>
-        public abstract bool LoadCompleted();
 
         /// <summary>
         /// Runs the  script specified by <paramref name="scriptName" />.
@@ -42,14 +30,16 @@ namespace Aggregator.Core
         /// <param name="workItem">The work item that must be processed by the script.</param>
         public abstract void Run(string scriptName, IWorkItem workItem, IWorkItemRepository store);
 
-        internal static ScriptEngine MakeEngine(string scriptLanguage, ILogEvents logger, bool debug)
+        internal static ScriptEngine MakeEngine(string scriptLanguage, ILogEvents logger, bool debug, IScriptLibrary library)
         {
             logger.BuildingScriptEngine(scriptLanguage);
             Type t = GetScriptEngineType(scriptLanguage);
-            var ctor = t.GetConstructor(new Type[] { typeof(ILogEvents), typeof(bool) });
-            ScriptEngine engine = ctor.Invoke(new object[] { logger, debug }) as ScriptEngine;
+            var ctor = t.GetConstructor(new Type[] { typeof(ILogEvents), typeof(bool), typeof(IScriptLibrary) });
+            ScriptEngine engine = ctor.Invoke(new object[] { logger, debug, library }) as ScriptEngine;
             return engine;
         }
+
+        public abstract void Load(IEnumerable<Script.ScriptSourceElement> sourceElements);
 
         private static Type GetScriptEngineType(string scriptLanguage)
         {
@@ -65,10 +55,10 @@ namespace Aggregator.Core
                 case "POWERSHELL":
                     return typeof(PsScriptEngine);
 
-                default:
                 case "CS":
                 case "CSHARP":
                 case "C#":
+                default:
                     return typeof(CSharpScriptEngine);
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Aggregator.Core;
 using Aggregator.Core.Context;
@@ -42,7 +43,7 @@ namespace Aggregator.ConsoleApp
             this.HasRequiredOption(
                 "n|id|workItemId=",
                 "Work Item Id",
-                value => this.WorkItemId = int.Parse(value));
+                value => this.WorkItemIds = value.Split(new[] { ',' }).Select(id => int.Parse(id)).ToArray());
             this.HasOption(
                 "l|logLevel=",
                 "Logging level (critical, error, warning, information, normal, verbose, diagnostic)",
@@ -62,7 +63,7 @@ namespace Aggregator.ConsoleApp
 
         internal string TeamProjectName { get; set; }
 
-        internal int WorkItemId { get; set; }
+        internal int[] WorkItemIds { get; set; }
 
         internal string LogLevelName { get; set; }
 
@@ -84,8 +85,8 @@ namespace Aggregator.ConsoleApp
                 () => this.PolicyFile,
                 context,
                 logger,
-                (collectionUri, toImpersonate, runtimeContext) =>
-                    new Core.Facade.WorkItemRepository(collectionUri, toImpersonate, runtimeContext));
+                (runtimeContext) => new Core.Facade.WorkItemRepository(runtimeContext),
+                (runtimeContext) => new Core.Script.ScriptLibrary(runtimeContext));
 
             if (!string.IsNullOrWhiteSpace(this.LogLevelName))
             {
@@ -104,7 +105,10 @@ namespace Aggregator.ConsoleApp
                 try
                 {
                     var workItemIds = new Queue<int>();
-                    workItemIds.Enqueue(this.WorkItemId);
+                    foreach (int id in this.WorkItemIds)
+                    {
+                        workItemIds.Enqueue(id);
+                    }
 
                     ProcessingResult result = null;
                     while (workItemIds.Count > 0)
@@ -122,7 +126,7 @@ namespace Aggregator.ConsoleApp
                         }
                     }
 
-                    return result.StatusCode;
+                    return result?.StatusCode ?? -1;
                 }
                 catch (Exception e)
                 {

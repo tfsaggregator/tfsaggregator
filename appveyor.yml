@@ -8,19 +8,19 @@
   configuration:
     - Debug
     - Release
-  version: 2.1.{build}-{branch}
+  version: 2.2.{build}-{branch}
   os:
   - Visual Studio 2015
   environment:
-    installerVersion: 2.1.$(APPVEYOR_BUILD_NUMBER)
+    installerVersion: 2.2.$(APPVEYOR_BUILD_NUMBER)
     containerURL:
       secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3x3eawhSGYVzFy4Pap0dOGw==
     referenceFolder: References
   assembly_info:
     patch: true
     file: AssemblyVersion.cs
-    assembly_version: "2.1.{build}"
-    assembly_file_version: "2.1.{build}"
+    assembly_version: "2.2.{build}"
+    assembly_file_version: "2.2.{build}"
     assembly_informational_version: "{version}"
   before_build:
     - ps: ./GetReferenceFromContainer.ps1
@@ -50,19 +50,19 @@
   skip_tags: true
   configuration:
     - Debug
-  version: 2.1.{build}-{branch}
+  version: 2.2.{build}-{branch}
   os:
   - Visual Studio 2015
   environment:
-    installerVersion: 2.1.$(APPVEYOR_BUILD_NUMBER)
+    installerVersion: 2.2.$(APPVEYOR_BUILD_NUMBER)
     containerURL:
       secure: 5ScgXebma0ZLFaW1DPgEdqis7MzXvPJL+c1O+f+gfkzqwAEzVmhk6ZmISlcgxCL3x3eawhSGYVzFy4Pap0dOGw==
     referenceFolder: References
   assembly_info:
     patch: true
     file: AssemblyVersion.cs
-    assembly_version: "2.1.0"
-    assembly_file_version: "2.1.0"
+    assembly_version: "2.2.0"
+    assembly_file_version: "2.2.0"
     assembly_informational_version: "{version}"
   before_build:
     - ps: ./GetReferenceFromContainer.ps1

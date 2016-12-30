@@ -26,10 +26,11 @@ namespace UnitTests.Core
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var grandParent = new WorkItemMock(repository, runtime);
             grandParent.Id = 1;
@@ -66,10 +67,13 @@ namespace UnitTests.Core
 
             // Tested By
             grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc1.Id, repository));
+
             // Tests
             tc1.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
+
             // Tested By
             grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc2.Id, repository));
+
             // Tests
             tc2.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
 
@@ -111,8 +115,8 @@ return searchResult;
             var repository = MakeRepository(out startPoint);
             var logger = Substitute.For<ILogEvents>();
             repository.Logger = logger;
-
-            var engine = new CSharpScriptEngine(logger, false);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, false, library);
             engine.LoadAndRun("test", script, startPoint, repository);
 
             var expected = new FluentQuery(startPoint);
@@ -140,7 +144,8 @@ foreach(var req in requirements) {
             repository.Logger = logger;
             var tc2 = repository.GetWorkItem(22);
 
-            var engine = new CSharpScriptEngine(logger, true);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, true, library);
             engine.LoadAndRun("test", script, tc2, repository);
 
             Assert.AreEqual(42.0, startPoint["Custom.RemainingWork"]);
@@ -152,10 +157,11 @@ foreach(var req in requirements) {
             var logger = new DebugEventLogger();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             workItem.Id = 42;
@@ -177,10 +183,11 @@ foreach(var req in requirements) {
             var logger = new DebugEventLogger();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
@@ -211,10 +218,11 @@ foreach(var req in requirements) {
             var logger = new DebugEventLogger();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
             var workItemType = new WorkItemTypeMock()
@@ -248,10 +256,11 @@ foreach(var req in requirements) {
             var logger = new DebugEventLogger();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             string script = @"
 self.TransitionToState(""Done"", ""script test"");
@@ -276,7 +285,8 @@ self.TransitionToState(""Done"", ""script test"");
 
             repository.SetWorkItems(new[] { workItem });
 
-            var engine = new CSharpScriptEngine(logger, false);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, false, library);
             engine.LoadAndRun("test", script, workItem, repository);
 
             Assert.AreEqual("Done", workItem.Fields["State"].Value);

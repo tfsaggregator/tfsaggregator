@@ -8,6 +8,7 @@ using Aggregator.Core;
 using Aggregator.Core.Context;
 using Aggregator.Core.Interfaces;
 using Aggregator.Core.Monitoring;
+using Aggregator.Core.Script;
 
 using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -42,7 +43,8 @@ return self.Fields[""z""].Value;
             zField.Value.Returns(42);
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached, library);
             engine.LoadAndRun("test", script, workItem, repository);
 
             Assert.AreEqual(33, xField.Value);
@@ -65,7 +67,8 @@ return self[""z""];
             workItem["z"].Returns(42);
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached, library);
             engine.LoadAndRun("test", script, workItem, repository);
 
             Assert.AreEqual(33, workItem["x"]);
@@ -89,7 +92,8 @@ return self(""z"")
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
             logger.WhenForAnyArgs(c => Debug.WriteLine(c));
-            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached, library);
 
             engine.LoadAndRun("test", script, workItem, repository);
 
@@ -110,10 +114,11 @@ return $self.Fields[""z""].Value ";
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
 
@@ -124,8 +129,9 @@ return $self.Fields[""z""].Value ";
             repository.SetWorkItems(new[] { workItem });
 
             Assert.IsNotNull(repository.GetWorkItem(1));
+            var library = Substitute.For<IScriptLibrary>();
 
-            var engine = new PsScriptEngine(logger, Debugger.IsAttached);
+            var engine = new PsScriptEngine(logger, Debugger.IsAttached, library);
 
             // sanity check
             Assert.AreEqual(42, workItem.Fields["z"].Value);
@@ -150,10 +156,11 @@ return $self.Fields[""z""].Value ";
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("NewObjects.policies", logger);
             var repository = new WorkItemRepositoryMock();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext("settingsPath", settings, context, logger, (c) => repository, scriptLibraryBuilder);
 
             var workItem = new WorkItemMock(repository, runtime);
 
@@ -162,8 +169,9 @@ return $self.Fields[""z""].Value ";
             repository.SetWorkItems(new[] { workItem });
 
             Assert.IsNotNull(repository.GetWorkItem(1));
+            var library = Substitute.For<IScriptLibrary>();
 
-            var engine = new PsScriptEngine(logger, Debugger.IsAttached);
+            var engine = new PsScriptEngine(logger, Debugger.IsAttached, library);
 
             engine.LoadAndRun("test", script, workItem, repository);
 
@@ -181,11 +189,12 @@ return $self.Fields[""z""].Value ";
             var logger = Substitute.For<ILogEvents>();
             var settings = TestHelpers.LoadConfigFromResourceFile("NoOp.policies", logger);
             var repository = Substitute.For<IWorkItemRepository>();
+            System.Func<IRuntimeContext, IScriptLibrary> scriptLibraryBuilder = (x) => Substitute.For<IScriptLibrary>();
             var workItem = Substitute.For<IWorkItem>();
             var context = Substitute.For<IRequestContext>();
             context.GetProjectCollectionUri().Returns(
                 new System.Uri("http://localhost:8080/tfs/DefaultCollection"));
-            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\Can_execute_a_Powershell_noop_rule", settings, context, logger, (c, i, l) => repository);
+            var runtime = RuntimeContext.MakeRuntimeContext(@"C:\Can_execute_a_Powershell_noop_rule", settings, context, logger, (c) => repository, scriptLibraryBuilder);
             using (var processor = new EventProcessor(runtime))
             {
                 var notification = Substitute.For<INotification>();
@@ -213,7 +222,8 @@ logger.Log(""Test"");
             var workItem = Substitute.For<IWorkItem>();
             var logger = Substitute.For<ILogEvents>();
             logger.ScriptLogger = Substitute.For<IRuleLogger>();
-            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached, library);
             engine.LoadAndRun("test", script, workItem, repository);
             logger.ScriptLogger.Received().Log("Test");
         }
@@ -229,7 +239,8 @@ logger.Log(""Test"")
             var workItem = Substitute.For<IWorkItem>();
             var logger = Substitute.For<ILogEvents>();
             logger.ScriptLogger = Substitute.For<IRuleLogger>();
-            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached, library);
             engine.LoadAndRun("test", script, workItem, repository);
             logger.ScriptLogger.Received().Log("Test");
         }
@@ -246,7 +257,8 @@ return (int)array.Average();
             var workItem = Substitute.For<IWorkItem>();
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached, library);
             engine.LoadAndRun("test", script, workItem, repository);
             object expected = 4;
             logger.Received().ResultsFromScriptRun("test", expected);
@@ -264,7 +276,8 @@ Return CInt(array.Average())
             var workItem = Substitute.For<IWorkItem>();
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached, library);
             engine.LoadAndRun("test", script, workItem, repository);
             object expected = 4;
             logger.Received().ResultsFromScriptRun("test", expected);
@@ -274,18 +287,27 @@ Return CInt(array.Average())
         [TestCategory("CSharpScript")]
         public void Catch_CSharp_rule_compile_error()
         {
-            string good_script = @"
+            var good_script = new ScriptSourceElement()
+            {
+                Name = "good",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
 logger.Log(""Test"");
-";
-            string bad_script = @"
+"
+            };
+            var bad_script = new ScriptSourceElement()
+            {
+                Name = "bad",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
 loger.Log(""Test"");
-";
+"
+            };
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached, library);
 
-            engine.Load("good", good_script);
-            engine.Load("bad", bad_script);
-            engine.LoadCompleted();
+            engine.Load(new ScriptSourceElement[] { good_script, bad_script });
 
             logger.Received().ScriptHasError("bad", 2, 1, "CS0103", "The name 'loger' does not exist in the current context");
         }
@@ -294,18 +316,27 @@ loger.Log(""Test"");
         [TestCategory("VBNetScript")]
         public void Catch_VBNet_rule_compile_error()
         {
-            string good_script = @"
-logger.Log(""Test"")
-";
-            string bad_script = @"
-loger.Log(""Test"")
-";
+            var good_script = new ScriptSourceElement()
+            {
+                Name = "good",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
+logger.Log(""Test"");
+"
+            };
+            var bad_script = new ScriptSourceElement()
+            {
+                Name = "bad",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
+loger.Log(""Test"");
+"
+            };
             var logger = Substitute.For<ILogEvents>();
-            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new VBNetScriptEngine(logger, Debugger.IsAttached, library);
 
-            engine.Load("good", good_script);
-            engine.Load("bad", bad_script);
-            engine.LoadCompleted();
+            engine.Load(new ScriptSourceElement[] { good_script, bad_script });
 
             logger.Received().ScriptHasError("bad", 2, 0, "BC30451", "'loger' is not declared. It may be inaccessible due to its protection level.");
         }
@@ -324,11 +355,90 @@ logger.Log(LogLevel.Warning, ""Unexpected work item state!"");
             workItem.TypeName.Returns("Task");
             repository.GetWorkItem(1).Returns(workItem);
             var logger = Substitute.For<ILogEvents>();
-            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached);
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached, library);
             engine.LoadAndRun("test", script, workItem, repository);
 
             logger.Received().ScriptLogger.Log(LogLevel.Verbose, "test", "Hello, World from Task #1!");
             logger.Received().ScriptLogger.Log(LogLevel.Warning, "test", "Unexpected work item state!");
+        }
+
+        [TestMethod]
+        [TestCategory("CSharpScript")]
+        public void Can_CSharp_rule_use_snippet_and_function()
+        {
+            // Arrange
+            var snippet1 = new ScriptSourceElement()
+            {
+                Name = "MySnippet",
+                Type = ScriptSourceElementType.Snippet,
+                SourceCode = @"
+logger.Log(""This is MySnippet code."");
+"
+            };
+            var function1 = new ScriptSourceElement()
+            {
+                Name = null,
+                Type = ScriptSourceElementType.Function,
+                SourceCode = @"
+int MyFunc() { return 42; }
+"
+            };
+            var rule1 = new ScriptSourceElement()
+            {
+                Name = "rule1",
+                Type = ScriptSourceElementType.Rule,
+                SourceCode = @"
+${MySnippet}
+logger.Log(""Hello, World from {1} #{0}!"", self.Id, self.TypeName);
+logger.Log(""MyFunc returns {0}."", MyFunc());
+"
+            };
+
+            var logger = Substitute.For<ILogEvents>();
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached, library);
+            engine.Load(new ScriptSourceElement[] { rule1, function1, snippet1 });
+
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            workItem.Id.Returns(1);
+            workItem.TypeName.Returns("Task");
+            repository.GetWorkItem(1).Returns(workItem);
+
+            // Act
+            engine.Run(rule1.Name, workItem, repository);
+
+            // Assert
+            logger.Received().ScriptLogger.Log(LogLevel.Verbose, rule1.Name, "This is MySnippet code.");
+            logger.Received().ScriptLogger.Log(LogLevel.Verbose, rule1.Name, "Hello, World from Task #1!");
+            logger.Received().ScriptLogger.Log(LogLevel.Verbose, rule1.Name, "MyFunc returns 42.");
+        }
+
+        [TestMethod]
+        [TestCategory("CSharpScript")]
+        public void Library_SendMail_succeeds()
+        {
+            string script = @"
+string to = ""test@example.com"";
+string subject = ""Test from Rule"";
+string body = ""It worked!"";
+Library.SendMail(to, subject, body);
+";
+            var repository = Substitute.For<IWorkItemRepository>();
+            var workItem = Substitute.For<IWorkItem>();
+            workItem.Id.Returns(1);
+            workItem.TypeName.Returns("Task");
+            repository.GetWorkItem(1).Returns(workItem);
+            var logger = Substitute.For<ILogEvents>();
+            var library = Substitute.For<IScriptLibrary>();
+            var engine = new CSharpScriptEngine(logger, Debugger.IsAttached, library);
+            engine.LoadAndRun("test", script, workItem, repository);
+
+            string to = "test@example.com";
+            string subject = "Test from Rule";
+            string body = "It worked!";
+            library.Received().SendMail(to, subject, body);
         }
     }
 }
