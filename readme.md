@@ -5,6 +5,8 @@
 This server side plugin, for TFS 2013 update 2 up to TFS 2017 RTM, enables running custom script when Work Items change,
 allowing dynamic calculation of field values in TFS and more. (For example: Dev work + Test Work = Total Work).
 
+The complete documentation is available on the [project's Documentation Site](https://tfsaggregator.github.io/).
+
 # Changelog
 
 ## What's new in v2.2
@@ -49,12 +51,6 @@ allowing dynamic calculation of field values in TFS and more. (For example: Dev 
  - Sum up totals on a single work item (i.e. Dev Estimate + Test Estimate = Total Estimate)
  - Create new work items
  - Create new work item links
-
-Documentation
-================================================
-
-The complete documentation is available on the [project's Wiki](https://github.com/tfsaggregator/tfsaggregator/wiki).
-A snaphost is available when you install TFS Aggregator using the MSI.
 
 # Contributing to the Project
 
