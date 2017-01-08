@@ -176,7 +176,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Aggregator.Core\Aggregator.Core.csproj">
+    <ProjectReference Include="..\Aggregator.Core\Aggregator.Core.Plugin.csproj">
       <Project>{fea76835-61b3-4fc7-9d6f-50d39a7a8258}</Project>
       <Name>Aggregator.Core</Name>
     </ProjectReference>

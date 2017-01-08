@@ -1,0 +1,3 @@
+[submodule "Aggregator.Core"]
+	path = Aggregator.Core
+	url = https://github.com/tfsaggregator/tfsaggregator-core.git
