@@ -3,6 +3,11 @@
   MSBuild file to generate the MSI for current $(Configuration)
   
   Iterates over supported TFS versions.
+
+  Sample usage:
+
+  MSBuild build-installer.proj /t:Build /p:Configuration=Debug /clp:Verbosity=minimal /fl /flp:LogFile=build-installer.log;Append;Verbosity=detailed;Encoding=UTF-8
+
 -->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
@@ -44,18 +49,23 @@
   <ItemGroup>
     <TfsVersion Include="2013" >
       <Alt>2013</Alt>
+      <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     </TfsVersion>
     <TfsVersion Include="2015" >
       <Alt>2015</Alt>
+      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     </TfsVersion>
     <TfsVersion Include="2015.1" >
       <Alt>2015u1</Alt>
+      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     </TfsVersion>
     <TfsVersion Include="2015.2" >
       <Alt>2015u2</Alt>
+      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     </TfsVersion>
     <TfsVersion Include="2017" >
       <Alt>2017</Alt>
+      <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     </TfsVersion>
   </ItemGroup>
 
@@ -77,15 +87,15 @@
 
 
   <Target Name="BuildSolutionFlavor">
-    <Message Importance="high" Text="-------------- Building $(CurrentTfsVersion) flavor --------------" />
+    <Message Importance="high" Text="-------------- Building $(CurrentTfsVersion) flavor for $(CurrentTargetFrameworkVersion) --------------" />
     <MSBuild Projects="$(MSBuildProjectDirectory)\TFS-Aggregator-2.sln"
-             Properties="Configuration=$(CurrentFlavor)" />
+             Properties="Configuration=$(CurrentFlavor);TargetFrameworkVersion=$(CurrentTargetFrameworkVersion)" />
   </Target>
 
   <Target Name="BuildSolution" Condition="$(BuildSolution)">
     <!-- re-entrant call pattern -->
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="BuildSolutionFlavor"
-             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity)" />
+             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity);CurrentTargetFrameworkVersion=%(TfsVersion.TargetFrameworkVersion)" />
   </Target>
 
 
