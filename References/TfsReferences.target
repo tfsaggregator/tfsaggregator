@@ -24,9 +24,9 @@
         <ClientAssembliesv20 Condition="'$(VsInstallationDirectory)'!=''">$(VsInstallationDirectory)IDE\ReferenceAssemblies\v2.0</ClientAssembliesv20>
         <ClientAssembliesv45 Condition="'$(VsInstallationDirectory)'!=''">$(VsInstallationDirectory)IDE\ReferenceAssemblies\v4.5</ClientAssembliesv45>
 
-        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'==''">$(SolutionDir)References\2013</ServerAssemblies>
-        <ClientAssembliesv20 Condition="'$(VsInstallationDirectory)'==''">$(SolutionDir)References\2013</ClientAssembliesv20>
-        <ClientAssembliesv45 Condition="'$(VsInstallationDirectory)'==''">$(SolutionDir)References\2013</ClientAssembliesv45>
+        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' Or '$(TF_BUILD)'=='True'">$(SolutionDir)References\2013</ServerAssemblies>
+        <ClientAssembliesv20 Condition="'$(VsInstallationDirectory)'=='' Or '$(TF_BUILD)'=='True'">$(SolutionDir)References\2013</ClientAssembliesv20>
+        <ClientAssembliesv45 Condition="'$(VsInstallationDirectory)'=='' Or '$(TF_BUILD)'=='True'">$(SolutionDir)References\2013</ClientAssembliesv45>
       </PropertyGroup>
 
       <ItemGroup>
@@ -97,9 +97,9 @@
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\TeamFoundationServer\14.0@InstallPath)</TfsInstallationDirectory>
         <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)\Application Tier\Web Services\bin</ServerAssemblies>
-        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '14.0'">..\References\2015</ServerAssemblies>
-        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '14.1'">..\References\2015.1</ServerAssemblies>
-        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '14.2'">..\References\2015.2</ServerAssemblies>
+        <ServerAssemblies Condition="('$(TfsInstallationDirectory)'=='' Or '$(TF_BUILD)'=='True') And '$(TfsVersion)' == '14.0'">..\References\2015</ServerAssemblies>
+        <ServerAssemblies Condition="('$(TfsInstallationDirectory)'=='' Or '$(TF_BUILD)'=='True') And '$(TfsVersion)' == '14.1'">..\References\2015.1</ServerAssemblies>
+        <ServerAssemblies Condition="('$(TfsInstallationDirectory)'=='' Or '$(TF_BUILD)'=='True') And '$(TfsVersion)' == '14.2'">..\References\2015.2</ServerAssemblies>
       </PropertyGroup>
 
       <ItemGroup>
@@ -315,7 +315,7 @@
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\TeamFoundationServer\15.0@InstallPath)</TfsInstallationDirectory>
         <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'==''">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\TeamFoundationServer\15.0@InstallPath)</TfsInstallationDirectory>
         <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)\Application Tier\Web Services\bin</ServerAssemblies>
-        <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' And '$(TfsVersion)' == '15.0'">..\References\2017</ServerAssemblies>
+        <ServerAssemblies Condition="('$(TfsInstallationDirectory)'=='' Or '$(TF_BUILD)'=='True') And '$(TfsVersion)' == '15.0'">..\References\2017</ServerAssemblies>
       </PropertyGroup>
 
       <ItemGroup>
