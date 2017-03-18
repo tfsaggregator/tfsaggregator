@@ -23,12 +23,13 @@
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" />
 
   <PropertyGroup>
+    <PathToSolutionFile>$(MSBuildProjectDirectory)\tfs-aggregator-plugin.sln</PathToSolutionFile>
     <CollectDir>$(MSBuildProjectDirectory)\_collect\$(Configuration)</CollectDir>
     <NeutralDir>$(CollectDir)\Neutral</NeutralDir>
     <WikiUrl>https://github.com/tfsaggregator/tfsaggregator.wiki.git</WikiUrl>
     <!-- Assume that we get values from GitVersion -->
-    <MajorMinorPatch Condition=" '$(MajorMinorPatch)' == '' ">0.2.2</MajorMinorPatch>
-    <FullSemVer Condition=" '$(FullSemVer)' == '' ">0.2.2-alpha+local</FullSemVer>
+    <MajorMinorPatch Condition=" '$(MajorMinorPatch)' == '' ">0.2.3</MajorMinorPatch>
+    <FullSemVer Condition=" '$(FullSemVer)' == '' ">0.2.3-alpha+local</FullSemVer>
     <!-- Defaults to global install -->
     <GitExe>git</GitExe>
     <!-- skip process steps by setting False -->
@@ -36,8 +37,6 @@
     <CollectFiles>True</CollectFiles>
     <BuildMSI>True</BuildMSI>
     <WiXProjectPropertiesFile>Setup.Aggregator\_clisrv.g.properties</WiXProjectPropertiesFile>
-  
-
 </PropertyGroup>
 
   <!-- TFS versions supported 
@@ -72,7 +71,7 @@
 
 
   <Target Name="CleanSolution">
-    <MSBuild Projects="$(MSBuildProjectDirectory)\TFS-Aggregator-2.sln"
+    <MSBuild Projects="$(PathToSolutionFile)"
              Targets="Clean"
              Properties="Configuration=$(Configuration)-%(TfsVersion.Identity)" />
   </Target>
@@ -88,7 +87,7 @@
 
   <Target Name="BuildSolutionFlavor">
     <Message Importance="high" Text="-------------- Building $(CurrentTfsVersion) flavor for $(CurrentTargetFrameworkVersion) --------------" />
-    <MSBuild Projects="$(MSBuildProjectDirectory)\TFS-Aggregator-2.sln"
+    <MSBuild Projects="$(PathToSolutionFile)"
              Properties="Configuration=$(CurrentFlavor);TargetFrameworkVersion=$(CurrentTargetFrameworkVersion)" />
   </Target>
 
