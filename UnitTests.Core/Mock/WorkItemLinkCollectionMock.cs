@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using Aggregator.Core.Interfaces;
@@ -27,6 +28,11 @@ namespace UnitTests.Core.Mock
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.links.GetEnumerator();
+        }
+
+        internal void Remove(WorkItemLinkMock relationship)
+        {
+            throw new NotImplementedException();
         }
     }
 }

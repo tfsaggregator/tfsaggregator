@@ -144,6 +144,8 @@ namespace UnitTests.Core.Mock
             }
         }
 
+        public IWorkItemLinkExposedCollection WorkItemLinks => throw new NotImplementedException();
+
         public bool ShouldLimit(RateLimiter limiter)
         {
             return false;
@@ -181,6 +183,17 @@ namespace UnitTests.Core.Mock
         public void AddHyperlink(string destination, string comment)
         {
             throw new NotImplementedException();
+        }
+
+        public void RemoveWorkItemLink(IWorkItemLinkExposed link)
+        {
+            // HACK: should use the code in wrapper...
+            var relationship = new WorkItemLinkMock(link.LinkTypeEndImmutableName, link.TargetId, this.Store);
+            if (this.workItemLinks.Contains(relationship))
+            {
+                this.workItemLinks.Remove(relationship);
+                this.IsDirty = true;
+            }
         }
     }
 }
