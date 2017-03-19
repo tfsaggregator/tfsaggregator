@@ -144,8 +144,6 @@ namespace UnitTests.Core.Mock
             }
         }
 
-        public IWorkItemLinkExposedCollection WorkItemLinks => throw new NotImplementedException();
-
         public bool ShouldLimit(RateLimiter limiter)
         {
             return false;
@@ -195,5 +193,11 @@ namespace UnitTests.Core.Mock
                 this.IsDirty = true;
             }
         }
+
+        public IWorkItemLinkExposedCollection WorkItemLinks
+        {
+            get { throw new NotImplementedException(); }
+        }
+
     }
 }
