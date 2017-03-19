@@ -81,7 +81,7 @@ namespace UnitTests.Core
             child.TypeName = "Task";
             child["Title"] = "TSK";
 
-            child.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
+            child.WorkItemLinksImpl.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
             repository.SetWorkItems(new[] { parent, child });
 
             using (var processor = new EventProcessor(runtime))

@@ -57,25 +57,25 @@ namespace UnitTests.Core
             tc2.TypeName = "Test Case";
             tc2["Microsoft.VSTS.Scheduling.RemainingWork"] = 30.0;
 
-            firstChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
-            secondChild.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, repository));
+            firstChild.WorkItemLinksImpl.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
+            secondChild.WorkItemLinksImpl.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, parent.Id, repository));
+            parent.WorkItemLinksImpl.Add(new WorkItemLinkMock(WorkItemImplementationBase.ParentRelationship, grandParent.Id, repository));
 
-            grandParent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, parent.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, firstChild.Id, repository));
-            parent.WorkItemLinks.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, secondChild.Id, repository));
-
-            // Tested By
-            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc1.Id, repository));
-
-            // Tests
-            tc1.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
+            grandParent.WorkItemLinksImpl.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, parent.Id, repository));
+            parent.WorkItemLinksImpl.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, firstChild.Id, repository));
+            parent.WorkItemLinksImpl.Add(new WorkItemLinkMock(WorkItemImplementationBase.ChildRelationship, secondChild.Id, repository));
 
             // Tested By
-            grandParent.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc2.Id, repository));
+            grandParent.WorkItemLinksImpl.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc1.Id, repository));
 
             // Tests
-            tc2.WorkItemLinks.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
+            tc1.WorkItemLinksImpl.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
+
+            // Tested By
+            grandParent.WorkItemLinksImpl.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Forward", tc2.Id, repository));
+
+            // Tests
+            tc2.WorkItemLinksImpl.Add(new WorkItemLinkMock("Microsoft.VSTS.Common.TestedBy-Reverse", grandParent.Id, repository));
 
             repository.SetWorkItems(new[] { grandParent, parent, firstChild, secondChild, tc1, tc2 });
 

@@ -97,7 +97,7 @@ namespace UnitTests.Core.Mock
 
         private readonly WorkItemLinkCollectionMock workItemLinks = new WorkItemLinkCollectionMock();
 
-        public override IWorkItemLinkCollection WorkItemLinks
+        public override IWorkItemLinkCollection WorkItemLinksImpl
         {
             get { return this.workItemLinks; }
         }
