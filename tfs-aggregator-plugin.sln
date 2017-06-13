@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.Core", "Aggregat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aggregator.ServerPlugin", "Aggregator.ServerPlugin\Aggregator.ServerPlugin.csproj", "{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Core", "UnitTests.Core\UnitTests.Core.csproj", "{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Core", "Aggregator.Core\UnitTests.Core\UnitTests.Core.csproj", "{D8C3CC34-8057-4FDA-AE91-07A5223A7B68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B94443D9-A5EE-4114-9C4F-F5C6B5401731}"
 	ProjectSection(SolutionItems) = preProject
