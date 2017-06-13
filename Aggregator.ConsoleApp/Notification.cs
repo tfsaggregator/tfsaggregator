@@ -29,7 +29,14 @@ namespace Aggregator.ConsoleApp
             var tpc = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new System.Uri(teamProjectCollectionUrl));
             var css = tpc.GetService<ICommonStructureService>();
             var pi = css.ListProjects().FirstOrDefault(p => p.Name == projectName);
-            this.ProjectUri = pi.Uri;
+            if (pi == null)
+            {
+                throw new System.ApplicationException($"Project '{projectName}' not found");
+            }
+            else
+            {
+                this.ProjectUri = pi.Uri;
+            }
         }
 
         public ChangeTypes ChangeType { get; private set; }
