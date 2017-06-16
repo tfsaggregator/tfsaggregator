@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  
+
   <Product Id="*" Name="TFS Aggregator" Language="1033" Version="$(var.BuildVersion)" Manufacturer="TFS Aggregator Team" UpgradeCode="1c6958f9-0865-449d-abd9-71b4600ff1f0">
     <Package InstallerVersion="400" Compressed="yes" InstallScope="perMachine" Platform="x64"/>
 
@@ -11,7 +11,7 @@
 
     <!-- HACK hard-coded versions -->
     <!-- TODO generate version specific snippets -->
-      
+
     <Feature Id="ClientFeature" Title="Client test application" Level='1' AllowAdvertise='no' Display='expand' >
       <Feature Id='Client2013Feature' Title="Client for TFS 2013.5" Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2013"/>
@@ -41,6 +41,12 @@
         <ComponentGroupRef Id="ClientComponents2017"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Client2017Feature' Title='Client for TFS 2017.2' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="ClientComponents2017.1"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017.2"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -81,8 +87,15 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017"]]>
         </Condition>
       </Feature>
+      <Feature Id='Server2017.2Feature' Title='Plugin for TFS 2017.2' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="NeutralServerComponents" />
+        <ComponentGroupRef Id="ServerComponents2017.2"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017.2"]]>
+        </Condition>
+      </Feature>
     </Feature>
-      
+
     <Feature Id='NeutralFeature' Title="Documentation and samples" Level='1' AllowAdvertise='no'>
       <ComponentGroupRef Id="NeutralComponents" />
     </Feature>
@@ -94,7 +107,7 @@
   </Product>
 
   <Fragment>
-    
+
     <Property Id="TEAMFOUNDATIONSERVER2013">
       <RegistrySearch
         Id="TeamFoundationServer12" Win64="yes"
@@ -133,7 +146,7 @@
     </Property>
 
     <PropertyRef Id="WIX_IS_NETFRAMEWORK_451_OR_LATER_INSTALLED"/>
-    
+
     <Condition Message="This application requires .NET Framework 4.5.1 or later. Please install or update the .NET Framework then run this installer again.">
       <![CDATA[Installed OR (WIX_IS_NETFRAMEWORK_451_OR_LATER_INSTALLED)]]>
     </Condition>
@@ -150,7 +163,10 @@
       <![CDATA[TEAMFOUNDATIONSERVER2015 AND TEAMFOUNDATIONSERVER2015BUILD <> "14.0.23128.0" AND TEAMFOUNDATIONSERVER2015BUILD <> "14.0.24712.0"]]>
     </SetProperty>
     <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2017" Before="LaunchConditions" Action="TFSVer2017RTM">
-      <![CDATA[TEAMFOUNDATIONSERVER2017]]>
+      <![CDATA[TEAMFOUNDATIONSERVER2017 AND TEAMFOUNDATIONSERVER2017BUILD <> "15.117.26613.0"]]>
+    </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2017.2" Before="LaunchConditions" Action="TFSVer2017u2">
+      <![CDATA[TEAMFOUNDATIONSERVER2017 AND TEAMFOUNDATIONSERVER2017BUILD = "15.117.26613.0"]]>
     </SetProperty>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -169,7 +185,7 @@
         </Directory>
       </Directory>
     </Directory>
-    
+
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2017]" Action="SetTFSINSTALLFOLDER2017">
       TEAMFOUNDATIONSERVER2017
     </SetDirectory>
@@ -179,7 +195,7 @@
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2013]" Action="SetTFSINSTALLFOLDER2013">
       TEAMFOUNDATIONSERVER2013 AND NOT TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017
     </SetDirectory>
-    
+
   </Fragment>
 
   <Fragment>
