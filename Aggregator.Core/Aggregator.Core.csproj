@@ -124,6 +124,26 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2017.2|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <TfsVersion>15.2</TfsVersion>
+    <OutputPath>bin\Debug-2017.2\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2017.2|AnyCPU'">
+    <OutputPath>bin\Release-2017.2\</OutputPath>
+    <TfsVersion>15.2</TfsVersion>
+    <DefineConstants>TRACE;</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <Import Project="../references/TfsReferences.target" />
   <ItemGroup>
     <Reference Include="System" />
