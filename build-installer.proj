@@ -66,6 +66,10 @@
       <Alt>2017</Alt>
       <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     </TfsVersion>
+    <TfsVersion Include="2017.2" >
+      <Alt>2017u2</Alt>
+      <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    </TfsVersion>
   </ItemGroup>
 
 

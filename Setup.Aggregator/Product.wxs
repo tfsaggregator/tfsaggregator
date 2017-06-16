@@ -37,10 +37,16 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015.2"]]>
         </Condition>
       </Feature>
-      <Feature Id='Client2017Feature' Title='Client for TFS 2017' Level='1' AllowAdvertise='no'>
+      <Feature Id='Client2017Feature' Title='Client for TFS 2017 RTM and 2017.1' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2017"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Client2017Feature' Title='Client for TFS 2017.2' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="ClientComponents2017"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017.2"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -74,11 +80,18 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015.2"]]>
         </Condition>
       </Feature>
-      <Feature Id='Server2017Feature' Title='Plugin for TFS 2017 RTM' Level='1' AllowAdvertise='no'>
+      <Feature Id='Server2017Feature' Title='Plugin for TFS 2017 RTM and 2017.1' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="NeutralServerComponents" />
         <ComponentGroupRef Id="ServerComponents2017"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Server2017Feature' Title='Plugin for TFS 2017.2' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="NeutralServerComponents" />
+        <ComponentGroupRef Id="ServerComponents2017"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017.2"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -150,7 +163,10 @@
       <![CDATA[TEAMFOUNDATIONSERVER2015 AND TEAMFOUNDATIONSERVER2015BUILD <> "14.0.23128.0" AND TEAMFOUNDATIONSERVER2015BUILD <> "14.0.24712.0"]]>
     </SetProperty>
     <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2017" Before="LaunchConditions" Action="TFSVer2017RTM">
-      <![CDATA[TEAMFOUNDATIONSERVER2017]]>
+      <![CDATA[TEAMFOUNDATIONSERVER2017 AND TEAMFOUNDATIONSERVER2017BUILD <> "15.117.26714.0"]]>
+    </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2017.2" Before="LaunchConditions" Action="TFSVer2017u2">
+      <![CDATA[TEAMFOUNDATIONSERVER2017 AND TEAMFOUNDATIONSERVER2017BUILD = "15.117.26714.0"]]>
     </SetProperty>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
