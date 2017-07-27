@@ -56,11 +56,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2013", "2013", "{79BBE553-2E3E-4D63-9369-4BDC30523FF1}"
 	ProjectSection(SolutionItems) = preProject
+		References\2013\packages.config = References\2013\packages.config
 		References\2013\PLACEHOLDER.txt = References\2013\PLACEHOLDER.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2015", "2015", "{14D62C28-52D1-4267-A40A-80D31A5135CA}"
 	ProjectSection(SolutionItems) = preProject
+		References\2015\packages.config = References\2015\packages.config
 		References\2015\PLACEHOLDER.txt = References\2015\PLACEHOLDER.txt
 	EndProjectSection
 EndProject
@@ -93,6 +95,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests.Plugin", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2015.1", "2015.1", "{62159E5E-940C-4B19-8859-4CF1BBDCA2E5}"
 	ProjectSection(SolutionItems) = preProject
+		References\2015.1\packages.config = References\2015.1\packages.config
 		References\2015.1\PLACEHOLDER.txt = References\2015.1\PLACEHOLDER.txt
 	EndProjectSection
 EndProject
@@ -106,6 +109,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2017", "2017", "{7FD49A72-3
 	ProjectSection(SolutionItems) = preProject
 		References\2017\packages.config = References\2017\packages.config
 		References\2017\PLACEHOLDER.txt = References\2017\PLACEHOLDER.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2017.2", "2017.2", "{217E53FA-4EB1-491B-8FC5-37DAD9E80425}"
+	ProjectSection(SolutionItems) = preProject
+		References\2017.2\packages.config = References\2017.2\packages.config
+		References\2017.2\PLACEHOLDER.txt = References\2017.2\PLACEHOLDER.txt
 	EndProjectSection
 EndProject
 Global
@@ -481,5 +490,6 @@ Global
 		{62159E5E-940C-4B19-8859-4CF1BBDCA2E5} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
 		{4AB78AF9-73DE-4353-AA18-DC6102320316} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
 		{7FD49A72-358A-4796-BA98-0DAD3B9392C9} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
+		{217E53FA-4EB1-491B-8FC5-37DAD9E80425} = {6D32EAB0-0194-408F-91EB-B2E2E0125C3E}
 	EndGlobalSection
 EndGlobal
