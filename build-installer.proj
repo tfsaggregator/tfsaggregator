@@ -7,9 +7,6 @@
   Sample usage:
 
   MSBuild build-installer.proj /t:Build /p:Configuration=Debug /clp:Verbosity=minimal /fl /flp:LogFile=build-installer.log;Append;Verbosity=detailed;Encoding=UTF-8
-
-  Get NuGet from https://dist.nuget.org/index.html
-
 -->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
@@ -20,13 +17,18 @@
     <OutputName>TFSAggregator</OutputName>
     <OutputType>Package</OutputType>
     <IntermediateOutputPath>$(SetupProjectDir)\obj\$(Configuration)\</IntermediateOutputPath>
+    <WixTargetsPath>$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
   </PropertyGroup>
 
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" />
+  <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
 
   <PropertyGroup>
     <PathToSolutionDir>$(MSBuildProjectDirectory)</PathToSolutionDir>
-    <PathToSolutionFile>$(MSBuildProjectDirectory)\tfs-aggregator-plugin.sln</PathToSolutionFile>
+    <PathToSolutionFile>$(PathToSolutionDir)\tfs-aggregator-plugin.sln</PathToSolutionFile>
+    <!-- get NuGet URL from https://dist.nuget.org/index.html -->
+    <NuGetDownloadUrl>https://dist.nuget.org/win-x86-commandline/v4.1.0/nuget.exe</NuGetDownloadUrl>
+    <WixVersion>3.11.0</WixVersion>
+    <WixPropsPath>$(PathToSolutionDir)\packages\WiX.$(WixVersion)\build\wix.props</WixPropsPath>
     <CollectDir>$(MSBuildProjectDirectory)\_collect\$(Configuration)</CollectDir>
     <NeutralDir>$(CollectDir)\Neutral</NeutralDir>
     <WikiUrl>https://github.com/tfsaggregator/tfsaggregator.wiki.git</WikiUrl>
@@ -92,11 +94,12 @@
 
 
 
-  <Target Name="IsNuGetCmdAvailable">
-    <Exec Command="where /q nuget.exe" ContinueOnError='true'>
+  <Target Name="MakeSureNuGetCmdIsAvailable">
+    <Exec Command="where /q nuget.exe" ContinueOnError='true' IgnoreExitCode="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
     </Exec>
-    <Error Condition="'$(ErrorCode)' > '0'" Text="NuGet.exe not found, please get it from https://dist.nuget.org/index.html" />
+    <Message Text="Downloading $(NuGetDownloadUrl)" Condition="'$(ErrorCode)' > '0'" />
+    <DownloadFile Url="$(NuGetDownloadUrl)" Condition="'$(ErrorCode)' > '0'" />
   </Target>
   
   <Target Name="RestorePackagesFlavor">
@@ -104,7 +107,7 @@
     <Exec Command="$(MSBuildProjectDirectory)\nuget restore References\$(CurrentTfsVersion)\packages.config -SolutionDirectory $(PathToSolutionDir)"/>
   </Target>
 
-  <Target Name="RestorePackages" DependsOnTargets="IsNuGetCmdAvailable" Condition="$(BuildSolution)">
+  <Target Name="RestorePackages" DependsOnTargets="MakeSureNuGetCmdIsAvailable" Condition="$(BuildSolution)">
     <!-- re-entrant call pattern -->
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="RestorePackagesFlavor"
              Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity);CurrentTargetFrameworkVersion=%(TfsVersion.TargetFrameworkVersion)" />
@@ -231,6 +234,10 @@
 
 
 
+  <Target Name="GetAndHookWiX" DependsOnTargets="MakeSureNuGetCmdIsAvailable" Condition="!Exists('')" >
+    <Exec Command="nuget install WiX -version $(WixVersion) -SolutionDirectory $(PathToSolutionDir)" />
+  </Target>
+  
   <Target Name="GenerateWiXProjectPropertiesFileContent1">
     <ItemGroup>
       <fileProp1 Include="   ClientBinDir$(CurrentTfsVersion)=%24(CollectDir)\$(CurrentTfsVersion)\cliBin%3B" />
@@ -287,26 +294,24 @@
                       Encoding="Unicode"/>
   </Target>
 
-  <Target Name="BuildMSI" DependsOnTargets="GenerateWiXProjectPropertiesFile" Condition="$(BuildMSI)">
+  <Target Name="BuildMSI" DependsOnTargets="GetAndHookWiX;GenerateWiXProjectPropertiesFile" Condition="$(BuildMSI)">
     <Message Importance="high" Text="-------------- Building $(Configuration) MSI --------------" />
 
     <!-- default target => build MSI -->
     <MSBuild Projects="$(MSBuildProjectDirectory)\Setup.Aggregator\Setup.Aggregator.wixproj"
-             Properties="@(TfsVersion -> 'Supports%(Alt)=True');OutputName=TFSAggregator-$(FullSemVer)-$(Configuration);Configuration=$(Configuration);CollectDir=$(CollectDir);NeutralDir=$(NeutralDir);SolutionDir=$(MSBuildProjectDirectory);BuildVersion=$(MajorMinorPatch)" />
+             Properties="@(TfsVersion -> 'Supports%(Alt)=True');OutputName=TFSAggregator-$(FullSemVer)-$(Configuration);Configuration=$(Configuration);CollectDir=$(CollectDir);NeutralDir=$(NeutralDir);SolutionDir=$(MSBuildProjectDirectory);BuildVersion=$(MajorMinorPatch);WixPropsPath=$(WixPropsPath)" />
   </Target>
 
 
 
-  <Target Name="Build" DependsOnTargets="BuildSolution;CollectFiles;BuildMSI">
+  <Target Name="Build" DependsOnTargets="RestorePackages;BuildSolution;CollectFiles;BuildMSI">
   </Target>
 
-
-  <Target Name="Rebuild" DependsOnTargets="RestorePackages;BuildSolution;CollectFiles;BuildMSI">
-  </Target>
 
 
   <Target Name="Clean" DependsOnTargets="CleanSolution;CleanCollected">
   </Target>
+
 
 
   <UsingTask TaskName="FixupWikiLinks" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
@@ -358,6 +363,22 @@
         }
       ]]>
       </Code>
+    </Task>
+  </UsingTask>
+  
+  <!-- source: http://blog.seravy.com/msbuild-download-file-task/ -->
+  <UsingTask TaskName="DownloadFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
+    <ParameterGroup>
+      <Url ParameterType="System.String" Required="true" />
+      <File ParameterType="System.String" Required="false" />
+      <OutputFolder ParameterType="System.String" Required="false" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.Web"/>
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        using (var client = new System.Net.WebClient())
+            { client.DownloadFile(Url, (OutputFolder != null ? OutputFolder + "/" : "") + (File ?? System.IO.Path.GetFileName(new Uri(Url).LocalPath))); }
+        ]]></Code>
     </Task>
   </UsingTask>
   
