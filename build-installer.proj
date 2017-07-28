@@ -42,7 +42,7 @@
     <WiXProjectPropertiesFile>Setup.Aggregator\_clisrv.g.properties</WiXProjectPropertiesFile>
   </PropertyGroup>
 
-  <Import Project="$(WixPropsPath)" Condition=" '$(WixPropsPath)' != '' " />
+  <Import Project="$(WixPropsPath)" Condition="Exists('$(WixPropsPath)')" />
   <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
 
   <!-- TFS versions supported 
