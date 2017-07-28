@@ -7,6 +7,8 @@ using Aggregator.Core.Context;
 using Aggregator.Core.Monitoring;
 
 using ManyConsole;
+using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.ConsoleApp
 {
@@ -40,10 +42,14 @@ namespace Aggregator.ConsoleApp
                 "p|teamProjectName=",
                 "TFS Team Project",
                 value => this.TeamProjectName = value);
-            this.HasRequiredOption(
+            this.HasOption(
                 "n|id|workItemId=",
-                "Work Item Id",
+                "Work Item Id(s), use comma (,) to separate",
                 value => this.WorkItemIds = value.Split(new[] { ',' }).Select(id => int.Parse(id)).ToArray());
+            this.HasOption(
+                "q|query=",
+                "Work Item Query",
+                value => this.WorkItemQuery = value);
             this.HasOption(
                 "l|logLevel=",
                 "Logging level (critical, error, warning, information, normal, verbose, diagnostic)",
@@ -65,7 +71,19 @@ namespace Aggregator.ConsoleApp
 
         internal int[] WorkItemIds { get; set; }
 
+        internal string WorkItemQuery { get; set; }
+
         internal string LogLevelName { get; set; }
+
+        public override void CheckRequiredArguments()
+        {
+            if (string.IsNullOrWhiteSpace(this.WorkItemQuery) && this.WorkItemIds.Length == 0)
+            {
+                throw new ConsoleHelpAsException("Specify the work item(s) using Ids or a Query!");
+            }
+
+            base.CheckRequiredArguments();
+        }
 
         /// <summary>
         /// Called by the ManyConsole framework to execute the  <i>run</i> command.
@@ -100,16 +118,32 @@ namespace Aggregator.ConsoleApp
                 return 3;
             }
 
+            var workItemIds = new Queue<int>();
+            if (string.IsNullOrWhiteSpace(this.WorkItemQuery))
+            {
+                foreach (int id in this.WorkItemIds)
+                {
+                    workItemIds.Enqueue(id);
+                }
+            }
+            else
+            {
+                using (var tfs = new TfsTeamProjectCollection(new Uri(this.TeamProjectCollectionUrl)))
+                {
+                    var workItemStore = tfs.GetService<WorkItemStore>();
+                    var qr = new QueryRunner(workItemStore, this.TeamProjectName);
+                    var result = qr.RunQuery(this.WorkItemQuery);
+                    foreach (var pair in result.WorkItems)
+                    {
+                        workItemIds.Enqueue(pair.Key);
+                    }
+                }
+            }
+
             using (EventProcessor eventProcessor = new EventProcessor(runtime))
             {
                 try
                 {
-                    var workItemIds = new Queue<int>();
-                    foreach (int id in this.WorkItemIds)
-                    {
-                        workItemIds.Enqueue(id);
-                    }
-
                     ProcessingResult result = null;
                     while (workItemIds.Count > 0)
                     {
