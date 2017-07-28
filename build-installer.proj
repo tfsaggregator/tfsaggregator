@@ -297,7 +297,11 @@
 
 
 
-  <Target Name="Build" DependsOnTargets="RestorePackages;BuildSolution;CollectFiles;BuildMSI">
+  <Target Name="Build" DependsOnTargets="BuildSolution;CollectFiles;BuildMSI">
+  </Target>
+
+
+  <Target Name="Rebuild" DependsOnTargets="RestorePackages;BuildSolution;CollectFiles;BuildMSI">
   </Target>
 
 
