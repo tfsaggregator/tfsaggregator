@@ -20,8 +20,6 @@
     <WixTargetsPath>$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
   </PropertyGroup>
 
-  <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
-
   <PropertyGroup>
     <PathToSolutionDir>$(MSBuildProjectDirectory)</PathToSolutionDir>
     <PathToSolutionFile>$(PathToSolutionDir)\tfs-aggregator-plugin.sln</PathToSolutionFile>
@@ -42,7 +40,10 @@
     <CollectFiles>True</CollectFiles>
     <BuildMSI>True</BuildMSI>
     <WiXProjectPropertiesFile>Setup.Aggregator\_clisrv.g.properties</WiXProjectPropertiesFile>
-</PropertyGroup>
+  </PropertyGroup>
+
+  <Import Project="$(WixPropsPath)" Condition=" '$(WixPropsPath)' != '' " />
+  <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
 
   <!-- TFS versions supported 
   Note: these values are all-over the places, e.g.
@@ -177,12 +178,12 @@
 
   </Target>
   
-  <Target Name="CollectFiles" Condition="$(CollectFiles)">
+  <Target Name="CollectFilesCore" Condition="$(CollectFiles)">
 
     <Message Importance="high" Text="-------------- Collecting '$(Configuration)' files --------------" />
     <!-- re-entrant call pattern -->
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CollectVersionSpecificFiles"
-             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity)" />
+             Properties="WixPropsPath=$(WixPropsPath);CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity)" />
 
     <MakeDir Directories="$(NeutralDir)" />
 
@@ -232,9 +233,14 @@
 
   </Target>
 
+  <Target Name="CollectFiles" DependsOnTargets="GetWiX" Condition="$(CollectFiles)">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CollectFilesCore"
+             Properties="WixPropsPath=$(WixPropsPath);Configuration=$(Configuration)" />
+  </Target>  
 
 
-  <Target Name="GetAndHookWiX" DependsOnTargets="MakeSureNuGetCmdIsAvailable" Condition="!Exists('')" >
+
+  <Target Name="GetWiX" DependsOnTargets="MakeSureNuGetCmdIsAvailable" Condition="!Exists('')" >
     <Exec Command="nuget install WiX -version $(WixVersion) -SolutionDirectory $(PathToSolutionDir)" />
   </Target>
   
@@ -294,7 +300,7 @@
                       Encoding="Unicode"/>
   </Target>
 
-  <Target Name="BuildMSI" DependsOnTargets="GetAndHookWiX;GenerateWiXProjectPropertiesFile" Condition="$(BuildMSI)">
+  <Target Name="BuildMSI" DependsOnTargets="GetWiX;GenerateWiXProjectPropertiesFile" Condition="$(BuildMSI)">
     <Message Importance="high" Text="-------------- Building $(Configuration) MSI --------------" />
 
     <!-- default target => build MSI -->
