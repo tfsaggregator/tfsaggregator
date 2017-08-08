@@ -16,5 +16,10 @@ namespace Aggregator.ConsoleApp
             : base(new ConsoleTextLogger(minimumLogLevel))
         {
         }
+
+        internal void QueryNotFound(string workItemQuery, string teamProjectName)
+        {
+            base.TextLogger.Log(LogLevel.Error, $"Query '{workItemQuery}' not found in Team Project '{teamProjectName}'");
+        }
     }
 }

@@ -77,7 +77,7 @@ namespace Aggregator.ConsoleApp
 
         public override void CheckRequiredArguments()
         {
-            if (string.IsNullOrWhiteSpace(this.WorkItemQuery) && this.WorkItemIds.Length == 0)
+            if (string.IsNullOrWhiteSpace(this.WorkItemQuery) && this.WorkItemIds?.Length == 0)
             {
                 throw new ConsoleHelpAsException("Specify the work item(s) using Ids or a Query!");
             }
@@ -128,14 +128,26 @@ namespace Aggregator.ConsoleApp
             }
             else
             {
-                using (var tfs = new TfsTeamProjectCollection(new Uri(this.TeamProjectCollectionUrl)))
+                var ci = runtime.GetConnectionInfo();
+                //HACK should be: ci.ProjectCollectionUri = new Uri(this.TeamProjectCollectionUrl);
+                ci.GetType().GetProperty("ProjectCollectionUri").SetValue(ci, new Uri(this.TeamProjectCollectionUrl));
+                using (var tfs = ci.Token.GetCollection(ci.ProjectCollectionUri))
                 {
+                    logger.Connecting(ci);
+                    tfs.Authenticate();
                     var workItemStore = tfs.GetService<WorkItemStore>();
                     var qr = new QueryRunner(workItemStore, this.TeamProjectName);
                     var result = qr.RunQuery(this.WorkItemQuery);
-                    foreach (var pair in result.WorkItems)
+                    if (result == null)
                     {
-                        workItemIds.Enqueue(pair.Key);
+                        logger.QueryNotFound(this.WorkItemQuery, this.TeamProjectName);
+                    }
+                    else
+                    {
+                        foreach (var pair in result.WorkItems)
+                        {
+                            workItemIds.Enqueue(pair.Key);
+                        }
                     }
                 }
             }
