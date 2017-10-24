@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <TfsVersion Condition="'TfsVersion' == ''">14.1</TfsVersion>
+    <TfsVersion Condition="'TfsVersion' == ''">15.2</TfsVersion>
     <HintPackageDir>$(SolutionDir)\packages</HintPackageDir>
   </PropertyGroup>
 
@@ -328,6 +328,9 @@
         <Reference Include="Microsoft.TeamFoundation.Framework.Server, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Framework.Server.dll</HintPath>
         </Reference>
+        <Reference Include="Microsoft.TeamFoundation.Server.Types, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Server.Types.dll</HintPath>
+        </Reference>
         <Reference Include="Microsoft.TeamFoundation.Server.Core, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>$(ServerAssemblies)\Microsoft.TeamFoundation.Server.Core.dll</HintPath>
         </Reference>
@@ -528,6 +531,7 @@
     <Otherwise>
       <ItemGroup>
         <Reference Include="Microsoft.TeamFoundation.Framework.Server"/>
+        <Reference Include="Microsoft.TeamFoundation.Server.Types"/>
         <Reference Include="Microsoft.TeamFoundation.Server.Core"/>
         <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server"/>
         <Reference Include="Microsoft.TeamFoundation.WorkItemTracking.Server.Dataaccesslayer"/>
