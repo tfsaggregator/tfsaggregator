@@ -83,6 +83,11 @@
       <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
       <ExtendedClientVersion>15.112.1</ExtendedClientVersion>
     </TfsVersion>
+    <TfsVersion Include="2018" >
+      <Alt>2018</Alt>
+      <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+      <ExtendedClientVersion>15.112.1</ExtendedClientVersion>
+    </TfsVersion>
   </ItemGroup>
 
 

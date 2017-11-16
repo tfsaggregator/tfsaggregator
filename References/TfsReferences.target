@@ -779,4 +779,11 @@
     <Error Condition="!Exists('$(HintPackageDir)\Microsoft.TeamFoundationServer.ExtendedClient.15.112.1\build\Microsoft.TeamFoundationServer.ExtendedClient.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(HintPackageDir)\Microsoft.TeamFoundationServer.ExtendedClient.15.112.1\build\Microsoft.TeamFoundationServer.ExtendedClient.targets'))" />
   </Target>
 
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="'$(TfsVersion)' == '16.0'">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(HintPackageDir)\Microsoft.TeamFoundationServer.ExtendedClient.15.122.1-preview\build\Microsoft.TeamFoundationServer.ExtendedClient.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(HintPackageDir)\Microsoft.TeamFoundationServer.ExtendedClient.15.122.1-preview\build\Microsoft.TeamFoundationServer.ExtendedClient.targets'))" />
+  </Target>
+
 </Project>
