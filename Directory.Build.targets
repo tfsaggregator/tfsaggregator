@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <TfsVersionConfigTarget>$(MSBuildThisFileDirectory)References\$(TfsVersion)\config.targets</TfsVersionConfigTarget>
+  </PropertyGroup>
+  <Import Project="$(TfsVersionConfigTarget)" Condition="Exists('$(TfsVersionConfigTarget)')" />
+
+  <Target Name="EnsureTfsVersionConfigTargetExists" BeforeTargets="BeforeBuild">
+    <Error Text="No config targets file found for current TFS version ($(TfsVersion))."
+           Condition="!Exists('$(TfsVersionConfigTarget)')" />
+  </Target>
+</Project>
