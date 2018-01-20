@@ -28,8 +28,9 @@
   </ItemGroup>
   <PropertyGroup>
     <!-- ensure that restore output and intermediate compilation output don't cause conflicts or incremental build issues -->
-    <BaseIntermediateOutputPath>obj\$(Configuration)\</BaseIntermediateOutputPath>
-    <BaseOutputPath>bin\$(Configuration)\</BaseOutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <!-- default items shall also exlude folder above base (int.) output paths -->
     <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
