@@ -2,7 +2,6 @@
   <PropertyGroup>
     <DevelopmentTfsVersion>2018</DevelopmentTfsVersion>
     <TfsVersion Condition="'$(TfsVersion)' == ''">$(DevelopmentTfsVersion)</TfsVersion>
-    <Version>2.3.0-alpha</Version>
     <Company>TFS Aggregator Team</Company>
     <Product>TFS Aggregator</Product>
     <Copyright>Copyright (c) TFS Aggregator Team 2015-18</Copyright>
