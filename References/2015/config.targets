@@ -4,9 +4,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Services.InteractiveClient" Version="14.83.0" />
-    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="14.83.0" />
-    <PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="14.83.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Services.InteractiveClient" Version="14.83.0">
+      <IncludeAssets>All</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="14.83.0">
+      <IncludeAssets>All</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="14.83.1">
+      <IncludeAssets>All</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <PropertyGroup>
