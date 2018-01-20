@@ -19,7 +19,6 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug-2015</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -31,7 +30,6 @@
     <TargetFramework>net452</TargetFramework>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release-2015</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,7 +41,6 @@
     <TargetFramework>net45</TargetFramework>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug-2013</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -56,7 +53,6 @@
     <DebugType>pdbonly</DebugType>
     <TargetFramework>net45</TargetFramework>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release-2013</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -66,7 +62,6 @@
     <TfsVersion>2015.1</TfsVersion>
     <TargetFramework>net452</TargetFramework>
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug-2015.1\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -78,7 +73,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2015.1|AnyCPU'">
     <TfsVersion>2015.1</TfsVersion>
     <TargetFramework>net452</TargetFramework>
-    <OutputPath>bin\Release-2015.1\</OutputPath>
     <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -90,7 +84,6 @@
     <DebugSymbols>true</DebugSymbols>
     <TfsVersion>2015.2</TfsVersion>
     <TargetFramework>net452</TargetFramework>
-    <OutputPath>bin\Debug-2015.2\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -102,7 +95,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2015.2|AnyCPU'">
     <TfsVersion>2015.2</TfsVersion>
     <TargetFramework>net452</TargetFramework>
-    <OutputPath>bin\Release-2015.2\</OutputPath>
     <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -114,7 +106,6 @@
     <DebugSymbols>true</DebugSymbols>
     <TfsVersion>2017</TfsVersion>
     <TargetFramework>net461</TargetFramework>
-    <OutputPath>bin\Debug-2017\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -122,7 +113,6 @@
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2017|AnyCPU'">
-    <OutputPath>bin\Release-2017\</OutputPath>
     <TfsVersion>2017</TfsVersion>
     <TargetFramework>net461</TargetFramework>
     <DefineConstants>TRACE;</DefineConstants>
@@ -136,7 +126,6 @@
     <DebugSymbols>true</DebugSymbols>
     <TfsVersion>2017.2</TfsVersion>
     <TargetFramework>net461</TargetFramework>
-    <OutputPath>bin\Debug-2017.2\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -144,7 +133,6 @@
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2017.2|AnyCPU'">
-    <OutputPath>bin\Release-2017.2\</OutputPath>
     <TfsVersion>2017.2</TfsVersion>
     <TargetFramework>net461</TargetFramework>
     <DefineConstants>TRACE;</DefineConstants>
@@ -156,7 +144,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2018|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug-2018\</OutputPath>
     <TfsVersion>2018</TfsVersion>
     <TargetFramework>net461</TargetFramework>
     <DebugType>full</DebugType>
@@ -165,7 +152,6 @@
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2018|AnyCPU'">
-    <OutputPath>bin\Release-2018\</OutputPath>
     <TfsVersion>2018</TfsVersion>
     <TargetFramework>net461</TargetFramework>
     <Optimize>true</Optimize>
