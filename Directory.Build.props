@@ -2,8 +2,8 @@
   <PropertyGroup>
     <DevelopmentTfsVersion>2018</DevelopmentTfsVersion>
     <TfsVersion Condition="'$(TfsVersion)' == ''">$(DevelopmentTfsVersion)</TfsVersion>
-    <AssemblyVersion Condition="'$(MajorMinorPatch)' == ''">$(MajorMinorPatch)</AssemblyVersion>
-    <AssemblyFileVersion Condition="'$(MajorMinorPatch)' == ''">$(MajorMinorPatch)</AssemblyFileVersion>
+    <AssemblyVersion Condition="'$(MajorMinorPatch)' != ''">$(MajorMinorPatch)</AssemblyVersion>
+    <AssemblyFileVersion Condition="'$(MajorMinorPatch)' != ''">$(MajorMinorPatch)</AssemblyFileVersion>
     <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">0.0.0.1</AssemblyVersion>
     <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">0.0.0.1</AssemblyFileVersion>
     <Company>TFS Aggregator Team</Company>
