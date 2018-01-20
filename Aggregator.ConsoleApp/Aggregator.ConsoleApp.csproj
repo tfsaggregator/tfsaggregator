@@ -1,8 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\System.Runtime.InteropServices.Analyzers.1.0.1\build\System.Runtime.InteropServices.Analyzers.props" Condition="Exists('..\packages\System.Runtime.InteropServices.Analyzers.1.0.1\build\System.Runtime.InteropServices.Analyzers.props')" />
-  <Import Project="..\packages\System.Runtime.Analyzers.1.0.1\build\System.Runtime.Analyzers.props" Condition="Exists('..\packages\System.Runtime.Analyzers.1.0.1\build\System.Runtime.Analyzers.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -11,14 +8,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Aggregator.ConsoleApp</RootNamespace>
     <AssemblyName>TFSAggregator2.ConsoleApp</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFramework>net461</TargetFramework>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
+    <Configurations>Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-2015|AnyCPU' ">
-    <TfsVersion>14.0</TfsVersion>
+    <TfsVersion>2015</TfsVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -31,7 +26,7 @@
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-2015|AnyCPU' ">
-    <TfsVersion>14.0</TfsVersion>
+    <TfsVersion>2015</TfsVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -42,7 +37,7 @@
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-2013|AnyCPU' ">
-    <TfsVersion>12.0</TfsVersion>
+    <TfsVersion>2013</TfsVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -55,7 +50,7 @@
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-2013|AnyCPU' ">
-    <TfsVersion>12.0</TfsVersion>
+    <TfsVersion>2013</TfsVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -66,7 +61,7 @@
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2015.1|AnyCPU'">
-    <TfsVersion>14.1</TfsVersion>
+    <TfsVersion>2015.1</TfsVersion>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug-2015.1\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
@@ -78,7 +73,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2015.1|AnyCPU'">
-    <TfsVersion>14.1</TfsVersion>
+    <TfsVersion>2015.1</TfsVersion>
     <OutputPath>bin\Release-2015.1\</OutputPath>
     <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>
@@ -89,7 +84,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2015.2|AnyCPU'">
-    <TfsVersion>14.2</TfsVersion>
+    <TfsVersion>2015.2</TfsVersion>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug-2015.2\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
@@ -101,7 +96,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2015.2|AnyCPU'">
-    <TfsVersion>14.2</TfsVersion>
+    <TfsVersion>2015.2</TfsVersion>
     <OutputPath>bin\Release-2015.2\</OutputPath>
     <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>
@@ -113,7 +108,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2017|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <TfsVersion>15.0</TfsVersion>
+    <TfsVersion>2017</TfsVersion>
     <OutputPath>bin\Debug-2017\</OutputPath>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
@@ -123,7 +118,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2017|AnyCPU'">
     <OutputPath>bin\Release-2017\</OutputPath>
-    <TfsVersion>15.0</TfsVersion>
+    <TfsVersion>2017</TfsVersion>
     <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -134,7 +129,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2017.2|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug-2017.2\</OutputPath>
-    <TfsVersion>15.2</TfsVersion>
+    <TfsVersion>2017.2</TfsVersion>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -144,7 +139,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2017.2|AnyCPU'">
     <OutputPath>bin\Release-2017.2\</OutputPath>
-    <TfsVersion>15.2</TfsVersion>
+    <TfsVersion>2017.2</TfsVersion>
     <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -156,7 +151,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-2018|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug-2018\</OutputPath>
-    <TfsVersion>16.0</TfsVersion>
+    <TfsVersion>2018</TfsVersion>
     <DefineConstants>DEBUG;TRACE;TFS2018;TFS2017u2;TFS2017;TFS2015u2;TFS2015u1;TFS2015</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -166,7 +161,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2018|AnyCPU'">
     <OutputPath>bin\Release-2018\</OutputPath>
-    <TfsVersion>16.0</TfsVersion>
+    <TfsVersion>2018</TfsVersion>
     <DefineConstants>TRACE;TFS2018;TFS2017u2;TFS2017;TFS2015u2;TFS2015u1;TFS2015</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -175,111 +170,41 @@
     <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
-  <Import Project="../references/TfsReferences.target" />
   <PropertyGroup>
     <ApplicationIcon>TfsAggregator.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ManyConsole, Version=0.4.2.20, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ManyConsole.0.4.2.20\lib\ManyConsole.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NDesk.Options">
-      <HintPath>..\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\System.Management.Automation_PowerShell_3.0.6.3.9600.17400\lib\net40\System.Management.Automation.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.2\lib\net46\System.Net.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
-    </Reference>
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Threading.Tasks.Dataflow, Version=4.5.24.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Tpl.Dataflow.4.5.24\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyVersion.cs">
       <Link>AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="ExceptionExtensions.cs" />
-    <Compile Include="ConsoleTextLogger.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Notification.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryRunner.cs" />
-    <Compile Include="RequestContext.cs" />
-    <Compile Include="RunCommand.cs" />
-    <Compile Include="ConsoleEventLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Aggregator.Core\Aggregator.Core.Plugin.csproj">
-      <Project>{fea76835-61b3-4fc7-9d6f-50d39a7a8258}</Project>
-      <Name>Aggregator.Core.Plugin</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="TfsAggregator.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.2.0.2536\analyzers\SonarAnalyzer.CSharp.dll" />
-    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.2.0.2536\analyzers\SonarAnalyzer.dll" />
-    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.2.0.2536\analyzers\Google.Protobuf.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
-    <Analyzer Include="..\packages\System.Runtime.Analyzers.1.1.0\analyzers\dotnet\cs\System.Runtime.Analyzers.dll" />
-    <Analyzer Include="..\packages\System.Runtime.Analyzers.1.1.0\analyzers\dotnet\cs\System.Runtime.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\System.Runtime.InteropServices.Analyzers.1.1.0\analyzers\dotnet\cs\System.Runtime.InteropServices.Analyzers.dll" />
-    <Analyzer Include="..\packages\System.Runtime.InteropServices.Analyzers.1.1.0\analyzers\dotnet\cs\System.Runtime.InteropServices.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\Desktop.Analyzers.1.1.0\analyzers\dotnet\cs\Desktop.Analyzers.dll" />
-    <Analyzer Include="..\packages\Desktop.Analyzers.1.1.0\analyzers\dotnet\cs\Desktop.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.AnalyzerPowerPack.1.1.0\analyzers\dotnet\cs\Microsoft.AnalyzerPowerPack.Common.dll" />
-    <Analyzer Include="..\packages\Microsoft.AnalyzerPowerPack.1.1.0\analyzers\dotnet\cs\Microsoft.AnalyzerPowerPack.CSharp.dll" />
-    <Analyzer Include="..\packages\System.Security.Cryptography.Hashing.Algorithms.Analyzers.1.1.0\analyzers\dotnet\cs\System.Security.Cryptography.Hashing.Algorithms.Analyzers.dll" />
-    <Analyzer Include="..\packages\System.Security.Cryptography.Hashing.Algorithms.Analyzers.1.1.0\analyzers\dotnet\cs\System.Security.Cryptography.Hashing.Algorithms.CSharp.Analyzers.dll" />
+    <PackageReference Include="Desktop.Analyzers" Version="1.1.0" />
+    <PackageReference Include="ManyConsole" Version="0.4.2.20" />
+    <PackageReference Include="Microsoft.AnalyzerPowerPack" Version="1.1.0" />
+    <PackageReference Include="NDesk.Options" Version="0.2.1" />
+    <PackageReference Include="SonarLint" Version="1.6.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="6.7.1.4347" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <ProjectReference Include="..\Aggregator.Core\Aggregator.Core.Plugin\Aggregator.Core.Plugin.csproj" />
+  </ItemGroup>
 </Project>

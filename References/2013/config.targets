@@ -56,21 +56,10 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <!-- Doesn't exist in references dir
-    <Reference Include="$(ClientAssembliesv20)\Microsoft.TeamFoundation.WorkItemTracking.Common.dll">
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    -->
 
     <!-- Client Assemblies v4.5 -->
     <Reference Include="$(ClientAssembliesv45)\Microsoft.VisualStudio.Services.WebApi.dll">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <!-- Doesn't exist in references dir
-    <Reference Include="$(ClientAssembliesv45)\Microsoft.VisualStudio.Services.Common.dll">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    -->
   </ItemGroup>
   </Project>
