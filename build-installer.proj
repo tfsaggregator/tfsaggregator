@@ -54,38 +54,30 @@
   <ItemGroup>
     <TfsVersion Include="2013" >
       <Alt>2013</Alt>
-      <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-      <!-- see References\TfsReferences.target-->
       <ExtendedClientVersion>14.83.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2015" >
       <Alt>2015</Alt>
-      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
       <ExtendedClientVersion>14.83.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2015.1" >
       <Alt>2015u1</Alt>
-      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
       <ExtendedClientVersion>14.83.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2015.2" >
       <Alt>2015u2</Alt>
-      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
       <ExtendedClientVersion>14.83.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2017" >
       <Alt>2017</Alt>
-      <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
       <ExtendedClientVersion>15.103.0-preview</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2017.2" >
       <Alt>2017u2</Alt>
-      <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
       <ExtendedClientVersion>15.112.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2018" >
       <Alt>2018</Alt>
-      <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
       <ExtendedClientVersion>15.112.1</ExtendedClientVersion>
     </TfsVersion>
   </ItemGroup>
@@ -107,37 +99,18 @@
 
 
 
-  <Target Name="MakeSureNuGetCmdIsAvailable">
-    <Exec Command="where /q nuget.exe" ContinueOnError='true' IgnoreExitCode="true">
-      <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
-    </Exec>
-    <Message Text="Downloading $(NuGetDownloadUrl)" Condition="'$(ErrorCode)' > '0'" />
-    <DownloadFile Url="$(NuGetDownloadUrl)" Condition="'$(ErrorCode)' > '0'" />
-  </Target>
-  
-  <Target Name="RestorePackagesFlavor">
-    <Message Importance="high" Text="-------------- Restoring NuGet packages $(CurrentTfsVersion) flavor --------------" />
-    <Exec Command="$(MSBuildProjectDirectory)\nuget restore References\$(CurrentTfsVersion)\packages.config -SolutionDirectory $(PathToSolutionDir)"/>
-  </Target>
-
-  <Target Name="RestorePackages" DependsOnTargets="MakeSureNuGetCmdIsAvailable" Condition="$(BuildSolution)">
-    <!-- re-entrant call pattern -->
-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="RestorePackagesFlavor"
-             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity);CurrentTargetFrameworkVersion=%(TfsVersion.TargetFrameworkVersion)" />
-  </Target>
-
-
-
   <Target Name="BuildSolutionFlavor">
-    <Message Importance="high" Text="-------------- Building $(CurrentTfsVersion) flavor for $(CurrentTargetFrameworkVersion) --------------" />
+    <Message Importance="high" Text="-------------- Building $(CurrentTfsVersion) --------------" />
+    <MSBuild Projects="$(PathToSolutionFile)" Targets="restore"
+             Properties="Configuration=$(CurrentFlavor)" />
     <MSBuild Projects="$(PathToSolutionFile)"
-             Properties="Configuration=$(CurrentFlavor);TargetFrameworkVersion=$(CurrentTargetFrameworkVersion)" />
+             Properties="Configuration=$(CurrentFlavor);" />
   </Target>
 
   <Target Name="BuildSolution" Condition="$(BuildSolution)">
     <!-- re-entrant call pattern -->
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="BuildSolutionFlavor"
-             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity);CurrentTargetFrameworkVersion=%(TfsVersion.TargetFrameworkVersion)" />
+             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity);" />
   </Target>
 
 
@@ -252,7 +225,7 @@
 
 
 
-  <Target Name="GetWiX" DependsOnTargets="MakeSureNuGetCmdIsAvailable" Condition="!Exists('')" >
+  <Target Name="GetWiX" Condition="!Exists('')" >
     <Exec Command="nuget install WiX -version $(WixVersion) -SolutionDirectory $(PathToSolutionDir)" />
   </Target>
   
@@ -322,7 +295,7 @@
 
 
 
-  <Target Name="Build" DependsOnTargets="RestorePackages;BuildSolution;CollectFiles;BuildMSI">
+  <Target Name="Build" DependsOnTargets="BuildSolution;CollectFiles;BuildMSI">
   </Target>
 
 
@@ -381,22 +354,6 @@
         }
       ]]>
       </Code>
-    </Task>
-  </UsingTask>
-  
-  <!-- source: http://blog.seravy.com/msbuild-download-file-task/ -->
-  <UsingTask TaskName="DownloadFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
-    <ParameterGroup>
-      <Url ParameterType="System.String" Required="true" />
-      <File ParameterType="System.String" Required="false" />
-      <OutputFolder ParameterType="System.String" Required="false" />
-    </ParameterGroup>
-    <Task>
-      <Using Namespace="System.Web"/>
-      <Code Type="Fragment" Language="cs"><![CDATA[
-        using (var client = new System.Net.WebClient())
-            { client.DownloadFile(Url, (OutputFolder != null ? OutputFolder + "/" : "") + (File ?? System.IO.Path.GetFileName(new Uri(Url).LocalPath))); }
-        ]]></Code>
     </Task>
   </UsingTask>
   
