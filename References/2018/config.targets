@@ -3,12 +3,10 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="15.122.1-preview" />
     <PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="15.122.1-preview" />
     <PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="15.122.1-preview" />
     <PackageReference Include="Microsoft.VisualStudio.Services.InteractiveClient" Version="15.122.1-preview" />
-    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.14.2" />
   </ItemGroup>
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);TFS2018;TFS2017u2;TFS2017;TFS2015u2;TFS2015u1;TFS2015</DefineConstants>

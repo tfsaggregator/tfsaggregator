@@ -4,7 +4,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="6.0.9" />
     <PackageReference Include="Microsoft.VisualStudio.Services.InteractiveClient" Version="14.83.0" />
     <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="14.83.0" />
     <PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="14.83.1" />
