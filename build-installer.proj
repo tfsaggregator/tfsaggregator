@@ -54,7 +54,6 @@
   <ItemGroup>
     <TfsVersion Include="2013" >
       <Alt>2013</Alt>
-      <ExtendedClientVersion>14.83.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2015" >
       <Alt>2015</Alt>
@@ -78,7 +77,7 @@
     </TfsVersion>
     <TfsVersion Include="2018" >
       <Alt>2018</Alt>
-      <ExtendedClientVersion>15.112.1</ExtendedClientVersion>
+      <ExtendedClientVersion>15.122.1-preview</ExtendedClientVersion>
     </TfsVersion>
   </ItemGroup>
 
@@ -101,10 +100,8 @@
 
   <Target Name="BuildSolutionFlavor">
     <Message Importance="high" Text="-------------- Building $(CurrentTfsVersion) --------------" />
-    <MSBuild Projects="$(PathToSolutionFile)" Targets="restore"
-             Properties="Configuration=$(CurrentFlavor)" />
-    <MSBuild Projects="$(PathToSolutionFile)"
-             Properties="Configuration=$(CurrentFlavor);" />
+    <MSBuild Projects="$(PathToSolutionFile)" Targets="restore;build"
+             Properties="Configuration=$(CurrentFlavor);TfsVersion=$(CurrentTfsVersion);" />
   </Target>
 
   <Target Name="BuildSolution" Condition="$(BuildSolution)">
@@ -122,8 +119,8 @@
       <!-- Exclude non-redistributable assemblies -->
       <cliBin Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\**\*.dll" Exclude="*.Server.*" />
       <!-- HACK this unmanaged library is not picked up automatically via references -->
-      <cliBin Include="$(MSBuildProjectDirectory)\packages\Microsoft.TeamFoundationServer.ExtendedClient.$(ExtendedClientVersion)\lib\native\x86\Microsoft.WITDataStore32.dll" />
-      <cliBin Include="$(MSBuildProjectDirectory)\packages\Microsoft.TeamFoundationServer.ExtendedClient.$(ExtendedClientVersion)\lib\native\amd64\Microsoft.WITDataStore64.dll" />
+      <cliBin Condition="'$(ExtendedClientVersion)'!=''" Include="$(MSBuildProjectDirectory)\packages\Microsoft.TeamFoundationServer.ExtendedClient.$(ExtendedClientVersion)\lib\native\x86\Microsoft.WITDataStore32.dll" />
+      <cliBin Condition="'$(ExtendedClientVersion)'!=''" Include="$(MSBuildProjectDirectory)\packages\Microsoft.TeamFoundationServer.ExtendedClient.$(ExtendedClientVersion)\lib\native\amd64\Microsoft.WITDataStore64.dll" />
       <cliBin Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\**\*.pdb" Exclude="*.Server.*" />
     </ItemGroup>
     <ItemGroup>

@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug-2018</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{200CF240-476E-4429-A8FC-66001806A2DE}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Aggregator.ConsoleApp</RootNamespace>
     <AssemblyName>TFSAggregator2.ConsoleApp</AssemblyName>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework Condition="'$(TargetFramework)'==''">net461</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <Configurations>Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018</Configurations>
   </PropertyGroup>

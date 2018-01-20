@@ -10,13 +10,13 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
   </PropertyGroup>
   <ItemGroup>
-    <KnownTfsVersion Include="2013" />
-    <KnownTfsVersion Include="2015" />
+    <KnownTfsVersion Include="2013"   />
+    <KnownTfsVersion Include="2015"   />
     <KnownTfsVersion Include="2015.1" />
-    <KnownTfsVersion Include="2015.2"/>
-    <KnownTfsVersion Include="2017" />
-    <KnownTfsVersion Include="2017.2"/>
-    <KnownTfsVersion Include="2018" />
+    <KnownTfsVersion Include="2015.2" />
+    <KnownTfsVersion Include="2017"   />
+    <KnownTfsVersion Include="2017.2" />
+    <KnownTfsVersion Include="2018"   />
 
     <AssemblyAttribute Include="System.Reflection.AssemblyConfigurationAttribute">
       <_Parameter1>$(Configuration) [TFS $(TfsVersion)]</_Parameter1>
@@ -28,8 +28,8 @@
   </ItemGroup>
   <PropertyGroup>
     <!-- ensure that restore output and intermediate compilation output don't cause conflicts or incremental build issues -->
-    <BaseIntermediateOutputPath>obj\$(TfsVersion)\</BaseIntermediateOutputPath>
-    <BaseOutputPath>bin\$(TfsVersion)\</BaseOutputPath>
+    <BaseIntermediateOutputPath>obj\$(Configuration)\</BaseIntermediateOutputPath>
+    <BaseOutputPath>bin\$(Configuration)\</BaseOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <!-- default items shall also exlude folder above base (int.) output paths -->
     <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
