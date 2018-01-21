@@ -174,7 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Desktop.Analyzers" Version="1.1.0" />
-    <PackageReference Include="ManyConsole" Version="0.4.2.20" />
+    <PackageReference Include="ManyConsole" Version="1.0.0.3" />
     <PackageReference Include="Microsoft.AnalyzerPowerPack" Version="1.1.0" />
     <PackageReference Include="NDesk.Options" Version="0.2.1" />
     <PackageReference Include="SonarLint" Version="1.6.0" />
