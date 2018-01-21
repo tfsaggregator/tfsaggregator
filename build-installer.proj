@@ -100,7 +100,7 @@
 
   <Target Name="BuildSolutionFlavor">
     <Message Importance="high" Text="-------------- Building $(CurrentTfsVersion) --------------" />
-    <Exec Command="msbuild.exe /t:restore;build /p:TfsVersion=$(CurrentTfsVersion);Configuration=$(CurrentFlavor);TF_BUILD=True /m $(PathToSolutionFile)" />
+    <Exec Command="&quot;$(MSBuildBinPath)\msbuild.exe&quot; /t:restore;build /p:TfsVersion=$(CurrentTfsVersion);Configuration=$(CurrentFlavor);TF_BUILD=True;MajorMinorPatch=$(MajorMinorPatch);FullSemVer=$(FullSemVer) /m $(PathToSolutionFile)" />
   </Target>
 
   <Target Name="BuildSolution" Condition="$(BuildSolution)">
