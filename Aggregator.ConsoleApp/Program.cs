@@ -48,12 +48,12 @@
             var infoVersion = GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 
             var sb = new StringBuilder();
-            sb.AppendFormat("{0} {1}", title.Title, infoVersion.InformationalVersion);
+            sb.AppendFormat("{0} {1}", title?.Title, infoVersion?.InformationalVersion);
             sb.AppendLine();
-            sb.AppendLine(descr.Description);
-            sb.AppendFormat("Build: {0}, Configuration: {1}", fileVersion.Version, config.Configuration);
+            sb.AppendLine(descr?.Description);
+            sb.AppendFormat("Build: {0}, Configuration: {1}", fileVersion?.Version, config?.Configuration);
             sb.AppendLine();
-            sb.AppendLine(copy.Copyright);
+            sb.AppendLine(copy?.Copyright);
 
             return sb.ToString();
         }
