@@ -59,6 +59,10 @@ namespace Aggregator.ConsoleApp
                     Enum.Parse(typeof(LogLevel), value, true);
                     this.LogLevelName = value;
                 });
+            this.HasOption(
+                "t|test|whatIf",
+                "Shows this message and exit",
+                value => this.WhatIf = value != null);
         }
 
         internal bool ShowHelp { get; set; }
@@ -74,6 +78,8 @@ namespace Aggregator.ConsoleApp
         internal string WorkItemQuery { get; set; }
 
         internal string LogLevelName { get; set; }
+
+        internal bool WhatIf { get; set; }
 
         public override void CheckRequiredArguments()
         {
@@ -105,6 +111,8 @@ namespace Aggregator.ConsoleApp
                 logger,
                 (runtimeContext) => new Core.Facade.WorkItemRepository(runtimeContext),
                 (runtimeContext) => new Core.Script.ScriptLibrary(runtimeContext));
+
+            runtime.Settings.WhatIf = this.WhatIf;
 
             if (!string.IsNullOrWhiteSpace(this.LogLevelName))
             {
