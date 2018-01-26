@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aggregator.ServerPlugin", "Aggregator.ServerPlugin\Aggregator.ServerPlugin.csproj", "{D0AD5141-0772-4FFA-8B55-DF3BA4429E4E}"
 EndProject

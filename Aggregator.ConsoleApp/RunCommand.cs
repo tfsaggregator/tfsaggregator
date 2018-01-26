@@ -51,6 +51,22 @@ namespace Aggregator.ConsoleApp
                 "Work Item Query",
                 value => this.WorkItemQuery = value);
             this.HasOption(
+                "e|eventType=",
+                "Notification Event Type (new, change, delete, restore), defaults to 'change'",
+                value =>
+                {
+                    if (string.IsNullOrWhiteSpace(value))
+                    {
+                        this.ChangeType = Core.Interfaces.ChangeTypes.Change;
+                    }
+                    else
+                    {
+                        Core.Interfaces.ChangeTypes temp;
+                        Enum.TryParse(value, out temp);
+                        this.ChangeType = temp;
+                    }
+                });
+            this.HasOption(
                 "l|logLevel=",
                 "Logging level (critical, error, warning, information, normal, verbose, diagnostic)",
                 value =>
@@ -76,6 +92,8 @@ namespace Aggregator.ConsoleApp
         internal int[] WorkItemIds { get; set; }
 
         internal string WorkItemQuery { get; set; }
+
+        internal Core.Interfaces.ChangeTypes ChangeType { get; set; }
 
         internal string LogLevelName { get; set; }
 
@@ -105,6 +123,7 @@ namespace Aggregator.ConsoleApp
             var logger = new ConsoleEventLogger(LogLevel.Normal);
 
             var context = new RequestContext(this.TeamProjectCollectionUrl, this.TeamProjectName);
+            context.CurrentChangeType = this.ChangeType;
             var runtime = RuntimeContext.GetContext(
                 () => this.PolicyFile,
                 context,
@@ -125,6 +144,8 @@ namespace Aggregator.ConsoleApp
             {
                 return 3;
             }
+
+            logger.WhatIfEnabled();
 
             var workItemIds = new Queue<int>();
             if (string.IsNullOrWhiteSpace(this.WorkItemQuery))
@@ -176,6 +197,12 @@ namespace Aggregator.ConsoleApp
 
                         foreach (var savedId in eventProcessor.SavedWorkItems)
                         {
+                            // special case: when WhatIf is on, new WI aren't saved and stay with ID 0
+                            if (this.WhatIf && savedId == 0)
+                            {
+                                continue;
+                            }
+
                             workItemIds.Enqueue(savedId);
                         }
                     }
