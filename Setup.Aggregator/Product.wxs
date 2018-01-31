@@ -49,7 +49,7 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017.2"]]>
         </Condition>
       </Feature>
-      <Feature Id='Client2018Feature' Title='Client for TFS 2018' Level='1' AllowAdvertise='no'>
+      <Feature Id='Client2018Feature' Title='Client for TFS 2018 and 2018.1' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2018"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2018"]]>
@@ -100,7 +100,7 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017.2"]]>
         </Condition>
       </Feature>
-      <Feature Id='Server2018Feature' Title='Plugin for TFS 2018' Level='1' AllowAdvertise='no'>
+      <Feature Id='Server2018Feature' Title='Plugin for TFS 2018 and 2018.1' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="NeutralServerComponents" />
         <ComponentGroupRef Id="ServerComponents2018"/>
         <Condition Level="1000">
@@ -194,7 +194,9 @@
       <![CDATA[TEAMFOUNDATIONSERVER2017 AND TEAMFOUNDATIONSERVER2017BUILD <> "15.105.25910.0" AND TEAMFOUNDATIONSERVER2017BUILD <> "15.112.26307.0"]]>
     </SetProperty>
     <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2018" Before="LaunchConditions" Action="TFSVer2018RTM">
-      <![CDATA[TEAMFOUNDATIONSERVER2018 AND TEAMFOUNDATIONSERVER2018BUILD = "16.122.27102.1"]]>
+      <!-- TFS2018rtm:   16.122.27102.1 -->
+      <!-- TFS2018u1rc1: 16.122.27319.1 -->
+      <![CDATA[TEAMFOUNDATIONSERVER2018 AND (TEAMFOUNDATIONSERVER2018BUILD = "16.122.27102.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27319.1"]]>
     </SetProperty>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
