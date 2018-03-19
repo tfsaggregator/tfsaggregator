@@ -7,7 +7,6 @@
   Sample usage:
 
   MSBuild build-installer.proj /t:Build /p:Configuration=Debug /clp:Verbosity=minimal /fl /flp:LogFile=build-installer.log;Append;Verbosity=detailed;Encoding=UTF-8
-
 -->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
@@ -18,17 +17,22 @@
     <OutputName>TFSAggregator</OutputName>
     <OutputType>Package</OutputType>
     <IntermediateOutputPath>$(SetupProjectDir)\obj\$(Configuration)\</IntermediateOutputPath>
+    <WixTargetsPath>$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
   </PropertyGroup>
 
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" />
-
   <PropertyGroup>
+    <PathToSolutionDir>$(MSBuildProjectDirectory)</PathToSolutionDir>
+    <PathToSolutionFile>$(PathToSolutionDir)\tfs-aggregator-plugin.sln</PathToSolutionFile>
+    <!-- get NuGet URL from https://dist.nuget.org/index.html -->
+    <NuGetDownloadUrl>https://dist.nuget.org/win-x86-commandline/v4.1.0/nuget.exe</NuGetDownloadUrl>
+    <WixVersion>3.11.0</WixVersion>
+    <WixPropsPath>$(PathToSolutionDir)\packages\WiX.$(WixVersion)\build\wix.props</WixPropsPath>
     <CollectDir>$(MSBuildProjectDirectory)\_collect\$(Configuration)</CollectDir>
     <NeutralDir>$(CollectDir)\Neutral</NeutralDir>
     <WikiUrl>https://github.com/tfsaggregator/tfsaggregator.wiki.git</WikiUrl>
     <!-- Assume that we get values from GitVersion -->
-    <MajorMinorPatch Condition=" '$(MajorMinorPatch)' == '' ">0.2.2</MajorMinorPatch>
-    <FullSemVer Condition=" '$(FullSemVer)' == '' ">0.2.2-alpha+local</FullSemVer>
+    <MajorMinorPatch Condition=" '$(MajorMinorPatch)' == '' ">0.2.3</MajorMinorPatch>
+    <FullSemVer Condition=" '$(FullSemVer)' == '' ">0.2.3-alpha+local</FullSemVer>
     <!-- Defaults to global install -->
     <GitExe>git</GitExe>
     <!-- skip process steps by setting False -->
@@ -36,9 +40,10 @@
     <CollectFiles>True</CollectFiles>
     <BuildMSI>True</BuildMSI>
     <WiXProjectPropertiesFile>Setup.Aggregator\_clisrv.g.properties</WiXProjectPropertiesFile>
-  
+  </PropertyGroup>
 
-</PropertyGroup>
+  <Import Project="$(WixPropsPath)" Condition="Exists('$(WixPropsPath)')" />
+  <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
 
   <!-- TFS versions supported 
   Note: these values are all-over the places, e.g.
@@ -49,30 +54,37 @@
   <ItemGroup>
     <TfsVersion Include="2013" >
       <Alt>2013</Alt>
-      <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     </TfsVersion>
     <TfsVersion Include="2015" >
       <Alt>2015</Alt>
-      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+      <ExtendedClientVersion>14.83.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2015.1" >
       <Alt>2015u1</Alt>
-      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+      <ExtendedClientVersion>14.83.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2015.2" >
       <Alt>2015u2</Alt>
-      <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+      <ExtendedClientVersion>14.83.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2017" >
       <Alt>2017</Alt>
-      <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+      <ExtendedClientVersion>15.103.0-preview</ExtendedClientVersion>
+    </TfsVersion>
+    <TfsVersion Include="2017.2" >
+      <Alt>2017u2</Alt>
+      <ExtendedClientVersion>15.112.1</ExtendedClientVersion>
+    </TfsVersion>
+    <TfsVersion Include="2018" >
+      <Alt>2018</Alt>
+      <ExtendedClientVersion>15.122.1-preview</ExtendedClientVersion>
     </TfsVersion>
   </ItemGroup>
 
 
 
   <Target Name="CleanSolution">
-    <MSBuild Projects="$(MSBuildProjectDirectory)\TFS-Aggregator-2.sln"
+    <MSBuild Projects="$(PathToSolutionFile)"
              Targets="Clean"
              Properties="Configuration=$(Configuration)-%(TfsVersion.Identity)" />
   </Target>
@@ -87,15 +99,15 @@
 
 
   <Target Name="BuildSolutionFlavor">
-    <Message Importance="high" Text="-------------- Building $(CurrentTfsVersion) flavor for $(CurrentTargetFrameworkVersion) --------------" />
-    <MSBuild Projects="$(MSBuildProjectDirectory)\TFS-Aggregator-2.sln"
-             Properties="Configuration=$(CurrentFlavor);TargetFrameworkVersion=$(CurrentTargetFrameworkVersion)" />
+    <Message Importance="high" Text="-------------- Building $(CurrentTfsVersion) --------------" />
+    <Exec Command="&quot;$(MSBuildBinPath)\msbuild.exe&quot; /t:restore /p:TfsVersion=$(CurrentTfsVersion);Configuration=$(CurrentFlavor);TF_BUILD=True;MajorMinorPatch=$(MajorMinorPatch);FullSemVer=$(FullSemVer) /m $(PathToSolutionFile)" />
+    <Exec Command="&quot;$(MSBuildBinPath)\msbuild.exe&quot; /t:build /p:TfsVersion=$(CurrentTfsVersion);Configuration=$(CurrentFlavor);TF_BUILD=True;MajorMinorPatch=$(MajorMinorPatch);FullSemVer=$(FullSemVer) /m $(PathToSolutionFile)" />
   </Target>
 
   <Target Name="BuildSolution" Condition="$(BuildSolution)">
     <!-- re-entrant call pattern -->
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="BuildSolutionFlavor"
-             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity);CurrentTargetFrameworkVersion=%(TfsVersion.TargetFrameworkVersion)" />
+             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity);" />
   </Target>
 
 
@@ -107,7 +119,8 @@
       <!-- Exclude non-redistributable assemblies -->
       <cliBin Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\**\*.dll" Exclude="*.Server.*" />
       <!-- HACK this unmanaged library is not picked up automatically via references -->
-      <cliBin Include="$(MSBuildProjectDirectory)\packages\Microsoft.TeamFoundationServer.ExtendedClient.14.83.1\lib\native\x86\Microsoft.WITDataStore32.dll" />
+      <cliBin Condition="'$(ExtendedClientVersion)'!=''" Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\Microsoft.WITDataStore32.dll" />
+      <cliBin Condition="'$(ExtendedClientVersion)'!=''" Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\Microsoft.WITDataStore64.dll" />
       <cliBin Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\**\*.pdb" Exclude="*.Server.*" />
     </ItemGroup>
     <ItemGroup>
@@ -147,12 +160,12 @@
 
   </Target>
   
-  <Target Name="CollectFiles" Condition="$(CollectFiles)">
+  <Target Name="CollectFilesCore" Condition="$(CollectFiles)">
 
     <Message Importance="high" Text="-------------- Collecting '$(Configuration)' files --------------" />
     <!-- re-entrant call pattern -->
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CollectVersionSpecificFiles"
-             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity)" />
+             Properties="ExtendedClientVersion=%(TfsVersion.ExtendedClientVersion);WixPropsPath=$(WixPropsPath);CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity)" />
 
     <MakeDir Directories="$(NeutralDir)" />
 
@@ -202,8 +215,17 @@
 
   </Target>
 
+  <Target Name="CollectFiles" DependsOnTargets="GetWiX" Condition="$(CollectFiles)">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CollectFilesCore"
+             Properties="WixPropsPath=$(WixPropsPath);Configuration=$(Configuration)" />
+  </Target>  
 
 
+
+  <Target Name="GetWiX" Condition="!Exists('')" >
+    <Exec Command="nuget install WiX -version $(WixVersion) -SolutionDirectory $(PathToSolutionDir)" />
+  </Target>
+  
   <Target Name="GenerateWiXProjectPropertiesFileContent1">
     <ItemGroup>
       <fileProp1 Include="   ClientBinDir$(CurrentTfsVersion)=%24(CollectDir)\$(CurrentTfsVersion)\cliBin%3B" />
@@ -260,12 +282,12 @@
                       Encoding="Unicode"/>
   </Target>
 
-  <Target Name="BuildMSI" DependsOnTargets="GenerateWiXProjectPropertiesFile" Condition="$(BuildMSI)">
+  <Target Name="BuildMSI" DependsOnTargets="GetWiX;GenerateWiXProjectPropertiesFile" Condition="$(BuildMSI)">
     <Message Importance="high" Text="-------------- Building $(Configuration) MSI --------------" />
 
     <!-- default target => build MSI -->
     <MSBuild Projects="$(MSBuildProjectDirectory)\Setup.Aggregator\Setup.Aggregator.wixproj"
-             Properties="@(TfsVersion -> 'Supports%(Alt)=True');OutputName=TFSAggregator-$(FullSemVer)-$(Configuration);Configuration=$(Configuration);CollectDir=$(CollectDir);NeutralDir=$(NeutralDir);SolutionDir=$(MSBuildProjectDirectory);BuildVersion=$(MajorMinorPatch)" />
+             Properties="@(TfsVersion -> 'Supports%(Alt)=True');OutputName=TFSAggregator-$(FullSemVer)-$(Configuration);Configuration=$(Configuration);CollectDir=$(CollectDir);NeutralDir=$(NeutralDir);SolutionDir=$(MSBuildProjectDirectory);BuildVersion=$(MajorMinorPatch);WixPropsPath=$(WixPropsPath)" />
   </Target>
 
 
@@ -274,8 +296,10 @@
   </Target>
 
 
+
   <Target Name="Clean" DependsOnTargets="CleanSolution;CleanCollected">
   </Target>
+
 
 
   <UsingTask TaskName="FixupWikiLinks" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">

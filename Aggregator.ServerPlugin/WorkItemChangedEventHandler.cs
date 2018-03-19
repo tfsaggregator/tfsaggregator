@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -58,7 +59,7 @@ namespace TFSAggregator.TfsSpecific
             out string statusMessage,
             out ExceptionPropertyCollection properties)
         {
-            var logger = new ServerEventLogger(LogLevel.Normal);
+            var logger = new ServerEventLogger(GetDefaultLoggingLevel());
             var context = new RequestContextWrapper(requestContext, notificationType, notificationEventArgs);
             var runtime = RuntimeContext.GetContext(
                 GetServerSettingsFullPath,
@@ -119,6 +120,34 @@ namespace TFSAggregator.TfsSpecific
                         Path.GetDirectoryName(new Uri(thisAssemblyName.CodeBase).LocalPath),
                         baseName)
                     + PolicyExtension;
+        }
+
+        private static LogLevel GetDefaultLoggingLevel()
+        {
+            Configuration dllConfig = null;
+            string exeConfigPath = GetThisDllFullPath();
+            try
+            {
+                dllConfig = ConfigurationManager.OpenExeConfiguration(exeConfigPath);
+            }
+            catch (Exception ex)
+            {
+                //handle errror here.. means DLL has no satellite configuration file.
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+
+            var defaultLoggingLevelAsString = dllConfig.AppSettings.Settings["DefaultLoggingLevel"]?.Value;
+            var defaultLoggingLevel = LogLevel.Normal;
+            Enum.TryParse<LogLevel>(defaultLoggingLevelAsString, true, out defaultLoggingLevel);
+            return defaultLoggingLevel;
+        }
+
+        private static string GetThisDllFullPath()
+        {
+            var assemblyFolder = Assembly.GetExecutingAssembly().CodeBase;
+            assemblyFolder = new Uri(assemblyFolder).LocalPath;
+
+            return assemblyFolder; //Assembly.GetExecutingAssembly().Location;
         }
 
         /// <summary>

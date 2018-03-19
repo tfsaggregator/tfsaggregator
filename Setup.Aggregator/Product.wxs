@@ -37,10 +37,22 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015.2"]]>
         </Condition>
       </Feature>
-      <Feature Id='Client2017Feature' Title='Client for TFS 2017' Level='1' AllowAdvertise='no'>
+      <Feature Id='Client2017Feature' Title='Client for TFS 2017 RTM and 2017.1' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2017"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Client2017.2Feature' Title='Client for TFS 2017.2 and 2017.3' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="ClientComponents2017.2"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017.2"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Client2018Feature' Title='Client for TFS 2018 and 2018.1' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="ClientComponents2018"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2018"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -74,11 +86,25 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015.2"]]>
         </Condition>
       </Feature>
-      <Feature Id='Server2017Feature' Title='Plugin for TFS 2017 RTM' Level='1' AllowAdvertise='no'>
+      <Feature Id='Server2017Feature' Title='Plugin for TFS 2017 RTM and 2017.1' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="NeutralServerComponents" />
         <ComponentGroupRef Id="ServerComponents2017"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Server2017.2Feature' Title='Plugin for TFS 2017.2 and 2017.3' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="NeutralServerComponents" />
+        <ComponentGroupRef Id="ServerComponents2017.2"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017.2"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Server2018Feature' Title='Plugin for TFS 2018 and 2018.1' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="NeutralServerComponents" />
+        <ComponentGroupRef Id="ServerComponents2018"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2018"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -131,6 +157,18 @@
         Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\15.0"
         Name="BuildNumber" Type="raw" />
     </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2018">
+      <RegistrySearch
+        Id="TeamFoundationServer16" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\16.0\InstalledComponents\ApplicationTier"
+        Name="InstallPath" Type="raw" />
+    </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2018BUILD">
+      <RegistrySearch
+        Id="TeamFoundationServer16Build" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\16.0"
+        Name="BuildNumber" Type="raw" />
+    </Property>
 
     <PropertyRef Id="WIX_IS_NETFRAMEWORK_451_OR_LATER_INSTALLED"/>
     
@@ -150,7 +188,16 @@
       <![CDATA[TEAMFOUNDATIONSERVER2015 AND TEAMFOUNDATIONSERVER2015BUILD <> "14.0.23128.0" AND TEAMFOUNDATIONSERVER2015BUILD <> "14.0.24712.0"]]>
     </SetProperty>
     <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2017" Before="LaunchConditions" Action="TFSVer2017RTM">
-      <![CDATA[TEAMFOUNDATIONSERVER2017]]>
+      <![CDATA[TEAMFOUNDATIONSERVER2017 AND (TEAMFOUNDATIONSERVER2017BUILD = "15.105.25910.0" OR TEAMFOUNDATIONSERVER2017BUILD = "15.105.27412.0" OR TEAMFOUNDATIONSERVER2017BUILD = "15.112.26307.0")]]>
+    </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2017.2" Before="LaunchConditions" Action="TFSVer2017u2">
+      <![CDATA[TEAMFOUNDATIONSERVER2017 AND TEAMFOUNDATIONSERVER2017BUILD <> "15.105.25910.0" AND TEAMFOUNDATIONSERVER2017BUILD <> "15.112.26307.0" AND TEAMFOUNDATIONSERVER2017BUILD <> "15.105.27412.0"]]>
+    </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2018" Before="LaunchConditions" Action="TFSVer2018RTM">
+      <!-- TFS2018rtm:   16.122.27102.1 -->
+      <!-- TFS2018u1rc1: 16.122.27319.1 -->
+      <!-- TFS2018u1:    16.122.27409.2 -->
+      <![CDATA[TEAMFOUNDATIONSERVER2018 AND (TEAMFOUNDATIONSERVER2018BUILD = "16.122.27102.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27319.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27402.3" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27409.2")]]>
     </SetProperty>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -170,14 +217,17 @@
       </Directory>
     </Directory>
     
+    <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2018]" Action="SetTFSINSTALLFOLDER2018">
+      TEAMFOUNDATIONSERVER2018
+    </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2017]" Action="SetTFSINSTALLFOLDER2017">
-      TEAMFOUNDATIONSERVER2017
+      TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2015]" Action="SetTFSINSTALLFOLDER2015">
-      TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017
+      TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2013]" Action="SetTFSINSTALLFOLDER2013">
-      TEAMFOUNDATIONSERVER2013 AND NOT TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017
+      TEAMFOUNDATIONSERVER2013 AND NOT TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018
     </SetDirectory>
     
   </Fragment>

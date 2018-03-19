@@ -1,7 +1,0 @@
-﻿// This file is used by Code Analysis to maintain SuppressMessage
-// attributes that are applied to this project.
-// Project-level suppressions either have no target or are given
-// a specific target and scoped to a namespace, type, member, etc.
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA5351:Do not use insecure cryptographic algorithm MD5.", Justification = "Only used to generate a quick unique hash for caching purposes", Scope = "member", Target = "~M:Aggregator.Core.Configuration.TFSAggregatorSettings.AggregatorSettingsXmlParser.ComputeHash(System.Xml.Linq.XDocument,System.DateTime)~System.String")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Field is properly disposed, but it's not detected properly", Scope = "member", Target = "~F:Aggregator.Core.Facade.RequestContextWrapper.context")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2213:Disposable fields should be disposed", Justification = "Field is properly disposed, but it's not detected properly", Scope = "member", Target = "~F:Aggregator.Core.Facade.WorkItemRepository.tfs")]

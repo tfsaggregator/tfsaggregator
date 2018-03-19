@@ -1,0 +1,41 @@
+<Project>
+  <PropertyGroup>
+    <DevelopmentTfsVersion>2018</DevelopmentTfsVersion>
+    <TfsVersion Condition="'$(TfsVersion)' == ''">$(DevelopmentTfsVersion)</TfsVersion>
+    <AssemblyVersion Condition="'$(MajorMinorPatch)' != ''">$(MajorMinorPatch)</AssemblyVersion>
+    <AssemblyFileVersion Condition="'$(MajorMinorPatch)' != ''">$(MajorMinorPatch)</AssemblyFileVersion>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">0.0.0.1</AssemblyVersion>
+    <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">0.0.0.1</AssemblyFileVersion>
+    <Company>TFS Aggregator Team</Company>
+    <Product>TFS Aggregator</Product>
+    <Copyright>Copyright (c) TFS Aggregator Team 2015-18</Copyright>
+    <!-- use custom configuration attribute -->
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+  </PropertyGroup>
+  <ItemGroup>
+    <KnownTfsVersion Include="2013"   />
+    <KnownTfsVersion Include="2015"   />
+    <KnownTfsVersion Include="2015.1" />
+    <KnownTfsVersion Include="2015.2" />
+    <KnownTfsVersion Include="2017"   />
+    <KnownTfsVersion Include="2017.2" />
+    <KnownTfsVersion Include="2018"   />
+
+    <AssemblyAttribute Include="System.Reflection.AssemblyConfigurationAttribute">
+      <_Parameter1>$(Configuration) [TFS $(TfsVersion)]</_Parameter1>
+    </AssemblyAttribute>
+
+    <KnownTfsVersion Update="@(KnownTfsVersion)">
+      <Name>$([System.String]::Copy('%(Identity)').Replace('.','u'))</Name>
+    </KnownTfsVersion>
+  </ItemGroup>
+  <PropertyGroup>
+    <!-- ensure that restore output and intermediate compilation output don't cause conflicts or incremental build issues -->
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- default items shall also exlude folder above base (int.) output paths -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>

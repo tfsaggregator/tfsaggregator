@@ -2,12 +2,31 @@
 ![Master Build status](https://tfsaggregator.visualstudio.com/_apis/public/build/definitions/2e747373-c780-4b2c-823d-98a3fd2b4e99/6/badge)
 ![Develop Build status](https://tfsaggregator.visualstudio.com/_apis/public/build/definitions/2e747373-c780-4b2c-823d-98a3fd2b4e99/1/badge)
 
-This server side plugin, for TFS 2013 update 2 up to TFS 2017 RTM, enables running custom script when Work Items change,
+This server side plugin, for TFS 2013 update 2 up to TFS 2018.1, enables running custom script when Work Items change,
 allowing dynamic calculation of field values in TFS and more. (For example: Dev work + Test Work = Total Work).
 
 The complete documentation is available on the [project's Documentation Site](https://tfsaggregator.github.io/).
 
 # Changelog
+
+## What's new in v2.4
+* Added support for TFS 2015.4.1
+* Added support for TFS 2017.0.1
+* Added support for TFS 2017.1
+* Added support for TFS 2017.2
+* Added support for TFS 2017.3
+* Added support for TFS 2017.3.1
+* Added support for TFS 2018
+* Added support for TFS 2018.1 RC
+* Added support for TFS 2018.1
+* Fixes TemplateScope in TFS 2017 update 2 and higher
+* Added text to installer explaining the 2017u2 version works with 2017u3 as well
+* Added text to installer explaining the 2018 version works with 2018u1 as well
+* Reading and removal of Work item Links self.WorkItemLinks self.RemoveWorkItemLink
+* Global List editing with AddItemToGlobalList and RemoveItemFromGlobalList
+* Startup logging controlled by configuration file
+* New code layout, contributors are urged to read Source Code
+* Support for work-item-deleted event
 
 ## What's new in v2.2
  * Support for TFS 2017

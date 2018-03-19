@@ -1,0 +1,37 @@
+<Project>
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="15.122.1-preview">
+      <IncludeAssets>All</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="15.122.1-preview">
+      <IncludeAssets>All</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="15.122.1-preview">
+      <IncludeAssets>All</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Services.InteractiveClient" Version="15.122.1-preview">
+      <IncludeAssets>All</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <DefineConstants>$(DefineConstants);TFS2018;TFS2017u2;TFS2017;TFS2015u2;TFS2015u1;TFS2015</DefineConstants>
+    <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'=='' and '$(MSBuildRuntimeType)' != 'Core'">$(Registry:HKEY_LOCAL_MACHINE\Software\Microsoft\TeamFoundationServer\16.0@InstallPath)</TfsInstallationDirectory>
+    <TfsInstallationDirectory Condition="'$(TfsInstallationDirectory)'=='' and '$(MSBuildRuntimeType)' != 'Core'">$(Registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\TeamFoundationServer\16.0@InstallPath)</TfsInstallationDirectory>
+    <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)\Application Tier\Web Services\bin</ServerAssemblies>
+    <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' Or '$(TF_BUILD)'=='True'">$(MSBuildThisFileDirectory)</ServerAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Server Assemblies -->
+    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Common.dll" />
+    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Framework.Server.dll" />
+    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Server.Types.dll" />
+    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Server.Core.dll" />
+    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.dll" />
+    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer.dll" />
+    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll" />
+  </ItemGroup>
+</Project>
