@@ -31,7 +31,7 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015.1"]]>
         </Condition>
       </Feature>
-      <Feature Id='Client2015.2Feature' Title="Client for TFS 2015.2" Level='1' AllowAdvertise='no'>
+      <Feature Id='Client2015.2Feature' Title="Client for TFS 2015.2 up to 2015.4.1" Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2015.2"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2015.2"]]>
@@ -43,7 +43,7 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017"]]>
         </Condition>
       </Feature>
-      <Feature Id='Client2017.2Feature' Title='Client for TFS 2017.2 and 2017.3' Level='1' AllowAdvertise='no'>
+      <Feature Id='Client2017.2Feature' Title='Client for TFS 2017.2 up to 2017.3.1' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2017.2"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017.2"]]>
