@@ -143,6 +143,6 @@
     <PackageReference Include="SonarAnalyzer.CSharp" Version="6.7.1.4347" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Aggregator.Core\Aggregator.Core.Plugin\Aggregator.Core.Plugin.csproj" />
+    <ProjectReference Include="..\Aggregator.Core\Aggregator.Core\Aggregator.Core.csproj" />
   </ItemGroup>
 </Project>
