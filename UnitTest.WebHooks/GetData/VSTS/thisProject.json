@@ -1,0 +1,18 @@
+﻿{
+  "id": "bed2988e-11a5-4705-9f9e-0738963940cf",
+  "name": "WorkItemTracking",
+  "url": "https://giuliovaad.visualstudio.com/_apis/projects/bed2988e-11a5-4705-9f9e-0738963940cf",
+  "state": "wellFormed",
+  "revision": 21,
+  "_links": {
+    "self": { "href": "https://giuliovaad.visualstudio.com/_apis/projects/bed2988e-11a5-4705-9f9e-0738963940cf" },
+    "collection": { "href": "https://giuliovaad.visualstudio.com/_apis/projectCollections/1fe04a90-6116-437a-a208-f64a7711e8ff" },
+    "web": { "href": "https://giuliovaad.visualstudio.com/WorkItemTracking" }
+  },
+  "visibility": "private",
+  "defaultTeam": {
+    "id": "0832f515-6b61-449f-84a7-533a0ad23748",
+    "name": "WorkItemTracking Team",
+    "url": "https://giuliovaad.visualstudio.com/_apis/projects/bed2988e-11a5-4705-9f9e-0738963940cf/teams/0832f515-6b61-449f-84a7-533a0ad23748"
+  }
+}

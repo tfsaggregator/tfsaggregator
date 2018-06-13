@@ -1,0 +1,112 @@
+{
+  "subscriptionId": "e937162d-b5d0-4980-a951-c6056f2bca30",
+  "notificationId": 2,
+  "id": "944d71d6-8271-492b-bb42-d44efd7772a0",
+  "eventType": "workitem.updated",
+  "publisherId": "tfs",
+  "message": null,
+  "detailedMessage": null,
+  "resource": {
+    "id": 19,
+    "workItemId": 1,
+    "rev": 19,
+    "revisedBy": {
+      "id": "2d6bff52-b5ca-436e-8c32-0b05fa4bfffd",
+      "name": "Administrator <WIN-VJNVOUQJMAM\\Administrator>",
+      "displayName": "Administrator",
+      "uniqueName": "WIN-VJNVOUQJMAM\\Administrator",
+      "url": "https://win-vjnvouqjmam/DefaultCollection/_apis/Identities/2d6bff52-b5ca-436e-8c32-0b05fa4bfffd",
+      "imageUrl": "https://win-vjnvouqjmam/DefaultCollection/_api/_common/identityImage?id=2d6bff52-b5ca-436e-8c32-0b05fa4bfffd"
+    },
+    "revisedDate": "9999-01-01T00:00:00Z",
+    "fields": {
+      "System.Rev": {
+        "oldValue": 18,
+        "newValue": 19
+      },
+      "System.AuthorizedDate": {
+        "oldValue": "2018-03-23T21:55:45.827Z",
+        "newValue": "2018-03-23T22:00:51.74Z"
+      },
+      "System.RevisedDate": {
+        "oldValue": "2018-03-23T22:00:51.74Z",
+        "newValue": "9999-01-01T00:00:00Z"
+      },
+      "System.ChangedDate": {
+        "oldValue": "2018-03-23T21:55:45.827Z",
+        "newValue": "2018-03-23T22:00:51.74Z"
+      },
+      "System.Watermark": {
+        "oldValue": 18,
+        "newValue": 19
+      },
+      "System.Description": {
+        "oldValue": "x",
+        "newValue": "xy"
+      }
+    },
+    "_links": {
+      "self": {
+        "href": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1/updates/19"
+      },
+      "workItemUpdates": {
+        "href": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1/updates"
+      },
+      "parent": {
+        "href": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1"
+      },
+      "html": {
+        "href": "https://win-vjnvouqjmam/web/wi.aspx?pcguid=70b03e83-e51b-4ba1-8799-ee1ae0f863bb&id=1"
+      }
+    },
+    "url": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1/updates/19",
+    "revision": {
+      "id": 1,
+      "rev": 19,
+      "fields": {
+        "System.AreaPath": "prova1",
+        "System.TeamProject": "prova1",
+        "System.IterationPath": "prova1\\Iteration 1",
+        "System.WorkItemType": "Task",
+        "System.State": "New",
+        "System.Reason": "New",
+        "System.CreatedDate": "2017-11-16T22:05:19.677Z",
+        "System.CreatedBy": "Administrator <WIN-VJNVOUQJMAM\\Administrator>",
+        "System.ChangedDate": "2018-03-23T22:00:51.74Z",
+        "System.ChangedBy": "Administrator <WIN-VJNVOUQJMAM\\Administrator>",
+        "System.Title": "provauno",
+        "Microsoft.VSTS.Common.StateChangeDate": "2017-11-16T22:05:19.677Z",
+        "Microsoft.VSTS.Common.Priority": 2,
+        "System.Description": "xy"
+      },
+      "_links": {
+        "self": {
+          "href": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1/revisions/19"
+        },
+        "workItemRevisions": {
+          "href": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1/revisions"
+        },
+        "parent": {
+          "href": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1"
+        }
+      },
+      "url": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1/revisions/19"
+    }
+  },
+  "resourceVersion": "1.0",
+  "resourceContainers": {
+    "collection": {
+      "id": "70b03e83-e51b-4ba1-8799-ee1ae0f863bb",
+      "baseUrl": "https://win-vjnvouqjmam/DefaultCollection/"
+    },
+    "server": {
+      "id": "b0b49534-922e-4ffb-afa8-086340c8caf5",
+      "baseUrl": "https://win-vjnvouqjmam/"
+    },
+    "project": {
+      "id": "6ab22c47-43cc-4967-822f-d79123a7ef6b",
+      "baseUrl": "https://win-vjnvouqjmam/DefaultCollection/"
+    }
+  },
+  "createdDate": "2018-03-23T22:01:06.5860808Z"
+}

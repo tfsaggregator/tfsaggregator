@@ -1,0 +1,112 @@
+{
+    "subscriptionId": "701bfa24-5bd3-4c62-865d-9e443d5e462a",
+    "notificationId": 14,
+    "id": "e6812110-770b-41f9-b853-7421ca3cd4ad",
+    "eventType": "workitem.updated",
+    "publisherId": "tfs",
+    "message": null,
+    "detailedMessage": null,
+    "resource": {
+        "id": 3,
+        "workItemId": 12,
+        "rev": 3,
+        "revisedBy": {
+            "id": "859dfcc2-d96d-4cd0-8bc1-d3a9570e5b5c",
+            "name": "Giulio Vian (Dev AAD) <giulio.dev@casavian.eu>",
+            "displayName": "Giulio Vian (Dev AAD)",
+            "url": "https://app.vssps.visualstudio.com/Ad42bf46b-f950-454c-b2aa-0cce857edf5a/_apis/Identities/859dfcc2-d96d-4cd0-8bc1-d3a9570e5b5c",
+            "uniqueName": "giulio.dev@casavian.eu",
+            "imageUrl": "https://giuliovaad.visualstudio.com/_api/_common/identityImage?id=859dfcc2-d96d-4cd0-8bc1-d3a9570e5b5c"
+        },
+        "revisedDate": "9999-01-01T00:00:00Z",
+        "fields": {
+            "System.Rev": {
+                "oldValue": 2,
+                "newValue": 3
+            },
+            "System.AuthorizedDate": {
+                "oldValue": "2018-03-24T10:19:17.81Z",
+                "newValue": "2018-03-24T10:21:23.767Z"
+            },
+            "System.RevisedDate": {
+                "oldValue": "2018-03-24T10:21:23.767Z",
+                "newValue": "9999-01-01T00:00:00Z"
+            },
+            "System.ChangedDate": {
+                "oldValue": "2018-03-24T10:19:17.81Z",
+                "newValue": "2018-03-24T10:21:23.767Z"
+            },
+            "System.Watermark": {
+                "oldValue": 31,
+                "newValue": 32
+            },
+            "System.Description": {
+                "oldValue": ".",
+                "newValue": ".."
+            }
+        },
+        "_links": {
+            "self": {
+                "href": "https://giuliovaad.visualstudio.com/_apis/wit/workItems/12/updates/3"
+            },
+            "workItemUpdates": {
+                "href": "https://giuliovaad.visualstudio.com/_apis/wit/workItems/12/updates"
+            },
+            "parent": {
+                "href": "https://giuliovaad.visualstudio.com/_apis/wit/workItems/12"
+            },
+            "html": {
+                "href": "https://giuliovaad.visualstudio.com/web/wi.aspx?pcguid=1fe04a90-6116-437a-a208-f64a7711e8ff&id=12"
+            }
+        },
+        "url": "https://giuliovaad.visualstudio.com/_apis/wit/workItems/12/updates/3",
+        "revision": {
+            "id": 12,
+            "rev": 3,
+            "fields": {
+                "System.AreaPath": "WorkItemTracking",
+                "System.TeamProject": "WorkItemTracking",
+                "System.IterationPath": "WorkItemTracking\\Iteration 1",
+                "System.WorkItemType": "Task",
+                "System.State": "New",
+                "System.Reason": "New",
+                "System.CreatedDate": "2018-03-24T10:10:22.98Z",
+                "System.CreatedBy": "Giulio Vian (Dev AAD) <giulio.dev@casavian.eu>",
+                "System.ChangedDate": "2018-03-24T10:21:23.767Z",
+                "System.ChangedBy": "Giulio Vian (Dev AAD) <giulio.dev@casavian.eu>",
+                "System.Title": "t2",
+                "Microsoft.VSTS.Common.StateChangeDate": "2018-03-24T10:10:22.98Z",
+                "Microsoft.VSTS.Common.Priority": 2,
+                "System.Description": ".."
+            },
+            "_links": {
+                "self": {
+                    "href": "https://giuliovaad.visualstudio.com/_apis/wit/workItems/12/revisions/3"
+                },
+                "workItemRevisions": {
+                    "href": "https://giuliovaad.visualstudio.com/_apis/wit/workItems/12/revisions"
+                },
+                "parent": {
+                    "href": "https://giuliovaad.visualstudio.com/bed2988e-11a5-4705-9f9e-0738963940cf/_apis/wit/workItems/12"
+                }
+            },
+            "url": "https://giuliovaad.visualstudio.com/_apis/wit/workItems/12/revisions/3"
+        }
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1fe04a90-6116-437a-a208-f64a7711e8ff",
+            "baseUrl": "https://giuliovaad.visualstudio.com/"
+        },
+        "account": {
+            "id": "d42bf46b-f950-454c-b2aa-0cce857edf5a",
+            "baseUrl": "https://giuliovaad.visualstudio.com/"
+        },
+        "project": {
+            "id": "bed2988e-11a5-4705-9f9e-0738963940cf",
+            "baseUrl": "https://giuliovaad.visualstudio.com/"
+        }
+    },
+    "createdDate": "2018-03-24T10:21:26.2901896Z"
+}
