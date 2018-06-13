@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+
+    <runtime>
+        <logging level="Diagnostic"/>
+    </runtime>
+
+    <!-- Links -->
+    <rule name="NewLink"
+          appliesTo="Task">
+        <![CDATA[
+        var parent = store.GetWorkItem(1);
+        self.AddWorkItemLink(parent, WorkItemImplementationBase.ParentRelationship);
+        ]]>
+    </rule>
+
+    <!-- WorkItems -->
+    <rule name="NewTask"
+          appliesTo="Bug">
+        <![CDATA[
+        var parent = self;
+        if (!self.HasChildren())
+        {
+            var child = store.MakeNewWorkItem((string)parent["System.TeamProject"], "Task");
+            child["Title"] = "Task auto-generated for " + parent["Title"];
+            child.AddWorkItemLink(parent, WorkItemImplementationBase.ParentRelationship);
+        }
+        ]]>
+    </rule>
+
+    <policy name="DefaultPolicy">
+        <collectionScope collections="*" />
+        <ruleRef name="NewLink" />
+        <ruleRef name="NewTask" />
+    </policy>
+
+</AggregatorConfiguration>

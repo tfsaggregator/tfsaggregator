@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+
+    <runtime>
+        <logging level="Diagnostic"/>
+    </runtime>
+
+    <!-- Do nothing -->
+    <rule name="Noop" appliesTo="Task">
+        return 42;
+    </rule>
+
+    <policy name="DefaultPolicy">
+        <collectionScope collections="*" />
+        <ruleRef name="Noop" />
+    </policy>
+
+</AggregatorConfiguration>

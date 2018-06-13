@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+
+    <runtime>
+        <rateLimiting interval="00:00:10.00" changes="5" /> <!-- optional tag -->
+        <logging level="Diagnostic"/> <!-- optional tag -->
+        <script language="C#" />
+        <authentication autoImpersonate="true" /> <!-- optional tag -->
+    </runtime>
+
+    <rule name="Type1"
+          appliesTo="Task"><![CDATA[]]></rule>
+
+    <rule name="Type2"
+          hasFields="Field1"><![CDATA[]]></rule>
+
+    <policy name="Policy1">
+        <projectScope projects="Proj1" />
+        <ruleRef name="Type1" />
+    </policy>
+
+    <policy name="Policy2">
+        <collectionScope collections="Coll1" />
+        <templateScope name="Pippo" typeId="" minVersion="1.0" maxVersion="9.9" />
+        <ruleRef name="Type2" />
+    </policy>
+
+</AggregatorConfiguration>

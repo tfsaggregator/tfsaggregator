@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+
+    <runtime>
+        <logging level="Diagnostic"/>
+    </runtime>
+
+    <!-- Add the time from the task up to the parent (Bug or PBI) -->
+    <rule name="Rollup"
+          appliesTo="Task">
+            <![CDATA[
+        if (self.HasParent())
+        {
+            self.Parent["Total Work Remaining"] = (double)(self["Remaining Dev Work"]??0d) + (double)(self["Remaining Test Work"]??0d);
+            self.Parent["Total Estimate"] = (double)(self["Estimated Dev Work"]??0d) + (double)(self["Estimated Test Work"]??0d);
+            // Sum up all estimates to the sprint
+            if ((System.DateTime)self["Finish Date"] > System.DateTime.Now) {
+                // Log("Updating grand parent");
+                self.Parent.Parent["Dev Estimate"] = self["Estimated Dev Work"]??0d;
+                self.Parent.Parent["Test Estimate"] = self["Estimated Test Work"]??0d;
+            }
+        }
+    ]]>
+    </rule>
+
+    <policy name="DefaultPolicy">
+        <collectionScope collections="*" />
+        <ruleRef name="Rollup" />
+    </policy>
+
+</AggregatorConfiguration>
