@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 using Aggregator.Core.Context;
@@ -17,6 +18,8 @@ namespace Aggregator.Core.Facade
         private readonly WorkItem workItem;
 
         private readonly IRuntimeContext context;
+
+        private IReadOnlyList<ExternalLink> externalLinks;
 
         public WorkItemWrapper(WorkItem workItem, IRuntimeContext context)
             : base(context)
@@ -156,6 +159,19 @@ namespace Aggregator.Core.Facade
             get
             {
                 return new WorkItemLinkExposedCollectionWrapper(this.workItem.WorkItemLinks, this.context);
+            }
+        }
+
+        public IReadOnlyList<ExternalLink> ExternalLinks
+        {
+            get
+            {
+                if (this.externalLinks == null)
+                {
+                    this.externalLinks = new ReadOnlyCollection<ExternalLink>(this.workItem.Links.OfType<ExternalLink>().ToList());
+                }
+
+                return this.externalLinks;
             }
         }
 
@@ -316,6 +332,31 @@ namespace Aggregator.Core.Facade
             if (!deleted)
             {
                 this.Logger.WorkItemLinkNotFound(link);
+            }
+        }
+
+        public IEnumerable<AddedResourceLink> AddedResourceLinks
+        {
+            get { return this.context?.RequestContext?.Notification?.AddedResourceLinks ?? Enumerable.Empty<AddedResourceLink>(); }
+        }
+
+        public void AddChangesetLink(string changeSetUri, string comment)
+        {
+            RegisteredLinkType changesetLinkType = this.workItem.Store.RegisteredLinkTypes["Fixed in Changeset"];
+            if (changesetLinkType == null)
+            {
+                throw new NotSupportedException("Linktype for changesets is not registered!");
+            }
+
+            var link = new ExternalLink(changesetLinkType, changeSetUri) { Comment = comment };
+            if (!this.workItem.Links.OfType<ExternalLink>().Any(exLink => exLink.BaseType.Equals(BaseLinkType.ExternalLink) && exLink.LinkedArtifactUri.Equals(link.LinkedArtifactUri, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                this.workItem.Links.Add(link);
+                this.Logger.AddingExternalLink(this.Id, link.LinkedArtifactUri, comment);
+            }
+            else
+            {
+                this.Logger.ExternalLinkAlreadyExists(this.Id, link.LinkedArtifactUri, comment);
             }
         }
     }

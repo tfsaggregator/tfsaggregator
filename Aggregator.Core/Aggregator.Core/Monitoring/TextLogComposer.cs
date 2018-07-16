@@ -506,5 +506,15 @@ namespace Aggregator.Core.Monitoring
         {
             this.logger.Log(LogLevel.Verbose, $"WhatIf: work item #{workItem.Id} saved.");
         }
+
+        public void AddingExternalLink(int id, string destination, string comment)
+        {
+            this.logger.Log(LogLevel.Information,$"Adding external link '{destination}' on work item #{id} (comment: '{comment}')");
+        }
+
+        public void ExternalLinkAlreadyExists(int id, string destination, string comment)
+        {
+            this.logger.Log(LogLevel.Information,$"External link '{destination}' on work item #{id} already exists");
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Aggregator.Core.Navigation;
+using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Interfaces
 {
@@ -49,8 +50,12 @@ namespace Aggregator.Core.Interfaces
 
         IEnumerable<IWorkItemExposed> GetRelatives(FluentQuery query);
 
+        IEnumerable<Interfaces.AddedResourceLink> AddedResourceLinks { get; }
+
         // links management
         IWorkItemLinkExposedCollection WorkItemLinks { get; }
+
+        IReadOnlyList<ExternalLink> ExternalLinks { get; }
 
         void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName);
 
@@ -59,6 +64,8 @@ namespace Aggregator.Core.Interfaces
         void AddHyperlink(string destination);
 
         void AddHyperlink(string destination, string message);
+
+        void AddChangesetLink(string changeSetUri, string comment);
 
         // state helpers; must be on interface to work on WorkItemLazyReference
         void TransitionToState(string state, string comment);

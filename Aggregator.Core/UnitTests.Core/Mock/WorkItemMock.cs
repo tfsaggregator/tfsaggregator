@@ -13,6 +13,7 @@ namespace UnitTests.Core.Mock
     internal class WorkItemMock : WorkItemImplementationBase, IWorkItem
     {
         private readonly FieldCollectionMock fields;
+        private readonly List<ExternalLink> extenalExternalLinks = new List<ExternalLink>();
 
         public WorkItemMock(IWorkItemRepository repository, IRuntimeContext context)
             : base(context)
@@ -155,10 +156,19 @@ namespace UnitTests.Core.Mock
                 .MakeRelativesLazyVisitor(this, query);
         }
 
+        public IEnumerable<AddedResourceLink> AddedResourceLinks { get; }
+        
+        public void AddChangesetLink(string changeSetUri, string comment)
+        {
+            throw new NotImplementedException();
+        }
+
         public void TransitionToState(string state, string comment)
         {
             StateWorkFlow.TransitionToState(this, state, comment, this.Logger);
         }
+
+        public IReadOnlyList<ExternalLink> ExternalLinks => this.extenalExternalLinks.AsReadOnly();
 
         public void AddWorkItemLink(IWorkItemExposed destination, string linkTypeName)
         {

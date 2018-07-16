@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Aggregator.Core.Interfaces;
 
 using Microsoft.TeamFoundation.Framework.Server;
@@ -48,6 +50,14 @@ namespace Aggregator.Core.Facade
             get
             {
                 return this.eventArgs.ChangerTeamFoundationId;
+            }
+        }
+
+        public IEnumerable<Interfaces.AddedResourceLink> AddedResourceLinks
+        {
+            get
+            {
+                return this.eventArgs.AddedResourceLinks?.Select(addedResourceLink => (Interfaces.AddedResourceLink)addedResourceLink) ?? Enumerable.Empty<Interfaces.AddedResourceLink>() ;
             }
         }
     }

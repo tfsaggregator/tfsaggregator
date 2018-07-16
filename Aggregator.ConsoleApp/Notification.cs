@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Aggregator.Core.Interfaces;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Server;
@@ -59,5 +60,7 @@ namespace Aggregator.ConsoleApp
                 return string.Empty;
             }
         }
+
+        public IEnumerable<AddedResourceLink> AddedResourceLinks { get; }
     }
 }

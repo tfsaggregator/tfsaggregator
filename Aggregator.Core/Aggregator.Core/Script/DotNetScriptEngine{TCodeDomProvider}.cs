@@ -127,21 +127,21 @@ namespace Aggregator.Core.Script
             var classForScript = assembly.GetType(this.Namespace + "." + this.ClassPrefix + scriptName);
             if (classForScript == null)
             {
-                this.Logger.FailureLoadingScript(scriptName);
+                this.Logger.FailureLoadingScript($"No compiled class found for {scriptName}");
                 return;
             }
 
             var interfaceForScript = classForScript.GetInterface(typeof(IDotNetScript).Name);
             if (interfaceForScript == null)
             {
-                this.Logger.FailureLoadingScript(scriptName);
+                this.Logger.FailureLoadingScript($"No implementation of 'IDotNetScript' in class '{classForScript.Name}' found for {scriptName}");
                 return;
             }
 
             ConstructorInfo constructor = classForScript.GetConstructor(Type.EmptyTypes);
             if (constructor == null || !constructor.IsPublic)
             {
-                this.Logger.FailureLoadingScript(scriptName);
+                this.Logger.FailureLoadingScript($"No constructor in class '{classForScript.Name}' found for {scriptName}");
                 return;
             }
 
@@ -149,7 +149,7 @@ namespace Aggregator.Core.Script
             IDotNetScript scriptObject = constructor.Invoke(null) as IDotNetScript;
             if (scriptObject == null)
             {
-                this.Logger.FailureLoadingScript(scriptName);
+                this.Logger.FailureLoadingScript($"Calling constructor in class '{classForScript.Name}' for {scriptName} failed");
                 return;
             }
 
@@ -250,7 +250,13 @@ namespace Aggregator.Core.Script
             else
             {
                 // compile errors slip away in the log, reinstate that something is wrong
-                this.Logger.FailureLoadingScript(scriptName);
+                StringBuilder errors = new StringBuilder();
+                foreach (CompilerError error in this.compilerResult.Errors)
+                {
+                    errors.AppendLine(error.ToString());
+                }
+
+                this.Logger.FailureLoadingScript($"Error(s) in '{scriptName}':{Environment.NewLine}{errors}");
             }
 
             // BUG: must have a "clean up event" fired at shutdown time

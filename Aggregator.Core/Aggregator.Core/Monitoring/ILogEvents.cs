@@ -116,5 +116,9 @@ namespace Aggregator.Core.Monitoring
         void UsingFakeSendMail();
 
         void WhatIfSave(IWorkItem workItem);
+
+        void AddingExternalLink(int id, string destination, string comment);
+
+        void ExternalLinkAlreadyExists(int id, string destination, string comment);
     }
 }

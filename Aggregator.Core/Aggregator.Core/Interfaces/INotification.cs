@@ -1,4 +1,6 @@
-﻿namespace Aggregator.Core.Interfaces
+﻿using System.Collections.Generic;
+
+namespace Aggregator.Core.Interfaces
 {
     // Identical to Microsoft.TeamFoundation.WorkItemTracking.Server.ChangeTypes
     public enum ChangeTypes
@@ -7,6 +9,17 @@
         Change = 1,
         Delete = 2,
         Restore = 3
+    }
+
+    // Identical to Microsoft.TeamFoundation.WorkItemTracking.Server.AddedResourceLink
+    public class AddedResourceLink
+    {
+        public string Resource { get; set; }
+
+        public static implicit operator AddedResourceLink(Microsoft.TeamFoundation.WorkItemTracking.Server.AddedResourceLink addedResourceLink)
+        {
+            return new AddedResourceLink { Resource = addedResourceLink.Resource };
+        }
     }
 
     /// <summary>
@@ -33,5 +46,7 @@
         {
             get;
         }
+
+        IEnumerable<Interfaces.AddedResourceLink> AddedResourceLinks { get; }
     }
 }

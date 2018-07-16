@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-
+using System.Collections.Generic;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 
 namespace Aggregator.Core.Interfaces
