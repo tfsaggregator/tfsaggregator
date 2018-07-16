@@ -112,13 +112,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2018", "2018", "{31B965A5-CE60-4551-96F2-CBA7124E46A0}"
 	ProjectSection(SolutionItems) = preProject
 		References\2018\config.targets = References\2018\config.targets
-		References\2018\Microsoft.TeamFoundation.Common.dll = References\2018\Microsoft.TeamFoundation.Common.dll
-		References\2018\Microsoft.TeamFoundation.Framework.Server.dll = References\2018\Microsoft.TeamFoundation.Framework.Server.dll
-		References\2018\Microsoft.TeamFoundation.Server.Core.dll = References\2018\Microsoft.TeamFoundation.Server.Core.dll
-		References\2018\Microsoft.TeamFoundation.Server.Types.dll = References\2018\Microsoft.TeamFoundation.Server.Types.dll
-		References\2018\Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer.dll = References\2018\Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer.dll
-		References\2018\Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll = References\2018\Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll
-		References\2018\Microsoft.TeamFoundation.WorkItemTracking.Server.dll = References\2018\Microsoft.TeamFoundation.WorkItemTracking.Server.dll
 		References\2018\PLACEHOLDER.txt = References\2018\PLACEHOLDER.txt
 	EndProjectSection
 EndProject
