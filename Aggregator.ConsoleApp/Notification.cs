@@ -61,6 +61,6 @@ namespace Aggregator.ConsoleApp
             }
         }
 
-        public IEnumerable<AddedResourceLink> AddedResourceLinks { get; }
+        public IEnumerable<AddedResourceLink> AddedResourceLinks { get; private set; }
     }
 }

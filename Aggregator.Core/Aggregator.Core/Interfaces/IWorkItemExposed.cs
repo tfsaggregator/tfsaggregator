@@ -67,6 +67,8 @@ namespace Aggregator.Core.Interfaces
 
         void AddChangesetLink(string changeSetUri, string comment);
 
+        void AddSourceFileLink(string sourceFileUri, string comment);
+
         // state helpers; must be on interface to work on WorkItemLazyReference
         void TransitionToState(string state, string comment);
     }

@@ -11,17 +11,6 @@ namespace Aggregator.Core.Interfaces
         Restore = 3
     }
 
-    // Identical to Microsoft.TeamFoundation.WorkItemTracking.Server.AddedResourceLink
-    public class AddedResourceLink
-    {
-        public string Resource { get; set; }
-
-        public static implicit operator AddedResourceLink(Microsoft.TeamFoundation.WorkItemTracking.Server.AddedResourceLink addedResourceLink)
-        {
-            return new AddedResourceLink { Resource = addedResourceLink.Resource };
-        }
-    }
-
     /// <summary>
     /// Decouples Core from TFS Server API
     /// </summary>

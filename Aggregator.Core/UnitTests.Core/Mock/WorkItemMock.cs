@@ -156,11 +156,25 @@ namespace UnitTests.Core.Mock
                 .MakeRelativesLazyVisitor(this, query);
         }
 
-        public IEnumerable<AddedResourceLink> AddedResourceLinks { get; }
-        
+        internal List<AddedResourceLink> AddedResourceLinkList = new List<AddedResourceLink>();
+
+        public IEnumerable<AddedResourceLink> AddedResourceLinks { get => AddedResourceLinkList; }
+
+        public int InternalAddChangesetLinkCalled { get; set; }
+        public int InternalAddSourceFileLinkCalled { get; set; }
+
         public void AddChangesetLink(string changeSetUri, string comment)
         {
-            throw new NotImplementedException();
+            InternalAddChangesetLinkCalled++;
+            //extenalExternalLinks.Add(null);
+            // Todo: call code in wrapper here... how?
+        }
+
+        public void AddSourceFileLink(string sourceFileUri, string comment)
+        {
+            InternalAddSourceFileLinkCalled++;
+            //extenalExternalLinks.Add(null);
+            // Todo: call code in wrapper here... how?
         }
 
         public void TransitionToState(string state, string comment)

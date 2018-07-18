@@ -14,7 +14,7 @@ using Microsoft.TeamFoundation.Framework.Server;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using NSubstitute;
-
+using NSubstitute.Exceptions;
 using UnitTests.Core.Mock;
 
 using Debugger = System.Diagnostics.Debugger;

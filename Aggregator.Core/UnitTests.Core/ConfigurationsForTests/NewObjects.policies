@@ -14,6 +14,22 @@
         ]]>
     </rule>
 
+  <rule name="NewChangeSet"
+        appliesTo="Task">
+    <![CDATA[
+          var parent = store.GetWorkItem(1);
+       
+          var comment = "Testing";       
+          var changeSetsInChild = self.AddedResourceLinks.Where(link => link.AddedResourceLinkType == AddedResourceLinkTypes.Changeset);
+  			  foreach (var newExternalLink in changeSetsInChild)
+            {         
+				      var changeSetUri = newExternalLink.Resource;				
+              parent.AddChangesetLink(changeSetUri, comment);					      
+            }    
+        
+        ]]>
+  </rule>
+
     <!-- WorkItems -->
     <rule name="NewTask"
           appliesTo="Bug">
@@ -32,6 +48,7 @@
         <collectionScope collections="*" />
         <ruleRef name="NewLink" />
         <ruleRef name="NewTask" />
+      <ruleRef name="NewChangeSet" />
     </policy>
 
 </AggregatorConfiguration>

@@ -347,8 +347,22 @@ namespace Aggregator.Core.Facade
             {
                 throw new NotSupportedException("Linktype for changesets is not registered!");
             }
+            AddExternalLink(changesetLinkType, changeSetUri, comment);
+        }
 
-            var link = new ExternalLink(changesetLinkType, changeSetUri) { Comment = comment };
+        public void AddSourceFileLink(string sourceFileUri, string comment)
+        {
+            RegisteredLinkType sourceCodeFileLinkType = this.workItem.Store.RegisteredLinkTypes["Source Code File"];
+            if (sourceCodeFileLinkType == null)
+            {
+                throw new NotSupportedException("Linktype for source code files is not registered!");
+            }
+            AddExternalLink(sourceCodeFileLinkType, sourceFileUri, comment);
+        }
+
+        private void AddExternalLink(RegisteredLinkType registeredLinkType, string uri, string comment)
+        {
+            var link = new ExternalLink(registeredLinkType, uri) { Comment = comment };
             if (!this.workItem.Links.OfType<ExternalLink>().Any(exLink => exLink.BaseType.Equals(BaseLinkType.ExternalLink) && exLink.LinkedArtifactUri.Equals(link.LinkedArtifactUri, StringComparison.InvariantCultureIgnoreCase)))
             {
                 this.workItem.Links.Add(link);
