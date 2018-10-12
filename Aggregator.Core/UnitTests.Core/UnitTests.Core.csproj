@@ -12,21 +12,21 @@
     <TargetFramework Condition="'$(TargetFramework)' == ''">net461</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <TestProjectType>UnitTest</TestProjectType>
-    <Configurations>Debug;Release;Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018</Configurations>
+    <Configurations>Debug;Release;Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018;Debug-webhooks;Release-webhooks</Configurations>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\tfs-aggregator.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <!-- WebHooks -->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-webhooks|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <TfsVersion>2018</TfsVersion>
+    <TfsVersion>webhooks</TfsVersion>
     <TargetFramework>net461</TargetFramework>
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <TfsVersion>2018</TfsVersion>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-webhooks|AnyCPU'">
+    <TfsVersion>webhooks</TfsVersion>
     <TargetFramework>net461</TargetFramework>
     <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>
