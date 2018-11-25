@@ -147,8 +147,8 @@ namespace UnitTests.Core
             Assert.IsNotNull(settings);
 
             Assert.IsNotNull(settings.RateLimit);
-            Assert.AreEqual(settings.RateLimit?.Interval, TimeSpan.FromSeconds(1));
-            Assert.AreEqual(settings.RateLimit?.Changes, 5);
+            Assert.AreEqual(TimeSpan.FromSeconds(1), settings.RateLimit?.Interval);
+            Assert.AreEqual(5, settings.RateLimit?.Changes);
         }
 
         [TestMethod]
@@ -169,7 +169,7 @@ namespace UnitTests.Core
 
             var settings = TFSAggregatorSettings.LoadXml(config, logger);
 
-            Assert.AreEqual(settings.RateLimit?.Changes, 100);
+            Assert.AreEqual(100, settings.RateLimit?.Changes);
         }
 
         [TestMethod]
