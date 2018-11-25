@@ -18,14 +18,14 @@
   <!--Give Component ID prefix -->
   <xsl:template match="wix:Component/@Id">
     <xsl:attribute name="{name()}">
-      <xsl:value-of select="concat('F2019_', .)" />
+      <xsl:value-of select="concat('F2018_', .)" />
     </xsl:attribute>
   </xsl:template>
 
   <!--Give File ID prefix -->
   <xsl:template match="wix:File/@Id">
     <xsl:attribute name="{name()}">
-      <xsl:value-of select="concat('F2019_', .)" />
+      <xsl:value-of select="concat('F2018_', .)" />
     </xsl:attribute>
   </xsl:template>
 

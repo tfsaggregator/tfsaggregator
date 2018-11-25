@@ -76,6 +76,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HeatTransforms", "HeatTrans
 		Setup.Aggregator\T2017.2.xslt = Setup.Aggregator\T2017.2.xslt
 		Setup.Aggregator\T2017.xslt = Setup.Aggregator\T2017.xslt
 		Setup.Aggregator\T2018.xslt = Setup.Aggregator\T2018.xslt
+		Setup.Aggregator\T2019.xslt = Setup.Aggregator\T2019.xslt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FilesToInstall", "FilesToInstall", "{61340591-23E3-4B33-9E23-8669CBC235A9}"
