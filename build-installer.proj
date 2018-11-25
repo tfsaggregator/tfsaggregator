@@ -79,6 +79,10 @@
       <Alt>2018</Alt>
       <ExtendedClientVersion>15.122.1-preview</ExtendedClientVersion>
     </TfsVersion>
+    <TfsVersion Include="2019" >
+      <Alt>2019</Alt>
+      <ExtendedClientVersion>16.143.0-preview</ExtendedClientVersion>
+    </TfsVersion>
   </ItemGroup>
 
 

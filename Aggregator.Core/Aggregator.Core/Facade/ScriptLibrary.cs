@@ -14,6 +14,11 @@ using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.IVssRequest
 #else
 using IVssRequestContext = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRequestContext;
 #endif
+#if ADOS2019
+using IVssRegistryService = Microsoft.TeamFoundation.Framework.Server.IVssRegistryService;
+#else
+using IVssRegistryService = Microsoft.TeamFoundation.Framework.Server.TeamFoundationRegistryService;
+#endif
 
 /// <summary>
 /// This is the real meat for Plugin and WebService;
@@ -58,7 +63,7 @@ namespace Aggregator.Core.Facade
                 this.Enabled = false;
                 try
                 {
-                    TeamFoundationRegistryService service = requestContext.GetService<TeamFoundationRegistryService>();
+                    IVssRegistryService service = requestContext.GetService<IVssRegistryService>();
                     Microsoft.TeamFoundation.Framework.Server.RegistryEntryCollection registryEntryCollection = service.ReadEntriesFallThru(requestContext, this.NotificationRootPath + "/*");
                     if (registryEntryCollection["EmailEnabled"].GetValue<bool>(true))
                     {
