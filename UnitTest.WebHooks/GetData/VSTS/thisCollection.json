@@ -1,0 +1,10 @@
+﻿{
+  "id": "1fe04a90-6116-437a-a208-f64a7711e8ff",
+  "name": "giuliovaad",
+  "url": "https://giuliovaad.visualstudio.com/_apis/projectCollections/1fe04a90-6116-437a-a208-f64a7711e8ff",
+  "state": "Started",
+  "_links": {
+    "self": { "href": "https://giuliovaad.visualstudio.com/_apis/projectCollections/1fe04a90-6116-437a-a208-f64a7711e8ff" },
+    "web": { "href": "https://giuliovaad.visualstudio.com/" }
+  }
+}

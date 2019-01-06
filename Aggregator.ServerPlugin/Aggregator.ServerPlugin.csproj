@@ -11,8 +11,8 @@
     <TargetFramework Condition="'$(TargetFramework)'==''">net461</TargetFramework>
     <FileAlignment>512</FileAlignment>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <Configurations>Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018</Configurations>
-    <CodeAnalysisRuleSet>..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+    <Configurations>Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018;Debug-2019;Release-2019</Configurations>
+    <CodeAnalysisRuleSet>..\tfs-aggregator.ruleset</CodeAnalysisRuleSet>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug-2013|AnyCPU' ">
@@ -107,9 +107,21 @@
     <TargetFramework>net461</TargetFramework>
     <DebugType>full</DebugType>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-2019|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <TfsVersion>2019</TfsVersion>
+    <TargetFramework>net471</TargetFramework>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2018|AnyCPU'">
     <TfsVersion>2018</TfsVersion>
     <TargetFramework>net461</TargetFramework>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2019|AnyCPU'">
+    <TfsVersion>2019</TfsVersion>
+    <TargetFramework>net471</TargetFramework>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
@@ -140,7 +152,10 @@
     <PackageReference Include="Desktop.Analyzers" Version="1.1.0" />
     <PackageReference Include="Microsoft.AnalyzerPowerPack" Version="1.1.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="6.7.1.4347" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.8.0.7320">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aggregator.Core\Aggregator.Core\Aggregator.Core.csproj" />

@@ -55,6 +55,12 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2018"]]>
         </Condition>
       </Feature>
+      <Feature Id='Client2019Feature' Title='Client for Azure DevOps Server 2019' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="ClientComponents2019"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2019"]]>
+        </Condition>
+      </Feature>
     </Feature>
 
     <Feature Id="ServerFeature" Title="Server plugin" Level='1' AllowAdvertise='no' Display='expand' >
@@ -105,6 +111,13 @@
         <ComponentGroupRef Id="ServerComponents2018"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2018"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Server2019Feature' Title='Plugin for Azure DevOps Server 2019' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="NeutralServerComponents" />
+        <ComponentGroupRef Id="ServerComponents2019"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2019"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -169,6 +182,18 @@
         Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\16.0"
         Name="BuildNumber" Type="raw" />
     </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2019BUILD">
+      <RegistrySearch
+        Id="TeamFoundationServer17Build" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\17.0"
+        Name="BuildNumber" Type="raw" />
+    </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2019">
+      <RegistrySearch
+        Id="TeamFoundationServer17" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\17.0\InstalledComponents\ApplicationTier"
+        Name="InstallPath" Type="raw" />
+    </Property>
 
     <PropertyRef Id="WIX_IS_NETFRAMEWORK_451_OR_LATER_INSTALLED"/>
     
@@ -205,6 +230,11 @@
 
       <![CDATA[TEAMFOUNDATIONSERVER2018 AND (TEAMFOUNDATIONSERVER2018BUILD = "16.122.27102.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27319.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27402.3" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27409.2" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.27620.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.27701.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.28002.2" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.28030.2" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.28106.2")]]>
     </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2019" Before="LaunchConditions" Action="TFSVer2019RTM">
+      <!-- 17.142.28309.3 (AzureDevOps2019.RC1) -->
+      
+      <![CDATA[TEAMFOUNDATIONSERVER2019 AND (TEAMFOUNDATIONSERVER2019BUILD = "17.142.28309.3")]]>
+    </SetProperty>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
@@ -222,18 +252,21 @@
         </Directory>
       </Directory>
     </Directory>
-    
+
+    <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2019]" Action="SetTFSINSTALLFOLDER2019">
+      TEAMFOUNDATIONSERVER2019
+    </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2018]" Action="SetTFSINSTALLFOLDER2018">
-      TEAMFOUNDATIONSERVER2018
+      TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2017]" Action="SetTFSINSTALLFOLDER2017">
-      TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018
+      TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2015]" Action="SetTFSINSTALLFOLDER2015">
-      TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018
+      TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2013]" Action="SetTFSINSTALLFOLDER2013">
-      TEAMFOUNDATIONSERVER2013 AND NOT TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018
+      TEAMFOUNDATIONSERVER2013 AND NOT TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
     </SetDirectory>
     
   </Fragment>

@@ -1,0 +1,30 @@
+{
+    "subscriptionId": "701bfa24-5bd3-4c62-865d-9e443d5e462a",
+    "notificationId": 15,
+    "id": "f2aedce3-21ad-4270-b1d3-78cd797088cb",
+    "eventType": "workitem.updated",
+    "publisherId": "tfs",
+    "message": null,
+    "detailedMessage": null,
+    "resource": {
+        "id": 2,
+        "url": "https://giuliovaad.visualstudio.com/_apis/wit/workItems/14/updates/2",
+        "workItemId": 14
+    },
+    "resourceVersion": "1.0",
+    "resourceContainers": {
+        "collection": {
+            "id": "1fe04a90-6116-437a-a208-f64a7711e8ff",
+            "baseUrl": "https://giuliovaad.visualstudio.com/"
+        },
+        "account": {
+            "id": "d42bf46b-f950-454c-b2aa-0cce857edf5a",
+            "baseUrl": "https://giuliovaad.visualstudio.com/"
+        },
+        "project": {
+            "id": "bed2988e-11a5-4705-9f9e-0738963940cf",
+            "baseUrl": "https://giuliovaad.visualstudio.com/"
+        }
+    },
+    "createdDate": "2018-03-24T10:51:41.5795829Z"
+}

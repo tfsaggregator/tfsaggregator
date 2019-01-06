@@ -1,0 +1,78 @@
+{
+  "subscriptionId": "6cbe292d-fc56-440b-9459-9fdb3216ca0f",
+  "notificationId": 1,
+  "id": "39c3075a-2583-491f-b981-f96dc19c0bfa",
+  "eventType": "workitem.restored",
+  "publisherId": "tfs",
+  "scope": "all",
+  "message": null,
+  "detailedMessage": null,
+  "resource": {
+    "id": 2,
+    "rev": 3,
+    "fields": {
+      "System.AreaPath": "FirstProject",
+      "System.TeamProject": "FirstProject",
+      "System.IterationPath": "FirstProject",
+      "System.WorkItemType": "Task",
+      "System.State": "New",
+      "System.Reason": "New",
+      "System.CreatedDate": "2018-03-25T10:15:57.667Z",
+      "System.CreatedBy": "Administrator <WIN-RO13GV4KFHQ\\Administrator>",
+      "System.ChangedDate": "2018-03-25T10:26:39.193Z",
+      "System.ChangedBy": "Administrator <WIN-RO13GV4KFHQ\\Administrator>",
+      "System.Title": "Task1",
+      "Microsoft.VSTS.Common.StateChangeDate": "2018-03-25T10:15:57.667Z",
+      "Microsoft.VSTS.Common.Priority": 2
+    },
+    "relations": [
+      {
+        "rel": "System.LinkTypes.Hierarchy-Reverse",
+        "url": "https://win-ro13gv4kfhq/DefaultCollection/_apis/wit/workItems/1",
+        "attributes": {
+          "isLocked": false
+        }
+      }
+    ],
+    "_links": {
+      "self": {
+        "href": "https://win-ro13gv4kfhq/DefaultCollection/_apis/wit/workItems/2"
+      },
+      "workItemUpdates": {
+        "href": "https://win-ro13gv4kfhq/DefaultCollection/_apis/wit/workItems/2/updates"
+      },
+      "workItemRevisions": {
+        "href": "https://win-ro13gv4kfhq/DefaultCollection/_apis/wit/workItems/2/revisions"
+      },
+      "workItemHistory": {
+        "href": "https://win-ro13gv4kfhq/DefaultCollection/_apis/wit/workItems/2/history"
+      },
+      "html": {
+        "href": "https://win-ro13gv4kfhq/web/wi.aspx?pcguid=fcb4f585-afdd-4dc8-bb1b-1d8d5d9d2ff2&id=2"
+      },
+      "workItemType": {
+        "href": "https://win-ro13gv4kfhq/DefaultCollection/993ffa69-1314-4649-b709-5568400e8da4/_apis/wit/workItemTypes/Task"
+      },
+      "fields": {
+        "href": "https://win-ro13gv4kfhq/DefaultCollection/_apis/wit/fields"
+      }
+    },
+    "url": "https://win-ro13gv4kfhq/DefaultCollection/_apis/wit/workItems/2"
+  },
+  "resourceVersion": "1.0",
+  "resourceContainers": {
+    "collection": {
+      "id": "fcb4f585-afdd-4dc8-bb1b-1d8d5d9d2ff2",
+      "baseUrl": "https://win-ro13gv4kfhq/DefaultCollection/"
+    },
+    "server": {
+      "id": "0c594c6b-e779-441e-8276-f208731e3be7",
+      "baseUrl": "https://win-ro13gv4kfhq/"
+    },
+    "project": {
+      "id": "993ffa69-1314-4649-b709-5568400e8da4",
+      "baseUrl": "https://win-ro13gv4kfhq/DefaultCollection/"
+    }
+  },
+  "createdDate": "2018-03-25T10:26:41.161324Z"
+}

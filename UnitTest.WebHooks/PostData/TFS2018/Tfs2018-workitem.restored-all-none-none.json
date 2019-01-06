@@ -1,0 +1,69 @@
+{
+  "subscriptionId": "09eab9ec-b4b3-4a09-a1a0-ba6bb1c988ba",
+  "notificationId": 1,
+  "id": "86ad76b9-a594-49c1-bcb1-cf0963afdee8",
+  "eventType": "workitem.restored",
+  "publisherId": "tfs",
+  "message": null,
+  "detailedMessage": null,
+  "resource": {
+    "id": 1,
+    "rev": 27,
+    "fields": {
+      "System.AreaPath": "prova1",
+      "System.TeamProject": "prova1",
+      "System.IterationPath": "prova1\\Iteration 1",
+      "System.WorkItemType": "Task",
+      "System.State": "New",
+      "System.Reason": "New",
+      "System.CreatedDate": "2017-11-16T22:05:19.677Z",
+      "System.CreatedBy": "Administrator <WIN-VJNVOUQJMAM\\Administrator>",
+      "System.ChangedDate": "2018-03-23T22:49:42.01Z",
+      "System.ChangedBy": "Administrator <WIN-VJNVOUQJMAM\\Administrator>",
+      "System.Title": "provauno",
+      "Microsoft.VSTS.Common.StateChangeDate": "2017-11-16T22:05:19.677Z",
+      "Microsoft.VSTS.Common.Priority": 2,
+      "System.Description": "..."
+    },
+    "_links": {
+      "self": {
+        "href": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1"
+      },
+      "workItemUpdates": {
+        "href": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1/updates"
+      },
+      "workItemRevisions": {
+        "href": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1/revisions"
+      },
+      "workItemHistory": {
+        "href": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1/history"
+      },
+      "html": {
+        "href": "https://win-vjnvouqjmam/web/wi.aspx?pcguid=70b03e83-e51b-4ba1-8799-ee1ae0f863bb&id=1"
+      },
+      "workItemType": {
+        "href": "https://win-vjnvouqjmam/DefaultCollection/6ab22c47-43cc-4967-822f-d79123a7ef6b/_apis/wit/workItemTypes/Task"
+      },
+      "fields": {
+        "href": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/fields"
+      }
+    },
+    "url": "https://win-vjnvouqjmam/DefaultCollection/_apis/wit/workItems/1"
+  },
+  "resourceVersion": "1.0",
+  "resourceContainers": {
+    "collection": {
+      "id": "70b03e83-e51b-4ba1-8799-ee1ae0f863bb",
+      "baseUrl": "https://win-vjnvouqjmam/DefaultCollection/"
+    },
+    "server": {
+      "id": "b0b49534-922e-4ffb-afa8-086340c8caf5",
+      "baseUrl": "https://win-vjnvouqjmam/"
+    },
+    "project": {
+      "id": "6ab22c47-43cc-4967-822f-d79123a7ef6b",
+      "baseUrl": "https://win-vjnvouqjmam/DefaultCollection/"
+    }
+  },
+  "createdDate": "2018-03-23T22:49:44.4656025Z"
+}

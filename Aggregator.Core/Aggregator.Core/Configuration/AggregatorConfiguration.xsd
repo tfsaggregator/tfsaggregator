@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="AggregatorConfiguration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="runtime">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="1" name="rateLimiting">
+                <xs:complexType>
+                  <xs:attribute name="interval" use="optional" default="00:00:01.0" type="xs:time" />
+                  <xs:attribute name="changes" use ="optional" default="5" type="xs:int" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="1" name="logging">
+                <xs:complexType>
+                  <xs:attribute name="level" use="optional" default="Normal" >
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:enumeration value="Critical"/>
+                        <xs:enumeration value="Error"/>
+                        <xs:enumeration value="Warning"/>
+                        <xs:enumeration value="Information"/>
+                        <xs:enumeration value="Normal"/>
+                        <xs:enumeration value="Verbose"/>
+                        <xs:enumeration value="Diagnostic"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="1" name="script">
+                <xs:complexType>
+                  <xs:attribute name="language" use="optional" default="C#">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:enumeration value="CS"/>
+                        <xs:enumeration value="CSharp"/>
+                        <xs:enumeration value="C#"/>
+                        <xs:enumeration value="VB"/>
+                        <xs:enumeration value="VB.NET"/>
+                        <xs:enumeration value="VBNET"/>
+                        <xs:enumeration value="PS"/>
+                        <xs:enumeration value="Powershell"/>
+                        <xs:enumeration value="PowerShell"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="1" name="authentication">
+                <xs:complexType>
+                  <xs:attribute name="autoImpersonate" type="xs:boolean" use="optional" default="false" />
+                  <xs:attribute name="personalToken" type="xs:string" use="optional" />
+                  <xs:attribute name="username" type="xs:string" use="optional" />
+                  <xs:attribute name="password" type="xs:string" use="optional" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="1" name="server">
+                <xs:complexType>
+                  <xs:attribute name="baseUrl" type="xs:string" use="optional" />
+                  <xs:attribute name="ignoreSslErrors" type="xs:boolean" use="optional" default="false" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="debug" type="xs:boolean" use="optional" default="false" />
+            <xs:attribute name="whatIf" type="xs:boolean" use="optional" default="false" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="snippet">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:ID" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+          <xs:unique name="uniqueSnippetName">
+            <xs:selector xpath="./snippet"/>
+            <xs:field xpath="name"/>
+          </xs:unique>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="function">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string"/>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="1" maxOccurs="unbounded" name="rule">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:ID" use="required" />
+                <xs:attribute name="appliesTo" type="xs:string" use="optional" />
+                <xs:attribute name="hasFields" type="xs:string" use="optional" />
+                <!-- must match Aggregator.Core.Interfaces.ChangeTypes i.e. Microsoft.TeamFoundation.WorkItemTracking.Server.ChangeTypes -->
+                <xs:attribute name="changes" type="xs:string" use="optional" default="New,Change,Delete,Restore" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+          <xs:unique name="uniqueRuleName">
+            <xs:selector xpath="./rule"/>
+            <xs:field xpath="name"/>
+          </xs:unique>
+        </xs:element>
+        <xs:element minOccurs="1" maxOccurs="unbounded" name="policy">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="1" name="collectionScope">
+                <xs:complexType>
+                  <xs:attribute name="collections" type="xs:string" use="required" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="1" name="templateScope">
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:string" use="optional" />
+                  <xs:attribute name="typeId" type="xs:string" use="optional" />
+                  <xs:attribute name="minVersion" type="xs:decimal" use="optional" />
+                  <xs:attribute name="maxVersion" type="xs:decimal" use="optional" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="0" maxOccurs="1" name="projectScope">
+                <xs:complexType>
+                  <xs:attribute name="projects" type="xs:string" use="required" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element minOccurs="1" maxOccurs="unbounded" name="ruleRef">
+                <xs:complexType>
+                  <xs:attribute name="name" type="xs:IDREF" use="required" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required" />
+          </xs:complexType>
+          <xs:unique name="uniquePolicyName">
+            <xs:selector xpath="./policy"/>
+            <xs:field xpath="name"/>
+          </xs:unique>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

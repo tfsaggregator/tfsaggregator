@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AggregatorConfiguration>
+
+  <runtime debug="true">
+    <rateLimiting interval="00:00:10.00" changes="2" />
+  </runtime>
+
+  <!-- Do nothing -->
+  <rule name="RateLimitingTest" appliesTo="*">
+    <![CDATA[
+    System.Random rnd = new System.Random((int)System.DateTime.Now.Ticks);
+    self["System.Title"] = "Test " + rnd.Next(100);
+    ]]>
+  </rule>
+
+  <policy name="DefaultPolicy">
+    <collectionScope collections="*" />
+    <ruleRef name="RateLimitingTest" />
+  </policy>
+
+</AggregatorConfiguration>
