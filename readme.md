@@ -23,6 +23,7 @@ The complete documentation is available on the [project's Documentation Site](ht
 * Added support for TFS 2018
 * Added support for TFS 2018.1 RC
 * Added support for TFS 2018.1
+* Added support for TFS 2018.2
 * Fixes TemplateScope in TFS 2017 update 2 and higher
 * Added text to installer explaining the 2017u2 version works with 2017u3 as well
 * Added text to installer explaining the 2018 version works with 2018u1 as well
