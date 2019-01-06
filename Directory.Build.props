@@ -20,6 +20,7 @@
     <KnownTfsVersion Include="2017"   />
     <KnownTfsVersion Include="2017.2" />
     <KnownTfsVersion Include="2018"   />
+    <KnownTfsVersion Include="2019"   />
 
     <AssemblyAttribute Include="System.Reflection.AssemblyConfigurationAttribute">
       <_Parameter1>$(Configuration) [TFS $(TfsVersion)]</_Parameter1>
