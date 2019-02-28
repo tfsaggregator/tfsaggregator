@@ -3,8 +3,14 @@
 // To read Configuration use this Powershell snippet
 // [System.Reflection.Assembly]::LoadFile("path-to-assembly-file").GetCustomAttributesData() | ?{ $_.AttributeType -eq [System.Reflection.AssemblyConfigurationAttribute] } | select ConstructorArguments
 #if DEBUG
-#if TFS2017
-    [assembly: AssemblyConfiguration("Debug [TFS 2017.0 WebHooks]")]
+#if ADOS2019
+    [assembly: AssemblyConfiguration("Debug [Azure DevOps Server 2019.0]")]
+#elif TFS2018
+    [assembly: AssemblyConfiguration("Debug [TFS 2018.0]")]
+#elif TFS2017u2
+    [assembly: AssemblyConfiguration("Debug [TFS 2017.2]")]
+#elif TFS2017
+    [assembly: AssemblyConfiguration("Debug [TFS 2017.0]")]
 #elif TFS2015u2
     [assembly: AssemblyConfiguration("Debug [TFS 2015.2]")]
 #elif TFS2015u1
@@ -15,8 +21,14 @@
     [assembly: AssemblyConfiguration("Debug [TFS 2013.5]")]
 #endif
 #else
-#if TFS2017
-    [assembly: AssemblyConfiguration("Release [TFS 2017.0 WebHooks]")]
+#if ADOS2019
+    [assembly: AssemblyConfiguration("Release [Azure DevOps Server 2019.0]")]
+#elif TFS2018
+    [assembly: AssemblyConfiguration("Release [TFS 2018.0]")]
+#elif TFS2017u2
+    [assembly: AssemblyConfiguration("Release [TFS 2017.2]")]
+#elif TFS2017
+    [assembly: AssemblyConfiguration("Release [TFS 2017.0]")]
 #elif TFS2015u2
     [assembly: AssemblyConfiguration("Release [TFS 2015.2]")]
 #elif TFS2015u1
@@ -42,6 +54,6 @@
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.2.0.0")]
-[assembly: AssemblyFileVersion("2.2.0.0")]
-[assembly: AssemblyInformationalVersion("2.2-alpha")]
+[assembly: AssemblyVersion("2.5.0.0")]
+[assembly: AssemblyFileVersion("2.5.0.0")]
+[assembly: AssemblyInformationalVersion("2.5")]
