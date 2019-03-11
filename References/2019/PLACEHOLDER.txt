@@ -1,0 +1,14 @@
+Copy here the proper version of these TFS assemblies:
+
+Microsoft.TeamFoundation.Framework.Server.dll
+Microsoft.TeamFoundation.Server.Core.dll
+Microsoft.TeamFoundation.Server.Types.dll
+Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer.dll
+Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll
+Microsoft.TeamFoundation.WorkItemTracking.Server.dll
+
+In addition
+Microsoft.TeamFoundation.Common.dll
+is required for Code Analisys to succeed in 2015.1 CTP.
+
+The client object model assemblies are loaded from the NuGet package.

@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
      xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-  
+
   <Product Id="*" Name="TFS Aggregator" Language="1033" Version="$(var.BuildVersion)" Manufacturer="TFS Aggregator Team" UpgradeCode="1c6958f9-0865-449d-abd9-71b4600ff1f0">
     <Package InstallerVersion="400" Compressed="yes" InstallScope="perMachine" Platform="x64"/>
 
@@ -11,7 +11,7 @@
 
     <!-- HACK hard-coded versions -->
     <!-- TODO generate version specific snippets -->
-      
+
     <Feature Id="ClientFeature" Title="Client test application" Level='1' AllowAdvertise='no' Display='expand' >
       <Feature Id='Client2013Feature' Title="Client for TFS 2013.5" Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2013"/>
@@ -49,10 +49,16 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017.2"]]>
         </Condition>
       </Feature>
-      <Feature Id='Client2018Feature' Title='Client for TFS 2018 up to 2018.2' Level='1' AllowAdvertise='no'>
+      <Feature Id='Client2018Feature' Title='Client for TFS 2018 up to 2018.3' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2018"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2018"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Client2019Feature' Title='Client for Azure DevOps Server 2019' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="ClientComponents2019"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2019"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -100,15 +106,22 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2017.2"]]>
         </Condition>
       </Feature>
-      <Feature Id='Server2018Feature' Title='Plugin for TFS 2018 up to 2018.2' Level='1' AllowAdvertise='no'>
+      <Feature Id='Server2018Feature' Title='Plugin for TFS 2018 up to 2018.3' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="NeutralServerComponents" />
         <ComponentGroupRef Id="ServerComponents2018"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2018"]]>
         </Condition>
       </Feature>
+      <Feature Id='Server2019Feature' Title='Plugin for Azure DevOps Server 2019' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="NeutralServerComponents" />
+        <ComponentGroupRef Id="ServerComponents2019"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2019"]]>
+        </Condition>
+      </Feature>
     </Feature>
-      
+
     <Feature Id='NeutralFeature' Title="Documentation and samples" Level='1' AllowAdvertise='no'>
       <ComponentGroupRef Id="NeutralComponents" />
     </Feature>
@@ -120,7 +133,7 @@
   </Product>
 
   <Fragment>
-    
+
     <Property Id="TEAMFOUNDATIONSERVER2013">
       <RegistrySearch
         Id="TeamFoundationServer12" Win64="yes"
@@ -169,9 +182,21 @@
         Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\16.0"
         Name="BuildNumber" Type="raw" />
     </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2019BUILD">
+      <RegistrySearch
+        Id="TeamFoundationServer17Build" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\17.0"
+        Name="BuildNumber" Type="raw" />
+    </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2019">
+      <RegistrySearch
+        Id="TeamFoundationServer17" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\17.0\InstalledComponents\ApplicationTier"
+        Name="InstallPath" Type="raw" />
+    </Property>
 
     <PropertyRef Id="WIX_IS_NETFRAMEWORK_451_OR_LATER_INSTALLED"/>
-    
+
     <Condition Message="This application requires .NET Framework 4.5.1 or later. Please install or update the .NET Framework then run this installer again.">
       <![CDATA[Installed OR (WIX_IS_NETFRAMEWORK_451_OR_LATER_INSTALLED)]]>
     </Condition>
@@ -199,7 +224,19 @@
       <!-- TFS2018u1:    16.122.27409.2 -->
       <!-- TFS2018u2escrow:    16.131.27620.1 -->
       <!-- TFS2018u2:    16.131.27701.1 -->
-      <![CDATA[TEAMFOUNDATIONSERVER2018 AND (TEAMFOUNDATIONSERVER2018BUILD = "16.122.27102.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27319.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27402.3" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27409.2" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.27620.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.27701.1")]]>
+      <!-- 16.131.28002.2 (Tfs2018.Update3.RC) -->
+      <!-- 16.131.28030.2 (Tfs2018.Update3) -->
+      <!-- 16.131.28106.2 (Tfs2018.Update3) -->
+
+      <![CDATA[TEAMFOUNDATIONSERVER2018 AND (TEAMFOUNDATIONSERVER2018BUILD = "16.122.27102.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27319.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27402.3" OR TEAMFOUNDATIONSERVER2018BUILD = "16.122.27409.2" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.27620.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.27701.1" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.28002.2" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.28030.2" OR TEAMFOUNDATIONSERVER2018BUILD = "16.131.28106.2")]]>
+    </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2019" Before="LaunchConditions" Action="TFSVer2019RTM">
+      <!-- 17.142.28309.3 (AzureDevOps2019.RC1) -->
+      <!-- 17.143.28504.6 (AzureDevOps2019.RC2.Dev17.M143.escrow) -->
+      <!-- 17.143.28511.3 (AzureDevOps2019.RC2.Dev17.M143) -->
+      <!-- 17.143.28604.6 (AzureDevOps2019.Dev17.M143.RTW.escrow) -->
+      <!-- 17.143.28621.4 (AzureDevOps2019.RTW) -->
+      <![CDATA[TEAMFOUNDATIONSERVER2019 AND (TEAMFOUNDATIONSERVER2019BUILD = "17.142.28309.3" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28504.6" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28511.3" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28604.6" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28621.4" )]]>
     </SetProperty>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -218,20 +255,23 @@
         </Directory>
       </Directory>
     </Directory>
-    
+
+    <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2019]" Action="SetTFSINSTALLFOLDER2019">
+      TEAMFOUNDATIONSERVER2019
+    </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2018]" Action="SetTFSINSTALLFOLDER2018">
-      TEAMFOUNDATIONSERVER2018
+      TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2017]" Action="SetTFSINSTALLFOLDER2017">
-      TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018
+      TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2015]" Action="SetTFSINSTALLFOLDER2015">
-      TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018
+      TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2013]" Action="SetTFSINSTALLFOLDER2013">
-      TEAMFOUNDATIONSERVER2013 AND NOT TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018
+      TEAMFOUNDATIONSERVER2013 AND NOT TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
     </SetDirectory>
-    
+
   </Fragment>
 
   <Fragment>

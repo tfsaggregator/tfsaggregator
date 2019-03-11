@@ -27,18 +27,16 @@
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-webhooks|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;;TFS2017;TFS2015u2;TFS2015u1;TFS2015</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\tfs-aggregator.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-webhooks|AnyCPU'">
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE;;TFS2017;TFS2015u2;TFS2015u1;TFS2015</DefineConstants>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
@@ -77,17 +75,14 @@
     <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
       <Version>1.0.8</Version>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>9.0.1</Version>
+      <IncludeAssets>All</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Net.Http" Version="4.3.3" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(NugetPackageRoot)\Microsoft.TeamFoundationServer.ExtendedClient\15.122.1-preview\lib\native\x86\Microsoft.WITDataStore32.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Global.asax" />
-    <Content Include="$(NugetPackageRoot)\Microsoft.TeamFoundationServer.ExtendedClient\15.122.1-preview\lib\native\amd64\Microsoft.WITDataStore64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -119,7 +114,6 @@
     <Compile Include="Utils\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
     <Content Include="apiapp.json" />
     <None Include="app.config" />
     <Content Include="App_Data\HelloWorld.policies" />
@@ -130,6 +124,7 @@
     <None Include="Properties\PublishProfiles\AggregatorWebHooks-GiuliovDev.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
