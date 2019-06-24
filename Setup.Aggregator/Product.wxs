@@ -55,10 +55,16 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2018"]]>
         </Condition>
       </Feature>
-      <Feature Id='Client2019Feature' Title='Client for Azure DevOps Server 2019' Level='1' AllowAdvertise='no'>
+      <Feature Id='Client2019Feature' Title='Client for Azure DevOps Server 2019 up to 2019.0.1' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2019"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2019"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Client2019Feature' Title='Client for Azure DevOps Server 2019.1' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="ClientComponents2019.1"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2019.1"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -113,11 +119,18 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2018"]]>
         </Condition>
       </Feature>
-      <Feature Id='Server2019Feature' Title='Plugin for Azure DevOps Server 2019' Level='1' AllowAdvertise='no'>
+      <Feature Id='Server2019Feature' Title='Plugin for Azure DevOps Server 2019 up to 2019.0.1' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="NeutralServerComponents" />
         <ComponentGroupRef Id="ServerComponents2019"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2019"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Server2019Feature' Title='Plugin for Azure DevOps Server 2019.1' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="NeutralServerComponents" />
+        <ComponentGroupRef Id="ServerComponents2019.1"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2019.1"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -239,9 +252,13 @@
       <!-- 17.143.28812.1 (AzureDevOps2019.0.1.RC.esscrow) -->
       <!-- 17.143.28819.4 (AzureDevOps2019.0.1.RC) -->
       <!-- 17.143.28912.1 (AzureDevOps2019.0.1)-->
+
+      <![CDATA[TEAMFOUNDATIONSERVER2019 AND (TEAMFOUNDATIONSERVER2019BUILD = "17.142.28309.3" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28504.6" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28511.3" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28604.6" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28621.4" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28812.1" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28912.1")]]>
+    </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2019.1" Before="LaunchConditions" Action="TFSVer2019u1">
       <!-- 17.153.29014.4 (AzureDevOps2019.Update1.RC1)-->
 
-      <![CDATA[TEAMFOUNDATIONSERVER2019 AND (TEAMFOUNDATIONSERVER2019BUILD = "17.142.28309.3" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28504.6" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28511.3" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28604.6" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28621.4" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28812.1" OR TEAMFOUNDATIONSERVER2019BUILD = "17.143.28912.1" OR TEAMFOUNDATIONSERVER2019BUILD = "17.153.29014.4")]]>
+      <![CDATA[TEAMFOUNDATIONSERVER2019 AND (TEAMFOUNDATIONSERVER2019BUILD = "17.153.29014.4")]]>
     </SetProperty>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
