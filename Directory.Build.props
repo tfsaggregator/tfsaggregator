@@ -8,7 +8,7 @@
     <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">0.0.0.1</AssemblyFileVersion>
     <Company>TFS Aggregator Team</Company>
     <Product>TFS Aggregator</Product>
-    <Copyright>Copyright (c) TFS Aggregator Team 2015-18</Copyright>
+    <Copyright>Copyright (c) TFS Aggregator Team 2015-19</Copyright>
     <!-- use custom configuration attribute -->
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
   </PropertyGroup>
