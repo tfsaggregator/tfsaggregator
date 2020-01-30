@@ -16,6 +16,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\TFS-Aggregator-2.ruleset</CodeAnalysisRuleSet>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
   <!-- WebHooks -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-webhooks|AnyCPU'">

@@ -15,6 +15,7 @@
     <WarningLevel>4</WarningLevel>
     <ErrorReport>prompt</ErrorReport>
     <ApplicationIcon>..\TfsAggregator.ico</ApplicationIcon>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
   <!-- WebHooks -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-webhooks|AnyCPU'">
@@ -160,6 +161,9 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Azure.Boards.CssNodes">
+      <HintPath>..\..\References\2019\Microsoft.Azure.Boards.CssNodes.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />

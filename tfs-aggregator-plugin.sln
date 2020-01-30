@@ -129,6 +129,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2019.1", "2019.1", "{533CBAAA-809D-4180-B6EE-0163B810337C}"
 	ProjectSection(SolutionItems) = preProject
 		References\2019.1\config.targets = References\2019.1\config.targets
+		References\2019.1\Microsoft.Azure.Boards.CssNodes.dll = References\2019.1\Microsoft.Azure.Boards.CssNodes.dll
+		References\2019.1\Microsoft.TeamFoundation.Common.dll = References\2019.1\Microsoft.TeamFoundation.Common.dll
+		References\2019.1\Microsoft.TeamFoundation.Framework.Server.dll = References\2019.1\Microsoft.TeamFoundation.Framework.Server.dll
+		References\2019.1\Microsoft.TeamFoundation.Server.Core.dll = References\2019.1\Microsoft.TeamFoundation.Server.Core.dll
+		References\2019.1\Microsoft.TeamFoundation.Server.Types.dll = References\2019.1\Microsoft.TeamFoundation.Server.Types.dll
+		References\2019.1\Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer.dll = References\2019.1\Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer.dll
+		References\2019.1\Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll = References\2019.1\Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll
+		References\2019.1\Microsoft.TeamFoundation.WorkItemTracking.Server.dll = References\2019.1\Microsoft.TeamFoundation.WorkItemTracking.Server.dll
 		References\2019.1\PLACEHOLDER.txt = References\2019.1\PLACEHOLDER.txt
 	EndProjectSection
 EndProject

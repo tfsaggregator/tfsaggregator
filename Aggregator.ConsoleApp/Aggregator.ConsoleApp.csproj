@@ -139,6 +139,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>TfsAggregator.ico</ApplicationIcon>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
