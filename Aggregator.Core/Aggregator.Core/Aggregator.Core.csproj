@@ -16,6 +16,7 @@
     <ErrorReport>prompt</ErrorReport>
     <ApplicationIcon>..\TfsAggregator.ico</ApplicationIcon>
     <CodeAnalysisRuleSet>..\..\tfs-aggregator.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <!-- WebHooks -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-webhooks|AnyCPU'">
