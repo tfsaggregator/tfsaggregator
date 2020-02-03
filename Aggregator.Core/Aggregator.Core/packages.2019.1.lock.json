@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "dependencies": {
+    ".NETFramework,Version=v4.7.2": {
+      "Desktop.Analyzers": {
+        "type": "Direct",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "YNx8+pW75pz/VF52vren5Yfu16sPYX02M537sHc1W4jtdY4sEGPs/p8reaLjF5PFX/9ml97DBHg056kR9K6tsQ=="
+      },
+      "Microsoft.AnalyzerPowerPack": {
+        "type": "Direct",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "0ER7rYBQOFsuaHJY8LyYjxscYBCop0B9Vam8jdRAlkbTRtU7NFxt72vnX6Bpk8sIn4JxPi/Oxy5ySr06kTuSqw=="
+      },
+      "Microsoft.TeamFoundationServer.Client": {
+        "type": "Direct",
+        "requested": "[16.153.0-preview, )",
+        "resolved": "16.153.0-preview",
+        "contentHash": "mrCdDcKoIb6hzz6mUspzK/ObcBm9F41ZYJLYePmyVbxb/Mfm8n33z+Y/dfTNjUWHP187pAZokg6litOslxDQ8w==",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.3",
+          "Microsoft.TeamFoundation.DistributedTask.Common.Contracts": "[16.153.0-preview]",
+          "Microsoft.VisualStudio.Services.Client": "[16.153.0-preview]",
+          "Newtonsoft.Json": "10.0.3"
+        }
+      },
+      "Microsoft.TeamFoundationServer.ExtendedClient": {
+        "type": "Direct",
+        "requested": "[16.153.0-preview, )",
+        "resolved": "16.153.0-preview",
+        "contentHash": "gGBlDBMTVild0X4Cos4yFp0eHQAZoZldYFIk9VIQ+ZskuwA6eRT4T+KoRNXt6oMyBem7B0a0erjgwofpQy914A==",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.3",
+          "Microsoft.AspNet.WebApi.Core": "5.2.3",
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "3.19.4",
+          "Microsoft.TeamFoundationServer.Client": "[16.153.0-preview]",
+          "Microsoft.VisualStudio.Services.Client": "[16.153.0-preview]",
+          "Microsoft.VisualStudio.Services.InteractiveClient": "[16.153.0-preview]",
+          "Newtonsoft.Json": "10.0.3",
+          "System.IdentityModel.Tokens.Jwt": "5.2.4"
+        }
+      },
+      "Microsoft.VisualStudio.Services.Client": {
+        "type": "Direct",
+        "requested": "[16.153.0-preview, )",
+        "resolved": "16.153.0-preview",
+        "contentHash": "EjiAEqWeZuf9mqzV3vgrVjrYWUwtVKG5JUKRDAENdUl1lGkpOev/Pxk+X+QGPYYBsQKZsa0ZPYrOzsM4mUJWGg==",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.3",
+          "Microsoft.IdentityModel.Tokens": "5.2.4",
+          "Newtonsoft.Json": "10.0.3",
+          "System.IdentityModel.Tokens.Jwt": "5.2.4"
+        }
+      },
+      "Microsoft.VisualStudio.Services.InteractiveClient": {
+        "type": "Direct",
+        "requested": "[16.153.0-preview, )",
+        "resolved": "16.153.0-preview",
+        "contentHash": "Xkr4iLv2B2d6HX4PIoPpjfD8BlAZKxUWzE8cntCfeHi7GnYXvW7torq0+Wseijg38adoqR87GNDbszuX342E8Q==",
+        "dependencies": {
+          "Ben.Demystifier": "0.1.2",
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "3.19.4",
+          "Microsoft.IdentityModel.Logging": "5.2.4",
+          "Microsoft.IdentityModel.Tokens": "5.2.4",
+          "Microsoft.VisualStudio.Services.Client": "[16.153.0-preview]",
+          "Newtonsoft.Json": "10.0.3",
+          "System.IdentityModel.Tokens.Jwt": "5.2.4"
+        }
+      },
+      "SonarAnalyzer.CSharp": {
+        "type": "Direct",
+        "requested": "[7.8.0.7320, )",
+        "resolved": "7.8.0.7320",
+        "contentHash": "PKBDNkMxse9D6Q6fXdYb8kxvTqG6Wa+nrq7SP1VNoSrdihr+JsgfoqdbMRWK6RDQlOG/fsZBqHOWtPH9Dx64qg=="
+      },
+      "SonarLint": {
+        "type": "Direct",
+        "requested": "[1.6.0, )",
+        "resolved": "1.6.0",
+        "contentHash": "Wcru5zTlqTDoFDn67pFtJk6oAEuGsEviliFanBTbuLNFAEymwvUVYheHOZ0oN2nabzrSTSQoAYSxOyx7Ni3uQA=="
+      },
+      "StyleCop.Analyzers": {
+        "type": "Direct",
+        "requested": "[1.0.2, )",
+        "resolved": "1.0.2",
+        "contentHash": "3xD87lafnVhsSEtJKk50G7FGutvaXkFz4XrrLrxnk/DhZU42dnCGWUsvKuBv4mTS0XdIgTY88tLhxW/8Vi3Pow=="
+      },
+      "System.Management.Automation.dll": {
+        "type": "Direct",
+        "requested": "[10.0.10586, )",
+        "resolved": "10.0.10586",
+        "contentHash": "eknkOPXmlrZ6gXNfmkkLFrhbopXcU815BCaxTVHiY44UtTpA/zm8EKy4uCyb4HicITf5S8FA/9WiXeLdBXusBA=="
+      },
+      "System.Net.Http": {
+        "type": "Direct",
+        "requested": "[4.3.3, )",
+        "resolved": "4.3.3",
+        "contentHash": "7rCqIbkC/P2+A00NoDH5gnvFhADmX7Dc4INvsOajbU1MVhktE9vZNrjPtF82N6Uo7obK+yzlrPUv/M+snnN/9w==",
+        "dependencies": {
+          "System.Security.Cryptography.X509Certificates": "4.3.0"
+        }
+      },
+      "System.Text.RegularExpressions": {
+        "type": "Direct",
+        "requested": "[4.3.0, )",
+        "resolved": "4.3.0",
+        "contentHash": "RpT2DA+L660cBt1FssIE9CAGpLFdFPuheB7pLpKpn6ZXNby7jDERe8Ua/Ne2xGiwLVG2JOqziiaVCGDon5sKFA=="
+      },
+      "Ben.Demystifier": {
+        "type": "Transitive",
+        "resolved": "0.1.2",
+        "contentHash": "72yB6sCgTKX6Wv3pZnbkANJrC4JzxPnss4LuaUpIeRiiIrfWKJw6/DNaFUYAckx6EluP3YydHreIvJT9tnljJA==",
+        "dependencies": {
+          "System.Reflection.Metadata": "1.5.0"
+        }
+      },
+      "Microsoft.AspNet.WebApi.Client": {
+        "type": "Transitive",
+        "resolved": "5.2.3",
+        "contentHash": "3kiI8peSXbXHDDrRuo+QaX0iCEVRe0nvn2dBDRw656uPX32UalbBlSIDUDlJxu05eau4tnuhsikiUuugvvoUoQ==",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.4"
+        }
+      },
+      "Microsoft.AspNet.WebApi.Core": {
+        "type": "Transitive",
+        "resolved": "5.2.3",
+        "contentHash": "o90QYlRV8VKR1S7+EcJw9w8WSyVFLl+IIzN8ILZ+n2t6rsc/KS8kBxRzA7wCFPRUHhebCfLqilBk39phvanx3g==",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.3"
+        }
+      },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory": {
+        "type": "Transitive",
+        "resolved": "3.19.4",
+        "contentHash": "DNmfww1BYg4p0AYkbqs4k+zS8BH4VZ57JYGRbOTBI5NxdXzU2YMBp8yqchBqSMk1LtIACaP0gdgJfo4RGaUQzg=="
+      },
+      "Microsoft.IdentityModel.JsonWebTokens": {
+        "type": "Transitive",
+        "resolved": "5.2.4",
+        "contentHash": "494JCwsMINjjmrl/kOTdOtcsm3ESh8W16zg0b3nNJBgnpOu9eDgs8KDOtP3kRjSQtHcLrTsBI1XJ5FbhKm1TrA==",
+        "dependencies": {
+          "Microsoft.IdentityModel.Tokens": "5.2.4",
+          "Newtonsoft.Json": "10.0.1"
+        }
+      },
+      "Microsoft.IdentityModel.Logging": {
+        "type": "Transitive",
+        "resolved": "5.2.4",
+        "contentHash": "12iZoCdMrwcQ8yOvg0AlG9oz6dIqvCczWsrHdALICsMWcBNFCAEyA0LELUYD0FZ7FVGvh4Z/KrPMkBVqVnIg2A=="
+      },
+      "Microsoft.IdentityModel.Tokens": {
+        "type": "Transitive",
+        "resolved": "5.2.4",
+        "contentHash": "hVkEnZTnU23IQv5hsbBmlJgmr/NdDg1yU6QPSoVirbfK1z+sDSItzDpZuKDcLjE81v174BlChdezKfVOzpr2YA==",
+        "dependencies": {
+          "Microsoft.IdentityModel.Logging": "5.2.4",
+          "Newtonsoft.Json": "10.0.1"
+        }
+      },
+      "Microsoft.TeamFoundation.DistributedTask.Common.Contracts": {
+        "type": "Transitive",
+        "resolved": "16.153.0-preview",
+        "contentHash": "RvHGl6ENys7S0mq9//pX97fS/Ny8mVZD4DwLatB8bBJCjvUY0bKm11jDQBC4qzGk7qeE8a8YBdF4paeC+hHpEw==",
+        "dependencies": {
+          "Microsoft.VisualStudio.Services.Client": "[16.153.0-preview]"
+        }
+      },
+      "Newtonsoft.Json": {
+        "type": "Transitive",
+        "resolved": "10.0.3",
+        "contentHash": "hSXaFmh7hNCuEoC4XNY5DrRkLDzYHqPx/Ik23R4J86Z7PE/Y6YidhG602dFVdLBRSdG6xp9NabH3dXpcoxWvww=="
+      },
+      "System.Collections.Immutable": {
+        "type": "Transitive",
+        "resolved": "1.4.0",
+        "contentHash": "71hw5RUJRu5+q/geUY69gpXD8Upd12cH+F3MwpXV2zle7Bqqkrmc1JblOTuvUcgmdnUtQvBlV5e1d6RH+H2lvA=="
+      },
+      "System.IdentityModel.Tokens.Jwt": {
+        "type": "Transitive",
+        "resolved": "5.2.4",
+        "contentHash": "IVIGJO1X8THAUfOIb3/KhPWALPOtXzpnP+36JBBM3BrQdnsE7kbi5m4Hpbax9JQVSdA5KG9cFeFoAtFOWfn90A==",
+        "dependencies": {
+          "Microsoft.IdentityModel.JsonWebTokens": "5.2.4",
+          "Microsoft.IdentityModel.Tokens": "5.2.4",
+          "Newtonsoft.Json": "10.0.1"
+        }
+      },
+      "System.IO": {
+        "type": "Transitive",
+        "resolved": "4.3.0",
+        "contentHash": "3qjaHvxQPDpSOYICjUoTsmoq5u6QJAFRUITgeT/4gqkF1bajbSmb1kwSxEA8AHlofqgcKJcM8udgieRNhaJ5Cg=="
+      },
+      "System.Reflection.Metadata": {
+        "type": "Transitive",
+        "resolved": "1.5.0",
+        "contentHash": "423hF/x1/1/aBT6hjgrp8RH2zdKOd1iTujlHisSesTW/cgv1ixUitfk23ZknVzItMm6jnwp9CBwI2P3r9jpitw==",
+        "dependencies": {
+          "System.Collections.Immutable": "1.4.0"
+        }
+      },
+      "System.Runtime": {
+        "type": "Transitive",
+        "resolved": "4.3.0",
+        "contentHash": "JufQi0vPQ0xGnAczR13AUFglDyVYt4Kqnz1AZaiKZ5+GICq0/1MH/mO/eAJHt/mHW1zjKBJd7kV26SrxddAhiw=="
+      },
+      "System.Security.Cryptography.Algorithms": {
+        "type": "Transitive",
+        "resolved": "4.3.0",
+        "contentHash": "W1kd2Y8mYSCgc3ULTAZ0hOP2dSdG5YauTb1089T0/kRcN2MpSAW1izOFROrJgxSlMn3ArsgHXagigyi+ibhevg==",
+        "dependencies": {
+          "System.IO": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Security.Cryptography.Encoding": "4.3.0",
+          "System.Security.Cryptography.Primitives": "4.3.0"
+        }
+      },
+      "System.Security.Cryptography.Encoding": {
+        "type": "Transitive",
+        "resolved": "4.3.0",
+        "contentHash": "1DEWjZZly9ae9C79vFwqaO5kaOlI5q+3/55ohmq/7dpDyDfc8lYe7YVxJUZ5MF/NtbkRjwFRo14yM4OEo9EmDw=="
+      },
+      "System.Security.Cryptography.Primitives": {
+        "type": "Transitive",
+        "resolved": "4.3.0",
+        "contentHash": "7bDIyVFNL/xKeFHjhobUAQqSpJq9YTOpbEs6mR233Et01STBMXNAc/V+BM6dwYGc95gVh/Zf+iVXWzj3mE8DWg=="
+      },
+      "System.Security.Cryptography.X509Certificates": {
+        "type": "Transitive",
+        "resolved": "4.3.0",
+        "contentHash": "t2Tmu6Y2NtJ2um0RtcuhP7ZdNNxXEgUm2JeoA/0NvlMjAhKCnM1NX07TDl3244mVp3QU6LPEhT3HTtH1uF7IYw==",
+        "dependencies": {
+          "System.Security.Cryptography.Algorithms": "4.3.0",
+          "System.Security.Cryptography.Encoding": "4.3.0"
+        }
+      }
+    }
+  }
+}

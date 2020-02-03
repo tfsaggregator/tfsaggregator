@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "dependencies": {
+    ".NETFramework,Version=v4.5.2": {
+      "Desktop.Analyzers": {
+        "type": "Direct",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "YNx8+pW75pz/VF52vren5Yfu16sPYX02M537sHc1W4jtdY4sEGPs/p8reaLjF5PFX/9ml97DBHg056kR9K6tsQ=="
+      },
+      "Microsoft.AnalyzerPowerPack": {
+        "type": "Direct",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "0ER7rYBQOFsuaHJY8LyYjxscYBCop0B9Vam8jdRAlkbTRtU7NFxt72vnX6Bpk8sIn4JxPi/Oxy5ySr06kTuSqw=="
+      },
+      "Microsoft.TeamFoundationServer.Client": {
+        "type": "Direct",
+        "requested": "[14.83.0, )",
+        "resolved": "14.83.0",
+        "contentHash": "mfxZonB1iNHTcEuHqj5fUqJ9racVe4fyidF2A9O8fYDpdJORaBwur2ZTSgUKKJZ4n6R1e0XvgK0HefC2DxWPhw==",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.2",
+          "Microsoft.AspNet.WebApi.Core": "5.2.2",
+          "Microsoft.VisualStudio.Services.Client": "[14.83.0]",
+          "Newtonsoft.Json": "6.0.5"
+        }
+      },
+      "Microsoft.TeamFoundationServer.ExtendedClient": {
+        "type": "Direct",
+        "requested": "[14.83.1, )",
+        "resolved": "14.83.1",
+        "contentHash": "ZiwF9Bv2fbMyYtIaavAJmxcJrZeGQTu5ifMoKoswnlz7k5P2t8jAA5H16Suw2HsA/SibpkYnbJ1vIA/uavt3CA==",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.2",
+          "Microsoft.AspNet.WebApi.Core": "5.2.2",
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.16.204221202",
+          "Microsoft.TeamFoundationServer.Client": "[14.83.0]",
+          "Microsoft.VisualStudio.Services.InteractiveClient": "[14.83.0]",
+          "Newtonsoft.Json": "6.0.5",
+          "System.IdentityModel.Tokens.Jwt": "4.0.0"
+        }
+      },
+      "Microsoft.VisualStudio.Services.InteractiveClient": {
+        "type": "Direct",
+        "requested": "[14.83.0, )",
+        "resolved": "14.83.0",
+        "contentHash": "29mEth95PlqvjNCBSNy1LoT/TWZPC1AunPX2hcgXiOLM5K5o/MYPPXUYS6H9/VUaToi+GhpXyKjbH1g+As7X+Q==",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.2",
+          "Microsoft.AspNet.WebApi.Core": "5.2.2",
+          "Microsoft.IdentityModel.Clients.ActiveDirectory": "2.16.204221202",
+          "Microsoft.VisualStudio.Services.Client": "[14.83.0]",
+          "Newtonsoft.Json": "6.0.5",
+          "System.IdentityModel.Tokens.Jwt": "4.0.0",
+          "WindowsAzure.ServiceBus": "2.5.1"
+        }
+      },
+      "SonarAnalyzer.CSharp": {
+        "type": "Direct",
+        "requested": "[7.8.0.7320, )",
+        "resolved": "7.8.0.7320",
+        "contentHash": "PKBDNkMxse9D6Q6fXdYb8kxvTqG6Wa+nrq7SP1VNoSrdihr+JsgfoqdbMRWK6RDQlOG/fsZBqHOWtPH9Dx64qg=="
+      },
+      "SonarLint": {
+        "type": "Direct",
+        "requested": "[1.6.0, )",
+        "resolved": "1.6.0",
+        "contentHash": "Wcru5zTlqTDoFDn67pFtJk6oAEuGsEviliFanBTbuLNFAEymwvUVYheHOZ0oN2nabzrSTSQoAYSxOyx7Ni3uQA=="
+      },
+      "StyleCop.Analyzers": {
+        "type": "Direct",
+        "requested": "[1.0.2, )",
+        "resolved": "1.0.2",
+        "contentHash": "3xD87lafnVhsSEtJKk50G7FGutvaXkFz4XrrLrxnk/DhZU42dnCGWUsvKuBv4mTS0XdIgTY88tLhxW/8Vi3Pow=="
+      },
+      "System.Management.Automation.dll": {
+        "type": "Direct",
+        "requested": "[10.0.10586, )",
+        "resolved": "10.0.10586",
+        "contentHash": "eknkOPXmlrZ6gXNfmkkLFrhbopXcU815BCaxTVHiY44UtTpA/zm8EKy4uCyb4HicITf5S8FA/9WiXeLdBXusBA=="
+      },
+      "System.Net.Http": {
+        "type": "Direct",
+        "requested": "[4.3.3, )",
+        "resolved": "4.3.3",
+        "contentHash": "7rCqIbkC/P2+A00NoDH5gnvFhADmX7Dc4INvsOajbU1MVhktE9vZNrjPtF82N6Uo7obK+yzlrPUv/M+snnN/9w=="
+      },
+      "System.Text.RegularExpressions": {
+        "type": "Direct",
+        "requested": "[4.3.0, )",
+        "resolved": "4.3.0",
+        "contentHash": "RpT2DA+L660cBt1FssIE9CAGpLFdFPuheB7pLpKpn6ZXNby7jDERe8Ua/Ne2xGiwLVG2JOqziiaVCGDon5sKFA=="
+      },
+      "Microsoft.AspNet.WebApi.Client": {
+        "type": "Transitive",
+        "resolved": "5.2.2",
+        "contentHash": "YVq+s0WeXrPxJk57CoElbtMYf95j76uJcW6nue3Cs4eIer9sgUp4rasSo0gALX3ls1Zf2jMceOLik9X/sJyrwA==",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.4"
+        }
+      },
+      "Microsoft.AspNet.WebApi.Core": {
+        "type": "Transitive",
+        "resolved": "5.2.2",
+        "contentHash": "P5boFqqGDq1XF7PVz1U4ju85wQLT0Pb5BbuiWy72cOmWXJKCCNqL+av6omi30knp62hpmfw+3rSCm+Nmt5zRgQ==",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.2"
+        }
+      },
+      "Microsoft.IdentityModel.Clients.ActiveDirectory": {
+        "type": "Transitive",
+        "resolved": "2.16.204221202",
+        "contentHash": "BHee/BcnVE/W3ikoHTtoOgmfvQG2hLZtcoNrxLj0pEjjMj1Cvg0pYM2LK4y3RvqCTvVo8Y6lxdhIcbFCATHoww=="
+      },
+      "Microsoft.VisualStudio.Services.Client": {
+        "type": "Transitive",
+        "resolved": "14.83.0",
+        "contentHash": "3vUrK1vqKlKfuWM22I3iauoCAdVWTzwqxrSzVf8rjT1uTpWzoc04nJ/8HrYEw/wUNczAjahS7ACbQkpk4DrEKg==",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.2",
+          "Newtonsoft.Json": "6.0.5"
+        }
+      },
+      "Microsoft.WindowsAzure.ConfigurationManager": {
+        "type": "Transitive",
+        "resolved": "1.7.0",
+        "contentHash": "1VedN38WLCN8VQuMi5a6V+ZwBwvnzt+/0KESBIogzi3gHdiO+fx7uW0KTtwW9kaSST/8q6QZal98g45soSuy1A=="
+      },
+      "Newtonsoft.Json": {
+        "type": "Transitive",
+        "resolved": "6.0.5",
+        "contentHash": "gPrmi+71KZJ3oNJfbpCaFW0xMZQ/eT60fnOgULgoqPrmnuuoEzxxSNDkTrOC9MlnfQPhUnL3yUSkG34MbykMIA=="
+      },
+      "System.IdentityModel.Tokens.Jwt": {
+        "type": "Transitive",
+        "resolved": "4.0.0",
+        "contentHash": "gBq/+SI1aCgPoY397FTLtMRUhaZciIGIadzKf1hcxDixxsQPZAbs/VmcucU24b9umdw9unIkQV9efn3AeHxTHg=="
+      },
+      "WindowsAzure.ServiceBus": {
+        "type": "Transitive",
+        "resolved": "2.5.1",
+        "contentHash": "3mGKFX1aunZhAChCm5WFzWsweRM1Js8EZcIYcWdo3tLNh3rP10I9hfLCfSDoz/z/HTrJgnH4QGOhxDptah9D4Q==",
+        "dependencies": {
+          "Microsoft.WindowsAzure.ConfigurationManager": "(, )"
+        }
+      }
+    }
+  }
+}

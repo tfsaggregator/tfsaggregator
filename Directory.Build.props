@@ -11,6 +11,8 @@
     <Copyright>Copyright (c) TFS Aggregator Team 2015-19</Copyright>
     <!-- use custom configuration attribute -->
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <NuGetLockFilePath>packages.$(TfsVersion).lock.json</NuGetLockFilePath>
   </PropertyGroup>
   <ItemGroup>
     <KnownTfsVersion Include="2013"   />
