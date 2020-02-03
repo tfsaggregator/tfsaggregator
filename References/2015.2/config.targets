@@ -23,7 +23,11 @@
     <ServerAssemblies Condition="'$(TfsInstallationDirectory)'!=''">$(TfsInstallationDirectory)\Application Tier\Web Services\bin</ServerAssemblies>
     <ServerAssemblies Condition="'$(TfsInstallationDirectory)'=='' Or '$(TF_BUILD)'=='True'">$(MSBuildThisFileDirectory)</ServerAssemblies>
   </PropertyGroup>
-  
+
+  <ItemGroup>
+    <PackageReference Include="ManyConsole" Version="1.0.0.4" />
+  </ItemGroup>
+
   <ItemGroup>
     <!-- Server Assemblies -->
     <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Common.dll" />

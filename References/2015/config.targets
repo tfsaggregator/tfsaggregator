@@ -25,6 +25,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ManyConsole" Version="1.0.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Server Assemblies -->
     <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Framework.Server.dll" />
     <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Server.Core.dll" />

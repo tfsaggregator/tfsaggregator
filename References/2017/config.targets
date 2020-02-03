@@ -18,6 +18,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ManyConsole" Version="2.0.1" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <DefineConstants>$(DefineConstants);TFS2017;TFS2015u2;TFS2015u1;TFS2015</DefineConstants>

@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
-    <RestoreLockedMode 
-            Condition="'$(RestoreLockedMode)' == '' 
-                and ('$(TF_BUILD)' != '' 
+    <RestoreLockedMode
+            Condition="'$(RestoreLockedMode)' == ''
+                and ('$(TF_BUILD)' != ''
                 or '$(CONTINUOUS_INTEGRATION)' != '')"
         >
         true
@@ -21,6 +21,7 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <NuGetLockFilePath>packages.$(TfsVersion).lock.json</NuGetLockFilePath>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <KnownTfsVersion Include="2013"   />
