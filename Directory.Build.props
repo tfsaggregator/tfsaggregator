@@ -37,6 +37,7 @@
     <!-- ensure that restore output and intermediate compilation output don't cause conflicts or incremental build issues -->
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <OutputPath>bin\$(Configuration)\</OutputPath>
+    <RestoreOutputPath>$(IntermediateOutputPath)</RestoreOutputPath>
 
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <!-- default items shall also exlude folder above base (int.) output paths -->
