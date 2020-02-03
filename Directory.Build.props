@@ -1,5 +1,12 @@
 <Project>
   <PropertyGroup>
+    <RestoreLockedMode 
+            Condition="'$(RestoreLockedMode)' == '' 
+                and ('$(TF_BUILD)' != '' 
+                or '$(CONTINUOUS_INTEGRATION)' != '')"
+        >
+        true
+    </RestoreLockedMode>
     <DevelopmentTfsVersion>2018</DevelopmentTfsVersion>
     <TfsVersion Condition="'$(TfsVersion)' == ''">$(DevelopmentTfsVersion)</TfsVersion>
     <AssemblyVersion Condition="'$(MajorMinorPatch)' != ''">$(MajorMinorPatch)</AssemblyVersion>
