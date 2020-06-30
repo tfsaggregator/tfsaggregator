@@ -24,7 +24,7 @@
     <PathToSolutionDir>$(MSBuildProjectDirectory)</PathToSolutionDir>
     <PathToSolutionFile>$(PathToSolutionDir)\tfs-aggregator-plugin.sln</PathToSolutionFile>
     <!-- get NuGet URL from https://dist.nuget.org/index.html -->
-    <NuGetDownloadUrl>https://dist.nuget.org/win-x86-commandline/v4.1.0/nuget.exe</NuGetDownloadUrl>
+    <NuGetDownloadUrl>https://dist.nuget.org/win-x86-commandline/v5.6.0/nuget.exe</NuGetDownloadUrl>
     <WixVersion>3.11.0</WixVersion>
     <WixPropsPath>$(PathToSolutionDir)\packages\WiX.$(WixVersion)\build\wix.props</WixPropsPath>
     <CollectDir>$(MSBuildProjectDirectory)\_collect\$(Configuration)</CollectDir>
