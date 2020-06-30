@@ -67,6 +67,12 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2019.1"]]>
         </Condition>
       </Feature>
+      <Feature Id='Client2020Feature' Title='Client for Azure DevOps Server 2020' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="ClientComponents2020"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2020"]]>
+        </Condition>
+      </Feature>
     </Feature>
 
     <Feature Id="ServerFeature" Title="Server plugin" Level='1' AllowAdvertise='no' Display='expand' >
@@ -131,6 +137,13 @@
         <ComponentGroupRef Id="ServerComponents2019.1"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2019.1"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Server2020Feature' Title='Plugin for Azure DevOps Server 2020' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="NeutralServerComponents" />
+        <ComponentGroupRef Id="ServerComponents2020"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2020"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -201,10 +214,22 @@
         Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\17.0"
         Name="BuildNumber" Type="raw" />
     </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2020BUILD">
+      <RegistrySearch
+        Id="TeamFoundationServer18Build" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\18.0"
+        Name="BuildNumber" Type="raw" />
+    </Property>
     <Property Id="TEAMFOUNDATIONSERVER2019">
       <RegistrySearch
         Id="TeamFoundationServer17" Win64="yes"
         Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\17.0\InstalledComponents\ApplicationTier"
+        Name="InstallPath" Type="raw" />
+    </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2020">
+      <RegistrySearch
+        Id="TeamFoundationServer18" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\18.0\InstalledComponents\ApplicationTier"
         Name="InstallPath" Type="raw" />
     </Property>
 
@@ -266,6 +291,10 @@
 
       <![CDATA[TEAMFOUNDATIONSERVER2019 AND (TEAMFOUNDATIONSERVER2019BUILD = "17.153.29014.4" OR TEAMFOUNDATIONSERVER2019BUILD = "17.153.29021.3" OR TEAMFOUNDATIONSERVER2019BUILD = "17.153.29025.3" OR TEAMFOUNDATIONSERVER2019BUILD = "17.153.29115.4" OR TEAMFOUNDATIONSERVER2019BUILD = "17.153.29126.3" OR TEAMFOUNDATIONSERVER2019BUILD = "17.153.29207.5" OR TEAMFOUNDATIONSERVER2019BUILD = "17.153.29522.3")]]>
     </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2020" Before="LaunchConditions" Action="TFSVer2020">
+      <!-- 18.170.30219.2 (Dev18.M170)-->
+      <![CDATA[TEAMFOUNDATIONSERVER2020 AND (TEAMFOUNDATIONSERVER2020BUILD = "18.170.30219.2")]]>
+    </SetProperty>
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
@@ -284,20 +313,23 @@
       </Directory>
     </Directory>
 
+    <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2020]" Action="SetTFSINSTALLFOLDER2020">
+      TEAMFOUNDATIONSERVER2020
+    </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2019]" Action="SetTFSINSTALLFOLDER2019">
-      TEAMFOUNDATIONSERVER2019
+      TEAMFOUNDATIONSERVER2019 AND NOT TEAMFOUNDATIONSERVER2020
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2018]" Action="SetTFSINSTALLFOLDER2018">
-      TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
+      TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019 AND NOT TEAMFOUNDATIONSERVER2020
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2017]" Action="SetTFSINSTALLFOLDER2017">
-      TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
+      TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019 AND NOT TEAMFOUNDATIONSERVER2020
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2015]" Action="SetTFSINSTALLFOLDER2015">
-      TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
+      TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019 AND NOT TEAMFOUNDATIONSERVER2020
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2013]" Action="SetTFSINSTALLFOLDER2013">
-      TEAMFOUNDATIONSERVER2013 AND NOT TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019
+      TEAMFOUNDATIONSERVER2013 AND NOT TEAMFOUNDATIONSERVER2015 AND NOT TEAMFOUNDATIONSERVER2017 AND NOT TEAMFOUNDATIONSERVER2018 AND NOT TEAMFOUNDATIONSERVER2019 AND NOT TEAMFOUNDATIONSERVER2020
     </SetDirectory>
 
   </Fragment>

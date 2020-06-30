@@ -11,12 +11,13 @@
     <AssemblyName>TFSAggregator2.Core</AssemblyName>
     <TargetFramework Condition="'$(TargetFramework)' == ''">net461</TargetFramework>
     <FileAlignment>512</FileAlignment>
-    <Configurations>Debug;Release;Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018;Debug-webhooks;Release-webhooks;Debug-2019;Release-2019;Debug-2019.1;Release-2019.1</Configurations>
+    <Configurations>Debug;Release;Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018;Debug-webhooks;Release-webhooks;Debug-2019;Release-2019;Debug-2019.1;Release-2019.1;Debug-2020;Release-2020</Configurations>
     <WarningLevel>4</WarningLevel>
     <ErrorReport>prompt</ErrorReport>
     <ApplicationIcon>..\TfsAggregator.ico</ApplicationIcon>
     <CodeAnalysisRuleSet>..\..\tfs-aggregator.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
   <!-- WebHooks -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-webhooks|AnyCPU'">
@@ -140,6 +141,13 @@
     <DefineConstants>DEBUG;TRACE;</DefineConstants>
     <DebugType>full</DebugType>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-2020|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <TfsVersion>2020</TfsVersion>
+    <TargetFramework>net472</TargetFramework>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2018|AnyCPU'">
     <TfsVersion>2018</TfsVersion>
     <TargetFramework>net461</TargetFramework>
@@ -156,6 +164,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2019.1|AnyCPU'">
     <TfsVersion>2019.1</TfsVersion>
+    <TargetFramework>net472</TargetFramework>
+    <DefineConstants>TRACE;</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2020|AnyCPU'">
+    <TfsVersion>2020</TfsVersion>
     <TargetFramework>net472</TargetFramework>
     <DefineConstants>TRACE;</DefineConstants>
     <Optimize>true</Optimize>

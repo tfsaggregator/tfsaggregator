@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   MSBuild file to generate the MSI for current $(Configuration)
-  
+
   Iterates over supported TFS versions.
 
   Sample usage:
@@ -45,7 +45,7 @@
   <Import Project="$(WixPropsPath)" Condition="Exists('$(WixPropsPath)')" />
   <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
 
-  <!-- TFS versions supported 
+  <!-- TFS versions supported
   Note: these values are all-over the places, e.g.
     - source code conditional compile
     - WiX sources
@@ -54,38 +54,52 @@
   <ItemGroup>
     <TfsVersion Include="2013" >
       <Alt>2013</Alt>
+      <Platform>Any CPU</Platform>
     </TfsVersion>
     <TfsVersion Include="2015" >
       <Alt>2015</Alt>
+      <Platform>Any CPU</Platform>
       <ExtendedClientVersion>14.83.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2015.1" >
       <Alt>2015u1</Alt>
+      <Platform>Any CPU</Platform>
       <ExtendedClientVersion>14.83.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2015.2" >
       <Alt>2015u2</Alt>
+      <Platform>Any CPU</Platform>
       <ExtendedClientVersion>14.83.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2017" >
       <Alt>2017</Alt>
+      <Platform>Any CPU</Platform>
       <ExtendedClientVersion>15.103.0-preview</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2017.2" >
       <Alt>2017u2</Alt>
+      <Platform>Any CPU</Platform>
       <ExtendedClientVersion>15.112.1</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2018" >
       <Alt>2018</Alt>
+      <Platform>Any CPU</Platform>
       <ExtendedClientVersion>15.122.1-preview</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2019" >
       <Alt>2019</Alt>
+      <Platform>Any CPU</Platform>
       <ExtendedClientVersion>16.143.0-preview</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2019.1" >
       <Alt>2019u1</Alt>
+      <Platform>Any CPU</Platform>
       <ExtendedClientVersion>16.153.0-preview</ExtendedClientVersion>
+    </TfsVersion>
+    <TfsVersion Include="2020" >
+      <Alt>2019u1</Alt>
+      <Platform>Any CPU</Platform>
+      <ExtendedClientVersion>16.170.0-preview</ExtendedClientVersion>
     </TfsVersion>
   </ItemGroup>
 
@@ -108,20 +122,20 @@
 
   <Target Name="BuildSolutionFlavor">
     <Message Importance="high" Text="-------------- Building $(CurrentTfsVersion) --------------" />
-    <Exec Command="&quot;$(MSBuildBinPath)\msbuild.exe&quot; /t:restore /p:TfsVersion=$(CurrentTfsVersion);Configuration=$(CurrentFlavor);TF_BUILD=True;MajorMinorPatch=$(MajorMinorPatch);FullSemVer=$(FullSemVer) /m $(PathToSolutionFile)" />
-    <Exec Command="&quot;$(MSBuildBinPath)\msbuild.exe&quot; /t:build /p:TfsVersion=$(CurrentTfsVersion);Configuration=$(CurrentFlavor);TF_BUILD=True;MajorMinorPatch=$(MajorMinorPatch);FullSemVer=$(FullSemVer) /m $(PathToSolutionFile)" />
+    <Exec Command="&quot;$(MSBuildBinPath)\msbuild.exe&quot; /t:restore /p:TfsVersion=$(CurrentTfsVersion);Configuration=$(CurrentFlavor);Platform=&quot;$(CurrentPlatform)&quot;;TF_BUILD=True;MajorMinorPatch=$(MajorMinorPatch);FullSemVer=$(FullSemVer);RestorePackagesWithLockFile=true;RestoreLockedMode=false /m $(PathToSolutionFile)" />
+    <Exec Command="&quot;$(MSBuildBinPath)\msbuild.exe&quot; /t:build /p:TfsVersion=$(CurrentTfsVersion);Configuration=$(CurrentFlavor);Platform=&quot;$(CurrentPlatform)&quot;;TF_BUILD=True;MajorMinorPatch=$(MajorMinorPatch);FullSemVer=$(FullSemVer) /m $(PathToSolutionFile)" />
   </Target>
 
   <Target Name="BuildSolution" Condition="$(BuildSolution)">
     <!-- re-entrant call pattern -->
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="BuildSolutionFlavor"
-             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity);" />
+             Properties="CurrentTfsVersion=%(TfsVersion.Identity);CurrentPlatform=%(TfsVersion.Platform);CurrentFlavor=$(Configuration)-%(TfsVersion.Identity);" />
   </Target>
 
 
 
   <Target Name="CollectVersionSpecificFiles">
-    
+
     <ItemGroup>
       <cliBin Include="$(MSBuildProjectDirectory)\Aggregator.ConsoleApp\bin\$(CurrentFlavor)\*.exe" Exclude="*.vshost.exe" />
       <!-- Exclude non-redistributable assemblies -->
@@ -167,7 +181,7 @@
       ToolPath="$(WixToolPath)" ContinueOnError="WarnAndContinue" />
 
   </Target>
-  
+
   <Target Name="CollectFilesCore" Condition="$(CollectFiles)">
 
     <Message Importance="high" Text="-------------- Collecting '$(Configuration)' files --------------" />
@@ -209,7 +223,7 @@
       <miscellanea Include="$(MSBuildProjectDirectory)\readme*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(miscellanea)" DestinationFolder="$(NeutralDir)" OverwriteReadOnlyFiles="true" SkipUnchangedFiles="true" />
-    
+
     <HeatDirectory
       NoLogo="True"
       AutogenerateGuids="False" GenerateGuidsNow="True"
@@ -226,14 +240,14 @@
   <Target Name="CollectFiles" DependsOnTargets="GetWiX" Condition="$(CollectFiles)">
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="CollectFilesCore"
              Properties="WixPropsPath=$(WixPropsPath);Configuration=$(Configuration)" />
-  </Target>  
+  </Target>
 
 
 
   <Target Name="GetWiX" Condition="!Exists('')" >
     <Exec Command="nuget install WiX -version $(WixVersion) -SolutionDirectory $(PathToSolutionDir)" />
   </Target>
-  
+
   <Target Name="GenerateWiXProjectPropertiesFileContent1">
     <ItemGroup>
       <fileProp1 Include="   ClientBinDir$(CurrentTfsVersion)=%24(CollectDir)\$(CurrentTfsVersion)\cliBin%3B" />
@@ -255,7 +269,7 @@
                       Overwrite="false"
                       Encoding="Unicode"/>
   </Target>
-  
+
   <Target Name="GenerateWiXProjectPropertiesFile">
     <ItemGroup>
       <WiXProjectPropertiesHeader Include='&lt;Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">' />
@@ -361,5 +375,5 @@
       </Code>
     </Task>
   </UsingTask>
-  
+
 </Project>
