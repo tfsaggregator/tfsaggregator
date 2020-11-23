@@ -9,8 +9,11 @@ The complete documentation is available on the [project's Documentation Site](ht
 
 # Changelog
 
+## What's new in v2.6
+* Adds support for Azure Devops Server 2020 beta, RC and RTW. 
+
 ## What's new in v2.5
-* Addr support for Azure DevOps Server 2019.0, 2019.0.1, 2019.1RC1, 2019.1RC1
+* Adds support for Azure DevOps Server 2019.0, 2019.0.1, 2019.1RC1, 2019.1RC1, 2019.1
 * Adds support for TFS 2018.2 and 2018.3
 
 ## What's new in v2.4
