@@ -36,27 +36,27 @@
   <ItemGroup>
     <!-- Server Assemblies -->
     <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Framework.Server.dll">
-      <Private>false</Private>
+      <Private>true</Private>
     </Reference>
     <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Server.Types.dll">
-      <Private>false</Private>
+      <Private>true</Private>
     </Reference>
     <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Server.Core.dll">
       <Private>false</Private>
     </Reference>
-    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.dll" >
+    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.dll">
       <Private>false</Private>
     </Reference>
-    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer.dll" >
+    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.DataAccessLayer.dll">
       <Private>false</Private>
     </Reference>
-    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll" >
+    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.WorkItemTracking.Server.DataServices.dll">
       <Private>false</Private>
     </Reference>
     <Reference Include="$(ServerAssemblies)\Microsoft.Azure.Boards.CssNodes.dll">
       <Private>false</Private>
     </Reference>
-    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Core.WebApi.dll" >
+    <Reference Include="$(ServerAssemblies)\Microsoft.TeamFoundation.Core.WebApi.dll">
       <Private>false</Private>
     </Reference>
     <Reference Include="$(ServerAssemblies)\System.Collections.Immutable.dll">

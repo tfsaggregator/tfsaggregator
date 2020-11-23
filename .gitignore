@@ -157,3 +157,4 @@ nuget.exe
 **/launchSettings.json
 *.binlog
 /msbuild.ProjectImports.zip
+/Aggregator.ConsoleApp/RuleSet1.ruleset

@@ -192,4 +192,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Aggregator.Core\Aggregator.Core\Aggregator.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Update="C:\Program Files\Azure DevOps Server 2020\\Application Tier\Web Services\bin\Microsoft.TeamFoundation.Server.Types.dll">
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
 </Project>
