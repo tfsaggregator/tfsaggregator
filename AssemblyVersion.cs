@@ -29,7 +29,7 @@
 #endif
 [assembly: AssemblyCompany("TFS Aggregator Team")]
 [assembly: AssemblyProduct("TFS Aggregator")]
-[assembly: AssemblyCopyright("Copyright (c) TFS Aggregator Team 2015-16")]
+[assembly: AssemblyCopyright("Copyright (c) TFS Aggregator Team 2015-2020")]
 [assembly: AssemblyTrademark("")]
 
 // Version information for an assembly consists of the following four values:

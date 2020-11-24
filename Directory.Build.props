@@ -7,7 +7,7 @@
         >
         true
     </RestoreLockedMode>
-    <DevelopmentTfsVersion>2018</DevelopmentTfsVersion>
+    <DevelopmentTfsVersion>2020</DevelopmentTfsVersion>
     <TfsVersion Condition="'$(TfsVersion)' == ''">$(DevelopmentTfsVersion)</TfsVersion>
     <AssemblyVersion Condition="'$(MajorMinorPatch)' != ''">$(MajorMinorPatch)</AssemblyVersion>
     <AssemblyFileVersion Condition="'$(MajorMinorPatch)' != ''">$(MajorMinorPatch)</AssemblyFileVersion>
@@ -15,7 +15,7 @@
     <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">0.0.0.1</AssemblyFileVersion>
     <Company>TFS Aggregator Team</Company>
     <Product>TFS Aggregator</Product>
-    <Copyright>Copyright (c) TFS Aggregator Team 2015-19</Copyright>
+    <Copyright>Copyright (c) TFS Aggregator Team 2015-2020</Copyright>
     <!-- use custom configuration attribute -->
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
@@ -32,7 +32,8 @@
     <KnownTfsVersion Include="2017.2" />
     <KnownTfsVersion Include="2018"   />
     <KnownTfsVersion Include="2019"   />
-    <KnownTfsVersion Include="2019.1"   />
+    <KnownTfsVersion Include="2019.1" />
+    <KnownTfsVersion Include="2020"   />
 
     <AssemblyAttribute Include="System.Reflection.AssemblyConfigurationAttribute">
       <_Parameter1>$(Configuration) [TFS $(TfsVersion)]</_Parameter1>
