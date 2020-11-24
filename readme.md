@@ -1,5 +1,3 @@
-
-![Master Build status](https://tfsaggregator.visualstudio.com/_apis/public/build/definitions/2e747373-c780-4b2c-823d-98a3fd2b4e99/6/badge)
 ![Develop Build status](https://tfsaggregator.visualstudio.com/_apis/public/build/definitions/2e747373-c780-4b2c-823d-98a3fd2b4e99/1/badge)
 
 This server side plugin, for TFS 2013 update 2 up to TFS 2018.3 and Azure DevOps Server 2019, enables running custom script when Work Items change,
