@@ -1,0 +1,64 @@
+{
+  "manifestVersion": 2,
+  "id": "tfs-aggregator-server-plugin",
+  "version": "2.6.0.1",
+  "name": "TFS Aggregator (Server Plugin)",
+  "description": "TFS Aggregator is a extension for TFS and Azure DevOps Server that enables running custom script when Work Items change, allowing dynamic calculation of field values in TFS and more.",
+  "publisher": "tfsaggregatorteam",
+  "targets": [
+    {
+      "id": "Microsoft.TeamFoundation.Server.Integration",
+      "version": "[12.2,)"
+    }
+  ],
+  "icons": {
+    "default": "images/logo.png"
+  },
+  "contributions": [
+  ],
+  "galleryFlags": [
+    "Public"
+  ],
+  "scopes": [
+  ],
+  "categories": [
+    "Azure Boards"
+  ],
+  "CustomerQnASupport": {
+    "enableqna": "false"
+  },
+  "branding": {
+    "color": "rgb(132, 81, 161)",
+    "theme": "dark"
+  },
+  "content": {
+    "details": {
+      "path": "readme-server-plugin.md"
+    }
+  },
+  "links": {
+    "getstarted": {
+      "uri": "https://tfsaggregator.github.io/"
+    },
+    "support": {
+      "uri": "https://github.com/tfsaggregator/tfsaggregator/issues"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "uri": "https://github.com/tfsaggregator/tfsaggregator/"
+  },
+  "badges": [
+    {
+      "href": "https://dev.azure.com/tfsaggregator/TfsAggregator2/_build?definitionId=1",
+      "uri": "https://dev.azure.com/TfsAggregator/TfsAggregator2/_apis/build/status/Plugin%20full%20develop?branchName=develop",
+      "description": "Build status"
+    }
+  ],
+  "files": [
+    {
+      "path": "images/logo.png",
+      "addressable": true
+    }
+  ]
+}

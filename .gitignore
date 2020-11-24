@@ -158,3 +158,5 @@ nuget.exe
 *.binlog
 /msbuild.ProjectImports.zip
 /Aggregator.ConsoleApp/RuleSet1.ruleset
+
+extension/*.vsix
