@@ -1,17 +1,17 @@
 ![Develop Build status](https://tfsaggregator.visualstudio.com/_apis/public/build/definitions/2e747373-c780-4b2c-823d-98a3fd2b4e99/1/badge)
 
-This server side plugin, for TFS 2013 update 2 up to TFS 2018.3 and Azure DevOps Server 2019 and 2020, enables running custom script when Work Items change,
-allowing dynamic calculation of field values in TFS and more. (For example: Dev work + Test Work = Total Work).
-
-# Documentation
-The complete documentation is available on the [project's Documentation Site](https://tfsaggregator.github.io/).
-
 > # Deprecation notice
 > [Azure DevOps Server is deprecating the old work item APIs](https://docs.microsoft.com/en-us/azure/devops/integrate/concepts/wit-client-om-deprecation?WT.mc_id=DOP-MVP-5001511&view=azure-devops). They are likely not going to be removed any time soon, but we can't keep supporting this plugin version forver. 
 >
 > [Our recomendation is to migrate to aggregator-cli which can now be hosted on Azure Functions or in Docker](https://github.com/tfsaggregator/aggregator-cli).
 > 
 > We won't do any major investment in this Plugin version and our bandwidth for support is limited.
+
+This server side plugin, for TFS 2013 update 2 up to TFS 2018.3 and Azure DevOps Server 2019 and 2020, enables running custom script when Work Items change,
+allowing dynamic calculation of field values in TFS and more. (For example: Dev work + Test Work = Total Work).
+
+# Documentation
+The complete documentation is available on the [project's Documentation Site](https://tfsaggregator.github.io/).
 
 # Changelog
 
