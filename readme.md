@@ -7,6 +7,13 @@ allowing dynamic calculation of field values in TFS and more. (For example: Dev 
 
 The complete documentation is available on the [project's Documentation Site](https://tfsaggregator.github.io/).
 
+> # Deprecation notice
+> [Azure DevOps Server is deprecating the old work item APIs](https://docs.microsoft.com/en-us/azure/devops/integrate/concepts/wit-client-om-deprecation?WT.mc_id=DOP-MVP-5001511&view=azure-devops). They are likely not going to be removed any time soon, but we can't keep supporting this plugin version forver. 
+>
+> [Our recomendation is to migrate to aggregator-cli which can now be hosted on Azure Functions or in Docker](https://github.com/tfsaggregator/aggregator-cli).
+> 
+> We won't do any major investment in this Plugin version and our bandwidth for support is limited.
+
 # Changelog
 
 ## What's new in v2.6
