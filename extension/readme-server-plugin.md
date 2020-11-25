@@ -2,7 +2,7 @@
 
 > # Deprecation notice
 >
-> [Azure DevOps Server is deprecating the old work item APIs](https://docs.microsoft.com/en-us/azure/devops/integrate/concepts/wit-client-om-deprecation?WT.mc_id=DOP-MVP-5001511&view=azure-devops). They are likely not going to be removed any time soon, but we can't keep supporting this plugin version forver. 
+> [Azure DevOps Server is deprecating the old work item APIs](https://docs.microsoft.com/en-us/azure/devops/integrate/concepts/wit-client-om-deprecation?WT.mc_id=DOP-MVP-5001511&view=azure-devops). They are likely not going to be removed any time soon, but we can't keep supporting this plugin version forever. 
 >
 > [Our recomendation is to migrate to aggregator-cli which can now be hosted on Azure Functions or in Docker](https://github.com/tfsaggregator/aggregator-cli).
 >

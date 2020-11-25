@@ -1,0 +1,1 @@
+tfx extension publish --manifests vss-extension-server-plugin.json

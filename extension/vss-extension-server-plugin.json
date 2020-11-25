@@ -1,7 +1,7 @@
 {
   "manifestVersion": 2,
   "id": "tfs-aggregator-server-plugin",
-  "version": "2.6.0.1",
+  "version": "2.6.0.2",
   "name": "TFS Aggregator (Server Plugin)",
   "description": "TFS Aggregator is a extension for TFS and Azure DevOps Server that enables running custom script when Work Items change, allowing dynamic calculation of field values in TFS and more.",
   "publisher": "tfsaggregatorteam",
