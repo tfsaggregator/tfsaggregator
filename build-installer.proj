@@ -97,9 +97,14 @@
       <ExtendedClientVersion>16.153.0-preview</ExtendedClientVersion>
     </TfsVersion>
     <TfsVersion Include="2020" >
-      <Alt>2019u1</Alt>
+      <Alt>2010</Alt>
       <Platform>Any CPU</Platform>
       <ExtendedClientVersion>16.170.0-preview</ExtendedClientVersion>
+    </TfsVersion>
+    <TfsVersion Include="2022" >
+      <Alt>2022</Alt>
+      <Platform>Any CPU</Platform>
+      <ExtendedClientVersion>16.205.0-preview</ExtendedClientVersion>
     </TfsVersion>
   </ItemGroup>
 
