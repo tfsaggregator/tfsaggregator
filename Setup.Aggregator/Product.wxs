@@ -233,6 +233,12 @@
         Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\18.0"
         Name="BuildNumber" Type="raw" />
     </Property>
+    <Property Id="TEAMFOUNDATIONSERVER2022BUILD">
+      <RegistrySearch
+        Id="TeamFoundationServer19Build" Win64="yes"
+        Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\19.0"
+        Name="BuildNumber" Type="raw" />
+    </Property>
     <Property Id="TEAMFOUNDATIONSERVER2019">
       <RegistrySearch
         Id="TeamFoundationServer17" Win64="yes"
