@@ -247,7 +247,7 @@
     </Property>
     <Property Id="TEAMFOUNDATIONSERVER2022">
       <RegistrySearch
-        Id="TeamFoundationServer18" Win64="yes"
+        Id="TeamFoundationServer19" Win64="yes"
         Root="HKLM" Key="SOFTWARE\Microsoft\TeamFoundationServer\19.0\InstalledComponents\ApplicationTier"
         Name="InstallPath" Type="raw" />
     </Property>
@@ -346,7 +346,7 @@
       </Directory>
     </Directory>
 
-    <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2020]" Action="SetTFSINSTALLFOLDER2020">
+    <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2022]" Action="SetTFSINSTALLFOLDER2022">
       TEAMFOUNDATIONSERVER2022
     </SetDirectory>
     <SetDirectory Id="TFSINSTALLFOLDER" Value="[TEAMFOUNDATIONSERVER2020]" Action="SetTFSINSTALLFOLDER2020">
