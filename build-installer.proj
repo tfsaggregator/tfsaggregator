@@ -11,6 +11,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
+    <RunWixToolsOutOfProc Condition=" '$(PROCESSOR_ARCHITECTURE)'!='x86' ">true</RunWixToolsOutOfProc>
     <Platform Condition=" '$(Platform)' == '' ">ia64</Platform>
     <SetupProjectDir>$(MSBuildProjectDirectory)\Setup.Aggregator</SetupProjectDir>
     <OutputPath>$(SetupProjectDir)\bin\$(Configuration)\</OutputPath>
@@ -171,7 +172,7 @@
       PreprocessorVariable="var.ClientBinDir$(CurrentTfsVersion)"
       Transforms="$(SetupProjectDir)\T$(CurrentTfsVersion).xslt"
       SuppressCom="True" SuppressRootDirectory="True" SuppressRegistry="True"
-      ToolPath="$(WixToolPath)" ContinueOnError="WarnAndContinue" />
+      ToolPath="$(WixToolPath)" ContinueOnError="WarnAndContinue" RunAsSeparateProcess="$(RunWixToolsOutOfProc)"/>
 
     <HeatDirectory
       NoLogo="True"
@@ -183,7 +184,7 @@
       PreprocessorVariable="var.ServerBinDir$(CurrentTfsVersion)"
       Transforms="$(SetupProjectDir)\T$(CurrentTfsVersion).xslt"
       SuppressCom="True" SuppressRootDirectory="True" SuppressRegistry="True"
-      ToolPath="$(WixToolPath)" ContinueOnError="WarnAndContinue" />
+      ToolPath="$(WixToolPath)" ContinueOnError="WarnAndContinue" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
 
   </Target>
 
@@ -238,7 +239,7 @@
       DirectoryRefId="INSTALLFOLDER"
       PreprocessorVariable="var.NeutralDir$(CurrentTfsVersion)"
       SuppressCom="True" SuppressRootDirectory="True" SuppressRegistry="True"
-      ToolPath="$(WixToolPath)" ContinueOnError="WarnAndContinue" />
+      ToolPath="$(WixToolPath)" ContinueOnError="WarnAndContinue" RunAsSeparateProcess="$(RunWixToolsOutOfProc)" />
 
   </Target>
 

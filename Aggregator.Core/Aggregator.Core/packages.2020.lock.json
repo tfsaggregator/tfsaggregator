@@ -1,7 +1,7 @@
 {
   "version": 1,
   "dependencies": {
-    ".NETFramework,Version=v4.8": {
+    ".NETFramework,Version=v4.7.2": {
       "Desktop.Analyzers": {
         "type": "Direct",
         "requested": "[1.1.0, )",
@@ -37,57 +37,57 @@
       },
       "Microsoft.TeamFoundationServer.Client": {
         "type": "Direct",
-        "requested": "[16.205.0-preview, )",
-        "resolved": "16.205.0-preview",
-        "contentHash": "O/qZXv7No+uBCfqWn6ciajIT1ujX660PwoaEwbd7+Kr61TMyAGUtWzIJN3wjrqFKJI6jo/v4LVpipq09X8MXZQ==",
+        "requested": "[16.170.0-preview, )",
+        "resolved": "16.170.0-preview",
+        "contentHash": "ikg2OoMESxJuWPbyetSO2l1OW5e2EPKRhK74ViYxaryyqOBFKfnBjlnGAGDkoOQnuGnON/0ZE1+r19zJWxg13w==",
         "dependencies": {
           "Microsoft.AspNet.WebApi.Client": "5.2.7",
           "Microsoft.AspNet.WebApi.Core": "5.2.7",
           "Microsoft.AspNet.WebApi.WebHost": "5.2.7",
-          "Microsoft.TeamFoundation.DistributedTask.Common.Contracts": "[16.205.0-preview]",
-          "Microsoft.VisualStudio.Services.Client": "[16.205.0-preview]",
+          "Microsoft.TeamFoundation.DistributedTask.Common.Contracts": "[16.170.0-preview]",
+          "Microsoft.VisualStudio.Services.Client": "[16.170.0-preview]",
           "Newtonsoft.Json": "12.0.3"
         }
       },
       "Microsoft.TeamFoundationServer.ExtendedClient": {
         "type": "Direct",
-        "requested": "[16.205.0-preview, )",
-        "resolved": "16.205.0-preview",
-        "contentHash": "K//gxTtiPBJJvBHoYsKEatDQ/hTaq1Avn/N0Gozi98sPgzogLRBG2+20wfpnlD2y1id3QoEBVpBAdyH8W85zPA==",
+        "requested": "[16.170.0-preview, )",
+        "resolved": "16.170.0-preview",
+        "contentHash": "V7qPZGYo2wN+haMLT2E4vyrWO46DtW8RSnvbAeu2081HeO2d2U+iWIOJupciT51SRUfSJ5Ee8sTKgSv6X8P1RA==",
         "dependencies": {
           "Microsoft.AspNet.WebApi.Client": "5.2.7",
           "Microsoft.AspNet.WebApi.Core": "5.2.7",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "5.2.6",
-          "Microsoft.TeamFoundationServer.Client": "[16.205.0-preview]",
-          "Microsoft.VisualStudio.Services.Client": "[16.205.0-preview]",
-          "Microsoft.VisualStudio.Services.InteractiveClient": "[16.205.0-preview]",
+          "Microsoft.TeamFoundationServer.Client": "[16.170.0-preview]",
+          "Microsoft.VisualStudio.Services.Client": "[16.170.0-preview]",
+          "Microsoft.VisualStudio.Services.InteractiveClient": "[16.170.0-preview]",
           "Newtonsoft.Json": "12.0.3",
           "System.IdentityModel.Tokens.Jwt": "5.6.0"
         }
       },
       "Microsoft.VisualStudio.Services.Client": {
         "type": "Direct",
-        "requested": "[16.205.0-preview, )",
-        "resolved": "16.205.0-preview",
-        "contentHash": "s1K0Db2brAlv8ZuskJLLrtvU+t34r1OYHY44fgA/DfTZnwupsDEOuugSGFxn3Bq3YPu7gI+k31qgg1xgKb5q3A==",
+        "requested": "[16.170.0-preview, )",
+        "resolved": "16.170.0-preview",
+        "contentHash": "26TkOWXYyz2NS9UXlK45bEXUS/NmhqoaSz+gedVxXwh1/2qszF1jLEJWpjG9yiRJ0n+nVigI3JEO5iQpV5xyXA==",
         "dependencies": {
           "Microsoft.AspNet.WebApi.Client": "5.2.7",
           "Microsoft.IdentityModel.Tokens": "5.6.0",
           "Newtonsoft.Json": "12.0.3",
-          "System.IdentityModel.Tokens.Jwt": "5.6.0",
-          "System.ValueTuple": "4.5.0"
+          "System.IdentityModel.Tokens.Jwt": "5.6.0"
         }
       },
       "Microsoft.VisualStudio.Services.InteractiveClient": {
         "type": "Direct",
-        "requested": "[16.205.0-preview, )",
-        "resolved": "16.205.0-preview",
-        "contentHash": "cbtXCJfRwtognGmF8IexnLuysXo6URNctO7vFI8OJ71tJcLbb7P5v+U1utJPzdkNUNjNGhMrBIQcy3GrUEFc+w==",
+        "requested": "[16.170.0-preview, )",
+        "resolved": "16.170.0-preview",
+        "contentHash": "4STtJWXZFCXwMl98aDs3SqSNe/zhkTwPcLysKrljyWpIgpKMTyCgzgyzclkfgdjBp5l5Sca8v+bXqEEpLuAe/w==",
         "dependencies": {
+          "Ben.Demystifier": "0.1.2",
           "Microsoft.IdentityModel.Clients.ActiveDirectory": "5.2.6",
           "Microsoft.IdentityModel.Logging": "5.6.0",
           "Microsoft.IdentityModel.Tokens": "5.6.0",
-          "Microsoft.VisualStudio.Services.Client": "[16.205.0-preview]",
+          "Microsoft.VisualStudio.Services.Client": "[16.170.0-preview]",
           "Newtonsoft.Json": "12.0.3",
           "System.IdentityModel.Tokens.Jwt": "5.6.0"
         }
@@ -130,6 +130,14 @@
         "requested": "[4.3.0, )",
         "resolved": "4.3.0",
         "contentHash": "RpT2DA+L660cBt1FssIE9CAGpLFdFPuheB7pLpKpn6ZXNby7jDERe8Ua/Ne2xGiwLVG2JOqziiaVCGDon5sKFA=="
+      },
+      "Ben.Demystifier": {
+        "type": "Transitive",
+        "resolved": "0.1.2",
+        "contentHash": "72yB6sCgTKX6Wv3pZnbkANJrC4JzxPnss4LuaUpIeRiiIrfWKJw6/DNaFUYAckx6EluP3YydHreIvJT9tnljJA==",
+        "dependencies": {
+          "System.Reflection.Metadata": "1.5.0"
+        }
       },
       "Microsoft.AspNet.WebApi.Client": {
         "type": "Transitive",
@@ -208,10 +216,10 @@
       },
       "Microsoft.TeamFoundation.DistributedTask.Common.Contracts": {
         "type": "Transitive",
-        "resolved": "16.205.0-preview",
-        "contentHash": "/I2kwlrHNUIb698FP8dUak5Md9ZEEDS9bVobHfCBXtjZX0Be0UaqCnMEew+4ZMQySAv68SxiEE6HXnMik3ZAcQ==",
+        "resolved": "16.170.0-preview",
+        "contentHash": "fESViBWKpT2Pr7XVHFTVXJXv/zWDpH7x9AQ9lmDxOAyWlIN2VdJEKzupH78C9XTJBJuDpCcYLg8ze//LFZACzw==",
         "dependencies": {
-          "Microsoft.VisualStudio.Services.Client": "[16.205.0-preview]"
+          "Microsoft.VisualStudio.Services.Client": "[16.170.0-preview]"
         }
       },
       "Mono.Options": {
@@ -223,6 +231,11 @@
         "type": "Transitive",
         "resolved": "12.0.3",
         "contentHash": "6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg=="
+      },
+      "System.Collections.Immutable": {
+        "type": "Transitive",
+        "resolved": "1.4.0",
+        "contentHash": "71hw5RUJRu5+q/geUY69gpXD8Upd12cH+F3MwpXV2zle7Bqqkrmc1JblOTuvUcgmdnUtQvBlV5e1d6RH+H2lvA=="
       },
       "System.IdentityModel.Tokens.Jwt": {
         "type": "Transitive",
@@ -238,6 +251,14 @@
         "type": "Transitive",
         "resolved": "4.3.0",
         "contentHash": "3qjaHvxQPDpSOYICjUoTsmoq5u6QJAFRUITgeT/4gqkF1bajbSmb1kwSxEA8AHlofqgcKJcM8udgieRNhaJ5Cg=="
+      },
+      "System.Reflection.Metadata": {
+        "type": "Transitive",
+        "resolved": "1.5.0",
+        "contentHash": "423hF/x1/1/aBT6hjgrp8RH2zdKOd1iTujlHisSesTW/cgv1ixUitfk23ZknVzItMm6jnwp9CBwI2P3r9jpitw==",
+        "dependencies": {
+          "System.Collections.Immutable": "1.4.0"
+        }
       },
       "System.Runtime": {
         "type": "Transitive",
@@ -273,11 +294,6 @@
           "System.Security.Cryptography.Algorithms": "4.3.0",
           "System.Security.Cryptography.Encoding": "4.3.0"
         }
-      },
-      "System.ValueTuple": {
-        "type": "Transitive",
-        "resolved": "4.5.0",
-        "contentHash": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ=="
       }
     }
   }

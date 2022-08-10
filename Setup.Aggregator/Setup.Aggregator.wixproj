@@ -4,6 +4,7 @@
   <Import Project="$(WixPropsPath)" Condition=" '$(WixPropsPath)' != '' " />
 
   <PropertyGroup>
+    <RunWixToolsOutOfProc Condition=" '$(PROCESSOR_ARCHITECTURE)'!='x86' ">true</RunWixToolsOutOfProc>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">ia64</Platform>
     <ProductVersion>3.10</ProductVersion>
@@ -24,7 +25,7 @@
   </PropertyGroup>
 
   <Import Project="_clisrv.g.properties"/>
-  
+
   <PropertyGroup>
     <DefineSolutionProperties>false</DefineSolutionProperties>
     <SuppressIces>ICE30</SuppressIces>
@@ -59,7 +60,7 @@
     <Content Include="AggregatorDialog.Bmp" />
     <Content Include="LICENSE-2.0.rtf" />
   </ItemGroup>
-  
+
   <Import Project="$(WixTargetsPath)" />
 
 </Project>
