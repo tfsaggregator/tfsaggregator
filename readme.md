@@ -7,7 +7,7 @@
 > 
 > We won't do any major investment in this Plugin version and our bandwidth for support is limited.
 
-This server side plugin, for TFS 2013 update 2 up to TFS 2018.3 and Azure DevOps Server 2019 and 2020, enables running custom script when Work Items change,
+This server side plugin, for TFS 2013 update 2 up to TFS 2018.3 and Azure DevOps Server 2019, 2020 and 2022, enables running custom script when Work Items change,
 allowing dynamic calculation of field values in TFS and more. (For example: Dev work + Test Work = Total Work).
 
 # Documentation
@@ -16,7 +16,8 @@ The complete documentation is available on the [project's Documentation Site](ht
 # Changelog
 
 ## What's new in v2.6
-* Adds support for Azure Devops Server 2020 beta, RC and RTW. 
+* Adds support for Azure DevOps Server 2020 beta, RC and RTW. 
+* Adds support for Azure DevOps Server 2022 RC1
 
 ## What's new in v2.5
 * Adds support for Azure DevOps Server 2019.0, 2019.0.1, 2019.1RC1, 2019.1RC1, 2019.1

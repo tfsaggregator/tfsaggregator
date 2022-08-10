@@ -35,6 +35,15 @@
           "Microsoft.NetFramework.Analyzers": "[3.0.0]"
         }
       },
+      "Microsoft.NETFramework.ReferenceAssemblies": {
+        "type": "Direct",
+        "requested": "[1.0.2, )",
+        "resolved": "1.0.2",
+        "contentHash": "5/cSEVld+px/CuRrbohO/djfg6++eR6zGpy88MgqloXvkj//WXWpFZyu/OpkXPN0u5m+dN/EVwLNYFUxD4h2+A==",
+        "dependencies": {
+          "Microsoft.NETFramework.ReferenceAssemblies.net45": "1.0.2"
+        }
+      },
       "NDesk.Options": {
         "type": "Direct",
         "requested": "[0.2.1, )",
@@ -81,6 +90,11 @@
         "type": "Transitive",
         "resolved": "3.0.0",
         "contentHash": "Q0sB3JYld9JMa9/HKtioIxhqmOohEku1FkfSC/uf0usGcCIhm6GYWU565klP64jC2kzmjFIu/6fkHEIYRqZCQQ=="
+      },
+      "Microsoft.NETFramework.ReferenceAssemblies.net45": {
+        "type": "Transitive",
+        "resolved": "1.0.2",
+        "contentHash": "Nm14pRmqB+4u2JEMdtngnbDcJidTmswMxOJ992TpTwiwcUTERxLlHwwSh0HiUoRjS0TO0sozsiB0h6FHjCUdEA=="
       },
       "Mono.Options": {
         "type": "Transitive",
