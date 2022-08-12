@@ -8,13 +8,16 @@
 >
 > We won't do any major investment in this Plugin version and our bandwidth for support is limited.
 
-The [**Server Plugin**](https://github.com/tfsaggregator/tfsaggregator/releases), for TFS 2013 Update 2 up to Azure DevOps Server 2020, runs in-process of your on-premise Application Tier and is the most performing option. The Application Tier takes care of insulating from crashes in the plugin.
+This [**server side plugin**](https://github.com/tfsaggregator/tfsaggregator/releases), for TFS 2013 update 2 up to TFS 2018.3 and Azure DevOps Server 2019, 2020 and 2022, enables running custom script when Work Items change, allowing dynamic calculation of field values in TFS and more. (For example: Dev work + Test Work = Total Work).
 
-Go to the project's site <https://tfsaggregator.github.io/> for more information and downloads.
+# Documentation
+The complete documentation is available on the [project's Documentation Site](https://tfsaggregator.github.io/).
+
+# Changelog
 
 ## What's new in v2.6
-
-* Adds support for Azure Devops Server 2020 beta, RC and RTW.
+* Adds support for Azure DevOps Server 2020 beta, RC and RTW, 2020.1, 2020.1.1, 2020.0.1. 
+* Adds support for Azure DevOps Server 2022 RC1
 
 ## What's new in v2.5
 
