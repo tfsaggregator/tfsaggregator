@@ -205,7 +205,7 @@ namespace Aggregator.Core.Configuration
                             case "collectionScope":
                                 {
                                     var collections = new List<string>();
-                                    collections.AddRange((element.Attribute("collections") ?? nullAttribute).Value.Split(ListSeparators));
+                                    collections.AddRange((element.Attribute("collections") ?? nullAttribute).Value.Split(ListSeparators).Select(c => c.Trim()));
                                     scope.Add(new CollectionScope() { CollectionNames = collections });
                                     break;
                                 }
@@ -233,7 +233,7 @@ namespace Aggregator.Core.Configuration
                             case "projectScope":
                                 {
                                     var projects = new List<string>();
-                                    projects.AddRange((element.Attribute("projects") ?? nullAttribute).Value.Split(ListSeparators));
+                                    projects.AddRange((element.Attribute("projects") ?? nullAttribute).Value.Split(ListSeparators).Select(p => p.Trim()));
                                     scope.Add(new ProjectScope() { ProjectNames = projects });
                                     break;
                                 }
@@ -310,17 +310,17 @@ namespace Aggregator.Core.Configuration
 
                     if (ruleElem.Attribute("appliesTo") != null)
                     {
-                        ruleScopes.Add(new WorkItemTypeScope() { ApplicableTypes = ruleElem.Attribute("appliesTo").Value.Split(ListSeparators) });
+                        ruleScopes.Add(new WorkItemTypeScope() { ApplicableTypes = ruleElem.Attribute("appliesTo").Value.Split(ListSeparators).Select(r => r.Trim()) });
                     }
 
                     if (ruleElem.Attribute("hasFields") != null)
                     {
-                        ruleScopes.Add(new HasFieldsScope() { FieldNames = ruleElem.Attribute("hasFields").Value.Split(ListSeparators) });
+                        ruleScopes.Add(new HasFieldsScope() { FieldNames = ruleElem.Attribute("hasFields").Value.Split(ListSeparators).Select(r => r.Trim()) });
                     }
 
                     if (ruleElem.Attribute("changes") != null)
                     {
-                        ruleScopes.Add(new ChangeTypeScope() { ApplicableChanges = ruleElem.Attribute("changes").Value.Split(ListSeparators) });
+                        ruleScopes.Add(new ChangeTypeScope() { ApplicableChanges = ruleElem.Attribute("changes").Value.Split(ListSeparators).Select(r => r.Trim()) });
                     }
 
                     rule.Scope = ruleScopes.ToArray();
