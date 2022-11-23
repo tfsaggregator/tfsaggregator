@@ -12,7 +12,7 @@ namespace Aggregator.Core.Extensions
         /// <returns></returns>
         public static bool SameAs(this string lhs, string rhs)
         {
-            return lhs == "*" || rhs == "*" || string.Equals(lhs, rhs, StringComparison.OrdinalIgnoreCase);
+            return lhs.Trim() == "*" || rhs.Trim() == "*" || string.Equals(lhs.Trim(), rhs.Trim(), StringComparison.OrdinalIgnoreCase);
         }
 
         public static string Truncate(this string value, int maxLength)
