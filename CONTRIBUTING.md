@@ -21,11 +21,28 @@ Label usage:
 
 ## Code contribution
 
-Review the https://github.com/tfsaggregator/tfsaggregator/wiki/Developer-Intro on how to compile and test
+To compile and test:
+
+- Install the version of Team Foundation Server or Azure DevOps Server you want to test with. It is not needed to configure the server to compile a build or run the unit tests.
+- Open the solution in Visual Studio 2022.
+- Select the project configuration that matches your version of the server.
+- Compile and test the project from inside Visual Studio.
+
+To test in a live server:
+
+- Configure Team Foundation Server or Azure DevOps Server on your machine.
+- Copy the dlls into the server's installation folders
+- Attach the debugger to the TFS Job Agent service.
+- Debug the solution.
+
+To test from the cli
+
+- Use the Console app generated to test a policy file without installing it into a server.
+
 Submit a Pull Request with the changes.
 
 
-##Documentation
+## Documentation
 
 Even non coders can help here. It is a public wiki that anyone can edit.
 
