@@ -12,7 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <CodeAnalysisRuleSet>..\tfs-aggregator.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <Configurations>Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018;Debug-2019;Release-2019;Debug-2019.1;Release-2019.1;Debug-2020;Release-2020;Debug-2022;Release-2022</Configurations>
+    <Configurations>Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018;Debug-2019;Release-2019;Debug-2019.1;Release-2019.1;Debug-2020;Release-2020;Debug-2022;Release-2022;Debug-2022.1;Release-2022.1</Configurations>
     <Prefer32Bit>true</Prefer32Bit>
     <ErrorReport>prompt</ErrorReport>
     <Platforms>AnyCPU</Platforms>
@@ -133,6 +133,12 @@
     <TargetFramework>net480</TargetFramework>
     <DebugType>full</DebugType>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-2022.1|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <TfsVersion>2022.1</TfsVersion>
+    <TargetFramework>net480</TargetFramework>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-2018|AnyCPU'">
     <TfsVersion>2018</TfsVersion>
     <TargetFramework>net461</TargetFramework>
@@ -159,6 +165,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2022|AnyCPU'">
     <TfsVersion>2022</TfsVersion>
+    <TargetFramework>net480</TargetFramework>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2022.1|AnyCPU'">
+    <TfsVersion>2022.1</TfsVersion>
     <TargetFramework>net480</TargetFramework>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>

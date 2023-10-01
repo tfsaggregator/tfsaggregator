@@ -73,10 +73,16 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2020"]]>
         </Condition>
       </Feature>
-      <Feature Id='Client2022Feature' Title='Client for Azure DevOps Server 2022' Level='1' AllowAdvertise='no'>
+      <Feature Id='Client2022Feature' Title='Client for Azure DevOps Server 2022 up to 2022.0.1' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="ClientComponents2022"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2022"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Client2022.1Feature' Title='Client for Azure DevOps Server 2022.1' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="ClientComponents2022.1"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2022.1"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -152,11 +158,18 @@
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2020"]]>
         </Condition>
       </Feature>
-      <Feature Id='Server2022Feature' Title='Plugin for Azure DevOps Server 2022' Level='1' AllowAdvertise='no'>
+      <Feature Id='Server2022Feature' Title='Plugin for Azure DevOps Server 2022 up to 2022.0.1' Level='1' AllowAdvertise='no'>
         <ComponentGroupRef Id="NeutralServerComponents" />
         <ComponentGroupRef Id="ServerComponents2022"/>
         <Condition Level="1000">
           <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2022"]]>
+        </Condition>
+      </Feature>
+      <Feature Id='Server2022.1Feature' Title='Plugin for Azure DevOps Server 2022.1' Level='1' AllowAdvertise='no'>
+        <ComponentGroupRef Id="NeutralServerComponents" />
+        <ComponentGroupRef Id="ServerComponents2022.1"/>
+        <Condition Level="1000">
+          <![CDATA[TEAMFOUNDATIONSERVERVERSION<>"2022.1"]]>
         </Condition>
       </Feature>
     </Feature>
@@ -339,6 +352,10 @@
       <!-- 19.205.33509.1 (Azure DevOps Server 2022.0.1 RC) -->
       <!-- 19.205.33618.1 (Azure DevOps Server 2022.0.1) -->
       <![CDATA[TEAMFOUNDATIONSERVER2022 AND (TEAMFOUNDATIONSERVER2022BUILD = "19.205.32728.1" OR TEAMFOUNDATIONSERVER2022BUILD = "19.205.33011.1" OR TEAMFOUNDATIONSERVER2022BUILD = "19.205.33117.5" OR TEAMFOUNDATIONSERVER2022BUILD = "19.205.33122.1" OR TEAMFOUNDATIONSERVER2022BUILD = "19.205.33509.1" OR TEAMFOUNDATIONSERVER2022BUILD = "19.205.33618.1")]]>
+    </SetProperty>
+    <SetProperty Id="TEAMFOUNDATIONSERVERVERSION" Value="2022.1" Before="LaunchConditions" Action="TFSVer2022u1">
+      <!-- 19.225.34108.1 (Azure DevOps Server 2022 Update 1 RC1) -->
+      <![CDATA[TEAMFOUNDATIONSERVER2022 AND (TEAMFOUNDATIONSERVER2022BUILD = "19.225.34108.1")]]>
     </SetProperty>
 
     <Directory Id="TARGETDIR" Name="SourceDir">

@@ -11,7 +11,7 @@
     <AssemblyName>TFSAggregator2.Core</AssemblyName>
     <TargetFramework Condition="'$(TargetFramework)' == ''">net461</TargetFramework>
     <FileAlignment>512</FileAlignment>
-    <Configurations>Debug;Release;Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018;Debug-webhooks;Release-webhooks;Debug-2019;Release-2019;Debug-2019.1;Release-2019.1;Debug-2020;Release-2020;Debug-2022;Release-2022</Configurations>
+    <Configurations>Debug;Release;Debug-2013;Release-2013;Debug-2015;Release-2015;Debug-2015.1;Release-2015.1;Debug-2015.2;Release-2015.2;Debug-2017;Release-2017;Debug-2017.2;Release-2017.2;Debug-2018;Release-2018;Debug-webhooks;Release-webhooks;Debug-2019;Release-2019;Debug-2019.1;Release-2019.1;Debug-2020;Release-2020;Debug-2022;Release-2022;Debug-2022.1;Release-2022.1</Configurations>
     <WarningLevel>4</WarningLevel>
     <ErrorReport>prompt</ErrorReport>
     <ApplicationIcon>..\TfsAggregator.ico</ApplicationIcon>
@@ -88,6 +88,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-2022|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <TfsVersion>2022</TfsVersion>
+    <TargetFramework>net480</TargetFramework>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-2022.1|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <TfsVersion>2022.1</TfsVersion>
     <TargetFramework>net480</TargetFramework>
     <DebugType>full</DebugType>
   </PropertyGroup>
@@ -184,6 +190,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2022|AnyCPU'">
     <TfsVersion>2022</TfsVersion>
+    <TargetFramework>net480</TargetFramework>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-2022.1|AnyCPU'">
+    <TfsVersion>2022.1</TfsVersion>
     <TargetFramework>net480</TargetFramework>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
