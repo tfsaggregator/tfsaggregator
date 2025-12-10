@@ -15,6 +15,9 @@ The complete documentation is available on the [project's Documentation Site](ht
 
 # Changelog
 
+## What's new un v2.7
+* Adds support for Azure DevOps Server 2022
+
 ## What's new in v2.6
 * Adds support for Azure DevOps Server 2020 beta, RC and RTW, 2020.1, 2020.1.1, 2020.0.1. 
 * Adds support for Azure DevOps Server 2022 RC1, RC2, and RTW, 2022.0.1 RC, 2022.0.1.
